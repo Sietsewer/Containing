@@ -30,23 +30,36 @@ public class Server {
     
     private ServerSocket serverSocket;
     Controller controller;
+      ArrayList<ServerClient> clients;//list of connected clients
+    /**
+     * create server
+     * @param c controller 
+     * @throws IOException
+     */
     public Server(Controller c) throws IOException
     {
              serverSocket = new ServerSocket(6066);
              serverSocket.setSoTimeout(100000000);
              controller =c;
+             clients = new   ArrayList<>();
     }
     
     
     
-  ArrayList<ServerClient> clients = new   ArrayList<ServerClient>();
+
+    /**
+     * main run function listining to clients
+     */
     public void Run()
     {
+                    System.out.println("Server running");
           while(true)
       {
          try
          {
             Socket server = serverSocket.accept();
+                  System.out.println("new client at ip:"+server.getRemoteSocketAddress());
+            controller.PrintMessage("Connected to device:"+server.getRemoteSocketAddress());
             final ServerClient c = new ServerClient(server, this);
             clients.add(c);
             new Thread(new Runnable(){
@@ -72,22 +85,35 @@ public class Server {
     
     
     
+    /**
+     * send command to clients
+     * @param mes
+     * @return
+     */
     public boolean SendCommand(Message mes) {
+                         ServerClient c = null;
         try {
             String xml = getMessageXML(mes);
             xml =xml.replace("\n", "");
                     xml =xml.replace(" ", "");
-            for(ServerClient c:clients)
+            for(int i =0;i<clients.size();i++)
             {
-                c.sendMessage(xml);
+                c=clients.get(i);
+               c.sendMessage(xml);
             }
             return true;
         } catch (Exception e) {
+            clients.remove(c);
             return false;
         }
 
     }
 
+    /**
+     * @deprecated use Message.encodeMessage
+     * @param mes
+     * @return
+     */
     public String getMessageXML(Message mes) {
         try {
             JAXBContext context = JAXBContext.newInstance(Message.class);
@@ -108,6 +134,11 @@ public class Server {
 
     }
 
+    /**
+     *@deprecated use Message.decodeMessage
+     * @param xml
+     * @return
+     */
     public Message getMessageFromXML(String xml) {
         try {
             JAXBContext context = JAXBContext.newInstance(Message.class);
@@ -122,6 +153,6 @@ public class Server {
     }
 
     void MessageRecieved(String ln) {
-        System.out.println(ln);
+       controller.recievedMessage( ln);
     }
 }

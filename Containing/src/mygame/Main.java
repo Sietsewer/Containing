@@ -14,13 +14,25 @@ import com.jme3.scene.shape.Box;
  */
 public class Main extends SimpleApplication {
 
+    ServerListener listener;
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
-        Main app = new Main();
+        
+        Main app = new Main(); 
+        
+        
         app.start();
     }
 
+    /**
+     *
+     */
     @Override
     public void simpleInitApp() {
+      
         Box b = new Box(Vector3f.ZERO, 1, 1, 1);
         Geometry geom = new Geometry("Box", b);
 
@@ -29,15 +41,33 @@ public class Main extends SimpleApplication {
         geom.setMaterial(mat);
 
         rootNode.attachChild(geom);
+        listener = new ServerListener(this);
+     
     }
 
+    /**
+     *
+     * @param tpf
+     */
     @Override
     public void simpleUpdate(float tpf) {
         //TODO: add update code
     }
 
+    /**
+     *
+     * @param rm
+     */
     @Override
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
+    }
+    void sendMessage(Message Message) {
+     listener.sendMessage( Message);
+    }
+    
+    
+    void messageRecieved(Message decodedMessage) {
+        
     }
 }

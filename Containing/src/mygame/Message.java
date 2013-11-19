@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package containingcontroller;
+package mygame;
 
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "message")
 public class Message {
 
-      private int command;//Command number
+    private int command;//Command number
     private Object[] parameters;//Parameters for command
 
     /**

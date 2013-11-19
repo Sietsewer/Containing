@@ -4,6 +4,7 @@
  */
 package containingcontroller;
 
+import java.awt.Dimension;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,6 +14,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Date;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,20 +25,33 @@ import java.util.logging.Logger;
  */
 public class ServerClient {
 
-    private BufferedReader input;
-    private Socket client;
-    private PrintWriter output;
-    private Server server;
+    private BufferedReader input;//input stream from client
+    private Socket client;//client's socket connection
+    private PrintWriter output;//output stream from client
+    private Server server;//server to relay message's
 
+    /**
+     *
+     * @param client
+     * @param s
+     */
     public ServerClient(Socket client, Server s) {
         this.client = client;
         server = s;
     }
 
+    /**
+     * Send message to client, must be in xml format
+     *
+     * @param message
+     */
     public void sendMessage(String message) {
         output.println(message);
     }
 
+    /**
+     * main function that listens to client
+     */
     public void Run() {
         try {
             input = new BufferedReader(new InputStreamReader(client.getInputStream()));
@@ -43,14 +59,23 @@ public class ServerClient {
         } catch (IOException e) {
             System.out.println("Read failed");
         }
+        Message m = new Message();
+        m.setCommand(Commands.READY);
+        m.setParameters(new Object[]{new Container("id",new Date(),new Date(),2,3,"NHL","asdad",new Vector(),"asd",2, new Dimension(),1,1,"1","2","3","4")});
+        sendMessage(Message.encodeMessage(m));
         while (true) {
             try {
-                String s = input.readLine();
-                if (!s.isEmpty()) {
-                    server.MessageRecieved(s);
+                if (input.ready()) {
+                    String s = input.readLine();
+                    if (!s.isEmpty()) {
+                        server.MessageRecieved(s);
+                        System.out.println("message from ip:" + client.getRemoteSocketAddress());
+                        System.out.println(s);
+                    }
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+                return;
             }
 
         }

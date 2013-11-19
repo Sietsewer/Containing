@@ -2,16 +2,19 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mygame;
+package containingcontroller;
 
-import com.jme3.math.Vector3f;
 import java.awt.Dimension;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Vector;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Wessel
  */
+    @XmlRootElement(name = "container")
 public class Container {
     //Properties
     String id;                      //Container id
@@ -21,8 +24,8 @@ public class Container {
     int transportTypeDeparture;     //Type of container departure
     String cargoCompanyArrival;     //Company handling container arrival
     String cargoCompanyDeparture;   //Company handling container departure
-    Vector3f position;              //Position on arrival transport
-    Vector3f bufferPosition;        //Position of container inside buffer
+    Vector position;              //Position on arrival transport
+    Vector bufferPosition;        //Position of container inside buffer
     String owner;                   //Owner of this container
     int containerNumber;            //Container number
     Dimension size;                 //Only length and width?
@@ -54,10 +57,11 @@ public class Container {
      * @param contentDanger
      * @param iso
      */
+
     public Container(String id, Date dateArrival, Date dateDeparture,
             int transportTypeArrival, int transportTypeDeparture,
             String cargoCompanyArrival, String cargoCompanyDeparture,
-            Vector3f position, String owner, int containerNumber,
+            Vector position, String owner, int containerNumber,
             Dimension size, int weightEmpty, int weightLoaded,
             String contents, String contentType, String contentDanger,
             String iso){

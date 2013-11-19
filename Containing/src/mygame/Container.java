@@ -5,7 +5,6 @@
 package mygame;
 
 import com.jme3.math.Vector3f;
-import java.awt.Dimension;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlSeeAlso;
 
@@ -26,7 +25,7 @@ public class Container {
     Vector3f bufferPosition;        //Position of container inside buffer
     String owner;                   //Owner of this container
     int containerNumber;            //Container number
-    Dimension size;                 //Only length and width?
+    Vector3f size;                  //Changed to Vector3f, Dimension halds only two values
     int weightEmpty;                //Container weight when empty
     int weightLoaded;               //Container weight when loaded
     String contents;                //Contents of this container
@@ -59,7 +58,7 @@ public class Container {
             int transportTypeArrival, int transportTypeDeparture,
             String cargoCompanyArrival, String cargoCompanyDeparture,
             Vector3f position, String owner, int containerNumber,
-            Dimension size, int weightEmpty, int weightLoaded,
+            Vector3f size, int weightEmpty, int weightLoaded,
             String contents, String contentType, String contentDanger,
             String iso){
         this.id = id;

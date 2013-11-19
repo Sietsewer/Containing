@@ -6,6 +6,7 @@ package containingcontroller;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
@@ -16,12 +17,14 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 /**
  *
  * @author Hendrik
  */
 @XmlRootElement(name = "message")
+@XmlSeeAlso({Vector3f.class, Date.class,Container.class})
 public class Message {
 
       private int command;//Command number

@@ -65,15 +65,15 @@ public class ServerListener {
         } catch (IOException ex) {
             Logger.getLogger(ServerListener.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-
+           
+        sendMessage(new Message(Commands.READY, null));
          
         while (true) {
             String s;
             try {
                 if (input.ready()) {
                     s = input.readLine();
-                    if (s.contains("\n")) {
+                    if (!s.isEmpty()) {
                         System.out.println("message from ip:" + client.getRemoteSocketAddress());
                         System.out.println(s);
                     }

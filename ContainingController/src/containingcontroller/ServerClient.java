@@ -46,6 +46,8 @@ public class ServerClient {
      * @param message
      */
     public void sendMessage(String message) {
+                   System.out.println("message to ip:" + client.getRemoteSocketAddress());
+                        System.out.println(message);
         output.println(message);
     }
 
@@ -61,10 +63,11 @@ public class ServerClient {
         }
         Message m = new Message();
         m.setCommand(Commands.READY);
-        m.setParameters(new Object[]{new Container("id",new Date(),new Date(),2,3,"NHL","asdad",new Vector(),"asd",2, new Dimension(),1,1,"1","2","3","4")});
+        m.setParameters(new Object[]{new Container("id",new Date(),new Date(),2,3,"NHL","asdad",new Vector3f(),"asd",2, "2","3","4",1,1,"1","2","3","4")});
         sendMessage(Message.encodeMessage(m));
         while (true) {
             try {
+                        String xml =Message.encodeMessage(m);
                 if (input.ready()) {
                     String s = input.readLine();
                     if (!s.isEmpty()) {

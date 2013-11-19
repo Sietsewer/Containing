@@ -16,12 +16,14 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 /**
  *
  * @author Hendrik
  */
 @XmlRootElement(name = "message")
+@XmlSeeAlso({Container.class})
 public class Message {
 
     private int command;//Command number

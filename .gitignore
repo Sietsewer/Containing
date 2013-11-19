@@ -5,3 +5,5 @@
 *.war
 *.ear
 /Containing/nbproject/private/
+/ContainingController/nbproject/private/
+/ContainingController/build/

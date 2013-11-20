@@ -9,3 +9,6 @@
 /ContainingController/build/
 /ContainingController/dist/
 /Containing/build/
+*.dylib
+
+*.jnilib

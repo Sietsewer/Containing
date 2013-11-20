@@ -9,10 +9,5 @@
 /ContainingController/build/
 /ContainingController/dist/
 /Containing/build/
-/ContainingController/nbproject/
-/Containing/nbproject/
 *.dylib
 *.jnilib
-Containing/nbproject/genfiles.properties
-
-Containing/nbproject/project.properties

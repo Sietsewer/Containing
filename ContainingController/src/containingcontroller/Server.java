@@ -93,7 +93,7 @@ public class Server {
     public boolean SendCommand(Message mes) {
                          ServerClient c = null;
         try {
-            String xml = getMessageXML(mes);
+            String xml = Message.encodeMessage(mes);
             xml =xml.replace("\n", "");
                     xml =xml.replace(" ", "");
             for(int i =0;i<clients.size();i++)
@@ -109,50 +109,9 @@ public class Server {
 
     }
 
-    /**
-     * @deprecated use Message.encodeMessage
-     * @param mes
-     * @return
-     */
-    public String getMessageXML(Message mes) {
-        try {
-            JAXBContext context = JAXBContext.newInstance(Message.class);
-            Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            String xml;
-            StringWriter xmlString = new StringWriter();
-            m.marshal(mes, xmlString);
-            xml = xmlString.toString();
-            return xml;
-        } catch (PropertyException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        } catch (JAXBException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-
-    }
-
-    /**
-     *@deprecated use Message.decodeMessage
-     * @param xml
-     * @return
-     */
-    public Message getMessageFromXML(String xml) {
-        try {
-            JAXBContext context = JAXBContext.newInstance(Message.class);
-            Unmarshaller um = context.createUnmarshaller();
-            Message message = (Message) um.unmarshal(new StringReader(xml));
-            return message;
-        } catch (JAXBException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        }
-
-    }
+   
 
     void MessageRecieved(String ln) {
-       controller.recievedMessage( ln);
+       controller.recievedMessage(ln);
     }
 }

@@ -1,0 +1,178 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containingcontroller;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+/**
+ *
+ * @author Hendrik
+ */
+public class XMLParser {
+
+    /**
+     * Parse inputstream from xml file to list of containers
+     * @param File inputstream from xmlfile
+     * @return list of read containers
+     */
+    static public List<Container> parseXMLFile(InputStream File) {
+        try {
+            Stack<String> sk = new Stack<>();
+            Calendar c = Calendar.getInstance();
+            Vector3f p = new Vector3f();
+            List<Container> containersList = null;
+            Container currentContainer = null;
+            String tagContent = null;
+
+            XMLInputFactory factory = XMLInputFactory.newInstance();
+            XMLStreamReader reader =
+                    factory.createXMLStreamReader(File);
+
+            while (reader.hasNext()) {
+                int event = reader.next();
+
+                switch (event) {
+                    case XMLStreamConstants.START_ELEMENT:
+
+
+                        if ("record".equals(reader.getLocalName())) {
+                            currentContainer = new Container();
+                            currentContainer.setId(reader.getAttributeValue(0));
+                        }
+                        if ("recordset".equals(reader.getLocalName())) {
+                            containersList = new ArrayList<>();
+                        }
+
+                        sk.push(reader.getLocalName());
+                        break;
+
+                    case XMLStreamConstants.CHARACTERS:
+                        tagContent = reader.getText().trim();
+                        break;
+
+                    case XMLStreamConstants.END_ELEMENT:
+                        sk.pop();
+                        switch (reader.getLocalName().toLowerCase()) {
+                            case "record":
+                                containersList.add(currentContainer);
+                                break;
+                            case "d":
+                                c = Calendar.getInstance();
+                                c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(tagContent));
+                                break;
+                            case "m":
+                                c.set(Calendar.MONTH, Integer.parseInt(tagContent));
+                                break;
+                            case "j":
+                                c.set(Calendar.YEAR, Integer.parseInt(tagContent));
+                                break;
+                            case "datum":
+                                if (sk.peek().equalsIgnoreCase("aankomst")) {
+                                    currentContainer.setDateArrival(c.getTime());//wat te doen met tijd
+                                } else {
+                                    currentContainer.setDateDeparture(c.getTime());
+                                }
+                                break;
+                            case "soort_vervoer":
+                                if (sk.peek().equalsIgnoreCase("aankomst")) {
+                                    currentContainer.setTransportTypeArrival(TransportTypes.getTransportType(tagContent));
+                                } else {
+                                    currentContainer.setTransportTypeDeparture(TransportTypes.getTransportType(tagContent));
+                                }
+                                break;
+                            case "bedrijf":
+                                if (sk.peek().equalsIgnoreCase("aankomst")) {
+                                    currentContainer.setCargoCompanyArrival(tagContent);
+                                } else if (sk.peek().equalsIgnoreCase("vertrek")) {
+                                    currentContainer.setCargoCompanyDeparture(tagContent);
+                                }
+
+                                break;
+                            case "x":
+                                p = new Vector3f();
+                                p.x = Integer.parseInt(tagContent);
+
+                                break;
+                            case "y":
+                                p.y = Integer.parseInt(tagContent);
+
+                                break;
+                            case "z":
+                                p.z = Integer.parseInt(tagContent);
+
+                                break;
+                            case "positie":
+                                currentContainer.setPosition(p);
+                                break;
+                            case "naam":
+                                if (sk.peek().equalsIgnoreCase("eigenaar")) {
+                                    currentContainer.setOwner(tagContent);
+                                } else {
+                                    currentContainer.setContents(tagContent);
+                                }
+                                break;
+                            case "containernr":
+                                currentContainer.setContainerNumber(Integer.parseInt(tagContent));
+                                break;
+                            case "l":
+                                currentContainer.setLenght(tagContent);
+                                break;
+                            case "h":
+                                currentContainer.setHeight(tagContent);
+                                break;
+                            case "b":
+                                currentContainer.setWidth(tagContent);
+                                break;
+                            case "leeg":
+                                currentContainer.setWeightEmpty(Integer.parseInt(tagContent));
+                                break;
+                            case "inhoud":
+                                if(sk.peek().equalsIgnoreCase("aankomst"))
+                                if (!tagContent.isEmpty()) {
+                                    currentContainer.setWeightLoaded(Integer.parseInt(tagContent));
+                                }
+                                break;
+                            case "soort":
+                                currentContainer.setContentType(tagContent);
+                                break;
+                            case "gevaar":
+                                currentContainer.setContentDanger(tagContent);
+                                break;
+                            case "iso":
+                                currentContainer.setIso(tagContent);
+                                break;
+
+                        }
+                        break;
+
+
+
+                    case XMLStreamConstants.START_DOCUMENT:
+                        containersList = new ArrayList<>();
+                        break;
+                }
+
+            }
+            return containersList;
+        } catch (XMLStreamException ex) {
+            Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+
+    }
+}

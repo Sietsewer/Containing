@@ -69,7 +69,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
             Float.NEGATIVE_INFINITY,
             Float.NEGATIVE_INFINITY);
 
-    
+    */
 	/**
      * the x value of the vector.
      */
@@ -152,6 +152,11 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
         this.y = vect.y;
         this.z = vect.z;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Vector3f{" + "x=" + x + ", y=" + y + ", z=" + z + '}';
     }
 
     /**

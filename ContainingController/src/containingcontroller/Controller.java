@@ -5,6 +5,11 @@
 package containingcontroller;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +21,8 @@ public class Controller {
 
     private Server server;//Server for communication between applications
     private ControllerWindow window;//Mainwindow to print log
+    List<Container> allContainers;// this list holds all containers
+    Map<Date, Container> sortedContainers;//containers sorted by arrivaldate
 
     /**
      *
@@ -38,6 +45,7 @@ public class Controller {
 
     /**
      * Print message on window
+     *
      * @param message
      */
     public void PrintMessage(String message) {
@@ -46,11 +54,19 @@ public class Controller {
 
     /**
      * message has been recieved from simulator
+     *
      * @param message the message object that has been recieved
      */
     public void recievedMessage(String message) {
         PrintMessage(message);
     }
 
+    void setContainers(List<Container> containers) {
+        allContainers = containers;
+        Collections.sort(containers, new ContainerComparer());
+        for (Container c : containers) {
+            this.PrintMessage("Loaded - "+ c.toString());
+        }
 
+    }
 }

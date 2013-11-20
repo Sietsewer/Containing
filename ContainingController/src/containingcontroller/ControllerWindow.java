@@ -4,8 +4,16 @@
  */
 package containingcontroller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JScrollBar;
 
 /**
@@ -15,7 +23,7 @@ import javax.swing.JScrollBar;
 public class ControllerWindow extends javax.swing.JFrame {
 SimpleDateFormat timeFormat;
     Controller controller;
-    
+    final JFileChooser fc = new JFileChooser();
     /**
      * Creates new form ControllerWindow
      */
@@ -34,36 +42,67 @@ SimpleDateFormat timeFormat;
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        mainToolbar = new javax.swing.JToolBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         logTxtArea = new javax.swing.JTextArea();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        mainToolbar.setRollover(true);
 
         logTxtArea.setEditable(false);
         logTxtArea.setColumns(20);
         logTxtArea.setRows(5);
         jScrollPane1.setViewportView(logTxtArea);
 
+        jMenu1.setText("File");
+
+        jMenuItem1.setText("XML bestand inladen");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainToolbar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(mainToolbar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+       //Handle open button action.
+        int returnVal = fc.showOpenDialog(ControllerWindow.this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                File file = fc.getSelectedFile();
+               //read file 
+               List<Container> containers = XMLParser.parseXMLFile(new FileInputStream(file));
+               controller.setContainers(containers);
+
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(ControllerWindow.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * write line to log window
@@ -112,8 +151,11 @@ SimpleDateFormat timeFormat;
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea logTxtArea;
-    private javax.swing.JToolBar mainToolbar;
     // End of variables declaration//GEN-END:variables
 }

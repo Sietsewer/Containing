@@ -52,8 +52,10 @@ public class Container {
      * @param position
      * @param owner
      * @param containerNumber
-     * @param size
+     * @param height 
+     * @param width 
      * @param weightEmpty
+     * @param lenght 
      * @param weightLoaded
      * @param contents
      * @param contentType
@@ -91,167 +93,336 @@ public class Container {
         this.width = width;
         this.lenght = lenght;
     }
+    /**
+     *
+     */
     public Container()
     {
     }
 
+    /**
+     *
+     * @return
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     *
+     * @return
+     */
     public Date getDateArrival() {
         return dateArrival;
     }
 
+    /**
+     *
+     * @param dateArrival
+     */
     public void setDateArrival(Date dateArrival) {
         this.dateArrival = dateArrival;
     }
 
+    /**
+     *
+     * @return
+     */
     public Date getDateDeparture() {
         return dateDeparture;
     }
 
+    /**
+     *
+     * @param dateDeparture
+     */
     public void setDateDeparture(Date dateDeparture) {
         this.dateDeparture = dateDeparture;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getTransportTypeArrival() {
         return transportTypeArrival;
     }
 
+    /**
+     *
+     * @param transportTypeArrival
+     */
     public void setTransportTypeArrival(int transportTypeArrival) {
         this.transportTypeArrival = transportTypeArrival;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getTransportTypeDeparture() {
         return transportTypeDeparture;
     }
 
+    /**
+     *
+     * @param transportTypeDeparture
+     */
     public void setTransportTypeDeparture(int transportTypeDeparture) {
         this.transportTypeDeparture = transportTypeDeparture;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCargoCompanyArrival() {
         return cargoCompanyArrival;
     }
 
+    /**
+     *
+     * @param cargoCompanyArrival
+     */
     public void setCargoCompanyArrival(String cargoCompanyArrival) {
         this.cargoCompanyArrival = cargoCompanyArrival;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getCargoCompanyDeparture() {
         return cargoCompanyDeparture;
     }
 
+    /**
+     *
+     * @param cargoCompanyDeparture
+     */
     public void setCargoCompanyDeparture(String cargoCompanyDeparture) {
         this.cargoCompanyDeparture = cargoCompanyDeparture;
     }
 
+    /**
+     *
+     * @return
+     */
     public Vector3f getPosition() {
         return position;
     }
 
+    /**
+     *
+     * @param position
+     */
     public void setPosition(Vector3f position) {
         this.position = position;
     }
 
+    /**
+     *
+     * @return
+     */
     public Vector3f getBufferPosition() {
         return bufferPosition;
     }
 
+    /**
+     *
+     * @param bufferPosition
+     */
     public void setBufferPosition(Vector3f bufferPosition) {
         this.bufferPosition = bufferPosition;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getOwner() {
         return owner;
     }
 
+    /**
+     *
+     * @param owner
+     */
     public void setOwner(String owner) {
         this.owner = owner;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getContainerNumber() {
         return containerNumber;
     }
 
+    /**
+     *
+     * @param containerNumber
+     */
     public void setContainerNumber(int containerNumber) {
         this.containerNumber = containerNumber;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getHeight() {
         return height;
     }
 
+    /**
+     *
+     * @param height
+     */
     public void setHeight(String height) {
         this.height = height;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getWidth() {
         return width;
     }
 
+    /**
+     *
+     * @param width
+     */
     public void setWidth(String width) {
         this.width = width;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLenght() {
         return lenght;
     }
 
+    /**
+     *
+     * @param lenght
+     */
     public void setLenght(String lenght) {
         this.lenght = lenght;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getWeightEmpty() {
         return weightEmpty;
     }
 
+    /**
+     *
+     * @param weightEmpty
+     */
     public void setWeightEmpty(int weightEmpty) {
         this.weightEmpty = weightEmpty;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getWeightLoaded() {
         return weightLoaded;
     }
 
+    /**
+     *
+     * @param weightLoaded
+     */
     public void setWeightLoaded(int weightLoaded) {
         this.weightLoaded = weightLoaded;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getContents() {
         return contents;
     }
 
+    /**
+     *
+     * @param contents
+     */
     public void setContents(String contents) {
         this.contents = contents;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getContentType() {
         return contentType;
     }
 
+    /**
+     *
+     * @param contentType
+     */
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getContentDanger() {
         return contentDanger;
     }
 
+    /**
+     *
+     * @param contentDanger
+     */
     public void setContentDanger(String contentDanger) {
         this.contentDanger = contentDanger;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getIso() {
         return iso;
     }
 
+    /**
+     *
+     * @param iso
+     */
     public void setIso(String iso) {
         this.iso = iso;
     }
+
+    @Override
+    public String toString() {
+        return "Container{" + "id=" + id + ", dateArrival=" + dateArrival + ", dateDeparture=" + dateDeparture + ", transportTypeArrival=" + transportTypeArrival + ", transportTypeDeparture=" + transportTypeDeparture + ", cargoCompanyArrival=" + cargoCompanyArrival + ", cargoCompanyDeparture=" + cargoCompanyDeparture + ", position=" + position + ", bufferPosition=" + bufferPosition + ", owner=" + owner + ", containerNumber=" + containerNumber + ", height=" + height + ", width=" + width + ", lenght=" + lenght + ", weightEmpty=" + weightEmpty + ", weightLoaded=" + weightLoaded + ", contents=" + contents + ", contentType=" + contentType + ", contentDanger=" + contentDanger + ", iso=" + iso + '}';
+    }
+    
 }

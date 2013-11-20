@@ -14,7 +14,7 @@ public class Commands {
      */
     static public int READY = 0;
     /**
-     *Container must be moved by AVG
+     *Container must be moved by AGV
      */
     static public int MOVE_CONTAINER = 1;
     /**
@@ -25,4 +25,8 @@ public class Commands {
      *Crane needds to put CONTAINER down
      */
     static public int PUT_CONTAINER = 3;
+    /**
+     *Give container to AGV
+     */
+    static public int GIVE_CONTAINER = 4;
 }

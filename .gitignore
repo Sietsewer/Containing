@@ -9,6 +9,6 @@
 /ContainingController/build/
 /ContainingController/dist/
 /Containing/build/
+/ContainingController/nbproject/
 *.dylib
-
 *.jnilib

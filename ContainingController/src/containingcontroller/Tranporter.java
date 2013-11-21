@@ -16,23 +16,24 @@ class Transporter {
     private List<Container> containers;
     private int transportType;
     String id;
-    static int tranporterID =0;
+    static int tranporterID = 0;
+
     public Transporter(int transportType) {
         this.transportType = transportType;
-        this.id = "TRS"+ tranporterID++;
-        
+        this.id = "TRS" + tranporterID++;
+
     }
 
     public int getTransportType() {
         return transportType;
     }
 
-    public Vector3f getFreeLocation() {
+    public CustomVector3f getFreeLocation() {
         if (transportType == TransportTypes.SEASHIP) {
             for (int z = 0; z < Integer.MAX_VALUE; z++) {
                 for (int x = 0; x < 20; x++) {
                     for (int y = 0; y < 8; y++) {
-                        Vector3f currentposition = new Vector3f(x, y, z);
+                        CustomVector3f currentposition = new CustomVector3f(x, y, z);
                         boolean posistionTaken = false;
                         for (Container c : containers) {
                             if (c.getPosition().x == currentposition.x
@@ -52,7 +53,7 @@ class Transporter {
             for (int z = 0; z < Integer.MAX_VALUE; z++) {
                 for (int x = 0; x < 4; x++) {
                     for (int y = 0; y < 4; y++) {
-                        Vector3f currentposition = new Vector3f(x, y, z);
+                        CustomVector3f currentposition = new CustomVector3f(x, y, z);
                         boolean posistionTaken = false;
                         for (Container c : containers) {
                             if (c.getPosition().x == currentposition.x
@@ -73,7 +74,7 @@ class Transporter {
             for (int z = 0; z < Integer.MAX_VALUE; z++) {
                 for (Container c : containers) {
                     if (c.getPosition().z != z) {
-                        return new Vector3f(0, 0, z);
+                        return new CustomVector3f(0, 0, z);
                     }
                 }
             }
@@ -81,7 +82,7 @@ class Transporter {
             if (containers.size() > 0) {
                 return null;
             } else {
-                return new Vector3f(0, 0, 0);
+                return new CustomVector3f(0, 0, 0);
             }
         } else {
             return null;
@@ -120,7 +121,7 @@ class Transporter {
 
     @Override
     public String toString() {
-        String s = "Transporter{ ID="+id + ",containers={";
+        String s = "Transporter{ ID=" + id + ",containers={";
 
         for (Container c : containers) {
             s += c.toString() + ",";
@@ -128,5 +129,30 @@ class Transporter {
         s = s.substring(0, s.length() - 1);
         s += "}, transportType=" + TransportTypes.getTransportType(transportType) + '}';
         return s;
+    }
+
+    /**
+     * Get containers from transporter
+     *
+     * @return
+     */
+    public List<Container> getContainers() {
+        return containers;
+    }
+
+    /**
+     * Get specific container from transporter
+     *
+     * @param i
+     * @return
+     */
+    public Container getContainer(int i) {
+        if (containers != null && i < containers.size() &&i >=0) {
+            return containers.get(i);
+        }
+        else
+        {
+            return null;
+        }
     }
 }

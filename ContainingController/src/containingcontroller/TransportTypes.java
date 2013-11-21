@@ -52,6 +52,11 @@ public class TransportTypes {
        return 0;
   
    }
+    /**
+     * Get the text for a type 
+     * @param type number between 0 and 3
+     * @return
+     */
     public static String getTransportType(int type)
    {
        if(type == TROLLEY)

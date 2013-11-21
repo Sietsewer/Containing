@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * @author Hendrik
  */
 @XmlRootElement(name = "message")
-@XmlSeeAlso({Vector3f.class, Date.class,Container.class})
+@XmlSeeAlso({CustomVector3f.class, Date.class,SimContainer.class })
 public class Message {
 
       private int command;//Command number

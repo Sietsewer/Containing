@@ -48,8 +48,12 @@ public class Controller {
         cal.set(Calendar.MILLISECOND, 0);
         simTime = cal.getTime();
         timeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        currentTransporter =new ArrayList<>();
     }
 
+    /**
+     * Start simulator with tick of 1 second is 1 second
+     */
     public void Start() {
         this.simTimer = new Timer();
         this.simTimer.schedule(new TimerTask() {
@@ -60,6 +64,9 @@ public class Controller {
         }, 0, 1000);
     }
 
+    /**
+     * tick in simulator to give commands
+     */
     public void timerTick() {
         PrintMessage("simtime is now: " + timeFormat.format(simTime));
 
@@ -107,6 +114,16 @@ public class Controller {
                 for (Transporter t : transporters) {
                     currentTransporter.add(t);
                     PrintMessage("Arriving: " + t.toString());
+                    Message m = new Message(Commands.CREATE_TRANSPORTER,null);
+                    Object[] objects= new Object[t.getContainerCount()+2];
+                    objects[0] = t.getTransportType();
+                    objects[1] = t.id;
+                   for(int i=0;i<t.getContainerCount(); i++)
+                   {
+                       objects[i+2] = new SimContainer(t.getContainer(i));
+                   }
+                   m.setParameters(objects);
+                    server.sendCommand(m);
                 }
             }
         }
@@ -121,10 +138,16 @@ public class Controller {
         simTime = cal.getTime(); // returns new date object, one hour in the future
     }
 
+    /**
+     * stop simulation
+     */
     public void pause() {
         this.simTimer.cancel();
     }
 
+    /**
+     *start server for communication
+     */
     public void startServer() {
         try {
             server = new Server(this);
@@ -148,6 +171,11 @@ public class Controller {
         window.WriteLogLine(message);
     }
 
+    /**
+     * create tranporter
+     * @param containers
+     * @param transportType
+     */
     public void createTransporter(List<Container> containers, int transportType) {
     }
 

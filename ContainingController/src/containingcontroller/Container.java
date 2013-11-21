@@ -15,8 +15,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  *
  * @author Wessel
  */
-@XmlRootElement(name = "container")
-@XmlSeeAlso({Vector3f.class, Date.class})
+
 public class Container {
     //Properties
 
@@ -27,8 +26,8 @@ public class Container {
     private int transportTypeDeparture;     //Type of container departure
     private String cargoCompanyArrival;     //Company handling container arrival
     private String cargoCompanyDeparture;   //Company handling container departure
-    private Vector3f position;              //Position on arrival transport
-    private Vector3f bufferPosition;        //Position of container inside buffer
+    private CustomVector3f position;              //Position on arrival transport
+    private CustomVector3f bufferPosition;        //Position of container inside buffer
     private String owner;                   //Owner of this container
     private int containerNumber;            //Container number
     private String height;                 //Only length and width?
@@ -67,7 +66,7 @@ public class Container {
     public Container(String id, Date dateArrival, Date dateDeparture,
             int transportTypeArrival, int transportTypeDeparture,
             String cargoCompanyArrival, String cargoCompanyDeparture,
-            Vector3f position, String owner, int containerNumber,
+            CustomVector3f position, String owner, int containerNumber,
             String height,
             String width,
             String lenght, int weightEmpty, int weightLoaded,
@@ -218,7 +217,7 @@ public class Container {
      *
      * @return
      */
-    public Vector3f getPosition() {
+    public CustomVector3f getPosition() {
         return position;
     }
 
@@ -226,7 +225,7 @@ public class Container {
      *
      * @param position
      */
-    public void setPosition(Vector3f position) {
+    public void setPosition(CustomVector3f position) {
         this.position = position;
     }
 
@@ -234,7 +233,7 @@ public class Container {
      *
      * @return
      */
-    public Vector3f getBufferPosition() {
+    public CustomVector3f getBufferPosition() {
         return bufferPosition;
     }
 
@@ -242,7 +241,7 @@ public class Container {
      *
      * @param bufferPosition
      */
-    public void setBufferPosition(Vector3f bufferPosition) {
+    public void setBufferPosition(CustomVector3f bufferPosition) {
         this.bufferPosition = bufferPosition;
     }
 

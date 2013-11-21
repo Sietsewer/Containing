@@ -34,7 +34,7 @@ public class XMLParser {
         try {
             Stack<String> sk = new Stack<>();
             Calendar c = Calendar.getInstance();
-            Vector3f p = new Vector3f();
+            CustomVector3f p = new CustomVector3f();
             List<Container> containersList = null;
             Container currentContainer = null;
             String tagContent = null;
@@ -110,7 +110,7 @@ public class XMLParser {
 
                                 break;
                             case "x":
-                                p = new Vector3f();
+                                p = new CustomVector3f();
                                 p.x = Integer.parseInt(tagContent);
 
                                 break;

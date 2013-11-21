@@ -6,6 +6,7 @@ package mygame;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
@@ -23,7 +24,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * @author Hendrik
  */
 @XmlRootElement(name = "message")
-@XmlSeeAlso({Container.class})
+@XmlSeeAlso({CustomVector3f.class, Date.class,SimContainer.class })
 public class Message {
 
     private int command;//Command number

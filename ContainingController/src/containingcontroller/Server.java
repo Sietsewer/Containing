@@ -117,7 +117,6 @@ public class Server {
         try {
             String xml = Message.encodeMessage(mes);
             xml =xml.replace("\n", "");
-                    xml =xml.replace(" ", "");
             for(int i =0;i<clients.size();i++)
             {
                 c=clients.get(i);

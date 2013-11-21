@@ -33,38 +33,42 @@
 package containingcontroller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.logging.Logger;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 /*
  * -- Added *Local methods to cut down on object creation - JS
  */
 
 /**
- * <code>Vector3f</code> defines a Vector for a three float value tuple.
- * <code>Vector3f</code> can represent any three dimensional value, such as a
+ * <code>CustomVector3f</code> defines a Vector for a three float value tuple.
+ * <code>CustomVector3f</code> can represent any three dimensional value, such as a
  * vertex, a normal, etc. Utility methods are also included to aid in
  * mathematical calculations.
  *
  * @author Mark Powell
  * @author Joshua Slack
  */
-public final class Vector3f implements  Cloneable, java.io.Serializable {
+@XmlRootElement(name = "custom_vector")
+public final class CustomVector3f implements  Cloneable, java.io.Serializable {
 
  /*   static final long serialVersionUID = 1;
     
-    private static final Logger logger = Logger.getLogger(Vector3f.class.getName());
+    private static final Logger logger = Logger.getLogger(CustomVector3f.class.getName());
 
-    public final static Vector3f ZERO = new Vector3f(0, 0, 0);
-    public final static Vector3f NAN = new Vector3f(Float.NaN, Float.NaN, Float.NaN);
-    public final static Vector3f UNIT_X = new Vector3f(1, 0, 0);
-    public final static Vector3f UNIT_Y = new Vector3f(0, 1, 0);
-    public final static Vector3f UNIT_Z = new Vector3f(0, 0, 1);
-    public final static Vector3f UNIT_XYZ = new Vector3f(1, 1, 1);
-    public final static Vector3f POSITIVE_INFINITY = new Vector3f(
+    public final static CustomVector3f ZERO = new CustomVector3f(0, 0, 0);
+    public final static CustomVector3f NAN = new CustomVector3f(Float.NaN, Float.NaN, Float.NaN);
+    public final static CustomVector3f UNIT_X = new CustomVector3f(1, 0, 0);
+    public final static CustomVector3f UNIT_Y = new CustomVector3f(0, 1, 0);
+    public final static CustomVector3f UNIT_Z = new CustomVector3f(0, 0, 1);
+    public final static CustomVector3f UNIT_XYZ = new CustomVector3f(1, 1, 1);
+    public final static CustomVector3f POSITIVE_INFINITY = new CustomVector3f(
             Float.POSITIVE_INFINITY,
             Float.POSITIVE_INFINITY,
             Float.POSITIVE_INFINITY);
-    public final static Vector3f NEGATIVE_INFINITY = new Vector3f(
+    public final static CustomVector3f NEGATIVE_INFINITY = new CustomVector3f(
             Float.NEGATIVE_INFINITY,
             Float.NEGATIVE_INFINITY,
             Float.NEGATIVE_INFINITY);
@@ -86,16 +90,16 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
     public float z;
 
     /**
-     * Constructor instantiates a new <code>Vector3f</code> with default
+     * Constructor instantiates a new <code>CustomVector3f</code> with default
      * values of (0,0,0).
      *
      */
-    public Vector3f() {
+    public CustomVector3f() {
         x = y = z = 0;
     }
 
     /**
-     * Constructor instantiates a new <code>Vector3f</code> with provides
+     * Constructor instantiates a new <code>CustomVector3f</code> with provides
      * values.
      *
      * @param x
@@ -105,18 +109,18 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * @param z
      *            the z value of the vector.
      */
-    public Vector3f(float x, float y, float z) {
+    public CustomVector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
     /**
-     * Constructor instantiates a new <code>Vector3f</code> that is a copy
+     * Constructor instantiates a new <code>CustomVector3f</code> that is a copy
      * of the provided vector
-     * @param copy The Vector3f to copy
+     * @param copy The CustomVector3f to copy
      */
-    public Vector3f(Vector3f copy) {
+    public CustomVector3f(CustomVector3f copy) {
         this.set(copy);
     }
 
@@ -132,7 +136,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the z value of the vector.
      * @return this vector
      */
-    public Vector3f set(float x, float y, float z) {
+    public CustomVector3f set(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -147,7 +151,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to copy.
      * @return this vector
      */
-    public Vector3f set(Vector3f vect) {
+    public CustomVector3f set(CustomVector3f vect) {
         this.x = vect.x;
         this.y = vect.y;
         this.z = vect.z;
@@ -169,12 +173,12 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to add to this.
      * @return the resultant vector.
      */
-  /*  public Vector3f add(Vector3f vec) {
+  /*  public CustomVector3f add(CustomVector3f vec) {
         if (null == vec) {
             logger.warning("Provided vector is null, null returned.");
             return null;
         }
-        return new Vector3f(x + vec.x, y + vec.y, z + vec.z);
+        return new CustomVector3f(x + vec.x, y + vec.y, z + vec.z);
     }
 
     /**
@@ -188,7 +192,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to store the result in
      * @return result returns the supplied result vector.
      */
- /*   public Vector3f add(Vector3f vec, Vector3f result) {
+ /*   public CustomVector3f add(CustomVector3f vec, CustomVector3f result) {
         result.x = x + vec.x;
         result.y = y + vec.y;
         result.z = z + vec.z;
@@ -204,7 +208,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to add to this vector.
      * @return this
      */
-  /*  public Vector3f addLocal(Vector3f vec) {
+  /*  public CustomVector3f addLocal(CustomVector3f vec) {
         if (null == vec) {
             logger.warning("Provided vector is null, null returned.");
             return null;
@@ -228,8 +232,8 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the z value to add.
      * @return the result vector.
      */
-  /*  public Vector3f add(float addX, float addY, float addZ) {
-        return new Vector3f(x + addX, y + addY, z + addZ);
+  /*  public CustomVector3f add(float addX, float addY, float addZ) {
+        return new CustomVector3f(x + addX, y + addY, z + addZ);
     }
 
     /**
@@ -245,7 +249,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            value to add to z
      * @return this
      */
-    /*public Vector3f addLocal(float addX, float addY, float addZ) {
+    /*public CustomVector3f addLocal(float addX, float addY, float addZ) {
         x += addX;
         y += addY;
         z += addZ;
@@ -255,14 +259,14 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
     /**
      *
      * <code>scaleAdd</code> multiplies this vector by a scalar then adds the
-     * given Vector3f.
+     * given CustomVector3f.
      *
      * @param scalar
      *            the value to multiply this vector by.
      * @param add
      *            the value to add
      */
-  /*  public Vector3f scaleAdd(float scalar, Vector3f add) {
+  /*  public CustomVector3f scaleAdd(float scalar, CustomVector3f add) {
         x = x * scalar + add.x;
         y = y * scalar + add.y;
         z = z * scalar + add.z;
@@ -281,7 +285,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * @param add
      *            the value to add
      */
-   /* public Vector3f scaleAdd(float scalar, Vector3f mult, Vector3f add) {
+   /* public CustomVector3f scaleAdd(float scalar, CustomVector3f mult, CustomVector3f add) {
         this.x = mult.x * scalar + add.x;
         this.y = mult.y * scalar + add.y;
         this.z = mult.z * scalar + add.z;
@@ -297,7 +301,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to dot with this vector.
      * @return the resultant dot product of this vector and a given vector.
      */
-   /* public float dot(Vector3f vec) {
+   /* public float dot(CustomVector3f vec) {
         if (null == vec) {
             logger.warning("Provided vector is null, 0 returned.");
             return 0;
@@ -313,7 +317,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to take the cross product of with this.
      * @return the cross product vector.
      */
-  /*  public Vector3f cross(Vector3f v) {
+  /*  public CustomVector3f cross(CustomVector3f v) {
         return cross(v, null);
     }
 
@@ -327,7 +331,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to store the cross product result.
      * @return result, after recieving the cross product vector.
      */
-  /*  public Vector3f cross(Vector3f v,Vector3f result) {
+  /*  public CustomVector3f cross(CustomVector3f v,CustomVector3f result) {
         return cross(v.x, v.y, v.z, result);
     }
 
@@ -345,8 +349,8 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to store the cross product result.
      * @return result, after recieving the cross product vector.
      */
-   /* public Vector3f cross(float otherX, float otherY, float otherZ, Vector3f result) {
-        if (result == null) result = new Vector3f();
+   /* public CustomVector3f cross(float otherX, float otherY, float otherZ, CustomVector3f result) {
+        if (result == null) result = new CustomVector3f();
         float resX = ((y * otherZ) - (z * otherY)); 
         float resY = ((z * otherX) - (x * otherZ));
         float resZ = ((x * otherY) - (y * otherX));
@@ -362,7 +366,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to take the cross product of with this.
      * @return this.
      */
-  /*  public Vector3f crossLocal(Vector3f v) {
+  /*  public CustomVector3f crossLocal(CustomVector3f v) {
         return crossLocal(v.x, v.y, v.z);
     }
 
@@ -378,7 +382,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            z component of the vector to take the cross product of with this.
      * @return this.
      */
-   /* public Vector3f crossLocal(float otherX, float otherY, float otherZ) {
+   /* public CustomVector3f crossLocal(float otherX, float otherY, float otherZ) {
         float tempx = ( y * otherZ ) - ( z * otherY );
         float tempy = ( z * otherX ) - ( x * otherZ );
         z = (x * otherY) - (y * otherX);
@@ -387,10 +391,10 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
         return this;
     }
 
- /*   public Vector3f project(Vector3f other){
+ /*   public CustomVector3f project(CustomVector3f other){
         float n = this.dot(other); // A . B
         float d = other.lengthSquared(); // |B|^2
-        return new Vector3f(other).normalizeLocal().multLocal(n/d);
+        return new CustomVector3f(other).normalizeLocal().multLocal(n/d);
     }*/
 
     /**
@@ -431,7 +435,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * @param v the second vector to determine the distance squared.
      * @return the distance squared between the two vectors.
      */
-  /*  public float distanceSquared(Vector3f v) {
+  /*  public float distanceSquared(CustomVector3f v) {
         double dx = x - v.x;
         double dy = y - v.y;
         double dz = z - v.z;
@@ -445,7 +449,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * @param v the second vector to determine the distance.
      * @return the distance between the two vectors.
      */
-  /*  public float distance(Vector3f v) {
+  /*  public float distance(CustomVector3f v) {
         return FastMath.sqrt(distanceSquared(v));
     }*/
 
@@ -458,8 +462,8 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the value to multiply this vector by.
      * @return the new vector.
      */
-   /* public Vector3f mult(float scalar) {
-        return new Vector3f(x * scalar, y * scalar, z * scalar);
+   /* public CustomVector3f mult(float scalar) {
+        return new CustomVector3f(x * scalar, y * scalar, z * scalar);
     }
 
     /**
@@ -471,9 +475,9 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * @param product the product to store the result in.
      * @return product
      */
-  /*  public Vector3f mult(float scalar, Vector3f product) {
+  /*  public CustomVector3f mult(float scalar, CustomVector3f product) {
         if (null == product) {
-            product = new Vector3f();
+            product = new CustomVector3f();
         }
 
         product.x = x * scalar;
@@ -490,7 +494,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the value to multiply this vector by.
      * @return this
      */
-  /*  public Vector3f multLocal(float scalar) {
+  /*  public CustomVector3f multLocal(float scalar) {
         x *= scalar;
         y *= scalar;
         z *= scalar;
@@ -506,7 +510,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to mult to this vector.
      * @return this
      */
-   /* public Vector3f multLocal(Vector3f vec) {
+   /* public CustomVector3f multLocal(CustomVector3f vec) {
         if (null == vec) {
             logger.warning("Provided vector is null, null returned.");
             return null;
@@ -527,7 +531,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * @param z
      * @return this
      */
-    /*public Vector3f multLocal(float x, float y, float z) {
+    /*public CustomVector3f multLocal(float x, float y, float z) {
         this.x *= x;
         this.y *= y;
         this.z *= z;
@@ -543,7 +547,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to mult to this vector.
      * @return this
      */
-   /* public Vector3f mult(Vector3f vec) {
+   /* public CustomVector3f mult(CustomVector3f vec) {
         if (null == vec) {
             logger.warning("Provided vector is null, null returned.");
             return null;
@@ -561,12 +565,12 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * @param store result vector (null to create a new vector)
      * @return this
      */
-   /* public Vector3f mult(Vector3f vec, Vector3f store) {
+   /* public CustomVector3f mult(CustomVector3f vec, CustomVector3f store) {
         if (null == vec) {
             logger.warning("Provided vector is null, null returned.");
             return null;
         }
-        if (store == null) store = new Vector3f();
+        if (store == null) store = new CustomVector3f();
         return store.set(x * vec.x, y * vec.y, z * vec.z);
     }
 
@@ -579,9 +583,9 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the value to divide this vectors attributes by.
      * @return the result <code>Vector</code>.
      */
-   /* public Vector3f divide(float scalar) {
+   /* public CustomVector3f divide(float scalar) {
         scalar = 1f/scalar;
-        return new Vector3f(x * scalar, y * scalar, z * scalar);
+        return new CustomVector3f(x * scalar, y * scalar, z * scalar);
     }
 
     /**
@@ -593,7 +597,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the value to divides this vector by.
      * @return this
      */
-   /* public Vector3f divideLocal(float scalar) {
+   /* public CustomVector3f divideLocal(float scalar) {
         scalar = 1f/scalar;
         x *= scalar;
         y *= scalar;
@@ -610,8 +614,8 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the value to divide this vectors attributes by.
      * @return the result <code>Vector</code>.
      */
-  /*  public Vector3f divide(Vector3f scalar) {
-        return new Vector3f(x / scalar.x, y / scalar.y, z / scalar.z);
+  /*  public CustomVector3f divide(CustomVector3f scalar) {
+        return new CustomVector3f(x / scalar.x, y / scalar.y, z / scalar.z);
     }
 
     /**
@@ -623,7 +627,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the value to divides this vector by.
      * @return this
      */
-  /*  public Vector3f divideLocal(Vector3f scalar) {
+  /*  public CustomVector3f divideLocal(CustomVector3f scalar) {
         x /= scalar.x;
         y /= scalar.y;
         z /= scalar.z;
@@ -637,8 +641,8 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *
      * @return the negated vector.
      */
- /*   public Vector3f negate() {
-        return new Vector3f(-x, -y, -z);
+ /*   public CustomVector3f negate() {
+        return new CustomVector3f(-x, -y, -z);
     }
 
     /**
@@ -647,7 +651,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *
      * @return this.
      */
- /*   public Vector3f negateLocal() {
+ /*   public CustomVector3f negateLocal() {
 /        x = -x;
         y = -y;
         z = -z;
@@ -664,8 +668,8 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to subtract from this vector.
      * @return the result vector.
      */
-  /*  public Vector3f subtract(Vector3f vec) {
-        return new Vector3f(x - vec.x, y - vec.y, z - vec.z);
+  /*  public CustomVector3f subtract(CustomVector3f vec) {
+        return new CustomVector3f(x - vec.x, y - vec.y, z - vec.z);
     }
 
     /**
@@ -677,7 +681,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to subtract
      * @return this
      */
- /*   public Vector3f subtractLocal(Vector3f vec) {
+ /*   public CustomVector3f subtractLocal(CustomVector3f vec) {
         if (null == vec) {
             logger.warning("Provided vector is null, null returned.");
             return null;
@@ -698,9 +702,9 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to store the result in
      * @return result
      */
-  /*  public Vector3f subtract(Vector3f vec, Vector3f result) {
+  /*  public CustomVector3f subtract(CustomVector3f vec, CustomVector3f result) {
         if(result == null) {
-            result = new Vector3f();
+            result = new CustomVector3f();
         }
         result.x = x - vec.x;
         result.y = y - vec.y;
@@ -721,8 +725,8 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the z value to subtract.
      * @return the result vector.
      */
-  /*  public Vector3f subtract(float subtractX, float subtractY, float subtractZ) {
-        return new Vector3f(x - subtractX, y - subtractY, z - subtractZ);
+  /*  public CustomVector3f subtract(float subtractX, float subtractY, float subtractZ) {
+        return new CustomVector3f(x - subtractX, y - subtractY, z - subtractZ);
     }
 
     /**
@@ -738,7 +742,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *            the z value to subtract.
      * @return this
      */
-  /*  public Vector3f subtractLocal(float subtractX, float subtractY, float subtractZ) {
+  /*  public CustomVector3f subtractLocal(float subtractX, float subtractY, float subtractZ) {
         x -= subtractX;
         y -= subtractY;
         z -= subtractZ;
@@ -750,7 +754,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *
      * @return unit vector of this vector.
      */
-  /* public Vector3f normalize() {
+  /* public CustomVector3f normalize() {
 //        float length = length();
 //        if (length != 0) {
 //            return divide(length);
@@ -760,7 +764,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
         float length = x * x + y * y + z * z;
         if (length != 1f && length != 0f){
             length = 1.0f / FastMath.sqrt(length);
-            return new Vector3f(x * length, y * length, z * length);
+            return new CustomVector3f(x * length, y * length, z * length);
         }
         return clone();
     }*/
@@ -771,7 +775,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      *
      * @return this.
      */
-  /*  public Vector3f normalizeLocal() {
+  /*  public CustomVector3f normalizeLocal() {
         // NOTE: this implementation is more optimized
         // than the old jme normalize as this method
         // is commonly used.
@@ -791,7 +795,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * in this vector.
      * @param other 
      */
- /*   public void maxLocal(Vector3f other){
+ /*   public void maxLocal(CustomVector3f other){
         x = other.x > x ? other.x : x;
         y = other.y > y ? other.y : y;
         z = other.z > z ? other.z : z;
@@ -803,7 +807,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * in this vector.
      * @param other
      */
-  /*  public void minLocal(Vector3f other){
+  /*  public void minLocal(CustomVector3f other){
         x = other.x < x ? other.x : x;
         y = other.y < y ? other.y : y;
         z = other.z < z ? other.z : z;
@@ -812,7 +816,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
     /**
      * <code>zero</code> resets this vector's data to zero internally.
      */
-   /* public Vector3f zero() {
+   /* public CustomVector3f zero() {
         x = y = z = 0;
         return this;
     }
@@ -824,7 +828,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * @param otherVector a unit vector to find the angle against
      * @return the angle in radians.
      */
-   // public float angleBetween(Vector3f otherVector) {
+   // public float angleBetween(CustomVector3f otherVector) {
     //    float dotProduct = dot(otherVector);
        // float angle = FastMath.acos(dotProduct);
    // }
@@ -836,7 +840,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * @param changeAmnt An amount between 0.0 - 1.0 representing a precentage
      *  change from this towards finalVec
      */
-  /*  public Vector3f interpolate(Vector3f finalVec, float changeAmnt) {
+  /*  public CustomVector3f interpolate(CustomVector3f finalVec, float changeAmnt) {
         this.x=(1-changeAmnt)*this.x + changeAmnt*finalVec.x;
         this.y=(1-changeAmnt)*this.y + changeAmnt*finalVec.y;
         this.z=(1-changeAmnt)*this.z + changeAmnt*finalVec.z;
@@ -851,7 +855,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * @param changeAmnt An amount between 0.0 - 1.0 representing a precentage
      *  change from beginVec towards finalVec
      */
-  /*  public Vector3f interpolate(Vector3f beginVec,Vector3f finalVec, float changeAmnt) {
+  /*  public CustomVector3f interpolate(CustomVector3f beginVec,CustomVector3f finalVec, float changeAmnt) {
         this.x=(1-changeAmnt)*beginVec.x + changeAmnt*finalVec.x;
         this.y=(1-changeAmnt)*beginVec.y + changeAmnt*finalVec.y;
         this.z=(1-changeAmnt)*beginVec.z + changeAmnt*finalVec.z;
@@ -864,7 +868,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * @param vector the vector to check
      * @return true or false as stated above.
      */
-   /* public static boolean isValidVector(Vector3f vector) {
+   /* public static boolean isValidVector(CustomVector3f vector) {
       if (vector == null) return false;
       if (Float.isNaN(vector.x) ||
           Float.isNaN(vector.y) ||
@@ -875,13 +879,13 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
       return true;
     }
 
-  /*  public static void generateOrthonormalBasis(Vector3f u, Vector3f v, Vector3f w) {
+  /*  public static void generateOrthonormalBasis(CustomVector3f u, CustomVector3f v, CustomVector3f w) {
         w.normalizeLocal();
         generateComplementBasis(u, v, w);
     }
 
-    public static void generateComplementBasis(Vector3f u, Vector3f v,
-            Vector3f w) {
+    public static void generateComplementBasis(CustomVector3f u, CustomVector3f v,
+            CustomVector3f w) {
         float fInvLength;
 
         if (FastMath.abs(w.x) >= FastMath.abs(w.y)) {
@@ -906,19 +910,19 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
     }
 
     @Override
-    public Vector3f clone() {
+    public CustomVector3f clone() {
         try {
-            return (Vector3f) super.clone();
+            return (CustomVector3f) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new AssertionError(); // can not happen
         }
     }
 
     /**
-     * Saves this Vector3f into the given float[] object.
+     * Saves this CustomVector3f into the given float[] object.
      * 
      * @param floats
-     *            The float[] to take this Vector3f. If null, a new float[3] is
+     *            The float[] to take this CustomVector3f. If null, a new float[3] is
      *            created.
      * @return The array, with X, Y, Z float values in that order
      */
@@ -941,11 +945,11 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * @return true if they are equal
      */
   /*  public boolean equals(Object o) {
-        if (!(o instanceof Vector3f)) { return false; }
+        if (!(o instanceof CustomVector3f)) { return false; }
 
         if (this == o) { return true; }
 
-        Vector3f comp = (Vector3f) o;
+        CustomVector3f comp = (CustomVector3f) o;
         if (Float.compare(x,comp.x) != 0) return false;
         if (Float.compare(y,comp.y) != 0) return false;
         if (Float.compare(z,comp.z) != 0) return false;
@@ -970,7 +974,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
      * <code>toString</code> returns the string representation of this vector.
      * The format is:
      *
-     * org.jme.math.Vector3f [X=XX.XXXX, Y=YY.YYYY, Z=ZZ.ZZZZ]
+     * org.jme.math.CustomVector3f [X=XX.XXXX, Y=YY.YYYY, Z=ZZ.ZZZZ]
      *
      * @return the string representation of this vector.
      */
@@ -996,7 +1000,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
         return x;
     }
 
-    public Vector3f setX(float x) {
+    public CustomVector3f setX(float x) {
         this.x = x;
         return this;
     }
@@ -1005,7 +1009,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
         return y;
     }
 
-    public Vector3f setY(float y) {
+    public CustomVector3f setY(float y) {
         this.y = y;
         return this;
     }
@@ -1014,7 +1018,7 @@ public final class Vector3f implements  Cloneable, java.io.Serializable {
         return z;
     }
 
-    public Vector3f setZ(float z) {
+    public CustomVector3f setZ(float z) {
         this.z = z;
         return this;
     }

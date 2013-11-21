@@ -103,5 +103,6 @@ public class Main extends SimpleApplication {
     }
 
     void messageRecieved(Message decodedMessage) {
+        
     }
 }

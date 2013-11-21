@@ -65,8 +65,7 @@ public class ServerListener {
         } catch (IOException ex) {
             Logger.getLogger(ServerListener.class.getName()).log(Level.SEVERE, null, ex);
         }
-           
-        sendMessage(new Message(Commands.READY, null));
+         
          
         while (true) {
             String s;
@@ -76,6 +75,7 @@ public class ServerListener {
                     if (!s.isEmpty()) {
                         System.out.println("message from ip:" + client.getRemoteSocketAddress());
                         System.out.println(s);
+                        main.messageRecieved(Message.decodeMessage(s));
                     }
                 }
             } catch (IOException ex) {

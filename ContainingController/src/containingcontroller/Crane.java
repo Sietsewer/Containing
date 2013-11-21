@@ -16,7 +16,7 @@ public abstract class Crane{
     /**
      * Crane Position
      */
-    public Vector3f position;
+    public CustomVector3f position;
 
     /**
      *
@@ -28,4 +28,6 @@ public abstract class Crane{
      * @param cont
      */
     public abstract void getContainer(Container cont);
+    
+    PathNode pathNode;
 }

@@ -4,11 +4,16 @@
  */
 package mygame;
 
+import java.sql.Date;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+
 /**
  *
  * @author Hendrik
  */
-public class Vector3f implements  Cloneable, java.io.Serializable {
+@XmlRootElement(name = "custom_vector")
+public class CustomVector3f implements  Cloneable, java.io.Serializable {
 
  /*   static final long serialVersionUID = 1;
     
@@ -50,7 +55,7 @@ public class Vector3f implements  Cloneable, java.io.Serializable {
      * values of (0,0,0).
      *
      */
-    public Vector3f() {
+    public CustomVector3f() {
         x = y = z = 0;
     }
 
@@ -65,7 +70,7 @@ public class Vector3f implements  Cloneable, java.io.Serializable {
      * @param z
      *            the z value of the vector.
      */
-    public Vector3f(float x, float y, float z) {
+    public CustomVector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -76,7 +81,7 @@ public class Vector3f implements  Cloneable, java.io.Serializable {
      * of the provided vector
      * @param copy The Vector3f to copy
      */
-    public Vector3f(Vector3f copy) {
+    public CustomVector3f(CustomVector3f copy) {
         this.set(copy);
     }
 
@@ -92,7 +97,7 @@ public class Vector3f implements  Cloneable, java.io.Serializable {
      *            the z value of the vector.
      * @return this vector
      */
-    public Vector3f set(float x, float y, float z) {
+    public CustomVector3f set(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -107,7 +112,7 @@ public class Vector3f implements  Cloneable, java.io.Serializable {
      *            the vector to copy.
      * @return this vector
      */
-    public Vector3f set(Vector3f vect) {
+    public CustomVector3f set(CustomVector3f vect) {
         this.x = vect.x;
         this.y = vect.y;
         this.z = vect.z;

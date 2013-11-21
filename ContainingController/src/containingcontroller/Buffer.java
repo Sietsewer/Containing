@@ -31,11 +31,11 @@ public class Buffer {
     /**
      * Hashmap for reserved spaces
      */
-    public HashMap<String,Vector3f> reservedSpace;
+    public HashMap<String,CustomVector3f> reservedSpace;
     /**
      * Position of buffer
      */
-    public Vector3f position;
+    public CustomVector3f position;
 
     /**
      * Constructor
@@ -44,7 +44,7 @@ public class Buffer {
      * @param ownedAGV
      * @param cranes
      */
-    public Buffer(Vector3f position, ArrayList<Container> containers, ArrayList<AGV> ownedAGV, ArrayList<Crane> cranes) {
+    public Buffer(CustomVector3f position, ArrayList<Container> containers, ArrayList<AGV> ownedAGV, ArrayList<Crane> cranes) {
         this.containers = new ArrayList<>(containers);
         this.ownedAGV = new ArrayList<>(ownedAGV);
         this.cranes = new ArrayList<>(cranes);
@@ -65,7 +65,7 @@ public class Buffer {
      * @param container
      * @return Vector
      */
-    public Vector3f findBestBufferPlace(Container container) {
+    public CustomVector3f findBestBufferPlace(Container container) {
         return null;
     }
     

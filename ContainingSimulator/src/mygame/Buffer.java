@@ -16,7 +16,10 @@ public class Buffer extends Node{
     Container[][][] bufferArray;     //spatial array off SimContainers
     Node bufferNode;                    //node to attach all containers to
     
-    //constructor, initializes full buffer
+    /**
+     * Constructor, initializes full buffer for stress testing
+     * @param bufferSize size of this buffer
+     */
     public Buffer(Vector3f bufferSize){
         this.bufferSize = bufferSize;
         
@@ -41,15 +44,19 @@ public class Buffer extends Node{
         this.attachChild(bufferNode);
     }
     
-    //constructor, initializes empty buffer
+    /**
+     * Empty constructor, initalizes empty buffer
+     */
     public Buffer(){
         this.bufferSize = new Vector3f(6, 6, 26);
         bufferArray = new Container[(int)bufferSize.x][(int)bufferSize.y][(int)bufferSize.z];
-        
         bufferNode = new Node();
+        this.attachChild(bufferNode);
     }
     
-    //set which geometries have to be drawn and which not
+    /**
+     * Set which geometries have to be drawn and which not
+     */
     private void setRendering(){
         //cull walled-in containers
         for (int i = 0; i < bufferSize.x; i++){
@@ -63,7 +70,11 @@ public class Buffer extends Node{
         }
     }
     
-    //fetch container from buffer
+    /**
+     * Fetch a container from the buffer
+     * @param index buffer of container to fetch
+     * @return 
+     */
     public Container removeContainer(Vector3f index){
         Container sc1 = bufferArray[(int)index.x][(int)index.y][(int)index.z];
         Container sc2 = (Container)sc1.clone();
@@ -73,7 +84,11 @@ public class Buffer extends Node{
         return sc2;
     }
     
-    //add container to buffer
+    /**
+     * Add a container to the buffer
+     * @param index index where you want to add the container
+     * @param sc1 the container you want to add to the buffer
+     */
     public void addContainer(Vector3f index, Container sc1){
         Container sc2 = (Container)sc1.clone();
         bufferArray[(int)index.x][(int)index.y][(int)index.z] = sc2;

@@ -27,7 +27,12 @@ public class Container extends Node{
     Vector3f indexPosition;     //position in transport/buffer
     Vector3f size;              //size in m
     
-    //Constructor
+    /**
+     * Constructor
+     * @param id container ID
+     * @param realPosition actual position inside simulation
+     * @param size size of this container
+     */
     public Container(String id, Vector3f realPosition, Vector3f size){
         //set properties
         this.id = id;
@@ -37,12 +42,17 @@ public class Container extends Node{
         setGeometry();
     }
     
-    //change indexPosition when moving container to buffer ir back
+    /**
+     * Change indexPosition when moving container to buffer or back
+     * @param indexPosition position to set this container's index to
+     */
     public void setIndexPosition(Vector3f indexPosition){
         this.indexPosition = indexPosition;
     }
     
-    //assign color, geometry, etc. to this object
+    /**
+     * assign color, geometry, etc. to this object
+     */
     private void setGeometry(){
         this.setCullHint(Spatial.CullHint.Always);
         this.setLocalTranslation(realPosition);
@@ -53,7 +63,11 @@ public class Container extends Node{
         this.attachChild(geom.clone());
     }
     
-    //count adjacent neighbors in buffer
+    /**
+     * Count adjacent neighbours in buffer
+     * @param buffer the array in which to check for neighbours
+     * @return 
+     */
     private int getNeighbours(Container[][][] buffer){
         int neighbours = 0;
         if(indexPosition.x + 1 < buffer.length && buffer[(int)indexPosition.x + 1][(int)indexPosition.y][(int)indexPosition.z] != null){
@@ -77,7 +91,10 @@ public class Container extends Node{
         return neighbours;
     }
     
-    //cull container if it has 6 neighbors
+    /**
+     * Cull containers with 6 neighbours for optimization
+     * @param buffer buffer array in which to search for neighbours
+     */
     public void updateRendering(Container[][][] buffer){
         if(getNeighbours(buffer) < 6){
             this.setCullHint(Spatial.CullHint.Dynamic);
@@ -87,8 +104,11 @@ public class Container extends Node{
         }
     }
     
-    //prepare geometry object
-    //IMPORTANT: call this before instantiating a Container object!
+    /**
+     * Prepare Geometry object
+     * IMPORTANT: call this before instantiating a Container object!
+     * @param am the AssetManager to load materials from
+     */
     public static void makeGeometry(AssetManager am){
         b = new Box(Vector3f.ZERO, 2.44f, 2.44f, 13.41f);
         geom = new Geometry("Box", b);

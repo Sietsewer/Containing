@@ -23,7 +23,7 @@ public class Buffer extends Node{
     public Buffer(Vector3f bufferSize){
         this.bufferSize = bufferSize;
         
-        Vector3f csize = new Vector3f(2.44f, 2.44f, 13.41f);
+        Vector3f csize = new Vector3f(2.44f/2, 2.44f/2, 13.41f/2); //divided by 2 because box size grows both ways
         bufferArray = new Container[(int)bufferSize.x][(int)bufferSize.y][(int)bufferSize.z];
         
         bufferNode = new Node();

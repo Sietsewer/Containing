@@ -110,7 +110,7 @@ public class Container extends Node{
      * @param am the AssetManager to load materials from
      */
     public static void makeGeometry(AssetManager am){
-        b = new Box(Vector3f.ZERO, 2.44f, 2.44f, 13.41f);
+        b = new Box(Vector3f.ZERO, 2.44f/2, 2.44f/2, 13.41f/2); //divided by 2 because box size grows both ways
         geom = new Geometry("Box", b);
         
         //assign random color on instantiaton to differentiate between containers

@@ -26,6 +26,7 @@ public class XMLParser {
 
     /**
      * Parse inputstream from xml file to list of containers
+     *
      * @param File inputstream from xmlfile
      * @return list of read containers
      */
@@ -75,12 +76,18 @@ public class XMLParser {
                                 c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(tagContent));
                                 break;
                             case "m":
-                                c.set(Calendar.MONTH, Integer.parseInt(tagContent));
+                                c.set(Calendar.MONTH, Integer.parseInt(tagContent)-1);
                                 break;
                             case "j":
-                                c.set(Calendar.YEAR, Integer.parseInt(tagContent));
+                                c.set(Calendar.YEAR, Integer.parseInt(tagContent) + 2000);
                                 break;
-                            case "datum":
+                            case "van":
+                                String[] time = tagContent.split("\\.");
+                                c.set(Calendar.HOUR, Integer.parseInt(time[0]));
+                                c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
+                                c.set(Calendar.SECOND, 0);
+                                break;
+                            case "tijd":
                                 if (sk.peek().equalsIgnoreCase("aankomst")) {
                                     currentContainer.setDateArrival(c.getTime());//wat te doen met tijd
                                 } else {
@@ -141,9 +148,10 @@ public class XMLParser {
                                 currentContainer.setWeightEmpty(Integer.parseInt(tagContent));
                                 break;
                             case "inhoud":
-                                if(sk.peek().equalsIgnoreCase("aankomst"))
-                                if (!tagContent.isEmpty()) {
-                                    currentContainer.setWeightLoaded(Integer.parseInt(tagContent));
+                                if (sk.peek().equalsIgnoreCase("aankomst")) {
+                                    if (!tagContent.isEmpty()) {
+                                        currentContainer.setWeightLoaded(Integer.parseInt(tagContent));
+                                    }
                                 }
                                 break;
                             case "soort":

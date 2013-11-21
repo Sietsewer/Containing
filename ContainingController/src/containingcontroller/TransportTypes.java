@@ -52,4 +52,25 @@ public class TransportTypes {
        return 0;
   
    }
+    public static String getTransportType(int type)
+   {
+       if(type == TROLLEY)
+       {
+           return "vrachtauto";
+       }
+       else if(type== TRAIN)
+       {
+           return "trein";
+       }
+        else if(type ==SEASHIP)
+       {
+           return "zeeschip";
+       }
+        else if(type == BARGE)
+       {
+           return "binnenschip";
+       }
+       return "";
+  
+   }
 }

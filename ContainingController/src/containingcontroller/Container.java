@@ -5,6 +5,8 @@
 package containingcontroller;
 
 import java.awt.Dimension;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
@@ -422,7 +424,8 @@ public class Container {
 
     @Override
     public String toString() {
-        return "Container{" + "id=" + id + ", dateArrival=" + dateArrival + ", dateDeparture=" + dateDeparture + ", transportTypeArrival=" + transportTypeArrival + ", transportTypeDeparture=" + transportTypeDeparture + ", cargoCompanyArrival=" + cargoCompanyArrival + ", cargoCompanyDeparture=" + cargoCompanyDeparture + ", position=" + position + ", bufferPosition=" + bufferPosition + ", owner=" + owner + ", containerNumber=" + containerNumber + ", height=" + height + ", width=" + width + ", lenght=" + lenght + ", weightEmpty=" + weightEmpty + ", weightLoaded=" + weightLoaded + ", contents=" + contents + ", contentType=" + contentType + ", contentDanger=" + contentDanger + ", iso=" + iso + '}';
+           SimpleDateFormat timeFormat= new SimpleDateFormat(" dd-MM-yyyy HH:mm:ss");
+        return "Container{" + "id=" + id + ", dateArrival=" +timeFormat.format(dateArrival) + ", dateDeparture=" + dateDeparture + ", transportTypeArrival=" + transportTypeArrival + ", transportTypeDeparture=" + transportTypeDeparture + ", cargoCompanyArrival=" + cargoCompanyArrival + ", cargoCompanyDeparture=" + cargoCompanyDeparture + ", position=" + position + ", bufferPosition=" + bufferPosition + ", owner=" + owner + ", containerNumber=" + containerNumber + ", height=" + height + ", width=" + width + ", lenght=" + lenght + ", weightEmpty=" + weightEmpty + ", weightLoaded=" + weightLoaded + ", contents=" + contents + ", contentType=" + contentType + ", contentDanger=" + contentDanger + ", iso=" + iso + '}';
     }
     
 }

@@ -82,6 +82,28 @@ public class Server {
          }
       }
     }
+    /**
+     * Set simulator to create tranporter
+     */
+    public void createTransporter(){
+        
+        Message message = new Message();
+        message.setCommand(Commands.CREATE_TRANSPORTER);
+        message.setParameters(null);
+        sendCommand(message);
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -90,7 +112,7 @@ public class Server {
      * @param mes
      * @return
      */
-    public boolean SendCommand(Message mes) {
+    public boolean sendCommand(Message mes) {
                          ServerClient c = null;
         try {
             String xml = Message.encodeMessage(mes);

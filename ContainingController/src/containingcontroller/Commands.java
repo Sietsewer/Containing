@@ -13,7 +13,7 @@ public class Commands {
        /**
      *Device is ready
      */
-    static public int READY = 0;
+    final static public int READY = 0;
     /**
      *Container must be moved by AVG
      */
@@ -26,4 +26,12 @@ public class Commands {
      *Crane needds to put CONTAINER down
      */
     static public int PUT_CONTAINER = 3;
+    /**
+     * Create transporter with containers
+     */
+    static public int CREATE_TRANSPORTER = 4;
+    /**
+     * Remove transporter
+     */
+    static public int REMOVE_TRANSPORTER = 5;
 }

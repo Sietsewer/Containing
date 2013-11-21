@@ -4,10 +4,10 @@
 *.jar
 *.war
 *.ear
-/Containing/nbproject/private/
+/ContainingSimulator/nbproject/private/
 /ContainingController/nbproject/private/
 /ContainingController/build/
 /ContainingController/dist/
-/Containing/build/
+/ContainingSimulator/build/
 *.dylib
 *.jnilib

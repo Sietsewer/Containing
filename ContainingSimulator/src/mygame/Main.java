@@ -76,6 +76,8 @@ public class Main extends SimpleApplication {
         rootNode.attachChild(sky_geo);
         Spatial dock = assetManager.loadModel("Models/dockBase/dockBase.j3o");
         
+        Container.makeGeometry(assetManager);
+        
         Quad waterQuad = new Quad(1550f,600f);
         Geometry waterGeo = new Geometry("Quad", waterQuad);
         waterGeo.rotate(-(float)Math.PI/2,0f,0f);

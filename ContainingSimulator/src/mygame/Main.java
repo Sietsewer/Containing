@@ -91,7 +91,7 @@ public class Main extends SimpleApplication {
             buffers[i] = new Buffer();
             rootNode.attachChild(buffers[i]);
             //some magic number abuse here, snap buffers to proper location on map:
-            buffers[i].setLocalTranslation(111.76f + (i * 22.035f), 11, -485);
+            buffers[i].setLocalTranslation(111.76f + (i * 22.035f), 11, 115);
         }
 
         //Init of the small blue plane, representing water.

@@ -19,8 +19,9 @@ public class SimContainer {
     private  String id;
     private mygame.CustomVector3f indexPosition;
 
-    public SimContainer() {
-        
+    public SimContainer(String id, CustomVector3f indexPosition) {
+        this.id = id;
+        this.indexPosition = indexPosition;
     }
 
     public String getId() {

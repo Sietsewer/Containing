@@ -150,4 +150,10 @@ public class Container extends Node{
         
         geom.setMaterial(mat);
     }
+
+    @Override
+    public String toString() {
+        return "Container{" + "id=" + id + ", realPosition=" + realPosition + ", indexPosition=" + indexPosition + ", size=" + size + '}';
+    }
+    
 }

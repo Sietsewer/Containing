@@ -43,7 +43,7 @@ public class Main extends SimpleApplication {
      */
     @Override
     public void simpleInitApp() {
-        
+
         loadAssets();
         flyCam.setMoveSpeed(100f);
 
@@ -66,8 +66,8 @@ public class Main extends SimpleApplication {
     public void simpleRender(RenderManager rm) {
         //TODO: add render code
     }
-    
-    void loadAssets(){
+
+    void loadAssets() {
         //Init of the AGV viewmodel.
         agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
         Material avgMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -84,12 +84,15 @@ public class Main extends SimpleApplication {
         sky_geo.scale(1000f);
         rootNode.attachChild(sky_geo);
 
-	//Init Container
-	Container.makeGeometry(assetManager);
-        
+        //Init Container
+        Container.makeGeometry(assetManager);
+
+        //Init Transporters
+        Transporter.makeGeometry(assetManager);
+
         //Init empty buffers
         buffers = new Buffer[63];
-        for(int i = 0; i < buffers.length; i++){
+        for (int i = 0; i < buffers.length; i++) {
             buffers[i] = new Buffer();
             rootNode.attachChild(buffers[i]);
             //some magic number abuse here, snap buffers to proper location on map:
@@ -126,6 +129,5 @@ public class Main extends SimpleApplication {
     }
 
     void messageRecieved(Message decodedMessage) {
-        
     }
 }

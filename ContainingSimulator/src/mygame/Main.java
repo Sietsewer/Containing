@@ -24,8 +24,6 @@ public class Main extends SimpleApplication {
     ServerListener listener;
     Spatial sky_geo;
     Spatial agvModel;
-    ArrayList<Waypoint> testPath;
-    AGV testAGV;
     Buffer[] buffers;
 
     /**
@@ -48,14 +46,6 @@ public class Main extends SimpleApplication {
         
         loadAssets();
         flyCam.setMoveSpeed(100f);
-        testPath = new ArrayList();
-        testPath.add(new Waypoint(new Vector3f(0f,10f,0f),.1f));
-        testPath.add(new Waypoint(new Vector3f(0f,10f,0f),.1f));
-        testPath.add(new Waypoint(new Vector3f(60f,10f,60f),.2f));
-        testPath.add(new Waypoint(new Vector3f(60f,10f,600f),.3f));
-        testAGV = new AGV("test",agvModel);
-        testAGV.addWaypoints(testPath);
-        rootNode.attachChild(testAGV);
 
     }
 

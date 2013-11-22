@@ -25,6 +25,7 @@ public class Main extends SimpleApplication {
     ServerListener listener;
     Spatial sky_geo;
     Spatial agvModel;
+    Buffer[] buffers;
 
     /**
      *
@@ -83,6 +84,15 @@ public class Main extends SimpleApplication {
 
 	//Init Container
 	Container.makeGeometry(assetManager);
+        
+        //Init empty buffers
+        buffers = new Buffer[63];
+        for(int i = 0; i < buffers.length; i++){
+            buffers[i] = new Buffer();
+            rootNode.attachChild(buffers[i]);
+            //some magic number abuse here, snap buffers to proper location on map:
+            buffers[i].setLocalTranslation(111.76f + (i * 22.035f), 11, -485);
+        }
 
         //Init of the small blue plane, representing water.
         Quad waterQuad = new Quad(1550f, 600f);

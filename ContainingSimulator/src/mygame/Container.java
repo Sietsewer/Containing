@@ -73,7 +73,7 @@ public class Container extends Node{
      * assign color, geometry, etc. to this object
      */
     private void setGeometry(){
-        this.setCullHint(Spatial.CullHint.Always);
+        this.setCullHint(Spatial.CullHint.Dynamic);
         this.setLocalTranslation(realPosition);
         //attach geometry to this object
         mat.setColor("Color", colors[r.nextInt(colors.length)]);

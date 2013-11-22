@@ -15,7 +15,6 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  *
  * @author Wessel
  */
-
 public class Container {
     //Properties
 
@@ -53,10 +52,10 @@ public class Container {
      * @param position
      * @param owner
      * @param containerNumber
-     * @param height 
-     * @param width 
+     * @param height
+     * @param width
      * @param weightEmpty
-     * @param lenght 
+     * @param lenght
      * @param weightLoaded
      * @param contents
      * @param contentType
@@ -71,7 +70,7 @@ public class Container {
             String width,
             String lenght, int weightEmpty, int weightLoaded,
             String contents, String contentType, String contentDanger,
-            String iso ) {
+            String iso) {
         this.id = id;
         this.dateArrival = dateArrival;
         this.dateDeparture = dateDeparture;
@@ -94,11 +93,11 @@ public class Container {
         this.width = width;
         this.lenght = lenght;
     }
+
     /**
      *
      */
-    public Container()
-    {
+    public Container() {
     }
 
     /**
@@ -423,8 +422,7 @@ public class Container {
 
     @Override
     public String toString() {
-           SimpleDateFormat timeFormat= new SimpleDateFormat(" dd-MM-yyyy HH:mm:ss");
-        return "Container{" + "id=" + id + ", dateArrival=" +timeFormat.format(dateArrival) + ", dateDeparture=" + dateDeparture + ", transportTypeArrival=" + transportTypeArrival + ", transportTypeDeparture=" + transportTypeDeparture + ", cargoCompanyArrival=" + cargoCompanyArrival + ", cargoCompanyDeparture=" + cargoCompanyDeparture + ", position=" + position + ", bufferPosition=" + bufferPosition + ", owner=" + owner + ", containerNumber=" + containerNumber + ", height=" + height + ", width=" + width + ", lenght=" + lenght + ", weightEmpty=" + weightEmpty + ", weightLoaded=" + weightLoaded + ", contents=" + contents + ", contentType=" + contentType + ", contentDanger=" + contentDanger + ", iso=" + iso + '}';
+        SimpleDateFormat timeFormat = new SimpleDateFormat(" dd-MM-yyyy HH:mm:ss");
+        return "Container{" + "id=" + id + ", dateArrival=" + timeFormat.format(dateArrival) + ", dateDeparture=" + dateDeparture + ", transportTypeArrival=" + transportTypeArrival + ", transportTypeDeparture=" + transportTypeDeparture + ", cargoCompanyArrival=" + cargoCompanyArrival + ", cargoCompanyDeparture=" + cargoCompanyDeparture + ", position=" + position + ", bufferPosition=" + bufferPosition + ", owner=" + owner + ", containerNumber=" + containerNumber + ", height=" + height + ", width=" + width + ", lenght=" + lenght + ", weightEmpty=" + weightEmpty + ", weightLoaded=" + weightLoaded + ", contents=" + contents + ", contentType=" + contentType + ", contentDanger=" + contentDanger + ", iso=" + iso + '}';
     }
-    
 }

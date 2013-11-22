@@ -24,10 +24,10 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * @author Hendrik
  */
 @XmlRootElement(name = "message")
-@XmlSeeAlso({CustomVector3f.class, Date.class,SimContainer.class })
+@XmlSeeAlso({CustomVector3f.class, Date.class, SimContainer.class})
 public class Message {
 
-      private int command;//Command number
+    private int command;//Command number
     private Object[] parameters;//Parameters for command
 
     /**
@@ -38,6 +38,7 @@ public class Message {
 
     /**
      * Filled message
+     *
      * @param command
      * @param parameters
      */
@@ -81,31 +82,33 @@ public class Message {
     public void setParameters(Object[] parameters) {
         this.parameters = parameters;
     }
-    
+
     /**
      * Get message object from xml string
+     *
      * @param XML
      * @return
      */
-    static  public Message decodeMessage(String XML)
-    {
-                try {
-           JAXBContext context = JAXBContext.newInstance(Message.class);
-           Unmarshaller um = context.createUnmarshaller();
-           Message message = (Message) um.unmarshal(new StringReader(XML));
-           return message;
-       } catch (JAXBException ex) {           
-           Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);           return null;
-       }
+    static public Message decodeMessage(String XML) {
+        try {
+            JAXBContext context = JAXBContext.newInstance(Message.class);
+            Unmarshaller um = context.createUnmarshaller();
+            Message message = (Message) um.unmarshal(new StringReader(XML));
+            return message;
+        } catch (JAXBException ex) {
+            Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
 
     }
+
     /**
      * encode message from object to xml
+     *
      * @param message
      * @return
      */
-    static   public String encodeMessage(Message message)
-    {
+    static public String encodeMessage(Message message) {
         try {
             JAXBContext context = JAXBContext.newInstance(Message.class);
             Marshaller m = context.createMarshaller();
@@ -114,8 +117,8 @@ public class Message {
             StringWriter xmlString = new StringWriter();
             m.marshal(message, xmlString);
             xml = xmlString.toString();
-           xml= xml.replace("\n", "");
-            
+            xml = xml.replace("\n", "");
+
             return xml;
         } catch (PropertyException ex) {
             Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);

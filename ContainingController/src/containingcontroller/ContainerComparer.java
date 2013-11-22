@@ -11,6 +11,7 @@ import java.util.Comparator;
  * @author Hendrik
  */
 public class ContainerComparer implements Comparator<Container> {
+
     @Override
     public int compare(Container o1, Container o2) {
         return o1.getDateArrival().compareTo(o2.getDateArrival());

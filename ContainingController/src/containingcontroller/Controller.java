@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
  */
 public class Controller {
 
+    PathFinder pathFinder;
     private Server server;//Server for communication between applications
     private ControllerWindow window;//Mainwindow to print log
     List<Container> allContainers;// this list holds all containers
@@ -31,13 +33,27 @@ public class Controller {
     Date simTime;
     SimpleDateFormat timeFormat;
     List<Transporter> currentTransporter;
+    List<Buffer> buffers;
+    List<AGV> agvs;
+    HashMap<AGV, Crane> waitingToBeReady;
 
     /**
      *
      * @param window mainwindow needed to write to textarea
      */
     public Controller(ControllerWindow window) {
+
         this.window = window;
+
+        buffers = new ArrayList<>();
+        agvs = new ArrayList<>();
+        timeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        currentTransporter = new ArrayList<>();
+        waitingToBeReady = new HashMap<>();
+        pathFinder = new PathFinder();
+        pathFinder.createMap();
+
+        //Set time of simulator
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2004);
         cal.set(Calendar.MONTH, Calendar.DECEMBER);
@@ -47,8 +63,40 @@ public class Controller {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         simTime = cal.getTime();
-        timeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        currentTransporter =new ArrayList<>();
+        
+        //Create buffers and agv's
+        for (int i = 1; i <= 63; i++) {
+            Buffer b = new Buffer();
+            Crane c = new Crane("CBF" + String.format("%03d", i));
+            b.crane = c;
+            PathNode upperNode = pathFinder.getMapBA().get(i - 1);
+            PathNode downNode = pathFinder.getMapBB().get(i - 1);
+            b.pathNodeUp = upperNode;
+            b.pathNodeDown = downNode;
+            for (int a = 0; a < 4; a++) {
+                if (a < 2) {
+                    AGV agv = new AGV(upperNode, b);
+                    b.ownedAGV.add(agv);
+                    agvs.add(agv);
+                    PrintMessage("AGV Created - " + agv.toString());
+                } else {
+                    AGV agv = new AGV(downNode, b);
+                    b.ownedAGV.add(agv);
+                    agvs.add(agv);
+                    PrintMessage("AGV Created - " + agv.toString());
+                }
+            }
+            PrintMessage("Buffer Created - " + b.toString());
+            buffers.add(b);
+
+
+
+
+
+
+        }
+        PrintMessage("Total AGV - " + agvs.size());
+        PrintMessage("Total Buffers - " + buffers.size());
     }
 
     /**
@@ -114,15 +162,14 @@ public class Controller {
                 for (Transporter t : transporters) {
                     currentTransporter.add(t);
                     PrintMessage("Arriving: " + t.toString());
-                    Message m = new Message(Commands.CREATE_TRANSPORTER,null);
-                    Object[] objects= new Object[t.getContainerCount()+2];
+                    Message m = new Message(Commands.CREATE_TRANSPORTER, null);
+                    Object[] objects = new Object[t.getContainerCount() + 2];
                     objects[0] = t.getTransportType();
                     objects[1] = t.id;
-                   for(int i=0;i<t.getContainerCount(); i++)
-                   {
-                       objects[i+2] = new SimContainer(t.getContainer(i));
-                   }
-                   m.setParameters(objects);
+                    for (int i = 0; i < t.getContainerCount(); i++) {
+                        objects[i + 2] = new SimContainer(t.getContainer(i));
+                    }
+                    m.setParameters(objects);
                     server.sendCommand(m);
                 }
             }
@@ -146,7 +193,7 @@ public class Controller {
     }
 
     /**
-     *start server for communication
+     * start server for communication
      */
     public void startServer() {
         try {
@@ -173,6 +220,7 @@ public class Controller {
 
     /**
      * create tranporter
+     *
      * @param containers
      * @param transportType
      */
@@ -217,6 +265,7 @@ public class Controller {
         for (Container c : containers) {
             this.PrintMessage("Loaded - " + c.toString());
         }
+        this.PrintMessage("Total containers - " + containers.size());
 
     }
 }

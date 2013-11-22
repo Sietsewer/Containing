@@ -76,7 +76,7 @@ public class XMLParser {
                                 c.set(Calendar.DAY_OF_MONTH, Integer.parseInt(tagContent));
                                 break;
                             case "m":
-                                c.set(Calendar.MONTH, Integer.parseInt(tagContent)-1);
+                                c.set(Calendar.MONTH, Integer.parseInt(tagContent) - 1);
                                 break;
                             case "j":
                                 c.set(Calendar.YEAR, Integer.parseInt(tagContent) + 2000);

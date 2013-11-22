@@ -15,17 +15,19 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 @XmlRootElement(name = "simcontainer")
 @XmlSeeAlso({CustomVector3f.class, Date.class})
 public class SimContainer {
+
     private String id;
     private CustomVector3f indexPosition;
+
     /**
      *
      */
     public SimContainer() {
-        
     }
+
     SimContainer(Container c) {
-       this.id= c.getId();
-       this.indexPosition = c.getPosition();
+        this.id = c.getId();
+        this.indexPosition = c.getPosition();
     }
 
     /**
@@ -59,5 +61,4 @@ public class SimContainer {
     public void setIndexPosition(CustomVector3f indexPosition) {
         this.indexPosition = indexPosition;
     }
-    
 }

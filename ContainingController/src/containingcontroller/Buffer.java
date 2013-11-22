@@ -15,6 +15,10 @@ import java.util.HashMap;
 public class Buffer {
 
     /**
+     * ID of buffer incremental
+     */
+    public static int ID = 1;
+    /**
      * Id of buffer
      */
     public String id;
@@ -46,11 +50,11 @@ public class Buffer {
     /**
      * Constructor
      *
-     * @param containers
-     * @param crane 
+     * @param crane
      * @param ownedAGV
      */
     public Buffer(ArrayList<AGV> ownedAGV, Crane crane) {
+        this.id = "BFR" + String.format("%03d", Buffer.ID++);
         this.containers = new Container[6][6][26];
         this.ownedAGV = new ArrayList<>(ownedAGV);
         this.reservedSpace = new HashMap<>();
@@ -58,9 +62,19 @@ public class Buffer {
     }
 
     /**
+     * Create buffer with id
+     */
+    public Buffer() {
+        this.id = "BFR" + String.format("%03d", Buffer.ID++);
+        this.ownedAGV = new ArrayList<>();
+        this.reservedSpace = new HashMap<>();
+        this.containers = new Container[6][6][26];
+    }
+
+    /**
      * Checks the list if there are containers to depart
      *
-     * @param date 
+     * @param date
      * @return ArrayList<Container>
      */
     public ArrayList<Container> checkDepartingContainers(Date date) {
@@ -116,7 +130,7 @@ public class Buffer {
 
     /**
      * Removes container
-     * 
+     *
      * @param container
      */
     public void removeContainer(Container container) {
@@ -133,12 +147,17 @@ public class Buffer {
 
     /**
      * Reserves container position
-     * 
+     *
      * @param container
      */
     public void reservePosition(Container container) {
-        if(containers[(int) container.getBufferPosition().x][(int) container.getBufferPosition().y][(int) container.getBufferPosition().z] == null) {
+        if (containers[(int) container.getBufferPosition().x][(int) container.getBufferPosition().y][(int) container.getBufferPosition().z] == null) {
             reservedSpace.put(container.getBufferPosition(), container);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Buffer{" + "id=" + id + ", containers=" + containers + ", crane=" + crane.id + ", reservedSpace=" + reservedSpace + ", pathNodeUp=" + pathNodeUp.getId() + ", pathNodeDown=" + pathNodeDown.getId() + '}';
     }
 }

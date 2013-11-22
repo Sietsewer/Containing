@@ -10,20 +10,20 @@ package containingcontroller;
  */
 public class Commands {
 
-       /**
-     *Device is ready
+    /**
+     * Device is ready
      */
     final static public int READY = 0;
     /**
-     *Container must be moved by AVG
+     * Container must be moved by AVG
      */
     static public int MOVE_CONTAINER = 1;
     /**
-     *Crane needs to pickup CONTAINER
+     * Crane needs to pickup CONTAINER
      */
     static public int PICKUP_CONTAINER = 2;
     /**
-     *Crane needds to put CONTAINER down
+     * Crane needds to put CONTAINER down
      */
     static public int PUT_CONTAINER = 3;
     /**

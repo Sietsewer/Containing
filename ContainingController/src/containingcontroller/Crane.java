@@ -8,26 +8,38 @@ package containingcontroller;
  *
  * @author Ruben
  */
-public abstract class Crane{
+public class Crane {
+
     /**
      * Crane ID
      */
     public String id;
     /**
-     * Crane Position
+     * waypoint node of crane
      */
-    public CustomVector3f position;
+    public PathNode node;
+
+    /**
+     * create crane with id
+     *
+     * @param id
+     */
+    public Crane(String id) {
+        this.id = id;
+    }
 
     /**
      *
      * @param cont
      */
-    public abstract void loadContainer(Container cont);
+    public void loadContainer(Container cont) {
+    }
+
     /**
      *
      * @param cont
      */
-    public abstract void getContainer(Container cont);
-    
+    public void getContainer(Container cont) {
+    }
     PathNode pathNode;
 }

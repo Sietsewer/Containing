@@ -147,11 +147,9 @@ class Transporter {
      * @return
      */
     public Container getContainer(int i) {
-        if (containers != null && i < containers.size() &&i >=0) {
+        if (containers != null && i < containers.size() && i >= 0) {
             return containers.get(i);
-        }
-        else
-        {
+        } else {
             return null;
         }
     }

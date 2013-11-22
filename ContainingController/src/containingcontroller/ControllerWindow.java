@@ -21,16 +21,18 @@ import javax.swing.JScrollBar;
  * @author Hendrik
  */
 public class ControllerWindow extends javax.swing.JFrame {
-SimpleDateFormat timeFormat;
+
+    SimpleDateFormat timeFormat;
     Controller controller;
     final JFileChooser fc = new JFileChooser();
+
     /**
      * Creates new form ControllerWindow
      */
     public ControllerWindow() {
         initComponents();
-        timeFormat= new SimpleDateFormat("HH:mm:ss");
-        controller =new Controller(this);
+        timeFormat = new SimpleDateFormat("HH:mm:ss");
+        controller = new Controller(this);
         controller.startServer();
     }
 
@@ -107,20 +109,20 @@ SimpleDateFormat timeFormat;
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-       //Handle open button action.
+        //Handle open button action.
         int returnVal = fc.showOpenDialog(ControllerWindow.this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
                 File file = fc.getSelectedFile();
-               //read file 
-               List<Container> containers = XMLParser.parseXMLFile(new FileInputStream(file));
-               controller.setContainers(containers);
+                //read file 
+                List<Container> containers = XMLParser.parseXMLFile(new FileInputStream(file));
+                controller.setContainers(containers);
 
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(ControllerWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } 
+        }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -133,16 +135,15 @@ SimpleDateFormat timeFormat;
 
     /**
      * write line to log window
+     *
      * @param message line
      */
-    public void WriteLogLine(String message)
-    {
-        logTxtArea.append(System.getProperty("line.separator")+"["+timeFormat.format(new Date())+"]"+message);
-      JScrollBar vertical = jScrollPane1.getVerticalScrollBar();
-        vertical.setValue( vertical.getMaximum() );
+    public void WriteLogLine(String message) {
+        logTxtArea.append(System.getProperty("line.separator") + "[" + timeFormat.format(new Date()) + "]" + message);
+        JScrollBar vertical = jScrollPane1.getVerticalScrollBar();
+        vertical.setValue(vertical.getMaximum());
     }
-    
-    
+
     /**
      * @param args the command line arguments
      */

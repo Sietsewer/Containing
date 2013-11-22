@@ -46,8 +46,8 @@ public class ServerClient {
      * @param message
      */
     public void sendMessage(String message) {
-                   System.out.println("message to ip:" + client.getRemoteSocketAddress());
-                        System.out.println(message);
+        System.out.println("message to ip:" + client.getRemoteSocketAddress());
+        System.out.println(message);
         output.println(message);
     }
 

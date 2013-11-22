@@ -93,7 +93,9 @@ public class Buffer extends Node{
         Container sc2 = (Container)sc1.clone();
         bufferArray[(int)index.x][(int)index.y][(int)index.z] = sc2;
         sc2.setIndexPosition(index);
-        sc2.setLocalTranslation(new Vector3f(index.x * 2 * sc2.size.x, index.y * 2 * sc2.size.y, index.z * 2 * sc2.size.z));
+        Vector3f loc = this.getLocalTranslation(); //get local position of buffer
+        sc2.setLocalTranslation(new Vector3f(loc.x + (index.x * 2 * sc2.size.x),
+                loc.y + (index.y * 2 * sc2.size.y), loc.z + (index.z * 2 * sc2.size.z))); //fit container into buffer
         bufferNode.attachChild(sc2);
         setRendering();
     }

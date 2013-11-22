@@ -12,6 +12,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import java.util.Random;
 
 /**
  *
@@ -21,6 +22,8 @@ public class Container extends Node{
     static Box b;               //container geometry, static to reduce memory load
     static Material mat;        //container material, static to reduce memory load
     static Geometry geom;       //geometry object
+    static ColorRGBA[] colors;  //color array
+    static Random r;            //RNG for color assignment
     
     String id;                  //container ID
     Vector3f realPosition;      //actual position in the simulation
@@ -57,7 +60,7 @@ public class Container extends Node{
         this.setCullHint(Spatial.CullHint.Always);
         this.setLocalTranslation(realPosition);
         //attach geometry to this object
-        mat.setColor("Color", ColorRGBA.randomColor());
+        mat.setColor("Color", colors[r.nextInt(colors.length)]);
         
         geom.setMaterial(mat);
         this.attachChild(geom.clone());
@@ -112,11 +115,21 @@ public class Container extends Node{
     public static void makeGeometry(AssetManager am){
         b = new Box(Vector3f.ZERO, 1.22f, 1.22f, 6.705f); //container size in m divided by 2 because box size grows both ways
         geom = new Geometry("Box", b);
+        mat = new Material(am, "Common/MatDefs/Misc/Unshaded.j3md");
         
-        //assign random color on instantiaton to differentiate between containers
-        if(mat == null){
-            mat = new Material(am, "Common/MatDefs/Misc/Unshaded.j3md");
-        }
+        colors = new ColorRGBA[9];
+        colors[0] = new ColorRGBA(0.729f, 0.729f, 0.729f, 1);
+        colors[1] = new ColorRGBA(0.839f, 0.196f, 0, 1);
+        colors[2] = new ColorRGBA(0.075f, 0.082f, 0.204f, 1);
+        colors[3] = new ColorRGBA(0.082f, 0.482f, 0.09f, 1);
+        colors[4] = new ColorRGBA(0.463f, 0, 0, 1);
+        colors[5] = new ColorRGBA(0.463f, 0.227f, 0, 1);
+        colors[6] = new ColorRGBA(0.051f, 0.051f, 0.051f, 1);
+        colors[7] = new ColorRGBA(0.176f, 0.114f, 0.051f, 1);
+        colors[8] = new ColorRGBA(0.314f, 0.314f, 0.314f, 1);
+        
+        r = new Random();
+
         mat.setColor("Color", ColorRGBA.Red);
         
         geom.setMaterial(mat);

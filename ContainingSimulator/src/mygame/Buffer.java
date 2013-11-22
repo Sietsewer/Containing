@@ -76,12 +76,12 @@ public class Buffer extends Node{
      * @return 
      */
     public Container removeContainer(Vector3f index){
-        Container sc1 = bufferArray[(int)index.x][(int)index.y][(int)index.z];
-        Container sc2 = (Container)sc1.clone();
-        bufferNode.detachChild(sc1);
+        Container c1 = bufferArray[(int)index.x][(int)index.y][(int)index.z];
+        Container c2 = (Container)c1.clone();
+        bufferNode.detachChild(c1);
         bufferArray[(int)index.x][(int)index.y][(int)index.z] = null;
         setRendering();
-        return sc2;
+        return c2;
     }
     
     /**
@@ -89,13 +89,13 @@ public class Buffer extends Node{
      * @param index index where you want to add the container
      * @param sc1 the container you want to add to the buffer
      */
-    public void addContainer(Vector3f index, Container sc1){
-        Container sc2 = (Container)sc1.clone();
-        bufferArray[(int)index.x][(int)index.y][(int)index.z] = sc2;
-        sc2.setIndexPosition(index);
-        sc2.setLocalTranslation(new Vector3f(index.x * 2 * sc2.size.x,
-                index.y * 2 * sc2.size.y, index.z * 2 * sc2.size.z)); //fit container into buffer
-        bufferNode.attachChild(sc2);
+    public void addContainer(Vector3f index, Container c1){
+        Container c2 = (Container)c1.clone();
+        bufferArray[(int)index.x][(int)index.y][(int)index.z] = c2;
+        c2.setIndexPosition(index);
+        c2.setLocalTranslation(new Vector3f(index.x * 2 * c2.size.x,
+                index.y * 2 * c2.size.y, index.z * 2 * c2.size.z)); //fit container into buffer
+        bufferNode.attachChild(c2);
         setRendering();
     }
 }

@@ -44,6 +44,22 @@ public class Container extends Node{
         
         setGeometry();
     }
+
+
+    /**
+     * Constructor for SimContainer
+     * @param sc SimContainer you want to create a Container for
+     */
+    public Container(SimContainer sc){
+        this.id = sc.getId();
+        CustomVector3f cv = sc.getIndexPosition();
+        setIndexPosition(new Vector3f(cv.x, cv.y, cv.z));
+        this.size = new Vector3f(1.22f, 1.22f, 6.705f);
+        this.realPosition = new Vector3f(indexPosition.x * 2 * size.x,
+                indexPosition.y * 2 * size.y, indexPosition.z * 2 * size.z);
+        
+        setGeometry();
+    }
     
     /**
      * Change indexPosition when moving container to buffer or back

@@ -14,6 +14,7 @@ class Waypoint {
     
     public float speed;
     public Vector3f location;
+    public String name;
     
     public Waypoint(Vector3f location, float speed){
         this.location = location;

@@ -7,6 +7,7 @@ package mygame;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Spline;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -80,6 +81,8 @@ public class AGV extends Node implements MotionPathListener{
     public boolean setContainer(Container container){
         if(this.container == null){
             this.container = container;
+            this.attachChild(container);
+            this.container.setLocalTranslation(0f, 3f, 0f);
             return true;
         } else {
             return false;
@@ -93,7 +96,9 @@ public class AGV extends Node implements MotionPathListener{
     public Container getContainer(){
         Container tempCont;
         tempCont = (Container)this.container.clone();
+        this.detachChild(this.container);
         this.container = null;
+        
         return tempCont;
     }
     /**
@@ -104,6 +109,16 @@ public class AGV extends Node implements MotionPathListener{
     }
 
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-        nextWaypoint(wayPointIndex);
+        if(waypointList.size() < 2){
+            jumpToPark(null);//NOG NIET KLAAR <<<<<<<<<
+        } else {
+            nextWaypoint(wayPointIndex);
+        }
+        
+    }
+    
+    private void jumpToPark(ParkingSpot spot){
+        this.setLocalTranslation(spot.translation);
+        this.setLocalRotation(new Quaternion().fromAngles(0f, spot.rotation, 0f));
     }
 }

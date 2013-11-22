@@ -9,6 +9,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
@@ -23,6 +24,7 @@ public class Main extends SimpleApplication {
 
     ServerListener listener;
     Spatial sky_geo;
+    Spatial agvModel;
 
     /**
      *
@@ -66,22 +68,33 @@ public class Main extends SimpleApplication {
     }
     
     void loadAssets(){
+        //Init of the AGV viewmodel.
+        agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
+
+        //Init of skybox geometry, material, and texture.
         sky_geo = assetManager.loadModel("Models/SkyBox/SkyBox.j3o");
         Material skyMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         Texture sky_text = assetManager.loadTexture("Textures/SkyBox_1.jpg");
         skyMat.setTexture("ColorMap", sky_text);
         sky_geo.setMaterial(skyMat);
-        sky_geo.setQueueBucket(RenderQueue.Bucket.Sky);//Makes it so that sky is always rendered last, and in the background.
+        sky_geo.setQueueBucket(RenderQueue.Bucket.Sky);
         sky_geo.scale(1000f);
         rootNode.attachChild(sky_geo);
-        Spatial dock = assetManager.loadModel("Models/dockBase/dockBase.j3o");
-        
-        Container.makeGeometry(assetManager);
-        
-        Quad waterQuad = new Quad(1550f,600f);
-        Geometry waterGeo = new Geometry("Quad", waterQuad);
-        waterGeo.rotate(-(float)Math.PI/2,0f,0f);
 
+	//Init Container
+	Container.makeGeometry(assetManager);
+
+        //Init of the small blue plane, representing water.
+        Quad waterQuad = new Quad(1550f, 600f);
+        Geometry waterGeo = new Geometry("Quad", waterQuad);
+        waterGeo.rotate(-(float) Math.PI / 2, 0f, 0f);
+        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        mat.setColor("Color", new ColorRGBA(26f / 255, 126f / 255, 168f / 255, 1f));
+        waterGeo.setMaterial(mat);
+        rootNode.attachChild(waterGeo);
+        waterGeo.setLocalTranslation(0f, 0f, 600f);
+
+        //Init of lightsources of the project.
         DirectionalLight sun = new DirectionalLight();
         sun.setColor(ColorRGBA.White.mult(2f));
         sun.setDirection(new Vector3f(.5f, -.5f, -.5f).normalizeLocal());
@@ -90,12 +103,10 @@ public class Main extends SimpleApplication {
         rootNode.addLight(al);
         rootNode.addLight(sun);
 
-        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", new ColorRGBA(26f/255, 126f/255, 168f/255, 1f));
-        waterGeo.setMaterial(mat);
+        //Init of the dock spatial, the base of the simulator.
+        Spatial dock = assetManager.loadModel("Models/dockBase/dockBase.j3o");
         rootNode.attachChild(dock);
-        rootNode.attachChild(waterGeo);
-        listener = new ServerListener(this);
+        dock.setLocalTranslation(0f, 0f, 600f);
     }
 
     void sendMessage(Message Message) {

@@ -11,3 +11,4 @@
 /ContainingSimulator/build/
 *.dylib
 *.jnilib
+/ContainingSimulator/dist/

@@ -4,31 +4,43 @@
  */
 package mygame;
 
+import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.MotionPathListener;
+import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.math.Spline;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
-import mygame.Container;
-import mygame.Waypoint;
 
 /**
  *
  * @author Sietse
  */
-public class AGV extends Node {
+public class AGV extends Node implements MotionPathListener{
 
     public Container container;
     public String id;
-    public float speed;
     
+    
+    private MotionEvent motionEvent;
     private ArrayList<Waypoint> waypointList;
     private float deltaX;
     private float deltaY;
     
+    MotionPath path = new MotionPath();
+    
+    
     private Spatial viewModel;
 
     public AGV(String ID, Spatial viewModel) {
+        this.waypointList = new ArrayList();
         this.id = ID;
         this.viewModel = viewModel.clone();
+        path.setCycle(false);
+        path.setPathSplineType(Spline.SplineType.Linear);
+        this.path.addListener(this);
+        motionEvent = new MotionEvent(this,this.path);
+        this.attachChild(viewModel);
     }
     
     /**
@@ -36,23 +48,29 @@ public class AGV extends Node {
      * @param tpf Duration of a frame, will be multiplied for time modifier.
      */
     public void updateLocation(float tpf, float timeSpeed){
-        this.setLocalTranslation(((deltaX*timeSpeed)*speed)*tpf, 10f, ((deltaY*timeSpeed)*speed)*tpf);
+        //this.setLocalTranslation(((deltaX*timeSpeed)*speed)*tpf, 10f, ((deltaY*timeSpeed)*speed)*tpf);
+        
     }
     /**
      * Adds waypoints to the current list of waypoints.
      * @param waypoints The waypoints to be added.
      */
     public void addWaypoints(ArrayList<Waypoint> waypoints){
+        this.path.clearWayPoints();
         this.waypointList.addAll(waypoints);
+        for(Waypoint waypoint : waypoints){
+            path.addWayPoint(waypoint.location);
+        }
+        
+        this.motionEvent.play();
     }
     /**
      * Removes the current waypoint, the one reached, and makes the AGV snap towards the next waypoint on the list.
      */
-    private void nextWaypoint(){
+    private void nextWaypoint(int wayPointIndex){
         this.waypointList.remove(0);
-        this.lookAt(this.waypointList.get(0).getLocalTranslation(), com.jme3.math.Vector3f.UNIT_Y);
-        deltaX = (float)Math.sin(this.getLocalRotation().toAngles(null)[1]);
-        deltaY = (float)Math.cos(this.getLocalRotation().toAngles(null)[1]);
+        this.lookAt(this.waypointList.get(1).location, com.jme3.math.Vector3f.UNIT_Y);
+        this.motionEvent.setSpeed(this.waypointList.get(0).speed);
     }
     /**
      * When called, places a container on the AGV. null can be sent.
@@ -83,5 +101,9 @@ public class AGV extends Node {
      */
     public String getContainerID(){
         return container == null ? null : container.id;
+    }
+
+    public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
+        nextWaypoint(wayPointIndex);
     }
 }

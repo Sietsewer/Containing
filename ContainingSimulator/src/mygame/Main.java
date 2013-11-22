@@ -9,11 +9,10 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
+import java.util.ArrayList;
 
 /**
  * test
@@ -25,6 +24,8 @@ public class Main extends SimpleApplication {
     ServerListener listener;
     Spatial sky_geo;
     Spatial agvModel;
+    ArrayList<Waypoint> testPath;
+    AGV testAGV;
     Buffer[] buffers;
 
     /**
@@ -47,6 +48,14 @@ public class Main extends SimpleApplication {
         
         loadAssets();
         flyCam.setMoveSpeed(100f);
+        testPath = new ArrayList();
+        testPath.add(new Waypoint(new Vector3f(0f,10f,0f),.1f));
+        testPath.add(new Waypoint(new Vector3f(0f,10f,0f),.1f));
+        testPath.add(new Waypoint(new Vector3f(60f,10f,60f),.2f));
+        testPath.add(new Waypoint(new Vector3f(60f,10f,600f),.3f));
+        testAGV = new AGV("test",agvModel);
+        testAGV.addWaypoints(testPath);
+        rootNode.attachChild(testAGV);
 
     }
 
@@ -71,6 +80,9 @@ public class Main extends SimpleApplication {
     void loadAssets(){
         //Init of the AGV viewmodel.
         agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
+        Material avgMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        avgMat.setColor("Color", ColorRGBA.Orange);
+        agvModel.setMaterial(avgMat);
 
         //Init of skybox geometry, material, and texture.
         sky_geo = assetManager.loadModel("Models/SkyBox/SkyBox.j3o");

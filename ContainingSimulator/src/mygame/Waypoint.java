@@ -5,18 +5,18 @@
 package mygame;
 
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
 
 /**
  *
  * @author Sietse
  */
-class Waypoint extends Node {
+class Waypoint {
     
     public float speed;
+    public Vector3f location;
     
     public Waypoint(Vector3f location, float speed){
-        this.setLocalTranslation(location);
+        this.location = location;
         this.speed = speed;
     }
 }

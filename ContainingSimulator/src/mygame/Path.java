@@ -13,17 +13,49 @@ import java.util.HashMap;
  */
 public class Path {
     
-  private HashMap<String,Vector3f>map = new HashMap();
+  private static HashMap<String,Vector3f>map = new HashMap();
      
+  
+    private static String clo = "clo";
+    private static String cse = "cse";
+    private static String cba = "cba";
+    private static String ctr = "ctr";
+    private static String bfa = "bfa";
+    private static String bfb = "bfb";
+    
     /**
      *Constructor creates path
      */
     public Path()
   {
-      createPath();
+      
   }
+    public static String getLorryID()
+    {
+        return clo;
+    }
+    public static String getSeaID()
+    {
+        return cse;
+    }
+    public static String getBargeID()
+    {
+        return cba;
+    }
+    public static String getBufferAID()
+    {
+        return bfa;
+    }
+    public static String getBufferBID()
+    {
+        return bfb;
+    }
+    public static String getTrainID()
+    {
+        return ctr;
+    }
 
-    private void createPath()
+    public static void createPath()
   {
       createM();
       createBF();
@@ -37,12 +69,12 @@ public class Path {
      * @param id
      * @return
      */
-    public Vector3f getVector(String id)
+    public static Vector3f getVector(String id)
   {
       return map.get(id);
   }
   
-  private void createM()
+  private static void createM()
   {
       map.put("m1", new Vector3f(96,10,503));
       map.put("m2",new Vector3f(90,10,534));
@@ -63,7 +95,7 @@ public class Path {
   }
   
   
-  private void createBF()
+  private static void createBF()
   {
       int dist = 22;
       Vector3f vecBFA = new Vector3f(12,10,71);
@@ -79,7 +111,7 @@ public class Path {
       }
       
   }
-  private void createCSE()
+  private static void createCSE()
   {
       int dist = 55;
              Vector3f vecCSE = new Vector3f(65,10,111);
@@ -91,7 +123,7 @@ public class Path {
               map.put(cse+i,vecCSE);
              }
   }
-  private void createCTR()
+  private static void createCTR()
   {
            int dist = 11*18;
              Vector3f vecCTR = new Vector3f(167,10,30);
@@ -103,7 +135,7 @@ public class Path {
              }
   }
   
-  private void createCBA()
+  private static void createCBA()
   {
       int dist = 66;
              Vector3f vecCBA = new Vector3f(222,10,534);
@@ -115,7 +147,7 @@ public class Path {
              }
   }
   
-  private void createCLO()
+  private static void createCLO()
   {
       int dist = 11;
              Vector3f vecCLO = new Vector3f(846,10,526);

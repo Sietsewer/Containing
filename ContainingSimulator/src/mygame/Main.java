@@ -13,6 +13,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * test
@@ -24,7 +25,16 @@ public class Main extends SimpleApplication {
     ServerListener listener;
     Spatial sky_geo;
     Spatial agvModel;
+    /*
+     Seacrane spatials
+     */
+    Spatial scModel;
+    Spatial scSModel;
+    Spatial scHModel;
+    List<Crane>SeaCranes = new ArrayList();
+    
     Buffer[] buffers;
+    public static float globalSpeed;
 
     /**
      *
@@ -68,6 +78,8 @@ public class Main extends SimpleApplication {
     }
 
     void loadAssets() {
+        
+        Path.createPath();
         //Init of the AGV viewmodel.
         agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
         Material avgMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -86,7 +98,19 @@ public class Main extends SimpleApplication {
 
         //Init Container
         Container.makeGeometry(assetManager);
-
+        
+        //Init of the SeaCrane viewmodel
+        scModel = assetManager.loadModel("Models/seacrane/seacrane.j3o");
+        scSModel = assetManager.loadModel("Models/seacrane/seacrane_slider.j3o");
+        scHModel = assetManager.loadModel("Models/seacrane/seacrane_slider_hook.j3o");
+        Material scMat = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
+        scMat.setColor("Color", ColorRGBA.Yellow);
+        scModel.setMaterial(scMat);
+        scSModel.setMaterial(scMat);
+        scHModel.setMaterial(scMat);
+        SeaCrane.init_Models(scModel, scSModel, scHModel);
+        init_SeaCranes();
+        
         //Init Transporters
         Transporter.makeGeometry(assetManager);
 
@@ -129,5 +153,18 @@ public class Main extends SimpleApplication {
     }
 
     void messageRecieved(Message decodedMessage) {
+    }
+    
+    private  void init_SeaCranes()
+    {
+        String cID = Path.getSeaID();
+        for(int i=1; i <= 10;i++)
+        {
+            String id = cID+i;
+            Crane c = new SeaCrane(id,Path.getVector(id));
+            SeaCranes.add(c);
+            rootNode.attachChild(c);
+            c.setLocalTranslation(Path.getVector(id));
+        }
     }
 }

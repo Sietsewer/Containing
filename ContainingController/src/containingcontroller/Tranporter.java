@@ -17,7 +17,7 @@ class Transporter {
     private int transportType;
     String id;
     static int tranporterID = 0;
-
+     private Crane dockingPoint;
     public Transporter(int transportType) {
         this.transportType = transportType;
         this.id = "TRS" + tranporterID++;
@@ -153,4 +153,13 @@ class Transporter {
             return null;
         }
     }
+
+    public Crane getDockingPoint() {
+        return dockingPoint;
+    }
+
+    public void setDockingPoint(Crane dockingPoint) {
+        this.dockingPoint = dockingPoint;
+    }
+    
 }

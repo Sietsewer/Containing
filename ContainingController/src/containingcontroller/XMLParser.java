@@ -32,6 +32,9 @@ public class XMLParser {
      */
     static public List<Container> parseXMLFile(InputStream File) {
         try {
+            int maxX = 0;
+            int maxY = 0;
+            int maxZ = 0;
             Stack<String> sk = new Stack<>();
             Calendar c = Calendar.getInstance();
             CustomVector3f p = new CustomVector3f();
@@ -112,14 +115,26 @@ public class XMLParser {
                             case "x":
                                 p = new CustomVector3f();
                                 p.x = Integer.parseInt(tagContent);
+                                if (p.x > maxX && currentContainer.getTransportTypeArrival() == TransportTypes.SEASHIP) {
+                                    maxX = (int) p.x;
+                                }
+                                if(currentContainer.getTransportTypeArrival() == TransportTypes.TROLLEY) {
+                                p.x =0;
+                                }
+                                   
 
                                 break;
                             case "y":
-                                p.y = Integer.parseInt(tagContent);
-
+                                p.z = Integer.parseInt(tagContent);
+                                if (p.z > maxZ) {
+                                    maxZ = (int) p.z;
+                                }
                                 break;
                             case "z":
-                                p.z = Integer.parseInt(tagContent);
+                                p.y = Integer.parseInt(tagContent);
+                               if (p.y > maxY) {
+                                    maxY = (int) p.y;
+                                }
 
                                 break;
                             case "positie":
@@ -175,6 +190,9 @@ public class XMLParser {
                 }
 
             }
+            System.out.println("maxX:" + maxX);
+            System.out.println("maxY:" + maxY);
+            System.out.println("maxZ:" + maxZ);
             return containersList;
         } catch (XMLStreamException ex) {
             Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);

@@ -34,4 +34,8 @@ public class Commands {
      * Remove transporter
      */
     static public int REMOVE_TRANSPORTER = 5;
+        /**
+     * Container must be moved by AVG
+     */
+    static public int MOVE = 6;
 }

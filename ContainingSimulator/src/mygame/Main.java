@@ -12,7 +12,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
-import java.util.ArrayList;
 
 /**
  * test

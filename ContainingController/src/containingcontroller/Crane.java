@@ -18,7 +18,15 @@ public class Crane {
      * waypoint node of crane
      */
     public PathNode node;
-
+    Container container;
+    /**
+     * start from range
+     */
+    public int startRange =0;
+    /**
+     * Range for crane
+     */
+    public int range=0;
     /**
      * create crane with id
      *
@@ -41,5 +49,18 @@ public class Crane {
      */
     public void getContainer(Container cont) {
     }
-    PathNode pathNode;
+    boolean ready =true;
+    boolean getReady() {
+        return ready;
+    }
+
+    void setIsReady(boolean b) {
+        ready = b;
+         }
+
+    @Override
+    public String toString() {
+        return "Crane{" + "id=" + id + ", node=" + node + ", ready=" + ready + '}';
+    }
+    
 }

@@ -160,4 +160,13 @@ public class Buffer {
     public String toString() {
         return "Buffer{" + "id=" + id + ", containers=" + containers + ", crane=" + crane.id + ", reservedSpace=" + reservedSpace + ", pathNodeUp=" + pathNodeUp.getId() + ", pathNodeDown=" + pathNodeDown.getId() + '}';
     }
+
+    AGV AGVAvailable() {
+        for (AGV a : ownedAGV) {
+            if (a.isHome) {
+                return a;
+            }
+        }
+        return null;
+    }
 }

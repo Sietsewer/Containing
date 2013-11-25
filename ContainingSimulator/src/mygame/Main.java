@@ -154,6 +154,9 @@ public class Main extends SimpleApplication {
     }
 
     void messageRecieved(Message decodedMessage) {
+        switch(decodedMessage.getCommand()){
+            case 2: 
+        }
     }
     
     private  void init_SeaCranes()
@@ -167,5 +170,15 @@ public class Main extends SimpleApplication {
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));
         }
+    }
+    /**
+     * 
+     * @param id the ID of the object.
+     */
+    public void sendReady(String id){
+        Object[] objectArray = new Object[1];
+        objectArray[0] = id;
+        Message message = new Message(0,objectArray);
+        sendMessage(message);
     }
 }

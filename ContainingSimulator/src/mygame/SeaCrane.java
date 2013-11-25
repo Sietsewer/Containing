@@ -28,40 +28,40 @@ public class SeaCrane extends Crane implements MotionPathListener{
     private boolean working;
     private Vector3f defPosCable;
     private int action = 0;
+    private Vector3f target;
 
-
-    private static float baseSpeed = 15f;
-    private static float sliderSpeed = 25f;
-    private static float hookSpeed = 25f;
+    private static float baseSpeed = 1f;
+    private static float sliderSpeed = 2f;
+    private static float hookSpeed = 2f;
     
-    private static Spatial base;
-    private static Spatial slider;
-    private static Spatial hook;
+    private  Spatial base;
+    private  Spatial slider;
+    private  Spatial hook;
     private Container container;
     private AGV agv;
     
     //motionpaths for moving objects
-    private MotionPath basePath;
-    private MotionPath sliderPath;
-    private MotionPath hookPath;
+    private MotionPath basePath = new MotionPath();
+    private MotionPath sliderPath = new MotionPath();
+    private MotionPath hookPath = new MotionPath();
     
-    private MotionEvent baseControl = new MotionEvent(base,basePath,baseSpeed,LoopMode.DontLoop);
-    private MotionEvent sliderControl = new MotionEvent(slider,sliderPath,sliderSpeed,LoopMode.DontLoop);
-    private MotionEvent hookControl = new MotionEvent(hook,hookPath,hookSpeed,LoopMode.DontLoop);
+    private MotionEvent baseControl;
+    private MotionEvent sliderControl;
+    private MotionEvent hookControl;
 
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-        
+        System.out.println(wayPointIndex);
         if(motionControl.equals(baseControl))
-        {
+        { System.out.println("asdad");
             switch(wayPointIndex)
             {
                 case 0: //start
                     break;
-                case 1:
+                case 2:
                     action = 2;
                     motionControl.stop();
                     break;
-                case 2:
+                case 1:
                     break;
             }
             
@@ -107,18 +107,33 @@ public class SeaCrane extends Crane implements MotionPathListener{
      7 = detach container
      8 = move cable up to default pos
      */
-    public SeaCrane(String id, Vector3f basePos)
+    public SeaCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook)
     {
          this.id = id;
          this.position = basePos;
+         this.base = base.clone();
+         this.slider = slider.clone();
+         this.hook = hook.clone();
          
-         init_MotionPaths();
-         
-         this.attachChild(base);
-         this.attachChild(slider);
-         this.attachChild(hook);
-         this.setLocalTranslation(this.position);
         
+         
+         this.attachChild(this.base);
+         this.attachChild(this.slider);
+         this.attachChild(this.hook);
+         this.hook.setLocalTranslation(new Vector3f(0,25,0));
+        
+        
+         
+         
+         baseControl = new MotionEvent(this.base,basePath,baseSpeed,LoopMode.DontLoop);
+         sliderControl = new MotionEvent(this.slider,sliderPath,sliderSpeed,LoopMode.DontLoop);
+        hookControl = new MotionEvent(this.hook,hookPath,hookSpeed,LoopMode.DontLoop);
+       
+       
+        
+        basePath.addListener(this);
+        sliderPath.addListener(this);
+        hookPath.addListener(this);
     }
     
     
@@ -137,29 +152,22 @@ public class SeaCrane extends Crane implements MotionPathListener{
     
     private void init_MotionPaths()
     {
-        if(container!=null)
+        if(target!=null)
         {
             basePath.clearWayPoints();
-            basePath.addWayPoint(this.getWorldTranslation());
-            basePath.addWayPoint(new Vector3f(this.getWorldTranslation().x,this.getWorldTranslation().y,container.getWorldTranslation().z));
+            basePath.addWayPoint(base.getWorldTranslation());
+            basePath.addWayPoint(new Vector3f(this.getWorldTranslation().x,this.getWorldTranslation().y,target.z));
             
             sliderPath.clearWayPoints();
-            sliderPath.addWayPoint(new Vector3f(slider.getWorldTranslation().x,slider.getWorldTranslation().y,container.getWorldTranslation().z));
+            sliderPath.addWayPoint(new Vector3f(slider.getWorldTranslation().x,slider.getWorldTranslation().y,target.z));
             
             hookPath.clearWayPoints();
-            hookPath.addWayPoint(new Vector3f(hook.getWorldTranslation().x,container.getWorldTranslation().y+container.size.y,container.getWorldTranslation().z));
+            hookPath.addWayPoint(new Vector3f(hook.getWorldTranslation().x,target.y,target.z));
         }
     }
 
 
-    //ugly crane attached to node
-    public static void init_Models(Spatial b, Spatial s, Spatial h)
-    {
-      base = b;
-      slider = s;
-      hook = h;
-      
-    }
+   
 
     
     @Override
@@ -177,12 +185,24 @@ public class SeaCrane extends Crane implements MotionPathListener{
         action = 1;
         }
     }
+   
+    public void getContainer(Vector3f pos)
+    {
+        if(pos != null)
+        {
+        
+      //  this.container = cont;
+        this.target =pos;
+        init_MotionPaths();
+        action = 1;
+        }
+    }
     
     
     //updates crane motion
     public void update(float tpf)
     {
-        if(container==null) //do nothing
+        if(target==null) //do nothing
         {
         return;
         }
@@ -193,15 +213,24 @@ public class SeaCrane extends Crane implements MotionPathListener{
             
                 break;
             case 1: //move crane to position infront of container
+                if(!baseControl.isEnabled())
+                {
                 baseControl.play();
                 System.out.println("crane " + this.id + " arrived at position");
+                }
                 break;
             case 2: 
+                if(!sliderControl.isEnabled())
+                {
                 sliderControl.play();
+                }
                 break;
             case 3://cable in position
+                if(!hookControl.isEnabled())
+                {
                 hookControl.play();
                     System.out.println("crane " + this.id + " attached container");
+                }
                 break;
         }
     }

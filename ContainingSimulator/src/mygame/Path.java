@@ -113,8 +113,8 @@ public class Path {
   }
   private static void createCSE()
   {
-      int dist = 55;
-             Vector3f vecCSE = new Vector3f(65,10,111);
+      int dist = 40;
+             Vector3f vecCSE = new Vector3f(65,10,50);
              String cse = "cse";
              
              for(int i =1;i<=10;i++)

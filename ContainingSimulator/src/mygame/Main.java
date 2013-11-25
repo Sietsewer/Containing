@@ -108,7 +108,7 @@ public class Main extends SimpleApplication {
         scModel.setMaterial(scMat);
         scSModel.setMaterial(scMat);
         scHModel.setMaterial(scMat);
-        SeaCrane.init_Models(scModel, scSModel, scHModel);
+ 
         init_SeaCranes();
         
         //Init Transporters
@@ -165,7 +165,7 @@ public class Main extends SimpleApplication {
         for(int i=1; i <= 10;i++)
         {
             String id = cID+i;
-            Crane c = new SeaCrane(id,Path.getVector(id));
+            Crane c = new SeaCrane(id,Path.getVector(id),scModel,scSModel,scHModel);
             SeaCranes.add(c);
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));

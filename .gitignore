@@ -12,3 +12,4 @@
 *.dylib
 *.jnilib
 /ContainingSimulator/dist/
+ContainingSimulator/nbproject/private/private.properties

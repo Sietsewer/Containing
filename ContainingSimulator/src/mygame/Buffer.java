@@ -13,8 +13,9 @@ import com.jme3.scene.Node;
  */
 public class Buffer extends Node{
     Vector3f bufferSize;                //size of this buffer
-    Container[][][] bufferArray;     //spatial array off SimContainers
+    Container[][][] bufferArray;     	//spatial array off SimContainers
     Node bufferNode;                    //node to attach all containers to
+    ParkingSpot[] pSpots;               //array of parking spots
     
     /**
      * Constructor, initializes full buffer for stress testing
@@ -52,6 +53,20 @@ public class Buffer extends Node{
         bufferArray = new Container[(int)bufferSize.x][(int)bufferSize.y][(int)bufferSize.z];
         bufferNode = new Node();
         this.attachChild(bufferNode);
+    }
+
+    /**
+     * Attach parking spots to both ends of the buffer
+     */
+    public void addParkingSpots(Vector3f loc){
+        pSpots = new ParkingSpot[12];
+        for(int i = 0; i < pSpots.length; i++){
+            if(i < 6){  //spots at north end of the buffer
+                pSpots[i] = new ParkingSpot(new Vector3f(loc.x + 6.1f, 10, loc.z + -11.9f - (i * 5)), (float)Math.PI * 0.5f);
+            }else{      //spots at opposite side
+                pSpots[i] = new ParkingSpot(new Vector3f(loc.x + 6.1f, 10, loc.z + 317.8f + (i * 5f)), (float)Math.PI * 0.5f);
+            }
+        }
     }
     
     /**

@@ -4,6 +4,8 @@
  */
 package mygame;
 
+import com.jme3.math.Vector3f;
+
 /**
  *
  * @author Sietse

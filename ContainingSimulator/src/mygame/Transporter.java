@@ -22,7 +22,7 @@ public class Transporter extends Node {
     /**
      * Container array
      */
-    public SimContainer[][][] containers;
+    public Container[][][] containers;
     /**
      * position of transporter
      */
@@ -46,7 +46,7 @@ public class Transporter extends Node {
     /**
      * TROLLEY Geometry
      */
-    public static Geometry TROLLEY;
+    public static Geometry LORRY;
     /**
      * TRAIN Geometry
      */
@@ -62,7 +62,7 @@ public class Transporter extends Node {
     /**
      * TROLLEY Box
      */
-    public static Box TROLLEYb;
+    public static Box LORRYb;
     /**
      * TRAIN Box
      */
@@ -75,10 +75,7 @@ public class Transporter extends Node {
      * @param type
      */
     public Transporter(ArrayList<SimContainer> containersList, Vector3f position, int type) {
-        containers = new SimContainer[6][6][26];
-        for (SimContainer container : containersList) {
-            this.containers[(int) container.getIndexPosition().x][(int) container.getIndexPosition().y][(int) container.getIndexPosition().z] = container;
-        }
+        
         this.position = position;
         this.type = type;
 
@@ -87,22 +84,30 @@ public class Transporter extends Node {
 
         switch (type) {
             case TransportTypes.SEASHIP:
+                containers = new Container[20][15][5];
                 currentGeometry = SEASHIP.clone();
                 size = new Vector3f(SEASHIPb.xExtent, SEASHIPb.yExtent, SEASHIPb.yExtent);
                 break;
             case TransportTypes.BARGE:
+                containers = new Container[12][3][2];
                 currentGeometry = BARGE.clone();
                 size = new Vector3f(BARGEb.xExtent, BARGEb.yExtent, BARGEb.yExtent);
                 break;
             case TransportTypes.TRAIN:
+                containers = new Container[29][1][1];
                 currentGeometry = TRAIN.clone();
                 size = new Vector3f(TRAINb.xExtent, TRAINb.yExtent, TRAINb.yExtent);
                 break;
             default:
-            case TransportTypes.TROLLEY:
-                currentGeometry = TROLLEY.clone();
-                size = new Vector3f(TROLLEYb.xExtent, TROLLEYb.yExtent, TROLLEYb.yExtent);
+            case TransportTypes.LORRY:
+                containers = new Container[2][1][1];
+                currentGeometry = LORRY.clone();
+                size = new Vector3f(LORRYb.xExtent, LORRYb.yExtent, LORRYb.yExtent);
                 break;
+        }
+        
+        for (SimContainer container : containersList) {
+            this.containers[(int) container.getIndexPosition().x][(int) container.getIndexPosition().y][(int) container.getIndexPosition().z] = new Container(container);
         }
 
 
@@ -110,7 +115,7 @@ public class Transporter extends Node {
             for (int x = 0; x < containers[0].length; x++) {
                 for (int y = 0; y < containers.length; y++) {
                     if (containers[x][y][z] != null) {
-                        Container con = new Container(containers[x][y][z]);
+                        Container con = containers[x][y][z];
                         Vector3f vec = con.getLocalTranslation();
                         vec.y += 1.72f;
                         this.attachChild(con);
@@ -121,6 +126,49 @@ public class Transporter extends Node {
 
         currentGeometry.setLocalTranslation(position);
         this.attachChild(currentGeometry);
+    }
+    
+    public Transporter(SimContainer container, Vector3f position) {
+        containers = new Container[1][1][1];
+        container.setIndexPosition(new CustomVector3f(0,0,0));
+        Container con = new Container(container);
+        Vector3f vec = con.getLocalTranslation();
+        vec.y += 1.72f;
+        
+        containers[0][0][0] = con;
+        this.attachChild(con);
+        this.attachChild(LORRY.clone());
+    }
+    
+    /**
+     * When called, places a container on the Transporter. null can be sent.
+     * @param container The container to be placed on the Transporter.
+     * @return True if the container was received, False if there already is a container.
+     */
+    public boolean setContainer(Container container){
+        Vector3f pos = new Vector3f(container.indexPosition.x, container.indexPosition.y, container.indexPosition.z);
+        if(containers[(int)pos.x][(int)pos.y][(int)pos.z] == null){
+            containers[(int)pos.x][(int)pos.y][(int)pos.z] = container;
+            this.attachChild(container);
+            Vector3f vec = container.getLocalTranslation();
+            vec.y += 1.72f;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Gets the container currently on the Transporter, and removes it from the Transporter.
+     * @return the container that was once on the AGV. Null if the Transporter was empty.
+     */
+    public Container getContainer(Vector3f position){
+        Container tempCont;
+        tempCont = (Container)this.containers[(int)position.x][(int)position.x][(int)position.z].clone();
+        this.detachChild(this.containers[(int)position.x][(int)position.x][(int)position.z]);
+        this.containers[(int)position.x][(int)position.x][(int)position.z] = null;
+        
+        return tempCont;
     }
 
     /**
@@ -135,17 +183,19 @@ public class Transporter extends Node {
         BARGEb = new Box(Vector3f.ZERO, 8.64f, 0.5f, 47.565f); //container size in m divided by 2 because box size grows both ways
         BARGE = new Geometry("Barge", BARGEb);
         
-        TROLLEYb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 6.705f); //container size in m divided by 2 because box size grows both ways
-        TROLLEY = new Geometry("Trolley", TROLLEYb);
-        TRAINb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 250f); //container size in m divided by 2 because box size grows both ways
+        LORRYb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 6.705f); //container size in m divided by 2 because box size grows both ways
+        LORRY = new Geometry("Lorry", LORRYb);
+        TRAINb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 700f); //container size in m divided by 2 because box size grows both ways
         TRAIN = new Geometry("Train", TRAINb);
         
         Material mat = new Material(am, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Red);
         
+        
+        
         SEASHIP.setMaterial(mat);
         BARGE.setMaterial(mat);
-        TROLLEY.setMaterial(mat);
+        LORRY.setMaterial(mat);
         TRAIN.setMaterial(mat);
     }
 

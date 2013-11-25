@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mygame;
+package containingsimulator;
 
 import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -13,11 +13,11 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * @author Hendrik
  */
 @XmlRootElement(name = "simcontainer")
-@XmlSeeAlso({mygame.CustomVector3f.class, Date.class})
+@XmlSeeAlso({containingsimulator.CustomVector3f.class, Date.class})
 public class SimContainer {
 
     private  String id;
-    private mygame.CustomVector3f indexPosition;
+    private containingsimulator.CustomVector3f indexPosition;
 
     public SimContainer(String id, CustomVector3f indexPosition) {
         this.id = id;
@@ -32,11 +32,11 @@ public class SimContainer {
         this.id = id;
     }
 
-    public mygame.CustomVector3f getIndexPosition() {
+    public containingsimulator.CustomVector3f getIndexPosition() {
         return indexPosition;
     }
 
-    public void setIndexPosition(mygame.CustomVector3f indexPosition) {
+    public void setIndexPosition(containingsimulator.CustomVector3f indexPosition) {
         this.indexPosition = indexPosition;
     }
 }

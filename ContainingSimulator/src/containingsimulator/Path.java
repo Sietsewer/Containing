@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mygame;
+package containingsimulator;
 
 import com.jme3.math.Vector3f;
 import java.util.HashMap;
@@ -13,17 +13,49 @@ import java.util.HashMap;
  */
 public class Path {
     
-  private HashMap<String,Vector3f>map = new HashMap();
+  private static HashMap<String,Vector3f>map = new HashMap();
      
+  
+    private static String clo = "clo";
+    private static String cse = "cse";
+    private static String cba = "cba";
+    private static String ctr = "ctr";
+    private static String bfa = "bfa";
+    private static String bfb = "bfb";
+    
     /**
      *Constructor creates path
      */
     public Path()
   {
-      createPath();
+      
   }
+    public static String getLorryID()
+    {
+        return clo;
+    }
+    public static String getSeaID()
+    {
+        return cse;
+    }
+    public static String getBargeID()
+    {
+        return cba;
+    }
+    public static String getBufferAID()
+    {
+        return bfa;
+    }
+    public static String getBufferBID()
+    {
+        return bfb;
+    }
+    public static String getTrainID()
+    {
+        return ctr;
+    }
 
-    private void createPath()
+    public static void createPath()
   {
       createM();
       createBF();
@@ -37,12 +69,12 @@ public class Path {
      * @param id
      * @return
      */
-    public Vector3f getVector(String id)
+    public static Vector3f getVector(String id)
   {
       return map.get(id);
   }
   
-  private void createM()
+  private static void createM()
   {
       map.put("m1", new Vector3f(96,10,503));
       map.put("m2",new Vector3f(90,10,534));
@@ -63,7 +95,7 @@ public class Path {
   }
   
   
-  private void createBF()
+  private static void createBF()
   {
       int dist = 22;
       Vector3f vecBFA = new Vector3f(12,10,71);
@@ -74,24 +106,24 @@ public class Path {
       {
           vecBFA = vecBFA.add(dist,0,0);
           vecBFB = vecBFB.add(dist,0,0);
-          map.put(bfa+i,vecBFA);
-          map.put(bfb+i,vecBFB);
+          map.put(bfa+String.format("%03d", i),vecBFA);
+          map.put(bfb+String.format("%03d", i),vecBFB);
       }
       
   }
-  private void createCSE()
+  private static void createCSE()
   {
-      int dist = 55;
-             Vector3f vecCSE = new Vector3f(65,10,111);
+      int dist = 40;
+             Vector3f vecCSE = new Vector3f(65,10,50);
              String cse = "cse";
              
              for(int i =1;i<=10;i++)
              {
               vecCSE = vecCSE.add(new Vector3f(0,0,dist));
-              map.put(cse+i,vecCSE);
+              map.put(cse+String.format("%03d", i),vecCSE);
              }
   }
-  private void createCTR()
+  private static void createCTR()
   {
            int dist = 11*18;
              Vector3f vecCTR = new Vector3f(167,10,30);
@@ -99,11 +131,11 @@ public class Path {
              for(int i =1; i <=4;i++)
              {
                  vecCTR = vecCTR.add(new Vector3f(dist,0,0));
-                 map.put(ctr+i, vecCTR);
+                 map.put(ctr+String.format("%03d", i), vecCTR);
              }
   }
   
-  private void createCBA()
+  private static void createCBA()
   {
       int dist = 66;
              Vector3f vecCBA = new Vector3f(222,10,534);
@@ -111,11 +143,11 @@ public class Path {
              for(int i=1;i<=8;i++)
              {
                  vecCBA.add(new Vector3f(dist,0,0));
-                 map.put(cba+i, vecCBA);
+                 map.put(cba+String.format("%03d", i), vecCBA);
              }
   }
   
-  private void createCLO()
+  private static void createCLO()
   {
       int dist = 11;
              Vector3f vecCLO = new Vector3f(846,10,526);
@@ -123,7 +155,7 @@ public class Path {
              for(int i=1;i<=20;i++)
              {
                  vecCLO.add(new Vector3f(dist,0,0));
-                 map.put(clo+i, vecCLO);
+                 map.put(clo+String.format("%03d", i), vecCLO);
              }
   }    
 }

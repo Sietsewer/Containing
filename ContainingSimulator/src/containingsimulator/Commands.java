@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mygame;
+package containingsimulator;
 
 /**
  *
@@ -16,13 +16,13 @@ public class Commands {
     /**
      *Container must be moved by AGV
      */
-    static public int MOVE_CONTAINER = 1;
+    //static public int MOVE_CONTAINER = 1; SCRAPPED!
     /**
      *Crane needs to pickup CONTAINER
      */
     static public int PICKUP_CONTAINER = 2;
     /**
-     *Crane needds to put CONTAINER down
+     *Crane needs to put CONTAINER down
      */
     static public int PUT_CONTAINER = 3;
     /**

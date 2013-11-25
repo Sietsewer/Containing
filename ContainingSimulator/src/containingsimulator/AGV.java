@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package mygame;
+package containingsimulator;
 
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.MotionPathListener;

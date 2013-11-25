@@ -1,4 +1,4 @@
-package mygame;
+package containingsimulator;
 
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.AmbientLight;
@@ -12,6 +12,8 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * test
@@ -23,7 +25,17 @@ public class Main extends SimpleApplication {
     ServerListener listener;
     Spatial sky_geo;
     Spatial agvModel;
+    /*
+     Seacrane spatials
+     */
+    Spatial scModel;
+    Spatial scSModel;
+    Spatial scHModel;
+    
+    Crane[]seaCranes = new Crane[10];
+    LorryPlatform[] lorryPlatform = new LorryPlatform[20];
     Buffer[] buffers;
+    public static float globalSpeed;
 
     /**
      *
@@ -67,6 +79,8 @@ public class Main extends SimpleApplication {
     }
 
     void loadAssets() {
+        
+        Path.createPath();
         //Init of the AGV viewmodel.
         agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
         Material avgMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -85,7 +99,19 @@ public class Main extends SimpleApplication {
 
         //Init Container
         Container.makeGeometry(assetManager);
-
+        
+        //Init of the SeaCrane viewmodel
+        scModel = assetManager.loadModel("Models/seacrane/seacrane.j3o");
+        scSModel = assetManager.loadModel("Models/seacrane/seacrane_slider.j3o");
+        scHModel = assetManager.loadModel("Models/seacrane/seacrane_slider_hook.j3o");
+        Material scMat = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
+        scMat.setColor("Color", ColorRGBA.Yellow);
+        scModel.setMaterial(scMat);
+        scSModel.setMaterial(scMat);
+        scHModel.setMaterial(scMat);
+ 
+        init_SeaCranes();
+        
         //Init Transporters
         Transporter.makeGeometry(assetManager);
 
@@ -129,5 +155,43 @@ public class Main extends SimpleApplication {
     }
 
     void messageRecieved(Message decodedMessage) {
+        switch(decodedMessage.getCommand()){
+            case 2: 
+        }
+    }
+    
+    private  void init_SeaCranes()
+    {
+        String cID = Path.getSeaID();
+        for(int i=1; i <= 10;i++)
+        {
+            String id = cID+String.format("%03d", i);
+            Crane c = new SeaCrane(id,Path.getVector(id),scModel,scSModel,scHModel);
+            seaCranes[i-1]=c;
+            rootNode.attachChild(c);
+            c.setLocalTranslation(Path.getVector(id));
+        }
+    }
+    
+    private void init_LorryPlatforms(){
+        String cID = Path.getLorryID();
+        for(int i=1; i <= 20;i++)
+        {
+            String id = cID+String.format("%03d", i);
+            LorryPlatform l = new LorryPlatform(id);
+            lorryPlatform[i-1]=l;
+            rootNode.attachChild(l);
+            l.setLocalTranslation(Path.getVector(id));
+        }
+    }
+    /**
+     * 
+     * @param id the ID of the object.
+     */
+    public void sendReady(String id){
+        Object[] objectArray = new Object[1];
+        objectArray[0] = id;
+        Message message = new Message(0,objectArray);
+        sendMessage(message);
     }
 }

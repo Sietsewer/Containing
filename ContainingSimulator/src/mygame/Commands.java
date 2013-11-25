@@ -29,4 +29,8 @@ public class Commands {
      *Give container to AGV
      */
     static public int GIVE_CONTAINER = 4;
+    
+    static public int MOVE_TRANSPORTER = 5;
+    
+    static public int MOVE = 6;
 }

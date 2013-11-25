@@ -46,7 +46,7 @@ public class Transporter extends Node {
     /**
      * TROLLEY Geometry
      */
-    public static Geometry TROLLEY;
+    public static Geometry LORRY;
     /**
      * TRAIN Geometry
      */
@@ -62,7 +62,7 @@ public class Transporter extends Node {
     /**
      * TROLLEY Box
      */
-    public static Box TROLLEYb;
+    public static Box LORRYb;
     /**
      * TRAIN Box
      */
@@ -99,10 +99,10 @@ public class Transporter extends Node {
                 size = new Vector3f(TRAINb.xExtent, TRAINb.yExtent, TRAINb.yExtent);
                 break;
             default:
-            case TransportTypes.TROLLEY:
+            case TransportTypes.LORRY:
                 containers = new SimContainer[1][1][1];
-                currentGeometry = TROLLEY.clone();
-                size = new Vector3f(TROLLEYb.xExtent, TROLLEYb.yExtent, TROLLEYb.yExtent);
+                currentGeometry = LORRY.clone();
+                size = new Vector3f(LORRYb.xExtent, LORRYb.yExtent, LORRYb.yExtent);
                 break;
         }
         
@@ -140,17 +140,19 @@ public class Transporter extends Node {
         BARGEb = new Box(Vector3f.ZERO, 8.64f, 0.5f, 47.565f); //container size in m divided by 2 because box size grows both ways
         BARGE = new Geometry("Barge", BARGEb);
         
-        TROLLEYb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 6.705f); //container size in m divided by 2 because box size grows both ways
-        TROLLEY = new Geometry("Trolley", TROLLEYb);
-        TRAINb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 250f); //container size in m divided by 2 because box size grows both ways
+        LORRYb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 6.705f); //container size in m divided by 2 because box size grows both ways
+        LORRY = new Geometry("Lorry", LORRYb);
+        TRAINb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 700f); //container size in m divided by 2 because box size grows both ways
         TRAIN = new Geometry("Train", TRAINb);
         
         Material mat = new Material(am, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Red);
         
+        
+        
         SEASHIP.setMaterial(mat);
         BARGE.setMaterial(mat);
-        TROLLEY.setMaterial(mat);
+        LORRY.setMaterial(mat);
         TRAIN.setMaterial(mat);
     }
 

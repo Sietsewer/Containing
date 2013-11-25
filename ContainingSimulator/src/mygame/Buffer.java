@@ -43,7 +43,6 @@ public class Buffer extends Node{
         
         setRendering();
         this.attachChild(bufferNode);
-        addParkingSpots();
     }
     
     /**
@@ -54,19 +53,18 @@ public class Buffer extends Node{
         bufferArray = new Container[(int)bufferSize.x][(int)bufferSize.y][(int)bufferSize.z];
         bufferNode = new Node();
         this.attachChild(bufferNode);
-        addParkingSpots();
     }
 
     /**
      * Attach parking spots to both ends of the buffer
      */
-    private void addParkingSpots(){
+    public void addParkingSpots(Vector3f loc){
         pSpots = new ParkingSpot[12];
         for(int i = 0; i < pSpots.length; i++){
             if(i < 6){  //spots at north end of the buffer
-                pSpots[i] = new ParkingSpot(new Vector3f(6.1f, 10, 7.925f - (i * 2.44f)), (float)Math.PI * 0.5f);
-            }else{      //spots at opposite sides
-                pSpots[i] = new ParkingSpot(new Vector3f(6.1f, 10, 356.582f + (i * 2.44f)), (float)Math.PI * 0.5f);
+                pSpots[i] = new ParkingSpot(new Vector3f(loc.x + 6.1f, 10, loc.z + 7.925f - (i * 2.44f)), (float)Math.PI * 0.5f);
+            }else{      //spots at opposite side
+                pSpots[i] = new ParkingSpot(new Vector3f(loc.x + 6.1f, 10, loc.z + 356.582f + (i * 2.44f)), (float)Math.PI * 0.5f);
             }
         }
     }

@@ -75,10 +75,7 @@ public class Transporter extends Node {
      * @param type
      */
     public Transporter(ArrayList<SimContainer> containersList, Vector3f position, int type) {
-        containers = new SimContainer[6][6][26];
-        for (SimContainer container : containersList) {
-            this.containers[(int) container.getIndexPosition().x][(int) container.getIndexPosition().y][(int) container.getIndexPosition().z] = container;
-        }
+        
         this.position = position;
         this.type = type;
 
@@ -87,22 +84,30 @@ public class Transporter extends Node {
 
         switch (type) {
             case TransportTypes.SEASHIP:
+                containers = new SimContainer[15][15][26];
                 currentGeometry = SEASHIP.clone();
                 size = new Vector3f(SEASHIPb.xExtent, SEASHIPb.yExtent, SEASHIPb.yExtent);
                 break;
             case TransportTypes.BARGE:
+                containers = new SimContainer[15][15][26];
                 currentGeometry = BARGE.clone();
                 size = new Vector3f(BARGEb.xExtent, BARGEb.yExtent, BARGEb.yExtent);
                 break;
             case TransportTypes.TRAIN:
+                containers = new SimContainer[1][1][50];
                 currentGeometry = TRAIN.clone();
                 size = new Vector3f(TRAINb.xExtent, TRAINb.yExtent, TRAINb.yExtent);
                 break;
             default:
             case TransportTypes.TROLLEY:
+                containers = new SimContainer[1][1][1];
                 currentGeometry = TROLLEY.clone();
                 size = new Vector3f(TROLLEYb.xExtent, TROLLEYb.yExtent, TROLLEYb.yExtent);
                 break;
+        }
+        
+        for (SimContainer container : containersList) {
+            this.containers[(int) container.getIndexPosition().x][(int) container.getIndexPosition().y][(int) container.getIndexPosition().z] = container;
         }
 
 

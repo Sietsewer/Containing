@@ -55,8 +55,8 @@ public class Container extends Node{
         CustomVector3f cv = sc.getIndexPosition();
         setIndexPosition(new Vector3f(cv.x, cv.y, cv.z));
         this.size = new Vector3f(1.22f, 1.22f, 6.705f);
-        this.realPosition = new Vector3f(indexPosition.x * 2 * size.x,
-                indexPosition.y * 2 * size.y, indexPosition.z * 2 * size.z);
+        this.realPosition = new Vector3f(indexPosition.z * 2 * size.x,
+                indexPosition.y * 2 * size.y, indexPosition.x * 2 * size.z);
         
         setGeometry();
     }

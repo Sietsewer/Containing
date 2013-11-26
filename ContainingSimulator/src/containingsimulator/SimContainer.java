@@ -26,10 +26,6 @@ public class SimContainer {
     public SimContainer() {
     }
 
-    SimContainer(Container c) {
-        this.id = c.getId();
-        this.indexPosition = c.getPosition();
-    }
 
     /**
      *

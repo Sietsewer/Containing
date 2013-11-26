@@ -31,9 +31,17 @@ public class Main extends SimpleApplication {
     Spatial scModel;
     Spatial scSModel;
     Spatial scHModel;
-    
-    Crane[]seaCranes = new Crane[10];
-    LorryPlatform[] lorryPlatform = new LorryPlatform[20];
+    /*
+     Buffercrane spatials
+     */
+    Spatial bcModel;
+    Spatial bcSModel;
+    Spatial bcHModel;
+    Crane[] seaCranes = new Crane[10];
+    Crane[] bufCranes = new Crane[63];
+    Crane[] lorCranes = new Crane[20];
+    Crane[] trainCranes = new Crane[4];
+    Crane[] barCranes = new Crane[8];
     Buffer[] buffers;
     public static float globalSpeed;
 
@@ -57,7 +65,12 @@ public class Main extends SimpleApplication {
 
         loadAssets();
         flyCam.setMoveSpeed(100f);
-
+        listener = new ServerListener(this);
+        new Thread(new Runnable() {
+            public void run() {
+                listener.run();
+            }
+        }).start();
     }
 
     /**
@@ -79,7 +92,7 @@ public class Main extends SimpleApplication {
     }
 
     void loadAssets() {
-        
+
         Path.createPath();
         //Init of the AGV viewmodel.
         agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
@@ -99,19 +112,21 @@ public class Main extends SimpleApplication {
 
         //Init Container
         Container.makeGeometry(assetManager);
-        
+
         //Init of the SeaCrane viewmodel
         scModel = assetManager.loadModel("Models/seacrane/seacrane.j3o");
         scSModel = assetManager.loadModel("Models/seacrane/seacrane_slider.j3o");
         scHModel = assetManager.loadModel("Models/seacrane/seacrane_slider_hook.j3o");
-        Material scMat = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
+        Material scMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         scMat.setColor("Color", ColorRGBA.Yellow);
         scModel.setMaterial(scMat);
         scSModel.setMaterial(scMat);
         scHModel.setMaterial(scMat);
- 
+
         init_SeaCranes();
-        
+        init_BufferCranes();
+        init_LorryCranes();
+
         //Init Transporters
         Transporter.makeGeometry(assetManager);
 
@@ -156,105 +171,116 @@ public class Main extends SimpleApplication {
 
     void messageRecieved(Message decodedMessage) {
         Object[] params = decodedMessage.getParameters();
-        switch(decodedMessage.getCommand()){
+        switch (decodedMessage.getCommand()) {
             case 1: //MOVE
-                String agvID1 = (String)params[0];
+                String agvID1 = (String) params[0];
                 String[] pathIDs1 = new String[params.length - 1];
-                for(int i = 0; i < pathIDs1.length; i++){
-                    pathIDs1[i] = (String)params[i + 1];
+                for (int i = 0; i < pathIDs1.length; i++) {
+                    pathIDs1[i] = (String) params[i + 1];
                 }
                 //TODO: get AGV from ID, get waypoints from IDs
                 break;
             case 2: //PICKUP_CONTAINER
-                String craneID1 = (String)params[0]; //crane ID
-                String containerID1 = (String)params[1]; //container ID
+                String craneID1 = (String) params[0]; //crane ID
+                String containerID1 = (String) params[1]; //container ID
                 //param[2],[3] and [4] are for x, y and z of indexposition
                 Crane crane = null;
-                for(Crane c : seaCranes){
-                    if(c.id.equals(craneID1)){
+                for (Crane c : seaCranes) {
+                    if (c.id.equals(craneID1)) {
                         crane = c;
                     }
                 }
                 //TODO: process buffer cranes
                 //Little start here, I'll process this and the rest of the cases
                 //more once we get the required objects inside Main
-                if(crane != null){
-                    if(crane instanceof SeaCrane){
+                if (crane != null) {
+                    if (crane instanceof SeaCrane) {
                         //TODO: find container by ID and pass it to crane.getContainer
                         //TODO: case for BufferCrane
-                    }else{
+                    } else {
                         System.err.println("Error: No crane with this ID.");
                     }
-                }else{
+                } else {
                     System.err.println("Error: No crane with this ID.");
                 }
                 break;
             case 3: //GIVE_CONTAINER
-                String agvID2 = (String)params[0];
-                String craneID2 = (String)params[1];
+                String agvID2 = (String) params[0];
+                String craneID2 = (String) params[1];
                 //TODO: make this work when we have AGVs in Main
                 break;
             case 4: //PUT_CONTAINER
-                String craneID3 = (String)params[0];
-                String containerID2 = (String)params[1];
-                Vector3f cposition = new Vector3f((Float)params[2], (Float)params[3], (Float)params[4]);
+                String craneID3 = (String) params[0];
+                String containerID2 = (String) params[1];
+                Vector3f cposition = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
                 //TODO: get containers and cranes from ID, etc yadda yadda yadda
                 break;
             case 5: //GET_CONTAINER
-                String agvID3 = (String)params[0];
-                String craneID4 = (String)params[1];
+                String agvID3 = (String) params[0];
+                String craneID4 = (String) params[1];
                 //TODO: you know the drill by now
                 break;
             case 6: //CREATE_TRANSPORTER
-                String transporterID1 = (String)params[0];
-                int transporterType = (Integer)params[1];
+                String transporterID1 = (String) params[0];
+                int transporterType = (Integer) params[1];
                 String[] containerIDs = new String[params.length - 2];
-                for(int i = 0; i < containerIDs.length; i++){
-                    containerIDs[i] = (String)params[i + 2];
+                for (int i = 0; i < containerIDs.length; i++) {
+                    containerIDs[i] = (String) params[i + 2];
                 }
                 //TODO: see above, also needs a list or array of transporters
                 break;
             case 7: //REMOVE_TRANSPORTER
-                String transporterID2 = (String)params[0];
+                String transporterID2 = (String) params[0];
                 //TODO: see above
                 break;
             default:
                 System.err.println("Error: Invalid command for simulator.");
         }
     }
-    
-    private  void init_SeaCranes()
-    {
+
+    private void init_SeaCranes() {
         String cID = Path.getSeaID();
-        for(int i=1; i <= 10;i++)
-        {
-            String id = cID+String.format("%03d", i);
-            Crane c = new SeaCrane(id,Path.getVector(id),scModel,scSModel,scHModel);
-            seaCranes[i-1]=c;
+        for (int i = 1; i <= 10; i++) {
+            String id = cID + String.format("%03d", i);
+            Crane c = new SeaCrane(id, Path.getVector(id), scModel, scSModel, scHModel);
+            seaCranes[i - 1] = c;
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));
         }
     }
-    
-    private void init_LorryPlatforms(){
-        String cID = Path.getLorryID();
-        for(int i=1; i <= 20;i++)
-        {
-            String id = cID+String.format("%03d", i);
-            LorryPlatform l = new LorryPlatform(id);
-            lorryPlatform[i-1]=l;
-            rootNode.attachChild(l);
-            l.setLocalTranslation(Path.getVector(id));
+
+    private void init_BufferCranes() {
+        String cID = Path.getBufferAID();
+
+        for (int i = 1; i <= 63; i++) {
+            String id = cID + String.format("%03d", i);
+            Crane c = new BufferCrane(id, Path.getVector(id), scModel, scSModel, scHModel);
+            bufCranes[i - 1] = c;
+            rootNode.attachChild(c);
+            c.setLocalTranslation(Path.getVector(id));
         }
     }
+
+    private void init_LorryCranes() {
+        String cID = Path.getLorryID();
+
+        for (int i = 1; i <= 20; i++) {
+            String id = cID + String.format("%03d", i);
+            LorryCrane c = new LorryCrane(id, Path.getVector(id), scModel, scHModel);
+            lorCranes[i - 1] = c;
+            rootNode.attachChild(c);
+            c.setLocalTranslation(Path.getVector(id));
+        }
+    }
+
     /**
-     * 
+     *
      * @param id the ID of the object.
      */
-    public void sendReady(String id){
+    public void sendReady(String id) {
         Object[] objectArray = new Object[1];
         objectArray[0] = id;
-        Message message = new Message(0,objectArray);
+        Message message = new Message(0, objectArray);
         sendMessage(message);
     }
 }

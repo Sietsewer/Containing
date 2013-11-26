@@ -71,6 +71,7 @@ public class Main extends SimpleApplication {
 
         loadAssets();
         flyCam.setMoveSpeed(100f);
+        cam.setFrustumFar(5000f);
         listener = new ServerListener(this);
         new Thread(new Runnable() {
             public void run() {
@@ -202,43 +203,31 @@ public class Main extends SimpleApplication {
                 //TODO: get AGV from ID, get waypoints from IDs
                 break;
             case 2: //PICKUP_CONTAINER
-                String craneID1 = (String) params[0]; //crane ID
-                String containerID1 = (String) params[1]; //container ID
+                //String containerID1 = (String) params[1]; //container ID
                 //param[2],[3] and [4] are for x, y and z of indexposition
-                Crane crane = null;
-                for (Crane c : seaCranes) {
-                    if (c.id.equals(craneID1)) {
-                        crane = c;
-                    }
-                }
-                //TODO: process buffer cranes
+                Crane crane1 = getCraneByID((String) params[0]);
                 //Little start here, I'll process this and the rest of the cases
                 //more once we get the required objects inside Main
-                if (crane != null) {
-                    if (crane instanceof SeaCrane) {
-                        //TODO: find container by ID and pass it to crane.getContainer
-                        //TODO: case for BufferCrane
-                    } else {
-                        System.err.println("Error: No crane with this ID.");
-                    }
+                if (crane1 != null) {
+                    //do stuff, needs containers
                 } else {
                     System.err.println("Error: No crane with this ID.");
                 }
                 break;
             case 3: //GIVE_CONTAINER
-                String agvID2 = (String) params[0];
-                String craneID2 = (String) params[1];
+                //String agvID2 = (String) params[0];
+                Crane crane2 = getCraneByID((String) params[1]);
                 //TODO: make this work when we have AGVs in Main
                 break;
             case 4: //PUT_CONTAINER
-                String craneID3 = (String) params[0];
-                String containerID2 = (String) params[1];
-                Vector3f cposition = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
+                Crane crane3 = getCraneByID((String) params[0]);
+                //String containerID2 = (String) params[1];
+                //Vector3f cposition = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
                 //TODO: get containers and cranes from ID, etc yadda yadda yadda
                 break;
             case 5: //GET_CONTAINER
-                String agvID3 = (String) params[0];
-                String craneID4 = (String) params[1];
+                //String agvID3 = (String) params[0];
+                Crane crane4 = getCraneByID((String) params[1]);
                 //TODO: you know the drill by now
                 break;
             case 6: //CREATE_TRANSPORTER
@@ -257,6 +246,35 @@ public class Main extends SimpleApplication {
             default:
                 System.err.println("Error: Invalid command for simulator.");
         }
+    }
+    
+    /**
+     * Finds and returns a crane by crane ID
+     * @param id the id to search for
+     * @return reference to a crane that matches the ID
+     */
+    private Crane getCraneByID(String id){
+        for(int i = 0; i < seaCranes.length; i++){
+            if(seaCranes[i].id == id)
+                return seaCranes[i];
+        }
+        for(int i = 0; i < bufCranes.length; i++){
+            if(bufCranes[i].id == id)
+                return bufCranes[i];
+        }
+        for(int i = 0; i < lorCranes.length; i++){
+            if(lorCranes[i].id == id)
+                return lorCranes[i];
+        }
+        for(int i = 0; i < trainCranes.length; i++){
+            if(trainCranes[i].id == id)
+                return trainCranes[i];
+        }
+        for(int i = 0; i < barCranes.length; i++){
+            if(barCranes[i].id == id)
+                return barCranes[i];
+        }
+        return null;
     }
 
     private void init_SeaCranes() {

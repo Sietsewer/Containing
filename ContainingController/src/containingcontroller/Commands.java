@@ -17,25 +17,26 @@ public class Commands {
     /**
      * Container must be moved by AVG
      */
-    static public int MOVE_CONTAINER = 1;
+    static public int MOVE = 1;
     /**
      * Crane needs to pickup CONTAINER
      */
     static public int PICKUP_CONTAINER = 2;
     /**
-     * Crane needds to put CONTAINER down
+     * Crane needds to give CONTAINER to AGV
      */
-    static public int PUT_CONTAINER = 3;
+    static public int GIVE_CONTAINER = 3;
     /**
      * Create transporter with containers
      */
-    static public int CREATE_TRANSPORTER = 4;
+    static public int PUT_CONTAINER = 4;
     /**
      * Remove transporter
      */
-    static public int REMOVE_TRANSPORTER = 5;
-        /**
+    static public int GET_CONTAINER = 5;
+    /**
      * Container must be moved by AVG
      */
-    static public int MOVE = 6;
+    static public int CREATE_TRANSPORTER = 6;
+    static public int REMOVE_TRANSPORTER = 7;
 }

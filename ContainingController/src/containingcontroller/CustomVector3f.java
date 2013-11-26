@@ -148,6 +148,28 @@ public final class CustomVector3f implements Cloneable, java.io.Serializable {
         return this;
     }
 
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CustomVector3f other = (CustomVector3f) obj;
+        if (Float.floatToIntBits(this.x) != Float.floatToIntBits(other.x)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.y) != Float.floatToIntBits(other.y)) {
+            return false;
+        }
+        if (Float.floatToIntBits(this.z) != Float.floatToIntBits(other.z)) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public String toString() {
         return "Vector3f{" + "x=" + x + ", y=" + y + ", z=" + z + '}';

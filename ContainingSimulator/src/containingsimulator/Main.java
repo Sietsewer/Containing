@@ -37,6 +37,12 @@ public class Main extends SimpleApplication {
     Spatial bcModel;
     Spatial bcSModel;
     Spatial bcHModel;
+    /*
+     Lorrycrane spatials
+     */
+    Spatial lcModel;
+    Spatial lcHModel;
+    
     Crane[] seaCranes = new Crane[10];
     Crane[] bufCranes = new Crane[63];
     Crane[] lorCranes = new Crane[20];
@@ -123,6 +129,21 @@ public class Main extends SimpleApplication {
         scSModel.setMaterial(scMat);
         scHModel.setMaterial(scMat);
 
+        //Init of the BufferCrane viewmodel
+        bcModel = assetManager.loadModel("Models/buffercrane/buffercrane.j3o");
+        bcSModel = assetManager.loadModel("Models/buffercrane/buffercrane_slider.j3o");
+        bcHModel = assetManager.loadModel("Models/buffercrane/buffercrane_slider_hook.j3o");
+        Material bcMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        bcMat.setColor("Color", ColorRGBA.Yellow);
+        bcModel.setMaterial(bcMat);
+        bcSModel.setMaterial(bcMat);
+        bcHModel.setMaterial(bcMat);
+        
+        //Init lorryCrane
+        lcModel = assetManager.loadModel("Models/lorrycrane/lorrycrane.j3o");
+        Material lcMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        lcMat.setColor("Color", ColorRGBA.Yellow);
+        lcModel.setMaterial(lcMat);
         init_SeaCranes();
         init_BufferCranes();
         init_LorryCranes();
@@ -254,7 +275,7 @@ public class Main extends SimpleApplication {
 
         for (int i = 1; i <= 63; i++) {
             String id = cID + String.format("%03d", i);
-            Crane c = new BufferCrane(id, Path.getVector(id), scModel, scSModel, scHModel);
+            Crane c = new BufferCrane(id, Path.getVector(id), bcModel, bcSModel, bcHModel);
             bufCranes[i - 1] = c;
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));
@@ -266,7 +287,7 @@ public class Main extends SimpleApplication {
 
         for (int i = 1; i <= 20; i++) {
             String id = cID + String.format("%03d", i);
-            LorryCrane c = new LorryCrane(id, Path.getVector(id), scModel, scHModel);
+            LorryCrane c = new LorryCrane(id, Path.getVector(id), lcModel, scHModel);
             lorCranes[i - 1] = c;
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));

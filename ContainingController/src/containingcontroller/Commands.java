@@ -38,5 +38,6 @@ public class Commands {
      * Container must be moved by AVG
      */
     static public int CREATE_TRANSPORTER = 6;
+    
     static public int REMOVE_TRANSPORTER = 7;
 }

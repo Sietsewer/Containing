@@ -18,9 +18,11 @@ public class LorryPlatform extends Node {
     public ParkingSpot parkingSpot;
     private Container container;
     private String agvID;
+    private Spatial crane;
 
-    public LorryPlatform() {
-      
+    public LorryPlatform(Spatial crane) {
+      this.crane = crane;
+      this.attachChild(crane);
     }
     
     public LorryPlatform(String id) {
@@ -48,7 +50,9 @@ public class LorryPlatform extends Node {
         this.container = null;
     }
     
-    public void debugRender(Spatial AGV, Spatial Transporter){
-        
+    public void debugRender(Spatial agv, Spatial transporter){
+        this.attachChild(agv);
+        this.attachChild(transporter);
+        transporter.setLocalTranslation(0f, 0f, 20f);
     }
 }

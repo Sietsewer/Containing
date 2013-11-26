@@ -13,24 +13,39 @@ public class Commands {
      *Device is ready
      */
     static public int READY = 0;
+
     /**
-     *Container must be moved by AGV
+     *Move AGV
      */
-    //static public int MOVE_CONTAINER = 1; SCRAPPED!
+    static public int MOVE = 1;
+    
     /**
-     *Crane needs to pickup CONTAINER
+     *Crane needs to pickup CONTAINER from buffer or transport
      */
     static public int PICKUP_CONTAINER = 2;
-    /**
-     *Crane needs to put CONTAINER down
-     */
-    static public int PUT_CONTAINER = 3;
+    
     /**
      *Give container to AGV
      */
-    static public int GIVE_CONTAINER = 4;
+    static public int GIVE_CONTAINER = 3;
     
-    static public int MOVE_TRANSPORTER = 5;
+    /**
+     *Crane needs to put CONTAINER down on buffer or transport
+     */
+    static public int PUT_CONTAINER = 4;
     
-    static public int MOVE = 6;
+    /**
+     * Crane gets container from AGV
+     */
+    static public int GET_CONTAINER = 5;
+    
+    /**
+     * Simulator creates a new transport
+     */
+    static public int CREATE_TRANSPORTER = 6;
+    
+    /**
+     * Remove transporter from simulation
+     */
+    static public int REMOVE_TRANSPORTER = 7;
 }

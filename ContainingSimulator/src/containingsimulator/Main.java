@@ -155,8 +155,71 @@ public class Main extends SimpleApplication {
     }
 
     void messageRecieved(Message decodedMessage) {
+        Object[] params = decodedMessage.getParameters();
         switch(decodedMessage.getCommand()){
-            case 2: 
+            case 1: //MOVE
+                String agvID1 = (String)params[0];
+                String[] pathIDs1 = new String[params.length - 1];
+                for(int i = 0; i < pathIDs1.length; i++){
+                    pathIDs1[i] = (String)params[i + 1];
+                }
+                //TODO: get AGV from ID, get waypoints from IDs
+                break;
+            case 2: //PICKUP_CONTAINER
+                String craneID1 = (String)params[0]; //crane ID
+                String containerID1 = (String)params[1]; //container ID
+                //param[2],[3] and [4] are for x, y and z of indexposition
+                Crane crane = null;
+                for(Crane c : seaCranes){
+                    if(c.id.equals(craneID1)){
+                        crane = c;
+                    }
+                }
+                //TODO: process buffer cranes
+                //Little start here, I'll process this and the rest of the cases
+                //more once we get the required objects inside Main
+                if(crane != null){
+                    if(crane instanceof SeaCrane){
+                        //TODO: find container by ID and pass it to crane.getContainer
+                        //TODO: case for BufferCrane
+                    }else{
+                        System.err.println("Error: No crane with this ID.");
+                    }
+                }else{
+                    System.err.println("Error: No crane with this ID.");
+                }
+                break;
+            case 3: //GIVE_CONTAINER
+                String agvID2 = (String)params[0];
+                String craneID2 = (String)params[1];
+                //TODO: make this work when we have AGVs in Main
+                break;
+            case 4: //PUT_CONTAINER
+                String craneID3 = (String)params[0];
+                String containerID2 = (String)params[1];
+                Vector3f cposition = new Vector3f((Float)params[2], (Float)params[3], (Float)params[4]);
+                //TODO: get containers and cranes from ID, etc yadda yadda yadda
+                break;
+            case 5: //GET_CONTAINER
+                String agvID3 = (String)params[0];
+                String craneID4 = (String)params[1];
+                //TODO: you know the drill by now
+                break;
+            case 6: //CREATE_TRANSPORTER
+                String transporterID1 = (String)params[0];
+                int transporterType = (Integer)params[1];
+                String[] containerIDs = new String[params.length - 2];
+                for(int i = 0; i < containerIDs.length; i++){
+                    containerIDs[i] = (String)params[i + 2];
+                }
+                //TODO: see above, also needs a list or array of transporters
+                break;
+            case 7: //REMOVE_TRANSPORTER
+                String transporterID2 = (String)params[0];
+                //TODO: see above
+                break;
+            default:
+                System.err.println("Error: Invalid command for simulator.");
         }
     }
     

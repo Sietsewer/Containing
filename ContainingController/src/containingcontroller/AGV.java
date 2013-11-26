@@ -54,6 +54,7 @@ public class AGV {
     
     AGV(PathNode upperNode, Buffer b) {
         this(upperNode, b, "AGV" + String.format("%03d", id++));
+       this.isHome=true;
     }
 
     /**
@@ -63,14 +64,18 @@ public class AGV {
      * @param destination
      */
     public void moveToCrane(Crane destination, Controller c) {
-        /*  PathFinder finder = new PathFinder();
-         List<PathNode> path = finder.getShortestPath(home, destination.pathNode);
-         Message moveMessage = new Message(Commands.MOVE_CONTAINER, null);
-         ArrayList<String> nodeIds = new ArrayList<>();
-         for (PathNode node : path) {
-         nodeIds.add(node.getId());
-         }
-         moveMessage.setParameters(new Object[]{nodeIds});*/
+        try {
+            PathFinder finder = c.getPathFinder();
+            List<PathNode> path = finder.getShortestPath(home, destination.node,false);
+            Message moveMessage = new Message(Commands.MOVE, null);
+            ArrayList<String> nodeIds = new ArrayList<>();
+            for (PathNode node : path) {
+            nodeIds.add(node.getId());
+            }
+            moveMessage.setParameters(new Object[]{nodeIds});
+        } catch (Exception ex) {
+            Logger.getLogger(AGV.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -106,6 +111,6 @@ public class AGV {
     
     @Override
     public String toString() {
-        return "AGV{" + "name=" + name + ", isHome=" + isHome + ", container=" + container + ", home=" + home.getId() + ", homeBuffer=" + homeBuffer.id + '}';
+        return "AGV{" + "name=" + name + ", isHome=" + isHome + ", container=" + container + ", home=" + home  + ", homeBuffer=" + homeBuffer.id + '}';
     }
 }

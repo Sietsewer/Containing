@@ -268,8 +268,8 @@ public class Controller {
                     Message m = new Message(Commands.CREATE_TRANSPORTER, null);
 
                     Object[] objects = new Object[t.getContainerCount() + 3];
-                    objects[0] = t.getTransportType();
-                    objects[1] = t.id;
+                    objects[0] = t.id;
+                    objects[1] = t.getTransportType();
                     objects[2] = t.getDockingPoint().id;
 
                     for (int i = 0; i < t.getContainerCount(); i++) {
@@ -353,12 +353,13 @@ public class Controller {
 
     /**
      * Put container onto agv
+     *
      * @param agv
      * @param crane
      */
     public void putContainer(AGV agv, Crane crane) {
-        Message m = new Message(Commands.PUT_CONTAINER, null);
-        m.setParameters(new Object[]{agv.name, crane.id, crane.container.getId()});
+        Message m = new Message(Commands.GIVE_CONTAINER, null);
+        m.setParameters(new Object[]{agv.name, crane.id});
         this.sendMessage(m);
         agv.container = crane.container;
         crane.container = null;
@@ -458,6 +459,7 @@ public class Controller {
 
     /**
      * Crane from buffer is ready
+     *
      * @param b
      */
     public void bufferCraneReady(Buffer b) {
@@ -520,6 +522,7 @@ public class Controller {
 
     /**
      * get path finder
+     *
      * @return
      */
     public PathFinder getPathFinder() {

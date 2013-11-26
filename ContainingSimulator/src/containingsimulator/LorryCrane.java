@@ -18,7 +18,9 @@ import com.jme3.scene.Spatial;
  */
 public class LorryCrane extends Crane implements MotionPathListener {
 
-    private Vector3f parkingSpot;
+   
+    public ParkingSpot parkingSpot = new ParkingSpot(Vector3f.ZERO,0);
+    
     private Container container;
     private String agvID;
     

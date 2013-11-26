@@ -22,7 +22,7 @@ public class Transporter extends Node {
     /**
      * Container array
      */
-    public Container[][][] containers;
+    private Container[][][] containers;
     /**
      * position of transporter
      */
@@ -74,8 +74,7 @@ public class Transporter extends Node {
      * @param position
      * @param type
      */
-    public Transporter(ArrayList<SimContainer> containersList, Vector3f position, int type) {
-        
+    public Transporter(String id, ArrayList<SimContainer> containersList, Vector3f position, int type) {
         this.position = position;
         this.type = type;
 
@@ -84,12 +83,12 @@ public class Transporter extends Node {
 
         switch (type) {
             case TransportTypes.SEASHIP:
-                containers = new Container[20][15][5];
+                containers = new Container[20][5][15];
                 currentGeometry = SEASHIP.clone();
                 size = new Vector3f(SEASHIPb.xExtent, SEASHIPb.yExtent, SEASHIPb.yExtent);
                 break;
             case TransportTypes.BARGE:
-                containers = new Container[12][3][2];
+                containers = new Container[12][2][3];
                 currentGeometry = BARGE.clone();
                 size = new Vector3f(BARGEb.xExtent, BARGEb.yExtent, BARGEb.yExtent);
                 break;
@@ -112,25 +111,29 @@ public class Transporter extends Node {
 
 
         for (int z = 0; z < containers[0][0].length; z++) {
-            for (int x = 0; x < containers[0].length; x++) {
-                for (int y = 0; y < containers.length; y++) {
+            for (int x = 0; x < containers.length; x++) {
+                for (int y = 0; y < containers[0].length; y++) {
                     if (containers[x][y][z] != null) {
                         Container con = containers[x][y][z];
                         Vector3f vec = con.getLocalTranslation();
                         vec.y += 1.72f;
+                        vec.x -= size.x - 1.22f;
+                        vec.z += size.z * 2;
+                        
                         this.attachChild(con);
                     }
                 }
             }
         }
+        setRendering();
 
         currentGeometry.setLocalTranslation(position);
         this.attachChild(currentGeometry);
+        this.setLocalTranslation(0, 1.5f, 0);
     }
     
-    public Transporter(SimContainer container, Vector3f position) {
+    public Transporter(String id, SimContainer container, Vector3f position) {
         containers = new Container[1][1][1];
-        container.setIndexPosition(new CustomVector3f(0,0,0));
         Container con = new Container(container);
         Vector3f vec = con.getLocalTranslation();
         vec.y += 1.72f;
@@ -152,6 +155,7 @@ public class Transporter extends Node {
             this.attachChild(container);
             Vector3f vec = container.getLocalTranslation();
             vec.y += 1.72f;
+            setRendering();
             return true;
         } else {
             return false;
@@ -167,8 +171,25 @@ public class Transporter extends Node {
         tempCont = (Container)this.containers[(int)position.x][(int)position.x][(int)position.z].clone();
         this.detachChild(this.containers[(int)position.x][(int)position.x][(int)position.z]);
         this.containers[(int)position.x][(int)position.x][(int)position.z] = null;
+        setRendering();
         
         return tempCont;
+    }
+    
+    /**
+     * Set which geometries have to be drawn and which not
+     */
+    private void setRendering(){
+        //cull walled-in containers
+        for (int i = 0; i < containers.length; i++){
+            for (int j = 0; j < containers[0].length; j++){
+                for (int k = 0; k < containers[0][0].length; k++){
+                    if(containers[i][j][k] != null){
+                        containers[i][j][k].updateRendering(containers);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -178,14 +199,14 @@ public class Transporter extends Node {
      * @param am the AssetManager to load materials from
      */
     public static void makeGeometry(AssetManager am) {
-        SEASHIPb = new Box(Vector3f.ZERO, 16.15f, 0.5f, 152.4f); //container size in m divided by 2 because box size grows both ways
+        SEASHIPb = new Box(new Vector3f(0, 0, 128f), 18.3f, 0.5f, 134.1f); //container size in m divided by 2 because box size grows both ways
         SEASHIP = new Geometry("Seaship", SEASHIPb);
-        BARGEb = new Box(Vector3f.ZERO, 8.64f, 0.5f, 47.565f); //container size in m divided by 2 because box size grows both ways
+        BARGEb = new Box(new Vector3f(0, 0, 80f), 3.66f, 0.5f, 85f); //container size in m divided by 2 because box size grows both ways
         BARGE = new Geometry("Barge", BARGEb);
         
         LORRYb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 6.705f); //container size in m divided by 2 because box size grows both ways
         LORRY = new Geometry("Lorry", LORRYb);
-        TRAINb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 700f); //container size in m divided by 2 because box size grows both ways
+        TRAINb = new Box(new Vector3f(0, 0, 190f), 1.22f, 0.5f, 200f); //container size in m divided by 2 because box size grows both ways
         TRAIN = new Geometry("Train", TRAINb);
         
         Material mat = new Material(am, "Common/MatDefs/Misc/Unshaded.j3md");

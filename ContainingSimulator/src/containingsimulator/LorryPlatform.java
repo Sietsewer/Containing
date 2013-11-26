@@ -6,6 +6,7 @@ package containingsimulator;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 
 /**
  *
@@ -17,57 +18,37 @@ public class LorryPlatform extends Node {
     public ParkingSpot parkingSpot;
     private Container container;
     private String agvID;
-    private AGV agv;
-    private Transporter lorry;
 
     public LorryPlatform() {
       
-    
     }
+    
     public LorryPlatform(String id) {
         this.id = id;
         parkingSpot.translation = new Vector3f(this.getWorldTranslation().x, this.getWorldTranslation().y, this.getWorldTranslation().z);
     }
 
-    public void lorryArrive() {
-    }
-
-    public void lorryDepart() {
-    }
-
-    public void agvArrived(AGV arrivedAGV) {
-    }
-
-    public void agvDepard() {
-    }
-
-    public void fromLorry() {
+    public void fromLorry(Transporter lorry) {
 
         this.container = lorry.getContainer(new Vector3f(0f, 0f, 0f));
     }
 
-    public void toLorry() {
+    public void toLorry(Transporter lorry) {
 
-        this.lorry.setContainer(container);
+        lorry.setContainer(container);
         this.container = null;
     }
-
-    public void fromAGV() {
-      
-    }
-    
 
     public void fromAGV(AGV agv) {
         this.container = agv.getContainer();
     }
 
-    public void toAGV() {
-    }
-
-    
-
     public void toAGV(AGV agv) {
         agv.setContainer(this.container);
         this.container = null;
+    }
+    
+    public void debugRender(Spatial AGV, Spatial Transporter){
+        
     }
 }

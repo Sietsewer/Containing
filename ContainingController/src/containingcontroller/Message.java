@@ -9,25 +9,19 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.PropertyException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import org.simpleframework.xml.*;
+import org.simpleframework.xml.core.Persister;
 
 /**
  *
  * @author Hendrik
  */
-@XmlRootElement(name = "message")
-@XmlSeeAlso({CustomVector3f.class, Date.class, SimContainer.class})
+@Root(name = "message")
 public class Message {
 
+    @Attribute
     private int command;//Command number
+    @ElementArray(name = "parameters", entry = "parameter")
     private Object[] parameters;//Parameters for command
 
     /**
@@ -68,8 +62,6 @@ public class Message {
      *
      * @return parameters
      */
-    @XmlElementWrapper(name = "parameters")
-    @XmlElement(name = "parameter")
     public Object[] getParameters() {
         return parameters;
     }
@@ -91,15 +83,14 @@ public class Message {
      */
     static public Message decodeMessage(String XML) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Message.class);
-            Unmarshaller um = context.createUnmarshaller();
-            Message message = (Message) um.unmarshal(new StringReader(XML));
-            return message;
-        } catch (JAXBException ex) {
+            Serializer serializer = new Persister();
+
+            return serializer.read(Message.class, XML);
+            
+        } catch (Exception ex) {
             Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-
     }
 
     /**
@@ -110,30 +101,19 @@ public class Message {
      */
     static public String encodeMessage(Message message) {
         try {
-            JAXBContext context = JAXBContext.newInstance(Message.class);
-            Marshaller m = context.createMarshaller();
-            m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            String xml;
+            Serializer serializer = new Persister();
             StringWriter xmlString = new StringWriter();
-            m.marshal(message, xmlString);
-            xml = xmlString.toString();
-            xml = xml.replace("\n", "");
 
-            return xml;
-        } catch (PropertyException ex) {
-            Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
-            return null;
-        } catch (JAXBException ex) {
+            serializer.write(message, xmlString);
+            return xmlString.toString().replace("\n", "");
+        } catch (Exception ex) {
             Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-
     }
 
     @Override
     public String toString() {
         return "Message{" + "command=" + command + ", parameters=" + parameters + '}';
     }
-    
-    
 }

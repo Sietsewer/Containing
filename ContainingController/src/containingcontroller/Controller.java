@@ -50,7 +50,7 @@ public class Controller {
      * @param window mainwindow needed to write to textarea
      */
     public Controller(ControllerWindow window) {
-
+   
         this.window = window;
 
         buffers = new ArrayList<>();

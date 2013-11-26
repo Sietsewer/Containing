@@ -4,39 +4,62 @@
  */
 package containingsimulator;
 
+
 import java.util.Date;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import org.simpleframework.xml.*;
 
 /**
  *
  * @author Hendrik
  */
-@XmlRootElement(name = "simcontainer")
-@XmlSeeAlso({containingsimulator.CustomVector3f.class, Date.class})
+@Root
 public class SimContainer {
 
-    private  String id;
-    private containingsimulator.CustomVector3f indexPosition;
+    @Attribute
+    private String id;
+    @Element
+    private CustomVector3f indexPosition;
 
-    public SimContainer(String id, CustomVector3f indexPosition) {
-        this.id = id;
-        this.indexPosition = indexPosition;
+    /**
+     *
+     */
+    public SimContainer() {
     }
 
+    SimContainer(Container c) {
+        this.id = c.getId();
+        this.indexPosition = c.getPosition();
+    }
+
+    /**
+     *
+     * @return
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     *
+     * @param id
+     */
     public void setId(String id) {
         this.id = id;
     }
 
-    public containingsimulator.CustomVector3f getIndexPosition() {
+    /**
+     *
+     * @return
+     */
+    public CustomVector3f getIndexPosition() {
         return indexPosition;
     }
 
-    public void setIndexPosition(containingsimulator.CustomVector3f indexPosition) {
+    /**
+     *
+     * @param indexPosition
+     */
+    public void setIndexPosition(CustomVector3f indexPosition) {
         this.indexPosition = indexPosition;
     }
 }

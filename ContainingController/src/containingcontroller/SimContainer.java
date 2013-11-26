@@ -5,18 +5,18 @@
 package containingcontroller;
 
 import java.util.Date;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import org.simpleframework.xml.*;
 
 /**
  *
  * @author Hendrik
  */
-@XmlRootElement(name = "simcontainer")
-@XmlSeeAlso({CustomVector3f.class, Date.class})
+@Root
 public class SimContainer {
 
+    @Attribute
     private String id;
+    @Element
     private CustomVector3f indexPosition;
 
     /**

@@ -31,11 +31,8 @@
  */
 package containingcontroller;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.logging.Logger;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Root;
 
 /*
  * -- Added *Local methods to cut down on object creation - JS
@@ -49,7 +46,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * @author Mark Powell
  * @author Joshua Slack
  */
-@XmlRootElement(name = "custom_vector")
+@Root
 public final class CustomVector3f implements Cloneable, java.io.Serializable {
 
     /*   static final long serialVersionUID = 1;
@@ -75,14 +72,17 @@ public final class CustomVector3f implements Cloneable, java.io.Serializable {
     /**
      * the x value of the vector.
      */
+    @Attribute
     public float x;
     /**
      * the y value of the vector.
      */
+    @Attribute
     public float y;
     /**
      * the z value of the vector.
      */
+    @Attribute
     public float z;
 
     /**

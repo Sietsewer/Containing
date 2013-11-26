@@ -98,11 +98,15 @@ public class Path {
   private static void createBF()
   {
       int dist = 22;
-      Vector3f vecBFA = new Vector3f(12,10,71);
-      Vector3f vecBFB= new Vector3f(12,10,495);
+      Vector3f vecBFA = new Vector3f(116,10,71);
+      Vector3f vecBFB= new Vector3f(116,10,495);
+     
       String bfa = "bfa";
       String bfb = "bfb";
-      for(int i = 1;i<=63;i++)
+      map.put(bfa+String.format("%03d", 1),vecBFA);
+      map.put(bfb+String.format("%03d", 1),vecBFB);
+      
+      for(int i = 2;i<=63;i++)
       {
           vecBFA = vecBFA.add(dist,0,0);
           vecBFB = vecBFB.add(dist,0,0);
@@ -116,8 +120,8 @@ public class Path {
       int dist = 40;
              Vector3f vecCSE = new Vector3f(65,10,50);
              String cse = "cse";
-             
-             for(int i =1;i<=10;i++)
+              map.put(cse+String.format("%03d", 1),vecCSE);
+             for(int i =2;i<=10;i++)
              {
               vecCSE = vecCSE.add(new Vector3f(0,0,dist));
               map.put(cse+String.format("%03d", i),vecCSE);
@@ -128,7 +132,8 @@ public class Path {
            int dist = 11*18;
              Vector3f vecCTR = new Vector3f(167,10,30);
              String ctr = "ctr";
-             for(int i =1; i <=4;i++)
+             map.put(ctr+String.format("%03d", 1), vecCTR);
+             for(int i =2; i <=4;i++)
              {
                  vecCTR = vecCTR.add(new Vector3f(dist,0,0));
                  map.put(ctr+String.format("%03d", i), vecCTR);
@@ -140,7 +145,8 @@ public class Path {
       int dist = 66;
              Vector3f vecCBA = new Vector3f(222,10,534);
              String cba = "cba";
-             for(int i=1;i<=8;i++)
+             map.put(cba+String.format("%03d", 1), vecCBA);
+             for(int i=2;i<=8;i++)
              {
                  vecCBA.add(new Vector3f(dist,0,0));
                  map.put(cba+String.format("%03d", i), vecCBA);
@@ -152,9 +158,10 @@ public class Path {
       int dist = 11;
              Vector3f vecCLO = new Vector3f(846,10,526);
              String clo = "clo";
-             for(int i=1;i<=20;i++)
+               map.put(clo+String.format("%03d", 1), vecCLO);
+             for(int i=2;i<=20;i++)
              {
-                 vecCLO.add(new Vector3f(dist,0,0));
+                 vecCLO = vecCLO.add(new Vector3f(dist,0,0));
                  map.put(clo+String.format("%03d", i), vecCLO);
              }
   }    

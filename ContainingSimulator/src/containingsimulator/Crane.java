@@ -25,10 +25,10 @@ public abstract class Crane extends Node{
      *
      * @param cont
      */
-    public abstract void loadContainer(Container cont);
+    public abstract void loadContainer(Transporter transporter);
     /**
      *
      * @param cont
      */
-    public abstract void getContainer(Container cont);
+    public abstract void getContainer(Transporter transporter, Container cont);
 }

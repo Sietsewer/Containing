@@ -129,8 +129,8 @@ public class Path {
   }
   private static void createCTR()
   {
-           int dist = 11*18;
-             Vector3f vecCTR = new Vector3f(167,10,30);
+           int dist = 22*18;
+             Vector3f vecCTR = new Vector3f(167,10,25);
              String ctr = "ctr";
              map.put(ctr+String.format("%03d", 1), vecCTR);
              for(int i =2; i <=4;i++)
@@ -143,12 +143,12 @@ public class Path {
   private static void createCBA()
   {
       int dist = 66;
-             Vector3f vecCBA = new Vector3f(222,10,534);
+             Vector3f vecCBA = new Vector3f(222,10,537);
              String cba = "cba";
              map.put(cba+String.format("%03d", 1), vecCBA);
              for(int i=2;i<=8;i++)
              {
-                 vecCBA.add(new Vector3f(dist,0,0));
+                 vecCBA = vecCBA.add(new Vector3f(dist,0,0));
                  map.put(cba+String.format("%03d", i), vecCBA);
              }
   }

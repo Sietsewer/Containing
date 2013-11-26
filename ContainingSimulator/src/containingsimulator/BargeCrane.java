@@ -5,54 +5,45 @@
 package containingsimulator;
 
 import com.jme3.animation.LoopMode;
-import com.jme3.asset.AssetManager;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.MotionPathListener;
-import com.jme3.cinematic.PlayState;
 import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
  *
- * @author User
+ * @author Len
  */
-public class SeaCrane extends Crane implements MotionPathListener{
-
-    private Container container;
+public class BargeCrane extends Crane implements MotionPathListener { 
     
+   
     private static final float sliDur = 2f;
-
-
     private Node sNode = new Node();
     private  Spatial slider;
-    
-    private AGV agv;
-    //motionpaths for moving objects
     private MotionPath sliderPath = new MotionPath();
     private MotionEvent sliderControl;
-
-
-    public SeaCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook)
+   
+    public BargeCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook)
     {
         super(id,basePos,base,hook);
-        this.slider = slider.clone();
         
+        this.slider = slider.clone();
+         this.base.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
          sNode.attachChild(this.slider);
          sNode.attachChild(this.hook);
          this.attachChild(this.sNode);
-         
          this.hook.setLocalTranslation(new Vector3f(0,25,0));
          sliderControl = new MotionEvent(this.sNode,sliderPath,sliDur/Main.globalSpeed,LoopMode.DontLoop);
          sliderPath.setCycle(false);
          sliderPath.addListener(this);
     }
     
-    public Container getContainer()
-    {
-        return this.container;
-    }
+
+    
     public boolean isMoving()
     {
         return this.action!=0;
@@ -63,7 +54,7 @@ public class SeaCrane extends Crane implements MotionPathListener{
     {
         
     }
- 
+   
     
     
     //updates crane motion
@@ -143,7 +134,7 @@ public class SeaCrane extends Crane implements MotionPathListener{
     {
          basePath.clearWayPoints();
          basePath.addWayPoint(this.getLocalTranslation());
-         basePath.addWayPoint(new Vector3f(this.getLocalTranslation().x,this.getLocalTranslation().y,target.z));
+         basePath.addWayPoint(new Vector3f(target.x,this.getLocalTranslation().y,this.getLocalTranslation().z));
          baseControl.play();
     }
     
@@ -161,7 +152,7 @@ public class SeaCrane extends Crane implements MotionPathListener{
          sliderPath.addWayPoint(new Vector3f(
                  target.x-this.getWorldTranslation().x
                  ,sNode.getLocalTranslation().y,
-                 sNode.getLocalTranslation().z));
+                 target.z-sNode.getWorldTranslation().z));
          sliderControl.play();
     }
     
@@ -176,7 +167,7 @@ public class SeaCrane extends Crane implements MotionPathListener{
     {
         hookPath.clearWayPoints();
         hookPath.addWayPoint(hook.getLocalTranslation());
-        hookPath.addWayPoint(new Vector3f(target.x-sNode.getWorldTranslation().x,target.y-sNode.getWorldTranslation().y,sNode.getLocalTranslation().z));
+        hookPath.addWayPoint(new Vector3f(sNode.getLocalTranslation().x,target.y-sNode.getWorldTranslation().y,target.z-sNode.getWorldTranslation().z));
         hookControl.play();
     }
     

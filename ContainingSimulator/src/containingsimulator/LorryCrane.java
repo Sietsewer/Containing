@@ -8,6 +8,7 @@ import com.jme3.animation.LoopMode;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -18,52 +19,19 @@ import com.jme3.scene.Spatial;
  */
 public class LorryCrane extends Crane implements MotionPathListener {
 
-   
     public ParkingSpot parkingSpot = new ParkingSpot(Vector3f.ZERO,0);
-    
     private Container container;
     private String agvID;
-    
-    private Spatial hook;
-    private Spatial base;
-    private int action = 0;
-    private Vector3f target;
-    
-    
-    private static final float baseDur = 2f;
-    private static final float hookDur = 2f;
-
-
-    
     private AGV agv;
-    //motionpaths for moving objects
-    private MotionPath basePath = new MotionPath();
-    private MotionPath hookPath = new MotionPath();
     
-    private MotionEvent baseControl;
-    private MotionEvent hookControl;
-    private boolean busy = false;
-
+    
     public LorryCrane(String id, Vector3f pos, Spatial base, Spatial hook) 
     {
-        this.id = id;
-         this.position = pos;
-         this.base = base.clone();
-         this.hook = hook.clone();
-         
-         this.attachChild(this.base);
+         super(id,pos,base,hook);
+        
+         this.hook = this.hook.scale(0.4f);
          this.attachChild(this.hook);
-         
-         this.hook.setLocalTranslation(new Vector3f(0,25,0));
-
-         baseControl = new MotionEvent(this,basePath,baseDur/Main.globalSpeed,LoopMode.DontLoop);
-         hookControl = new MotionEvent(this.hook,hookPath,hookDur/Main.globalSpeed,LoopMode.DontLoop);
-       
-         basePath.setCycle(false);
-         hookPath.setCycle(false);
-
-         basePath.addListener(this);
-         hookPath.addListener(this);
+         this.hook.setLocalTranslation(new Vector3f(0,6.8f,0));
     }
     
       public boolean isbusy()
@@ -89,30 +57,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
     {
         target = transporter.getWorldTranslation();
     }
-    @Override
-    public void getContainer(Transporter transporter,Container cont)
-    {
-        if(cont != null && this.container == null)
-        {
-        this.container = cont;
-        this.target = cont.realPosition;
-        action = 1;
-        busy = true;
-        }
-    }
-   
-    public void getContainer(Vector3f pos)
-    {
-        if(pos != null)
-        {
-      //  this.container = cont;
-        this.target = pos;
-        action = 1;
-        busy = true;
-        }
-    }
-    
-    
+
     //updates crane motion
     public void update(float tpf)
     {
@@ -162,10 +107,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
         
     }
     
-    public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) 
-    {
-       action+=wayPointIndex;
-    }
+ 
     
     private void updateSpeed()
     {
@@ -203,7 +145,10 @@ public class LorryCrane extends Crane implements MotionPathListener {
         hookControl.play();
     }
 
-
+   public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) 
+    {
+       action+=wayPointIndex;
+    }
 
 
     

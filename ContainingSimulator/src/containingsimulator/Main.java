@@ -5,6 +5,7 @@ import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue;
@@ -12,8 +13,6 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * test
@@ -42,14 +41,17 @@ public class Main extends SimpleApplication {
      */
     Spatial lcModel;
     Spatial lcHModel;
-    
+    /*
+     crane 
+     */
     Crane[] seaCranes = new Crane[10];
     Crane[] bufCranes = new Crane[63];
     Crane[] lorCranes = new Crane[20];
     Crane[] trainCranes = new Crane[4];
     Crane[] barCranes = new Crane[8];
+    
     Buffer[] buffers;
-    public static float globalSpeed;
+    public static float globalSpeed = 1f;
 
     /**
      *
@@ -58,7 +60,6 @@ public class Main extends SimpleApplication {
     public static void main(String[] args) {
 
         Main app = new Main();
-
 
         app.start();
     }
@@ -70,7 +71,7 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
 
         loadAssets();
-        flyCam.setMoveSpeed(100f);
+        flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
         listener = new ServerListener(this);
         new Thread(new Runnable() {
@@ -87,6 +88,26 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         sky_geo.setLocalTranslation(cam.getLocation());
+        for(Crane c : seaCranes)
+        {
+            c.update(tpf);
+        }
+        for(Crane c : lorCranes)
+        {
+            c.update(tpf);
+        }
+        for(Crane c : bufCranes)
+        {
+            c.update(tpf);
+        }
+        for(Crane c : barCranes)
+        {
+            c.update(tpf);
+        }
+        for(Crane c : trainCranes)
+        {
+            c.update(tpf);
+        }
     }
 
     /**
@@ -146,8 +167,10 @@ public class Main extends SimpleApplication {
         lcMat.setColor("Color", ColorRGBA.Yellow);
         lcModel.setMaterial(lcMat);
         init_SeaCranes();
+        init_BargeCranes();
         init_BufferCranes();
         init_LorryCranes();
+        init_TrainCranes();
 
         //Init Transporters
         Transporter.makeGeometry(assetManager);
@@ -305,8 +328,31 @@ public class Main extends SimpleApplication {
 
         for (int i = 1; i <= 20; i++) {
             String id = cID + String.format("%03d", i);
-            LorryCrane c = new LorryCrane(id, Path.getVector(id), lcModel, scHModel);
+            LorryCrane c = new LorryCrane(id, Path.getVector(id), lcModel, scHModel.clone().rotate(0, 90*FastMath.DEG_TO_RAD, 0));
             lorCranes[i - 1] = c;
+            rootNode.attachChild(c);
+            c.setLocalTranslation(Path.getVector(id));
+        }
+    }
+    private void init_BargeCranes()
+    {
+        String cID = Path.getBargeID();
+         for (int i = 1; i <= 8; i++) {
+            String id = cID + String.format("%03d", i);
+            Crane c = new BargeCrane(id, Path.getVector(id),scModel, scSModel, scHModel);
+            barCranes[i - 1] = c;
+          
+            rootNode.attachChild(c);
+            c.setLocalTranslation(Path.getVector(id));
+        }
+    }
+     private void init_TrainCranes()
+    {
+        String cID = Path.getTrainID();
+         for (int i = 1; i <= 4; i++) {
+            String id = cID + String.format("%03d", i);
+            Crane c = new TrainCrane(id, Path.getVector(id),bcModel, scSModel,scHModel);
+            trainCranes[i - 1] = c;
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));
         }
@@ -322,4 +368,5 @@ public class Main extends SimpleApplication {
         Message message = new Message(0, objectArray);
         sendMessage(message);
     }
+ 
 }

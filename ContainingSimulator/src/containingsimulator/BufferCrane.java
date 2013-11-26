@@ -8,6 +8,7 @@ import com.jme3.animation.LoopMode;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -18,115 +19,42 @@ import com.jme3.scene.Spatial;
  */
 public class BufferCrane extends Crane implements MotionPathListener{
 
-    private int action = 0;
-    private Vector3f target;
-    private Container container;
-    
+    private Container container;   
     private static final float sliDur = 2f;
-    private static final float baseDur = 2f;
-    private static final float hookDur = 2f;
-
     private  Node sNode = new Node();
-    private  Spatial base;
     private  Spatial slider;
-    private  Spatial hook;
-    
     private AGV agv;
     //motionpaths for moving objects
-    private MotionPath basePath = new MotionPath();
     private MotionPath sliderPath = new MotionPath();
-    private MotionPath hookPath = new MotionPath();
-    
-    private MotionEvent baseControl;
     private MotionEvent sliderControl;
-    private MotionEvent hookControl;
-    private boolean busy = false;
 
-    
-    
-    
     public BufferCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook)
     {
-         this.id = id;
-         this.position = basePos;
-         this.base = base.clone();
-         this.slider = slider.clone();
-         this.hook = hook.clone();
-         
-         this.attachChild(this.base);
-         sNode.attachChild(this.slider);
-         sNode.attachChild(this.hook);
-         this.attachChild(this.sNode);
-         
-         this.hook.setLocalTranslation(new Vector3f(0,25,0));
+        super(id, basePos,base, hook);
 
-         baseControl = new MotionEvent(this,basePath,baseDur/Main.globalSpeed,LoopMode.DontLoop);
+        this.slider = slider.clone();
+        sNode.attachChild(this.slider);
+        sNode.attachChild(this.hook);
+        this.attachChild(this.sNode);
+         
+         this.hook.setLocalTranslation(new Vector3f(0,18.5f,0));
+         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+
          sliderControl = new MotionEvent(this.sNode,sliderPath,sliDur/Main.globalSpeed,LoopMode.DontLoop);
-         hookControl = new MotionEvent(this.hook,hookPath,hookDur/Main.globalSpeed,LoopMode.DontLoop);
-       
-         basePath.setCycle(false);
          sliderPath.setCycle(false);
-         hookPath.setCycle(false);
-
-         basePath.addListener(this);
          sliderPath.addListener(this);
-         hookPath.addListener(this);
     }
     
-      public boolean isbusy()
-    {
-        return this.busy;
-    }
-    
-    public Container getContainer()
-    {
-        return this.container;
-    }
-    public String getId()
-    {
-        return id;
-    }
-    public boolean isMoving()
-    {
-        return this.action!=0;
-    }
-
     @Override
     public  void loadContainer(Transporter transporter)
     {
         
     }
+
     @Override
-    public void getContainer(Transporter transporter,Container cont)
-    {
-        if(cont != null && this.container == null)
-        {
-        this.container = cont;
-        this.target = cont.realPosition;
-        action = 1;
-        busy = true;
-        }
-    }
-   
-    public void getContainer(Vector3f pos)
-    {
-        if(pos != null)
-        {
-      //  this.container = cont;
-        this.target = pos;
-        action = 1;
-        busy = true;
-        }
-    }
-    
-    
-    //updates crane motion
     public void update(float tpf)
     {
-        if(target==null)
-        {
-            return;
-        }
+       
         
         updateSpeed();
 

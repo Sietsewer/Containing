@@ -3,7 +3,6 @@
 /build
 /dist
 # Package Files #
-*.jar
 *.war
 *.ear
 /ContainingSimulator/nbproject/private/

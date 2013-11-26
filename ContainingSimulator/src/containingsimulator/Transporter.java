@@ -70,6 +70,7 @@ public class Transporter extends Node {
 
     /**
      * Constructor
+     *
      * @param containersList
      * @param position
      * @param type
@@ -104,7 +105,7 @@ public class Transporter extends Node {
                 size = new Vector3f(LORRYb.xExtent, LORRYb.yExtent, LORRYb.yExtent);
                 break;
         }
-        
+
         for (SimContainer container : containersList) {
             this.containers[(int) container.getIndexPosition().x][(int) container.getIndexPosition().y][(int) container.getIndexPosition().z] = new Container(container);
         }
@@ -119,7 +120,7 @@ public class Transporter extends Node {
                         vec.y += 1.72f;
                         vec.x -= size.x - 1.22f;
                         vec.z += size.z * 2;
-                        
+
                         this.attachChild(con);
                     }
                 }
@@ -131,27 +132,29 @@ public class Transporter extends Node {
         this.attachChild(currentGeometry);
         this.setLocalTranslation(0, 1.5f, 0);
     }
-    
+
     public Transporter(String id, SimContainer container, Vector3f position) {
         containers = new Container[1][1][1];
         Container con = new Container(container);
         Vector3f vec = con.getLocalTranslation();
         vec.y += 1.72f;
-        
+
         containers[0][0][0] = con;
         this.attachChild(con);
         this.attachChild(LORRY.clone());
     }
-    
+
     /**
      * When called, places a container on the Transporter. null can be sent.
+     *
      * @param container The container to be placed on the Transporter.
-     * @return True if the container was received, False if there already is a container.
+     * @return True if the container was received, False if there already is a
+     * container.
      */
-    public boolean setContainer(Container container){
+    public boolean setContainer(Container container) {
         Vector3f pos = new Vector3f(container.indexPosition.x, container.indexPosition.y, container.indexPosition.z);
-        if(containers[(int)pos.x][(int)pos.y][(int)pos.z] == null){
-            containers[(int)pos.x][(int)pos.y][(int)pos.z] = container;
+        if (containers[(int) pos.x][(int) pos.y][(int) pos.z] == null) {
+            containers[(int) pos.x][(int) pos.y][(int) pos.z] = container;
             this.attachChild(container);
             Vector3f vec = container.getLocalTranslation();
             vec.y += 1.72f;
@@ -161,30 +164,35 @@ public class Transporter extends Node {
             return false;
         }
     }
-    
+
     /**
-     * Gets the container currently on the Transporter, and removes it from the Transporter.
-     * @return the container that was once on the AGV. Null if the Transporter was empty.
+     * Gets the container currently on the Transporter, and removes it from the
+     * Transporter.
+     *
+     * @return the container that was once on the AGV. Null if the Transporter
+     * was empty.
      */
-    public Container getContainer(Vector3f position){
-        Container tempCont;
-        tempCont = (Container)this.containers[(int)position.x][(int)position.x][(int)position.z].clone();
-        this.detachChild(this.containers[(int)position.x][(int)position.x][(int)position.z]);
-        this.containers[(int)position.x][(int)position.x][(int)position.z] = null;
-        setRendering();
-        
+    public Container getContainer(Vector3f position) {
+        Container tempCont = null;
+        if (this.containers[(int) position.x][(int) position.x][(int) position.z] != null) {
+            tempCont = (Container) this.containers[(int) position.x][(int) position.x][(int) position.z].clone();
+            this.detachChild(this.containers[(int) position.x][(int) position.x][(int) position.z]);
+            this.containers[(int) position.x][(int) position.x][(int) position.z] = null;
+            setRendering();
+        }
+
         return tempCont;
     }
-    
+
     /**
      * Set which geometries have to be drawn and which not
      */
-    private void setRendering(){
+    private void setRendering() {
         //cull walled-in containers
-        for (int i = 0; i < containers.length; i++){
-            for (int j = 0; j < containers[0].length; j++){
-                for (int k = 0; k < containers[0][0].length; k++){
-                    if(containers[i][j][k] != null){
+        for (int i = 0; i < containers.length; i++) {
+            for (int j = 0; j < containers[0].length; j++) {
+                for (int k = 0; k < containers[0][0].length; k++) {
+                    if (containers[i][j][k] != null) {
                         containers[i][j][k].updateRendering(containers);
                     }
                 }
@@ -203,17 +211,17 @@ public class Transporter extends Node {
         SEASHIP = new Geometry("Seaship", SEASHIPb);
         BARGEb = new Box(new Vector3f(0, 0, 80f), 3.66f, 0.5f, 85f); //container size in m divided by 2 because box size grows both ways
         BARGE = new Geometry("Barge", BARGEb);
-        
+
         LORRYb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 6.705f); //container size in m divided by 2 because box size grows both ways
         LORRY = new Geometry("Lorry", LORRYb);
         TRAINb = new Box(new Vector3f(0, 0, 190f), 1.22f, 0.5f, 200f); //container size in m divided by 2 because box size grows both ways
         TRAIN = new Geometry("Train", TRAINb);
-        
+
         Material mat = new Material(am, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", ColorRGBA.Red);
-        
-        
-        
+
+
+
         SEASHIP.setMaterial(mat);
         BARGE.setMaterial(mat);
         LORRY.setMaterial(mat);
@@ -222,6 +230,7 @@ public class Transporter extends Node {
 
     /**
      * Load containers
+     *
      * @param container
      */
     public void loadContainer(Container container) {

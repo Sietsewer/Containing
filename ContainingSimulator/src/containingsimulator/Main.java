@@ -255,23 +255,23 @@ public class Main extends SimpleApplication {
      */
     private Crane getCraneByID(String id){
         for(int i = 0; i < seaCranes.length; i++){
-            if(seaCranes[i].id == id)
+            if(seaCranes[i].id.equals(id))
                 return seaCranes[i];
         }
         for(int i = 0; i < bufCranes.length; i++){
-            if(bufCranes[i].id == id)
+            if(bufCranes[i].id.equals(id))
                 return bufCranes[i];
         }
         for(int i = 0; i < lorCranes.length; i++){
-            if(lorCranes[i].id == id)
+            if(lorCranes[i].id.equals(id))
                 return lorCranes[i];
         }
         for(int i = 0; i < trainCranes.length; i++){
-            if(trainCranes[i].id == id)
+            if(trainCranes[i].id.equals(id))
                 return trainCranes[i];
         }
         for(int i = 0; i < barCranes.length; i++){
-            if(barCranes[i].id == id)
+            if(barCranes[i].id.equals(id))
                 return barCranes[i];
         }
         return null;

@@ -98,8 +98,8 @@ public class Path {
   private static void createBF()
   {
       int dist = 22;
-      Vector3f vecBFA = new Vector3f(116,10,71);
-      Vector3f vecBFB= new Vector3f(116,10,495);
+      Vector3f vecBFA = new Vector3f(118,10,71);
+      Vector3f vecBFB= new Vector3f(118,10,495);
      
       String bfa = "bfa";
       String bfb = "bfb";
@@ -118,9 +118,9 @@ public class Path {
   private static void createCSE()
   {
       int dist = 40;
-             Vector3f vecCSE = new Vector3f(65,10,50);
+             Vector3f vecCSE = new Vector3f(65,10,85);
              String cse = "cse";
-              map.put(cse+String.format("%03d", 1),vecCSE);
+             map.put(cse+String.format("%03d", 1),vecCSE);
              for(int i =2;i<=10;i++)
              {
               vecCSE = vecCSE.add(new Vector3f(0,0,dist));
@@ -156,7 +156,7 @@ public class Path {
   private static void createCLO()
   {
       int dist = 11;
-             Vector3f vecCLO = new Vector3f(846,10,526);
+             Vector3f vecCLO = new Vector3f(850.5f,10,526);
              String clo = "clo";
                map.put(clo+String.format("%03d", 1), vecCLO);
              for(int i=2;i<=20;i++)

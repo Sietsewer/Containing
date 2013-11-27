@@ -13,6 +13,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
+import java.util.ArrayList;
 
 /**
  * test
@@ -49,6 +50,8 @@ public class Main extends SimpleApplication {
     Crane[] lorCranes = new Crane[20];
     Crane[] trainCranes = new Crane[4];
     Crane[] barCranes = new Crane[8];
+    
+    ArrayList<Transporter> transporters;
     
     Buffer[] buffers;
     public static float globalSpeed = 1f;
@@ -174,6 +177,7 @@ public class Main extends SimpleApplication {
 
         //Init Transporters
         Transporter.makeGeometry(assetManager);
+        transporters = new ArrayList<Transporter>();
 
         //Init empty buffers
         buffers = new Buffer[63];
@@ -256,15 +260,19 @@ public class Main extends SimpleApplication {
             case 6: //CREATE_TRANSPORTER
                 String transporterID1 = (String) params[0];
                 int transporterType = (Integer) params[1];
-                String[] containerIDs = new String[params.length - 2];
-                for (int i = 0; i < containerIDs.length; i++) {
-                    containerIDs[i] = (String) params[i + 2];
+                Vector3f dockingPoint = getCraneByID((String) params[2]).position;
+                ArrayList<SimContainer> simContainers = new ArrayList<SimContainer>();
+                for (int i = 3; i < params.length - 3; i++) {
+                    simContainers.add((SimContainer) params[i]);
                 }
-                //TODO: see above, also needs a list or array of transporters
+                transporters.add(new Transporter(transporterID1, simContainers, dockingPoint, transporterType));
                 break;
             case 7: //REMOVE_TRANSPORTER
                 String transporterID2 = (String) params[0];
-                //TODO: see above
+                for(Transporter t : transporters){
+                    if(t.id.equals(transporterID2))
+                        transporters.remove(t);
+                }
                 break;
             default:
                 System.err.println("Error: Invalid command for simulator.");

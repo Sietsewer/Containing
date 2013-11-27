@@ -38,10 +38,14 @@ public abstract class Crane extends Node implements MotionPathListener{
     protected MotionEvent baseControl;
     protected MotionEvent hookControl;
     protected boolean busy = false;
+    protected boolean readyForL = false;
+    protected boolean loadContainer = false;
     protected Container cont;
     protected static final float baseDur = 2f;
     protected static final float hookDur = 2f;
     protected Vector3f target;
+    protected Transporter transporter;
+    
     
     public Crane(String id, Vector3f pos, Spatial base, Spatial hook)
     {
@@ -80,15 +84,16 @@ public abstract class Crane extends Node implements MotionPathListener{
      * @param cont
      */
        
-    public void getContainer(Transporter transporter, Container cont)
+    public void getContainer(Container cont)
     {
-        if(cont != null && this.cont== null)
-        {
+       
+       
+        
         this.cont = cont;
-        this.target = cont.realPosition;
+        this.target = cont.getWorldTranslation();
         action = 1;
         busy = true;
-        }
+        
     }
     public void getContainer(Vector3f pos)
     {

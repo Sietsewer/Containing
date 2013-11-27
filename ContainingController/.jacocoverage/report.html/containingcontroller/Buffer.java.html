@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Buffer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ContainingController&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containingcontroller</a> &gt; <span class="el_source">Buffer.java</span></div><h1>Buffer.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containingcontroller;
+
+import containing.xml.CustomVector3f;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+
+/**
+ *
+ * @author Ruben
+ */
+public class Buffer {
+
+    /**
+     * ID of buffer incremental
+     */
+<span class="fc" id="L21">    public static int ID = 1;</span>
+    /**
+     * Id of buffer
+     */
+    public String id;
+    /**
+     * Array of all containers
+     */
+    public Container[][][] containers;
+    /**
+     * List of all owned AGVs
+     */
+    public ArrayList&lt;AGV&gt; ownedAGV;
+    /**
+     * Buffer crane
+     */
+    public Crane crane;
+    /**
+     * Hashmap for reserved spaces
+     */
+    public HashMap&lt;CustomVector3f, Container&gt; reservedSpace;
+    /**
+     * PathNode
+     */
+    public PathNode pathNodeUp;
+    /**
+     * PathNode
+     */
+    public PathNode pathNodeDown;
+
+    /**
+     * Constructor
+     *
+     * @param crane
+     * @param ownedAGV
+     */
+<span class="nc" id="L57">    public Buffer(ArrayList&lt;AGV&gt; ownedAGV, Crane crane) {</span>
+<span class="nc" id="L58">        this.id = &quot;BFR&quot; + String.format(&quot;%03d&quot;, Buffer.ID++);</span>
+<span class="nc" id="L59">        this.containers = new Container[6][6][26];</span>
+<span class="nc" id="L60">        this.ownedAGV = new ArrayList&lt;&gt;(ownedAGV);</span>
+<span class="nc" id="L61">        this.reservedSpace = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L62">        this.crane = crane;</span>
+<span class="nc" id="L63">    }</span>
+
+    /**
+     * Create buffer with id
+     */
+<span class="fc" id="L68">    public Buffer() {</span>
+<span class="fc" id="L69">        this.id = &quot;BFR&quot; + String.format(&quot;%03d&quot;, Buffer.ID++);</span>
+<span class="fc" id="L70">        this.ownedAGV = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L71">        this.reservedSpace = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L72">        this.containers = new Container[6][6][26];</span>
+<span class="fc" id="L73">    }</span>
+
+    /**
+     * Checks the list if there are containers to depart
+     *
+     * @param date
+     * @return ArrayList&lt;Container&gt;
+     */
+    public ArrayList&lt;Container&gt; checkDepartingContainers(Date date) {
+<span class="nc" id="L82">        ArrayList&lt;Container&gt; departingContainers = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        for (Container[][] containerArray3 : containers) {</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">            for (Container[] containerArray2 : containerArray3) {</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">                for (Container container : containerArray2) {</span>
+<span class="nc bnc" id="L86" title="All 4 branches missed.">                    if (container.getDateDeparture().after(date) || container.getDateDeparture().equals(date)) {</span>
+<span class="nc" id="L87">                        departingContainers.add(container);</span>
+                    }
+
+                }
+            }
+        }
+<span class="nc" id="L93">        return departingContainers;</span>
+    }
+
+    /**
+     * Checks the best place for container
+     *
+     * @param container
+     * @return Vector3f
+     */
+    public CustomVector3f findBestBufferPlace(Container container) {
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (int z = 0; z &lt; 26; z++) {</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            for (int x = 0; x &lt; 6; x++) {</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                for (int y = 0; y &lt; 6; y++) {</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">                    if (containers[x][y][z] == null) {</span>
+<span class="nc bnc" id="L107" title="All 4 branches missed.">                        if (y &gt; 0 &amp;&amp; containers[x][y - 1][z] != null) {</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">                            if (containers[x][y - 1][z].getDateDeparture().after(container.getDateDeparture())) {</span>
+<span class="nc" id="L109">                                return new CustomVector3f(x, y, z);</span>
+                            }
+                        } else {
+<span class="nc" id="L112">                            return new CustomVector3f(x, y, z);</span>
+                        }
+                    }
+                }
+            }
+        }
+<span class="nc" id="L118">        return null;</span>
+    }
+
+    /**
+     * Adds a container to buffer
+     *
+     * @param container
+     */
+    public void addContainer(Container container) {
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (reservedSpace.get(container.getBufferPosition()) == container) {</span>
+<span class="nc" id="L128">            containers[(int) container.getBufferPosition().x][(int) container.getBufferPosition().y][(int) container.getBufferPosition().z] = container;</span>
+<span class="nc" id="L129">            reservedSpace.remove(container.getBufferPosition());</span>
+        }
+<span class="nc" id="L131">    }</span>
+
+    /**
+     * Removes container
+     *
+     * @param container
+     */
+    public void removeContainer(Container container) {
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        for (int z = 0; z &lt; 26; z++) {</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            for (int x = 0; x &lt; 6; x++) {</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">                for (int y = 0; y &lt; 6; y++) {</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                    if (containers[x][y][z].getId().equals(container.getId())) {</span>
+<span class="nc" id="L143">                        containers[x][y][z] = null;</span>
+                    }
+                }
+            }
+        }
+<span class="nc" id="L148">    }</span>
+
+    /**
+     * Reserves container position
+     *
+     * @param container
+     */
+    public void reservePosition(Container container) {
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (containers[(int) container.getBufferPosition().x][(int) container.getBufferPosition().y][(int) container.getBufferPosition().z] == null) {</span>
+<span class="nc" id="L157">            reservedSpace.put(container.getBufferPosition(), container);</span>
+        }
+<span class="nc" id="L159">    }</span>
+
+    @Override
+    public String toString() {
+<span class="fc" id="L163">        return &quot;Buffer{&quot; + &quot;id=&quot; + id + &quot;, containers=&quot; + containers + &quot;, crane=&quot; + crane.id + &quot;, reservedSpace=&quot; + reservedSpace + &quot;, pathNodeUp=&quot; + pathNodeUp.getId() + &quot;, pathNodeDown=&quot; + pathNodeDown.getId() + '}';</span>
+    }
+
+    AGV AGVAvailable() {
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        for (AGV a : ownedAGV) {</span>
+<span class="nc bnc" id="L168" title="All 2 branches missed.">            if (a.isHome) {</span>
+<span class="nc" id="L169">                return a;</span>
+            }
+<span class="nc" id="L171">        }</span>
+<span class="nc" id="L172">        return null;</span>
+    }
+
+    public int getContainerCount() {
+<span class="fc" id="L176">        int counter = 0;</span>
+<span class="fc bfc" id="L177" title="All 2 branches covered.">        for (int z = 0; z &lt; 26; z++) {</span>
+<span class="fc bfc" id="L178" title="All 2 branches covered.">            for (int x = 0; x &lt; 6; x++) {</span>
+<span class="fc bfc" id="L179" title="All 2 branches covered.">                for (int y = 0; y &lt; 6; y++) {</span>
+<span class="pc bpc" id="L180" title="1 of 2 branches missed.">                    if (containers[x][y][z] != null) {</span>
+<span class="nc" id="L181">                        counter++;</span>
+                    }
+                }
+            }
+        }
+<span class="fc" id="L186">        return counter;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

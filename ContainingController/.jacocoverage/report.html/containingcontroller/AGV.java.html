@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AGV.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ContainingController&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containingcontroller</a> &gt; <span class="el_source">AGV.java</span></div><h1>AGV.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containingcontroller;
+
+import containing.xml.Message;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.soap.Node;
+
+/**
+ *
+ * @author Ruben
+ */
+public class AGV {
+    
+<span class="fc" id="L20">    boolean ready = false;</span>
+<span class="fc" id="L21">    static private int id = 1;</span>
+    /**
+     * Indicating if cart is home
+     */
+    public boolean isHome;
+    /**
+     * Container that the AGV carries
+     */
+    public Container container;
+    /**
+     * Name of the home buffer
+     */
+    public PathNode home;
+    /**
+     * the home of the agv
+     */
+    public Buffer homeBuffer;
+    /**
+     * Name of the AGV
+     */
+    public String name;
+
+    /**
+     * Constructor
+     *
+     * @param home
+     * @param homeBuffer
+     * @param name
+     */
+<span class="fc" id="L50">    public AGV(PathNode home, Buffer homeBuffer, String name) {</span>
+<span class="fc" id="L51">        this.home = home;</span>
+<span class="fc" id="L52">        this.name = name;</span>
+<span class="fc" id="L53">        this.homeBuffer = homeBuffer;</span>
+<span class="fc" id="L54">    }</span>
+    
+    AGV(PathNode upperNode, Buffer b) {
+<span class="fc" id="L57">        this(upperNode, b, &quot;AGV&quot; + String.format(&quot;%03d&quot;, id++));</span>
+<span class="fc" id="L58">       this.isHome=true;</span>
+<span class="fc" id="L59">    }</span>
+
+    /**
+     * Command the AGV to move to crane
+     *
+     * @param c
+     * @param destination
+     */
+    public void moveToCrane(Crane destination, Controller c) {
+        try {
+<span class="nc" id="L69">            PathFinder finder = c.getPathFinder();</span>
+<span class="nc" id="L70">            List&lt;PathNode&gt; path = finder.getShortestPath(home, destination.node,false);</span>
+<span class="nc" id="L71">            Message moveMessage = new Message(Commands.MOVE, null);</span>
+<span class="nc" id="L72">            ArrayList&lt;String&gt; nodeIds = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">            for (PathNode node : path) {</span>
+<span class="nc" id="L74">            nodeIds.add(node.getId());</span>
+<span class="nc" id="L75">            }</span>
+<span class="nc" id="L76">            moveMessage.setParameters(new Object[]{nodeIds});</span>
+<span class="nc" id="L77">        } catch (Exception ex) {</span>
+<span class="nc" id="L78">            Logger.getLogger(AGV.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L79">        }</span>
+<span class="nc" id="L80">    }</span>
+
+    /**
+     * Send AGV home
+     *
+     * @param source
+     * @param c
+     */
+    public void moveToHome(Crane source, Controller c) {
+        try {
+<span class="nc" id="L90">            PathFinder finder = c.getPathFinder();</span>
+<span class="nc" id="L91">            List&lt;PathNode&gt; path = finder.getShortestPath(source.node, this.home, false);</span>
+<span class="nc" id="L92">            Message moveMessage = new Message(Commands.MOVE, null);</span>
+<span class="nc" id="L93">            ArrayList&lt;String&gt; parameters = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L94">            parameters.add(name);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            for (PathNode node : path) {</span>
+<span class="nc" id="L96">                parameters.add(node.getId());</span>
+<span class="nc" id="L97">            }</span>
+<span class="nc" id="L98">            moveMessage.setParameters(parameters.toArray());</span>
+<span class="nc" id="L99">            c.sendMessage(moveMessage);</span>
+<span class="nc" id="L100">        } catch (Exception ex) {</span>
+<span class="nc" id="L101">            Logger.getLogger(AGV.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L102">        }</span>
+<span class="nc" id="L103">    }</span>
+    
+    boolean getIsReady() {
+<span class="nc" id="L106">        return ready;</span>
+    }
+
+    void setIsReady(boolean newValue) {
+<span class="nc" id="L110">        ready = newValue;</span>
+<span class="nc" id="L111">    }</span>
+    
+    @Override
+    public String toString() {
+<span class="fc" id="L115">        return &quot;AGV{&quot; + &quot;name=&quot; + name + &quot;, isHome=&quot; + isHome + &quot;, container=&quot; + container + &quot;, home=&quot; + home  + &quot;, homeBuffer=&quot; + homeBuffer.id + '}';</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

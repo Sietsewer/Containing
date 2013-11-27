@@ -73,7 +73,9 @@ public class AGV {
             for (PathNode node : path) {
             nodeIds.add(node.getId());
             }
-            moveMessage.setParameters(new Object[]{nodeIds});
+            nodeIds.add(0, this.name);
+            moveMessage.setParameters(nodeIds.toArray());
+            c.sendMessage(moveMessage);
         } catch (Exception ex) {
             Logger.getLogger(AGV.class.getName()).log(Level.SEVERE, null, ex);
         }

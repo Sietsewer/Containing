@@ -21,7 +21,7 @@ class Transporter {
      private Crane dockingPoint;
     public Transporter(int transportType) {
         this.transportType = transportType;
-        this.id = "TRS" + tranporterID++;
+        this.id = "TRS" + String.format("%03d",tranporterID++);
 
     }
 

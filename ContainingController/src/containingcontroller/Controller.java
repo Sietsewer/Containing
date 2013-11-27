@@ -108,6 +108,7 @@ public class Controller {
         for (int i = 1; i <= 20; i++) {
             Crane c = new Crane("CLO" + String.format("%03d", i));
             c.node = pathFinder.getMapCLO().get(i - 1);
+            c.range = 2;
             lorreyCranes.add(c);
             PrintMessage("Lorreystop Created - " + c.toString());
         }
@@ -354,6 +355,20 @@ public class Controller {
         return null;
     }
 
+    private Crane getDockingPoint(Transporter t) {
+        Iterator it = dockedTransporter.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pairs = (Map.Entry) it.next();
+            if (pairs.getValue() == t) {
+                it.remove();
+                return (Crane) pairs.getKey();
+
+            }
+            it.remove();
+        }
+        return null;
+    }
+
     /**
      * Put container onto agv
      *
@@ -407,7 +422,7 @@ public class Controller {
                         for (int y = 5; y >= 0 && toMove == null; y--) {
                             for (Container cont : t.getContainers()) {
                                 if (cont.getPosition().x == x
-                                        && cont.getBufferPosition().z == z
+                                        && cont.getPosition().z == z
                                         && cont.getPosition().y == y) {
                                     toMove = cont;
                                     break;
@@ -446,6 +461,7 @@ public class Controller {
                             waitingToBeReadyAtCrane.put(agv, c);
                             agv.isHome = false;
                             agv.ready = false;
+                            break;
                         }
                     }
                 }
@@ -469,6 +485,53 @@ public class Controller {
     }
 
     private void transporterReady(Transporter t) {
+        Crane dockingpoint = getDockingPoint(t);
+        Container toMove = null;
+        for (int x = 0; x < dockingpoint.range && toMove == null; x++) {
+            for (int z = 0; z <= 15 && toMove == null; z++) {
+                for (int y = 5; y >= 0 && toMove == null; y--) {
+                    for (Container cont : t.getContainers()) {
+                        if (cont.getPosition().x == x
+                                && cont.getPosition().z == z
+                                && cont.getPosition().y == y) {
+                            toMove = cont;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        Message m = new Message(Commands.PICKUP_CONTAINER, null);
+        ArrayList<Object> params = new ArrayList<>();
+        params.add(dockingpoint.id);
+
+        params.add(toMove.getId());
+
+        params.add(toMove.getPosition().x);
+
+        params.add(toMove.getPosition().y);
+
+        params.add(toMove.getPosition().z);
+
+        m.setParameters(params.toArray());
+
+        this.sendMessage(m);
+        dockingpoint.setIsReady(false);
+        for (Buffer b : buffers) {
+            CustomVector3f bestpos = b.findBestBufferPlace(toMove);
+            AGV agv = b.AGVAvailable();
+            if (bestpos != null && agv != null) {
+                toMove.setBufferPosition(bestpos);
+                b.reservePosition(toMove);
+                agv.moveToCrane(dockingpoint, this);
+                waitingToBeReadyAtCrane.put(agv, dockingpoint);
+                agv.isHome = false;
+                agv.ready = false;
+                break;
+            }
+        }
+
+
     }
 
     void setContainers(List<Container> containers) {
@@ -489,8 +552,8 @@ public class Controller {
     public void recievedMessage(String message) {
         PrintMessage(message);
         Message m = Message.decodeMessage(message);
-        if (!((String)m.getParameters()[0]).equalsIgnoreCase("simulator")) {
-            int id = Integer.getInteger(((String) m.getParameters()[0]).substring(3, 5));
+        if (!((String) m.getParameters()[0]).equalsIgnoreCase("simulator")) {
+            int id = Integer.parseInt(((String) m.getParameters()[0]).substring(3, 5));
             switch (m.getCommand()) {
                 case Commands.READY:
                     switch (((String) m.getParameters()[0]).charAt(0)) {

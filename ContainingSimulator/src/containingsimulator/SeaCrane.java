@@ -220,5 +220,10 @@ public class SeaCrane extends Crane implements MotionPathListener{
         hookPath.removeWayPoint(0);
         hookControl.play();
     }
+    
+        @Override
+    public ParkingSpot getParkingspot() {
+        return new ParkingSpot(this.getWorldTranslation(),(float)Math.PI/2f);
+    }
 }
 

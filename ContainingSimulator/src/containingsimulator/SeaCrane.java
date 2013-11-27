@@ -32,6 +32,7 @@ public class SeaCrane extends Crane implements MotionPathListener{
     //motionpaths for moving objects
     private MotionPath sliderPath = new MotionPath();
     private MotionEvent sliderControl;
+    
 
 
     public SeaCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook)
@@ -46,13 +47,10 @@ public class SeaCrane extends Crane implements MotionPathListener{
          this.hook.setLocalTranslation(new Vector3f(0,25,0));
          sliderControl = new MotionEvent(this.sNode,sliderPath,sliDur/Main.globalSpeed,LoopMode.DontLoop);
          sliderPath.setCycle(false);
+         
          sliderPath.addListener(this);
     }
-    
-    public Container getContainer()
-    {
-        return this.container;
-    }
+
     public boolean isMoving()
     {
         return this.action!=0;
@@ -61,9 +59,11 @@ public class SeaCrane extends Crane implements MotionPathListener{
     @Override
     public  void loadContainer(Transporter transporter)
     {
-        
+        sNode.attachChild(transporter.getContainer(cont.indexPosition));
+        this.target = this.position;
+        loadContainer=true;
     }
- 
+
     
     
     //updates crane motion
@@ -108,18 +108,48 @@ public class SeaCrane extends Crane implements MotionPathListener{
                  if(!sliderControl.isEnabled())
                 {
                     moveSlider2();
+                   // loadContainer(null);
                 }
                 break;
             case 6:
+                if(readyForL && !loadContainer)
+                {
+                   break;
+                }
+                else if(!readyForL && !loadContainer)
+                {
+                    readyForL = true;
+                   
+                }
+                else if(readyForL && loadContainer)
+                {
+                   
+                if(!hookControl.isEnabled())
+                {
+                    System.out.println("wtf");
+                   moveHook();
+                }
+                }
+                break;
+            case 7:
+                if(!hookControl.isEnabled())
+                {
+                   moveHook2();
+                }
+                break;
+            case 8:
                 if(!baseControl.isEnabled())
                 {
                    moveBase2();
                 }
                 break;
-            case 7:
+            case 9:
              System.out.println("crane is back in position");
              action = 0;
              busy = false;
+             readyForL = false;
+             loadContainer = false;
+             
              target = null;
                 break;
         }
@@ -129,7 +159,11 @@ public class SeaCrane extends Crane implements MotionPathListener{
     
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) 
     {
+        
        action+=wayPointIndex;
+       
+       
+        
     }
     
     private void updateSpeed()

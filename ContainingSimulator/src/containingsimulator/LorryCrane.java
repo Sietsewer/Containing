@@ -41,7 +41,9 @@ public class LorryCrane extends Crane implements MotionPathListener {
     
     public Container getContainer()
     {
-        return this.container;
+        Container con = this.container;
+        this.container = null;
+        return con;
     }
     public String getId()
     {
@@ -53,8 +55,9 @@ public class LorryCrane extends Crane implements MotionPathListener {
     }
 
     @Override
-    public  void loadContainer(Transporter transporter)
+    public void loadContainer(Transporter transporter)
     {
+        container = transporter.getContainer(new Vector3f(0f,0f,0f));
         target = transporter.getWorldTranslation();
     }
 
@@ -97,10 +100,12 @@ public class LorryCrane extends Crane implements MotionPathListener {
                 }
                 break;
             case 5:
-             System.out.println("crane is back in position");
-             action = 0;
-             busy = false;
-             target = null;
+                System.out.println("crane is back in position");
+                action = 0;
+                busy = false;
+                target = null;
+                
+                Main.sendReady(id);
                 break;
         }
         

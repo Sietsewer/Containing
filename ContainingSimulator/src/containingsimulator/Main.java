@@ -244,6 +244,9 @@ public class Main extends SimpleApplication {
 
     void messageRecieved(Message decodedMessage) {
         Object[] params = decodedMessage.getParameters();
+        Container cont;
+        Crane crane;
+        String transporterID;
         switch (decodedMessage.getCommand()) {
             case Commands.MOVE:
                 AGV agv1 = getAGVbyID((String) params[0]);
@@ -254,49 +257,49 @@ public class Main extends SimpleApplication {
                 agv1.addWaypoints(pathIDs1);
                 break;
             case Commands.PICKUP_CONTAINER:
-                Crane crane1 = getCraneByID((String) params[0]);
-                Container cont1 = getContainerByID((String) params[1]);
+                crane = getCraneByID((String) params[0]);
+                cont = getContainerByID((String) params[1]);
                 //param[2],[3] and [4] are for x, y and z of indexposition
                 //Little start here, I'll process this and the rest of the cases
                 //more once we get the required objects inside Main
-                if (crane1 != null) {
+                if (crane != null) {
                     //do stuff, needs containers
                 } else {
                     System.err.println("Error: No crane with this ID.");
                 }
                 break;
             case Commands.GIVE_CONTAINER:
-                Container cont2 = getContainerByID((String) params[0]);
-                Crane crane2 = getCraneByID((String) params[1]);
+                cont = getContainerByID((String) params[0]);
+                crane = getCraneByID((String) params[1]);
                 //TODO: make this work when we have AGVs in Main
                 break;
             case Commands.PUT_CONTAINER:
-                Crane crane3 = getCraneByID((String) params[0]);
-                Container cont3 = getContainerByID((String) params[1]);
+                crane = getCraneByID((String) params[0]);
+                cont = getContainerByID((String) params[1]);
                 Vector3f cposition = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
                 //TODO: stuff
                 break;
             case Commands.GET_CONTAINER:
                 //String agvID3 = (String) params[0];
-                Crane crane4 = getCraneByID((String) params[1]);
+                crane = getCraneByID((String) params[1]);
                 //TODO: you know the drill by now
                 break;
             case Commands.CREATE_TRANSPORTER:
-                String transporterID1 = (String) params[0];
+                transporterID = (String) params[0];
                 int transporterType = (Integer) params[1];
                 Vector3f dockingPoint = getCraneByID((String) params[2]).position;
                 ArrayList<SimContainer> simContainers = new ArrayList<SimContainer>();
                 for (int i = 3; i < params.length - 3; i++) {
                     simContainers.add((SimContainer) params[i]);
                 }
-                Transporter t = new Transporter(transporterID1, simContainers, dockingPoint, transporterType);
+                Transporter t = new Transporter(transporterID, simContainers, dockingPoint, transporterType);
                 transporters.add(t);
                 rootNode.attachChild(t);
                 break;
             case Commands.REMOVE_TRANSPORTER:
-                String transporterID2 = (String) params[0];
+                transporterID = (String) params[0];
                 for(Transporter trans : transporters){
-                    if(trans.id.equalsIgnoreCase(transporterID2)){
+                    if(trans.id.equalsIgnoreCase(transporterID)){
                         rootNode.detachChild(trans);
                         transporters.remove(trans);
                     }
@@ -429,14 +432,15 @@ public class Main extends SimpleApplication {
              AGV agv = new AGV(id, agvModel.clone());
              agvs.add(agv);
              rootNode.attachChild(agv);
-             //System.out.println("sup");
-             //agv.setLocalTranslation(new Vector3f(100 + (i * 2.44f), 10.25f, 100));
          }
+         
+         int j = 0;
          for(int i = 0; i < 100; i++){
-             //int pspotindex = i % 12;
-             //int bufferindex = i % 63;
-             agvs.get(i).setLocalTranslation(buffers[i % 63].pSpots[i % 12].translation);
+             agvs.get(i).setLocalTranslation(buffers[j % 63].pSpots[i % 12].translation);
              agvs.get(i).rotate(0, buffers[0].pSpots[0].rotation, 0);
+             if(i % 12 == 0 && i > 0){
+                 j++;
+             }
          }
      }
 

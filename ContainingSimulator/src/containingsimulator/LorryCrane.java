@@ -89,7 +89,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
                 break;
             case 3:
                 if(!hookControl.isEnabled())
-                {
+                {//attach container, detach from transporter
                     moveHook2();
                 }
                 break;
@@ -100,12 +100,31 @@ public class LorryCrane extends Crane implements MotionPathListener {
                 }
                 break;
             case 5:
+                if (readyForL && !loadContainer) {
+                    break;
+                } else if (!readyForL && !loadContainer) {
+                    loadContainer(null);
+                } else if (readyForL && loadContainer) {
+
+                    if (!hookControl.isEnabled()) {
+                        moveHook();
+                    }
+                }
+                break;
+            case 6:
+                if(!hookControl.isEnabled())
+                {//attach container, detach from transporter
+                    moveHook2();
+                }
+                break;
+            case 7:
                 System.out.println("crane is back in position");
                 action = 0;
                 busy = false;
                 target = null;
-                
-                Main.sendReady(id);
+                loadContainer = false;
+                readyForL = false;
+               this.sendReady();
                 break;
         }
         
@@ -165,6 +184,9 @@ public class LorryCrane extends Crane implements MotionPathListener {
 
     @Override
     public ParkingSpot getParkingspot() {
+        
+        
+        
         return this.parkingSpot;
     }
 }

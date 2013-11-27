@@ -31,33 +31,35 @@ public abstract class Crane extends Node implements MotionPathListener {
      * @param cont
      */
     protected int action = 0;
+    
     protected MotionPath basePath = new MotionPath();
     protected MotionPath hookPath = new MotionPath();
     protected MotionPath sliderPath = new MotionPath();
-    protected Spatial base;
-    protected Spatial hook;
-    protected Spatial slider;
-    protected Node sNode = new Node();
-    protected Node hNode = new Node();
+    
     protected MotionEvent baseControl;
     protected MotionEvent hookControl;
     protected MotionEvent sliderControl;
     
+    protected Spatial base;
+    protected Spatial hook;
+    protected Spatial slider;
+    
+    protected Node sNode = new Node();
+    protected Node hNode = new Node();
+    
     protected boolean busy = false;
     protected boolean readyForL = false;
     protected boolean loadContainer = false;
-    protected Container cont;
+    
     protected static final float baseDur = 2f;
     protected static final float hookDur = 2f;
     protected static final float sliDur = 2f;
+    
     protected Vector3f target;
+    protected Container cont;
     protected Transporter transporter;
     protected Node transportNode;
 
-    public Crane()
-    {
-    }
-    
     public Crane(String id, Vector3f pos, Spatial base, Spatial slider, Spatial hook) {
        
         this.id = id;
@@ -67,12 +69,11 @@ public abstract class Crane extends Node implements MotionPathListener {
         this.hook = hook.clone();
         this.attachChild(this.base);
         
-        hNode.attachChild(this.hook.clone());
+        hNode.attachChild(this.hook);
         sNode.attachChild(hNode);
         sNode.attachChild(this.slider);
 
         this.attachChild(this.sNode);
-        hNode.setLocalTranslation(new Vector3f(0,25,0));
         
         baseControl = new MotionEvent(this, basePath, baseDur / Main.globalSpeed, LoopMode.DontLoop);
         hookControl = new MotionEvent(this.hNode, hookPath, hookDur / Main.globalSpeed, LoopMode.DontLoop);
@@ -96,8 +97,8 @@ public abstract class Crane extends Node implements MotionPathListener {
     public boolean isbusy() {
         return this.busy;
     }
-
-    public abstract void loadContainer(Transporter transporter);
+    public abstract void update(float tpf);
+    public abstract ParkingSpot getParkingspot();
 
     /**
      *
@@ -109,11 +110,13 @@ public abstract class Crane extends Node implements MotionPathListener {
         // Main.sendReady(this.id);
          System.out.println("container ready for drop");
     }
+    
     protected void transferFinished()
     {
        // Main.sendReady(this.id);
         System.out.println("transfer finished");
     }
+    
     protected void resetAll()
     {
         System.out.println("crane is back to idle");
@@ -133,19 +136,27 @@ public abstract class Crane extends Node implements MotionPathListener {
         busy = true;
     }
 
-    public void getContainer(Vector3f pos) {
-        if (pos != null) {
+    public void getContainer(Vector3f pos) 
+    {
+        if (pos != null) 
+        {
             this.target = pos;
             action = 1;
             busy = true;
         }
     }
-     public void loadContainer(Node node) {
-        //sNode.attachChild(transporter.getContainer(cont.indexPosition));
+     public void loadContainer(Node node) 
+     {
         this.target = this.position;
         loadContainer = true;
-       // this.containerIsReady();
-    }
+     }
+     
+     public void loadContainer(Transporter trans) 
+     {
+        transporter.getContainer(cont.indexPosition);
+        this.target = trans.getWorldTranslation();
+        loadContainer = true;
+     }
      
      private void detachContainer()
      {
@@ -155,7 +166,13 @@ public abstract class Crane extends Node implements MotionPathListener {
          cont.setLocalTranslation(pos);
      }
      
-     protected void attachProcess()
+     private void attachToHook() 
+    {
+        hNode.attachChild(cont);
+        cont.setLocalTranslation(hook.getLocalTranslation().add(new Vector3f(0,cont.size.y,0)));
+    }
+     
+     protected void waitProcess()
      {
            if (!readyForL && !loadContainer) 
             {
@@ -180,11 +197,49 @@ public abstract class Crane extends Node implements MotionPathListener {
           }
      }
      
+     protected void attachProcess()
+     {
+         if (!hookControl.isEnabled()) {
+                    this.attachToHook();
+                    moveHook2();
+                }
+     }
+     
      
      protected abstract void moveHook();
-     protected abstract void moveHook2();
+     
+     protected  void moveHook2()
+     {
+        hookPath.addWayPoint(hookPath.getWayPoint(0));
+        hookPath.removeWayPoint(0);
+        hookControl.play();
+     }
+     
+     protected void moveSlider2()
+     {
+        sliderPath.addWayPoint(sliderPath.getWayPoint(0));
+        sliderPath.removeWayPoint(0);
+        sliderControl.play();
+     }
+     
+     protected void moveBase2()
+     {
+         basePath.addWayPoint(basePath.getWayPoint(0));
+         basePath.removeWayPoint(0);
+         baseControl.play();
+     }
+     
+     protected void updateSpeed() 
+     {
+        baseControl.setInitialDuration(baseDur / Main.globalSpeed);
+        sliderControl.setInitialDuration(sliDur / Main.globalSpeed);
+        hookControl.setInitialDuration(hookDur / Main.globalSpeed);
+     }
+     
+     @Override
+    public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
 
-    public abstract void update(float tpf);
+        action += wayPointIndex;
+    }
 
-    public abstract ParkingSpot getParkingspot();
 }

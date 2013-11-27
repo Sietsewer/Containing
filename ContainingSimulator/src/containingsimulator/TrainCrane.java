@@ -19,37 +19,26 @@ import com.jme3.scene.Spatial;
  */
 public class TrainCrane extends Crane implements MotionPathListener{
     
-
-
     public TrainCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook)
     {
         super(id, basePos,base,slider, hook);
-
         this.base.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-        
-         this.hook.setLocalTranslation(new Vector3f(0,25,0));
-         this.sNode.setLocalTranslation(new Vector3f(0,14,0));
-         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+        hNode.setLocalTranslation(new Vector3f(0,12,0));
     }
     
     @Override
-    public  void loadContainer(Transporter transporter)
-    {
-        
-    }
-
-    @Override
     public void update(float tpf)
     {
-       
+        if(target==null)
+        {
+            return;
+        }
         
         updateSpeed();
 
         switch(action)
         {
-            case 0: //nothing
-                return;
             case 1: 
                 if(!baseControl.isEnabled())
                 {
@@ -69,10 +58,7 @@ public class TrainCrane extends Crane implements MotionPathListener{
                 }
                 break;
             case 4:
-                if(!hookControl.isEnabled())
-                {
-                    moveHook2();
-                }
+                  this.attachProcess();
                 break;
             case 5:
                  if(!sliderControl.isEnabled())
@@ -80,7 +66,6 @@ public class TrainCrane extends Crane implements MotionPathListener{
                     moveSlider2();
                 }
                 break;
-            
             case 6:
                 if(!baseControl.isEnabled())
                 {
@@ -88,7 +73,7 @@ public class TrainCrane extends Crane implements MotionPathListener{
                 }
                 break;
             case 7:
-                 attachProcess();
+                  waitProcess();
                  break;
             case 8:
                  dropProcess();
@@ -97,22 +82,8 @@ public class TrainCrane extends Crane implements MotionPathListener{
              this.resetAll();
                 break;
         }
-        
-        
     }
-    
-    public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) 
-    {
-       action+=wayPointIndex;
-    }
-    
-    private void updateSpeed()
-    {
-        baseControl.setInitialDuration(baseDur/Main.globalSpeed);
-        sliderControl.setInitialDuration(sliDur/Main.globalSpeed);
-        hookControl.setInitialDuration(hookDur/Main.globalSpeed);
-    }
-    
+
     private void moveBase()
     {
          basePath.clearWayPoints();
@@ -120,14 +91,6 @@ public class TrainCrane extends Crane implements MotionPathListener{
          basePath.addWayPoint(new Vector3f(target.x,this.getLocalTranslation().y,this.getLocalTranslation().z));
          baseControl.play();
     }
-    
-    private void moveBase2()
-    {
-         basePath.addWayPoint(basePath.getWayPoint(0));
-         basePath.removeWayPoint(0);
-         baseControl.play();
-    }
-    
     private void moveSlider()
     {
          sliderPath.clearWayPoints();
@@ -139,27 +102,12 @@ public class TrainCrane extends Crane implements MotionPathListener{
          sliderControl.play();
     }
     
-    private void moveSlider2()
-    {
-        sliderPath.addWayPoint(sliderPath.getWayPoint(0));
-        sliderPath.removeWayPoint(0);
-        sliderControl.play();
-    }
-    
     @Override
     protected void moveHook()
     {
         hookPath.clearWayPoints();
-        hookPath.addWayPoint(hook.getLocalTranslation());
+        hookPath.addWayPoint(hNode.getLocalTranslation());
         hookPath.addWayPoint(new Vector3f(hook.getLocalTranslation().x,target.y-sNode.getWorldTranslation().y, hook.getLocalTranslation().z));
-        hookControl.play();
-    }
-    
-    @Override
-    protected void moveHook2()
-    {
-        hookPath.addWayPoint(hookPath.getWayPoint(0));
-        hookPath.removeWayPoint(0);
         hookControl.play();
     }
 

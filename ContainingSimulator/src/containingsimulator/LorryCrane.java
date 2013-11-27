@@ -20,58 +20,24 @@ import com.jme3.scene.Spatial;
 public class LorryCrane extends Crane implements MotionPathListener {
 
     public ParkingSpot parkingSpot = new ParkingSpot(Vector3f.ZERO,0);
-
     
     public LorryCrane(String id, Vector3f pos, Spatial base, Spatial slider, Spatial hook) 
     {
-         super(id,pos,base,slider,hook);
-        
-         this.hook = this.hook.scale(0.4f);
-         this.attachChild(this.hook);
-         this.hook.setLocalTranslation(new Vector3f(0,6.8f,0));
+        super(id,pos,base,slider.clone().scale(0.4f),hook);
+        sNode.setLocalTranslation(new Vector3f(0, -10, 0));
+        this.slider.setLocalTranslation(new Vector3f(0, 6.5f, 0));
+        this.hNode.setLocalTranslation(new Vector3f(0, 16.5f, 0));
     }
-    
-      public boolean isbusy()
-    {
-        return this.busy;
-    }
-    
-    public Container getContainer()
-    {
-        Container con = this.cont;
-        this.cont = null;
-        return con;
-    }
-    public String getId()
-    {
-        return id;
-    }
-    public boolean isMoving()
-    {
-        return this.action!=0;
-    }
-
-    @Override
-    public void loadContainer(Transporter transporter)
-    {
-        cont = transporter.getContainer(new Vector3f(0f,0f,0f));
-        target = transporter.getWorldTranslation();
-    }
-
-    //updates crane motion
     public void update(float tpf)
     {
         if(target==null)
         {
             return;
         }
-        
         updateSpeed();
-
+        
         switch(action)
         {
-            case 0: //nothing
-                return;
             case 1: 
                 if(!baseControl.isEnabled())
                 {
@@ -85,10 +51,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
                 }
                 break;
             case 3:
-                if(!hookControl.isEnabled())
-                {//attach container, detach from transporter
-                   moveHook2();
-                }
+                 this.attachProcess();
                 break;
             case 4:
                 if(!baseControl.isEnabled())
@@ -97,7 +60,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
                 }
                 break;
             case 5:
-               attachProcess();
+                waitProcess();
                 break;
             case 6:
                 dropProcess();
@@ -106,33 +69,13 @@ public class LorryCrane extends Crane implements MotionPathListener {
                 this.resetAll();
                 break;
         }
-        
-        
-        
-        
-        
     }
-    
-        
-    
-    private void updateSpeed()
-    {
-        baseControl.setInitialDuration(baseDur/Main.globalSpeed);
-        hookControl.setInitialDuration(hookDur/Main.globalSpeed);
-    }
-    
+
     private void moveBase()
     {
          basePath.clearWayPoints();
          basePath.addWayPoint(this.getLocalTranslation());
-         basePath.addWayPoint(target);
-         baseControl.play();
-    }
-    
-    private void moveBase2()
-    {
-         basePath.addWayPoint(basePath.getWayPoint(0));
-         basePath.removeWayPoint(0);
+         basePath.addWayPoint(new Vector3f(this.getLocalTranslation().x,this.getLocalTranslation().y,target.z));
          baseControl.play();
     }
 
@@ -140,26 +83,12 @@ public class LorryCrane extends Crane implements MotionPathListener {
     protected void moveHook()
     {
         hookPath.clearWayPoints();
-        hookPath.addWayPoint(hook.getLocalTranslation());
-        hookPath.addWayPoint(new Vector3f(hook.getLocalTranslation().x,target.y-this.getLocalTranslation().y,hook.getLocalTranslation().z));
-        hookControl.play();
-    }
-    
-    @Override
-    protected void moveHook2()
-    {
-        hookPath.addWayPoint(hookPath.getWayPoint(0));
-        hookPath.removeWayPoint(0);
+        hookPath.addWayPoint(hNode.getLocalTranslation());
+        hookPath.addWayPoint(new Vector3f(hook.getLocalTranslation().x,target.y-sNode.getWorldTranslation().y,hook.getLocalTranslation().z));
+        // hookPath.addWayPoint(new Vector3f(target.x - sNode.getWorldTranslation().x, target.y - sNode.getWorldTranslation().y, sNode.getLocalTranslation().z));
         hookControl.play();
     }
 
-   public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) 
-    {
-       action+=wayPointIndex;
-    }
-
-
-    
     public void debugRender(Spatial agv, Spatial transporter){
         this.attachChild(agv);
         this.attachChild(transporter);
@@ -168,9 +97,6 @@ public class LorryCrane extends Crane implements MotionPathListener {
 
     @Override
     public ParkingSpot getParkingspot() {
-        
-        
-        
         return this.parkingSpot;
     }
 }

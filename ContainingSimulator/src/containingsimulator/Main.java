@@ -3,18 +3,27 @@ package containingsimulator;
 import containing.xml.SimContainer;
 import containing.xml.Message;
 import com.jme3.app.SimpleApplication;
+import com.jme3.collision.CollisionResult;
+import com.jme3.collision.CollisionResults;
+import com.jme3.font.BitmapText;
+import com.jme3.input.MouseInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
+import containing.xml.CustomVector3f;
 import java.util.ArrayList;
 
 /**
@@ -83,6 +92,8 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
 
         loadAssets();
+        init_Input();
+        init_CrossHairs();
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
         listener = new ServerListener(this);
@@ -194,7 +205,10 @@ public class Main extends SimpleApplication {
         init_BufferCranes();
         init_LorryCranes();
         init_TrainCranes();
-
+        Node a = new Node();
+        Node b = new Node();
+    
+        
         //Init Transporters
         Transporter.makeGeometry(assetManager);
         transporters = new ArrayList<Transporter>();
@@ -396,7 +410,7 @@ public class Main extends SimpleApplication {
 
         for (int i = 1; i <= 20; i++) {
             String id = cID + String.format("%03d", i);
-            LorryCrane c = new LorryCrane(id, Path.getVector(id), lcModel, scHModel.clone().rotate(0, 90*FastMath.DEG_TO_RAD, 0));
+            LorryCrane c = new LorryCrane(id, Path.getVector(id), lcModel, scSModel,scHModel.clone().scale(0.4f).rotate(0, 90*FastMath.DEG_TO_RAD, 0));
             lorCranes[i - 1] = c;
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));
@@ -453,6 +467,86 @@ public class Main extends SimpleApplication {
         objectArray[0] = id;
         Message message = new Message(0, objectArray);
         sendMessage(message);
+    }
+    
+      
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+   //FOR TESTING///////FOR TESTING///////FOR TESTING////CLICK TO TEST SOMETHING! 
+   public void init_Input() 
+    {
+        inputManager.addMapping("left-click",
+                new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
+        inputManager.addMapping("right-click", 
+                new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+         inputManager.addListener(actionListener,"left-click");
+         inputManager.addListener(actionListener,"right-click");
+    }
+    
+     private ActionListener actionListener = new ActionListener() 
+    {
+        public void onAction(String name, boolean keyPressed, float tpf) {
+            if (name.equals("right-click"))
+            {
+                globalSpeed*=1.5f; //fasten up
+            }
+            if (name.equals("left-click")&& !keyPressed )
+            {
+                CollisionResults results = new CollisionResults();
+                Ray ray = new Ray(cam.getLocation(), cam.getDirection().normalize());
+               rootNode.collideWith(ray, results);
+                //check if point of click was on the iceberg (only penguins on iceberg allowed!)
+                if (results.size() > 0) 
+                {
+                    // The closest collision point is what was truly hit:
+                    CollisionResult closest = results.getClosestCollision();
+                    Vector3f hitPoint = closest.getContactPoint(); //where uve shot 
+                    
+                    Crane[] cranes = seaCranes; //change crane array for testing
+                    if(!cranes[0].busy)
+                    {
+                    Container c = new Container(new SimContainer("1",new CustomVector3f(0,0,0)));
+                    rootNode.attachChild(c);
+                    c.setLocalTranslation( hitPoint.add(new Vector3f(0,c.size.y,0)));
+                    cranes[0].getContainer(c,rootNode);
+                    } 
+                    else if( cranes[0].readyForL)
+                    {
+                        cranes[0].loadContainer(rootNode); //transfer container
+                    }
+                }
+               
+                    }
+                }
+            
+        
+    };
+    
+    
+   protected void init_CrossHairs()
+    {
+    setDisplayStatView(false);
+    BitmapText ch = new BitmapText(guiFont, false);
+    
+    ch.setSize(guiFont.getCharSet().getRenderedSize() * 2);
+    ch.setText("+"); // crosshairs
+    ch.setLocalTranslation( // center
+    settings.getWidth() / 2 - ch.getLineWidth()/2, settings.getHeight() / 2 + ch.getLineHeight()/2, 0);
+    guiNode.attachChildAt(ch, 0);
     }
  
 }

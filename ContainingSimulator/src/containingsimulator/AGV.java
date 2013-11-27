@@ -64,7 +64,7 @@ public class AGV extends Node implements MotionPathListener{
     private void nextWaypoint(int wayPointIndex){
         this.waypointList.remove(0);
         //this.lookAt(this.waypointList.get(1).location, com.jme3.math.Vector3f.UNIT_Y);
-        this.motionEvent.setSpeed((this.container == null?5.56f:2.78f));//Sets full speed (20km/h) if empty, half if full(in m/s)
+        this.motionEvent.setSpeed((this.container == null?0.6f:.05f));//Sets full speed (20km/h) if empty, half if full(in m/s)
         
     }
     /**
@@ -103,11 +103,11 @@ public class AGV extends Node implements MotionPathListener{
     }
 
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-        if(waypointList.size() < 2){
+        if(waypointList.size() > 2){
+            nextWaypoint(wayPointIndex);
+        } else {
             jumpToPark(null);//NOG NIET KLAAR <<<<<<<<<
             Main.sendReady(id);
-        } else {
-            nextWaypoint(wayPointIndex);
         }
         
     }

@@ -435,12 +435,12 @@ public class Main extends SimpleApplication {
          }
          
          int j = 0;
-         for(int i = 0; i < 100; i++){
-             agvs.get(i).setLocalTranslation(buffers[j % 63].pSpots[i % 12].translation);
+         for(int i = 0; i < 100; i+= 2){
+             agvs.get(i).setLocalTranslation(buffers[j].pSpots[0].translation);
+             agvs.get(i + 1).setLocalTranslation(buffers[j].pSpots[6].translation);
              agvs.get(i).rotate(0, buffers[0].pSpots[0].rotation, 0);
-             if(i % 12 == 0 && i > 0){
-                 j++;
-             }
+             agvs.get(i + 1).rotate(0, buffers[0].pSpots[0].rotation, 0);
+             j++;
          }
      }
 

@@ -291,9 +291,9 @@ public class Main extends SimpleApplication {
             case Commands.REMOVE_TRANSPORTER:
                 String transporterID2 = (String) params[0];
                 for(Transporter trans : transporters){
-                    if(trans.id.equals(transporterID2)){
-                        transporters.remove(trans);
+                    if(trans.id.equalsIgnoreCase(transporterID2)){
                         rootNode.detachChild(trans);
+                        transporters.remove(trans);
                     }
                 }
                 break;

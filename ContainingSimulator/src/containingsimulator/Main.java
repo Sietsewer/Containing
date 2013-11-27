@@ -226,9 +226,9 @@ public class Main extends SimpleApplication {
                 //TODO: get AGV from ID, get waypoints from IDs
                 break;
             case 2: //PICKUP_CONTAINER
-                //String containerID1 = (String) params[1]; //container ID
-                //param[2],[3] and [4] are for x, y and z of indexposition
                 Crane crane1 = getCraneByID((String) params[0]);
+                Container cont1 = getContainerByID((String) params[1]);
+                //param[2],[3] and [4] are for x, y and z of indexposition
                 //Little start here, I'll process this and the rest of the cases
                 //more once we get the required objects inside Main
                 if (crane1 != null) {
@@ -238,15 +238,15 @@ public class Main extends SimpleApplication {
                 }
                 break;
             case 3: //GIVE_CONTAINER
-                //String agvID2 = (String) params[0];
+                Container cont2 = getContainerByID((String) params[0]);
                 Crane crane2 = getCraneByID((String) params[1]);
                 //TODO: make this work when we have AGVs in Main
                 break;
             case 4: //PUT_CONTAINER
                 Crane crane3 = getCraneByID((String) params[0]);
-                //String containerID2 = (String) params[1];
-                //Vector3f cposition = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
-                //TODO: get containers and cranes from ID, etc yadda yadda yadda
+                Container cont3 = getContainerByID((String) params[1]);
+                Vector3f cposition = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
+                //TODO: stuff
                 break;
             case 5: //GET_CONTAINER
                 //String agvID3 = (String) params[0];
@@ -298,6 +298,28 @@ public class Main extends SimpleApplication {
                 return barCranes[i];
         }
         return null;
+    }
+    
+    /**
+     * Finds and returns a container by container ID
+     * @param id the id to search for
+     * @return reference to a container that matches the ID
+     */
+    private Container getContainerByID(String id){
+        Container c = null;
+        for(int i = 0; i < buffers.length; i++){
+            for(int j = 0; j < buffers[i].bufferArray.length; j++){
+               for(int k = 0; k < buffers[i].bufferArray[0].length; k++){
+                   for(int l = 0; l < buffers[i].bufferArray[0][0].length; l++){
+                       if(buffers[i].bufferArray[j][k][l] != null && buffers[i].bufferArray[j][k][l].id.equals(id)){
+                           return c;
+                       }
+                    }
+                } 
+            }
+        }
+        //TODO: add code to look into containers on transport
+        return c;
     }
 
     private void init_SeaCranes() {

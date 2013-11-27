@@ -67,6 +67,7 @@ public class ServerClient {
                 if (input.ready()) {
                     String s = input.readLine();
                     if (firstMessage) {
+                        firstMessage = false;
                         Message m = Message.decodeMessage(s);
                         if (((String) m.getParameters()[0]).equalsIgnoreCase("simulator")) {
                             server.controller.PrintMessage("Connected simulator - " + client.getRemoteSocketAddress());
@@ -75,7 +76,7 @@ public class ServerClient {
                             sendMessage(server.controller.getAndroidData());
                             break;
                         }
-                        firstMessage = false;
+                        
                     } else {
                         if (!s.isEmpty()) {
                             server.MessageRecieved(s);

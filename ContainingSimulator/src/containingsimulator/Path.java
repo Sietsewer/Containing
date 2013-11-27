@@ -22,6 +22,7 @@ public class Path {
     private static String ctr = "ctr";
     private static String bfa = "bfa";
     private static String bfb = "bfb";
+    private static String m = "m";
     
     /**
      *Constructor creates path
@@ -30,6 +31,10 @@ public class Path {
   {
       
   }
+    public static String getMainPathID()
+    {
+        return m;
+    }
     public static String getLorryID()
     {
         return clo;

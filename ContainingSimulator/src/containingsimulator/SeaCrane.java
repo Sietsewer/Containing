@@ -63,8 +63,6 @@ public class SeaCrane extends Crane implements MotionPathListener {
 
     private void attachToHook(int test) {
 
-
-
         sNode.attachChild(cont);
         this.target = this.position;
         loadContainer = true;

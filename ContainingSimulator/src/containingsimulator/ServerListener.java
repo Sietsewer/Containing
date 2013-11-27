@@ -67,11 +67,10 @@ public class ServerListener {
             Logger.getLogger(ServerListener.class.getName()).log(Level.SEVERE, null, ex);
         }
          
-         
+        output.println(Message.encodeMessage(new Message(Commands.READY, new String[]{"simulator"})));
         while (true) {
             String s;
             try {
-                output.println(Message.encodeMessage(new Message(Commands.READY, new String[]{"simulator"})));
                 if (input.ready()) {
                     s = input.readLine();
                     if (!s.isEmpty()) {

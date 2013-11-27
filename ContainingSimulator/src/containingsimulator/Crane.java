@@ -82,6 +82,15 @@ public abstract class Crane extends Node implements MotionPathListener {
         readyForL = true;
         Main.sendReady(this.id);
     }
+    protected void resetAll()
+    {
+        System.out.println("crane is back in position");
+         this.action = 0;
+         this.busy = false;
+         this.readyForL = false;
+         this.loadContainer = false;
+         this.target = null;
+    }
 
     public void getContainer(Container cont, Node trans) {
         this.transporter = null;

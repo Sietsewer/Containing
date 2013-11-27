@@ -118,13 +118,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
                 }
                 break;
             case 7:
-                System.out.println("crane is back in position");
-                action = 0;
-                busy = false;
-                target = null;
-                loadContainer = false;
-                readyForL = false;
-               this.sendReady();
+                this.resetAll();
                 break;
         }
         

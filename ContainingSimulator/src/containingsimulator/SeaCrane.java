@@ -143,13 +143,7 @@ public class SeaCrane extends Crane implements MotionPathListener {
                 }
                 break;
             case 9:
-                System.out.println("crane is back in position");
-                action = 0;
-                busy = false;
-                readyForL = false;
-                loadContainer = false;
-
-                target = null;
+                this.resetAll();
                 break;
         }
 

@@ -24,6 +24,11 @@ public class SimContainer {
      */
     public SimContainer() {
     }
+    public SimContainer(String id, CustomVector3f pos)
+    {
+        this.id = id;
+        this.indexPosition = pos;
+    }
 
 
     /**

@@ -50,9 +50,10 @@ public class SeaCrane extends Crane implements MotionPathListener {
 
     @Override
     public void loadContainer(Transporter transporter) {
-        sNode.attachChild(transporter.getContainer(cont.indexPosition));
+        //sNode.attachChild(transporter.getContainer(cont.indexPosition));
         this.target = this.position;
         loadContainer = true;
+        this.sendReady();
     }
 
     private void attachToHook() {
@@ -119,8 +120,7 @@ public class SeaCrane extends Crane implements MotionPathListener {
                 if (readyForL && !loadContainer) {
                     break;
                 } else if (!readyForL && !loadContainer) {
-                    this.sendReady();
-
+                    loadContainer(null);
                 } else if (readyForL && loadContainer) {
 
                     if (!hookControl.isEnabled()) {
@@ -131,6 +131,9 @@ public class SeaCrane extends Crane implements MotionPathListener {
                 break;
             case 7:
                 if (!hookControl.isEnabled()) {
+                    
+                    //drop container
+                    this.sendReady();
                     moveHook2();
                 }
                 break;

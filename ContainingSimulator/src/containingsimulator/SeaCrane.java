@@ -20,28 +20,16 @@ import com.jme3.scene.Spatial;
  */
 public class SeaCrane extends Crane implements MotionPathListener {
 
-    private Container container;
-    private static final float sliDur = 2f;
-    private Node sNode = new Node();
-    private Spatial slider;
-    private AGV agv;
     //motionpaths for moving objects
-    private MotionPath sliderPath = new MotionPath();
-    private MotionEvent sliderControl;
-
+   
     public SeaCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook) {
-        super(id, basePos, base, hook);
-        this.slider = slider.clone();
+        super(id, basePos, base,slider, hook);
 
-        sNode.attachChild(this.slider);
-        sNode.attachChild(this.hook);
-        this.attachChild(this.sNode);
+        
+
 
         this.hook.setLocalTranslation(new Vector3f(0, 25, 0));
-        sliderControl = new MotionEvent(this.sNode, sliderPath, sliDur / Main.globalSpeed, LoopMode.DontLoop);
-        sliderPath.setCycle(false);
-
-        sliderPath.addListener(this);
+     
     }
 
     public boolean isMoving() {
@@ -50,32 +38,30 @@ public class SeaCrane extends Crane implements MotionPathListener {
 
     @Override
     public void loadContainer(Transporter transporter) {
-        //sNode.attachChild(transporter.getContainer(cont.indexPosition));
+        
+        hNode.attachChild(transporter.getContainer(cont.indexPosition));
         this.target = this.position;
         loadContainer = true;
-        this.sendReady();
+        this.containerIsReady();
+    }
+    
+
+    private void attachToHook() 
+    {
+        hNode.attachChild(cont);
+        cont.setLocalTranslation(new Vector3f(hook.getLocalTranslation().x,
+                hNode.getWorldTranslation().y,hook.getLocalTranslation().z));
     }
 
-    private void attachToHook() {
-        this.attachChild(transporter.getContainer(cont.indexPosition));
-        this.target = this.position;
-        loadContainer = true;
-    }
-
-    private void attachToHook(int test) {
-
-        sNode.attachChild(cont);
-        this.target = this.position;
-        loadContainer = true;
-    }
 
     private void dettachFromHook() {
-        this.detachChild(container);
-        transporter.setContainer(container);
+        this.detachChild(cont);
+        transporter.setContainer(cont);
     }
 
     private void dettachFromHook(int test) {
-        this.detachChild(container);
+        this.detachChild(cont);
+        
 
     }
 
@@ -106,7 +92,9 @@ public class SeaCrane extends Crane implements MotionPathListener {
                 }
                 break;
             case 4:
-                if (!hookControl.isEnabled()) {//this.attachToHook(0);
+                if (!hookControl.isEnabled()) {
+                    //this.attachToHook(0);
+                    this.attachToHook();
                     moveHook2();
                 }
                 break;
@@ -117,28 +105,14 @@ public class SeaCrane extends Crane implements MotionPathListener {
                 }
                 break;
             case 6:
-                if (readyForL && !loadContainer) {
-                    break;
-                } else if (!readyForL && !loadContainer) {
-                    loadContainer(null);
-                } else if (readyForL && loadContainer) {
-
-                    if (!hookControl.isEnabled()) {
-                        System.out.println("wtf");
-                        moveHook();
-                    }
-                }
+               attachProcess();
                 break;
             case 7:
-                if (!hookControl.isEnabled()) {
-                    
-                    //drop container
-                    this.sendReady();
-                    moveHook2();
-                }
+               dropProcess();
                 break;
             case 8:
-                if (!baseControl.isEnabled()) {
+                if (!baseControl.isEnabled()) 
+                {
                     moveBase2();
                 }
                 break;
@@ -192,14 +166,16 @@ public class SeaCrane extends Crane implements MotionPathListener {
         sliderControl.play();
     }
 
-    private void moveHook() {
+    @Override
+    protected void moveHook() {
         hookPath.clearWayPoints();
         hookPath.addWayPoint(hook.getLocalTranslation());
         hookPath.addWayPoint(new Vector3f(target.x - sNode.getWorldTranslation().x, target.y - sNode.getWorldTranslation().y, sNode.getLocalTranslation().z));
         hookControl.play();
     }
 
-    private void moveHook2() {
+    @Override
+    protected void moveHook2() {
         hookPath.addWayPoint(hookPath.getWayPoint(0));
         hookPath.removeWayPoint(0);
         hookControl.play();

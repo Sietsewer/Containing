@@ -20,14 +20,11 @@ import com.jme3.scene.Spatial;
 public class LorryCrane extends Crane implements MotionPathListener {
 
     public ParkingSpot parkingSpot = new ParkingSpot(Vector3f.ZERO,0);
-    private Container container;
-    private String agvID;
-    private AGV agv;
+
     
-    
-    public LorryCrane(String id, Vector3f pos, Spatial base, Spatial hook) 
+    public LorryCrane(String id, Vector3f pos, Spatial base, Spatial slider, Spatial hook) 
     {
-         super(id,pos,base,hook);
+         super(id,pos,base,slider,hook);
         
          this.hook = this.hook.scale(0.4f);
          this.attachChild(this.hook);
@@ -41,8 +38,8 @@ public class LorryCrane extends Crane implements MotionPathListener {
     
     public Container getContainer()
     {
-        Container con = this.container;
-        this.container = null;
+        Container con = this.cont;
+        this.cont = null;
         return con;
     }
     public String getId()
@@ -57,7 +54,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
     @Override
     public void loadContainer(Transporter transporter)
     {
-        container = transporter.getContainer(new Vector3f(0f,0f,0f));
+        cont = transporter.getContainer(new Vector3f(0f,0f,0f));
         target = transporter.getWorldTranslation();
     }
 
@@ -90,7 +87,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
             case 3:
                 if(!hookControl.isEnabled())
                 {//attach container, detach from transporter
-                    moveHook2();
+                   moveHook2();
                 }
                 break;
             case 4:
@@ -100,22 +97,10 @@ public class LorryCrane extends Crane implements MotionPathListener {
                 }
                 break;
             case 5:
-                if (readyForL && !loadContainer) {
-                    break;
-                } else if (!readyForL && !loadContainer) {
-                    loadContainer(null);
-                } else if (readyForL && loadContainer) {
-
-                    if (!hookControl.isEnabled()) {
-                        moveHook();
-                    }
-                }
+               attachProcess();
                 break;
             case 6:
-                if(!hookControl.isEnabled())
-                {//attach container, detach from transporter
-                    moveHook2();
-                }
+                dropProcess();
                 break;
             case 7:
                 this.resetAll();
@@ -123,9 +108,12 @@ public class LorryCrane extends Crane implements MotionPathListener {
         }
         
         
+        
+        
+        
     }
     
- 
+        
     
     private void updateSpeed()
     {
@@ -148,7 +136,8 @@ public class LorryCrane extends Crane implements MotionPathListener {
          baseControl.play();
     }
 
-    private void moveHook()
+    @Override
+    protected void moveHook()
     {
         hookPath.clearWayPoints();
         hookPath.addWayPoint(hook.getLocalTranslation());
@@ -156,7 +145,8 @@ public class LorryCrane extends Crane implements MotionPathListener {
         hookControl.play();
     }
     
-    private void moveHook2()
+    @Override
+    protected void moveHook2()
     {
         hookPath.addWayPoint(hookPath.getWayPoint(0));
         hookPath.removeWayPoint(0);

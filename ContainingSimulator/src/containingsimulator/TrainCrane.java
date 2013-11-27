@@ -19,34 +19,18 @@ import com.jme3.scene.Spatial;
  */
 public class TrainCrane extends Crane implements MotionPathListener{
     
-   private Container container;   
-    private static final float sliDur = 2f;
-    private  Node sNode = new Node();
-    private  Spatial slider;
-    private AGV agv;
-    //motionpaths for moving objects
-    private MotionPath sliderPath = new MotionPath();
-    private MotionEvent sliderControl;
+
 
     public TrainCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook)
     {
-        super(id, basePos,base, hook);
+        super(id, basePos,base,slider, hook);
 
-        this.slider = slider.clone();
-        sNode.attachChild(this.slider);
-        sNode.attachChild(this.hook);
-        this.attachChild(this.sNode);
-        
         this.base.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         
          this.hook.setLocalTranslation(new Vector3f(0,25,0));
          this.sNode.setLocalTranslation(new Vector3f(0,14,0));
          this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-
-         sliderControl = new MotionEvent(this.sNode,sliderPath,sliDur/Main.globalSpeed,LoopMode.DontLoop);
-         sliderPath.setCycle(false);
-         sliderPath.addListener(this);
     }
     
     @Override
@@ -96,6 +80,7 @@ public class TrainCrane extends Crane implements MotionPathListener{
                     moveSlider2();
                 }
                 break;
+            
             case 6:
                 if(!baseControl.isEnabled())
                 {
@@ -103,10 +88,13 @@ public class TrainCrane extends Crane implements MotionPathListener{
                 }
                 break;
             case 7:
-             System.out.println("crane is back in position");
-             action = 0;
-             busy = false;
-             target = null;
+                 attachProcess();
+                 break;
+            case 8:
+                 dropProcess();
+                break;
+            case 9:
+             this.resetAll();
                 break;
         }
         
@@ -158,7 +146,8 @@ public class TrainCrane extends Crane implements MotionPathListener{
         sliderControl.play();
     }
     
-    private void moveHook()
+    @Override
+    protected void moveHook()
     {
         hookPath.clearWayPoints();
         hookPath.addWayPoint(hook.getLocalTranslation());
@@ -166,7 +155,8 @@ public class TrainCrane extends Crane implements MotionPathListener{
         hookControl.play();
     }
     
-    private void moveHook2()
+    @Override
+    protected void moveHook2()
     {
         hookPath.addWayPoint(hookPath.getWayPoint(0));
         hookPath.removeWayPoint(0);

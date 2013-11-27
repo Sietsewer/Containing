@@ -45,6 +45,12 @@ public class Main extends SimpleApplication {
     Spatial lcModel;
     Spatial lcHModel;
     /*
+     Traincrane spatials
+     */
+    Spatial tcModel;
+    Spatial tcSModel;
+    Spatial tcHModel;
+    /*
      crane 
      */
     Crane[] seaCranes = new Crane[10];
@@ -171,6 +177,17 @@ public class Main extends SimpleApplication {
         Material lcMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         lcMat.setColor("Color", ColorRGBA.Yellow);
         lcModel.setMaterial(lcMat);
+        
+        //Init trainCrane
+        tcModel = assetManager.loadModel("Models/traincrane/traincrane.j3o");
+        tcSModel = assetManager.loadModel("Models/traincrane/traincrane_slider.j3o");
+        tcHModel = assetManager.loadModel("Models/traincrane/traincrane_slider_hook.j3o");
+        Material tcMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        tcMat.setColor("Color", ColorRGBA.Yellow);
+        tcModel.setMaterial(tcMat);
+        tcSModel.setMaterial(tcMat);
+        tcHModel.setMaterial(tcMat);
+        
         init_SeaCranes();
         init_BargeCranes();
         init_BufferCranes();
@@ -384,7 +401,7 @@ public class Main extends SimpleApplication {
         String cID = Path.getTrainID();
          for (int i = 1; i <= 4; i++) {
             String id = cID + String.format("%03d", i);
-            Crane c = new TrainCrane(id, Path.getVector(id),bcModel, scSModel,scHModel);
+            Crane c = new TrainCrane(id, Path.getVector(id),tcModel, tcSModel,tcHModel);
             trainCranes[i - 1] = c;
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));

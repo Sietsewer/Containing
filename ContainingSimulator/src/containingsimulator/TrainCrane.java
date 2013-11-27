@@ -39,7 +39,6 @@ public class TrainCrane extends Crane implements MotionPathListener{
         
         this.base.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-        this.base.scale(2f);
         
          this.hook.setLocalTranslation(new Vector3f(0,25,0));
          this.sNode.setLocalTranslation(new Vector3f(0,14,0));

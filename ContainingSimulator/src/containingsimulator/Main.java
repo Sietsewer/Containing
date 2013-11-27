@@ -223,7 +223,7 @@ public class Main extends SimpleApplication {
     void messageRecieved(Message decodedMessage) {
         Object[] params = decodedMessage.getParameters();
         switch (decodedMessage.getCommand()) {
-            case 1: //MOVE
+            case Commands.MOVE:
                 String agvID1 = (String) params[0];
                 String[] pathIDs1 = new String[params.length - 1];
                 for (int i = 0; i < pathIDs1.length; i++) {
@@ -231,7 +231,7 @@ public class Main extends SimpleApplication {
                 }
                 //TODO: get AGV from ID, get waypoints from IDs
                 break;
-            case 2: //PICKUP_CONTAINER
+            case Commands.PICKUP_CONTAINER:
                 Crane crane1 = getCraneByID((String) params[0]);
                 Container cont1 = getContainerByID((String) params[1]);
                 //param[2],[3] and [4] are for x, y and z of indexposition
@@ -243,23 +243,23 @@ public class Main extends SimpleApplication {
                     System.err.println("Error: No crane with this ID.");
                 }
                 break;
-            case 3: //GIVE_CONTAINER
+            case Commands.GIVE_CONTAINER:
                 Container cont2 = getContainerByID((String) params[0]);
                 Crane crane2 = getCraneByID((String) params[1]);
                 //TODO: make this work when we have AGVs in Main
                 break;
-            case 4: //PUT_CONTAINER
+            case Commands.PUT_CONTAINER:
                 Crane crane3 = getCraneByID((String) params[0]);
                 Container cont3 = getContainerByID((String) params[1]);
                 Vector3f cposition = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
                 //TODO: stuff
                 break;
-            case 5: //GET_CONTAINER
+            case Commands.GET_CONTAINER:
                 //String agvID3 = (String) params[0];
                 Crane crane4 = getCraneByID((String) params[1]);
                 //TODO: you know the drill by now
                 break;
-            case 6: //CREATE_TRANSPORTER
+            case Commands.CREATE_TRANSPORTER:
                 String transporterID1 = (String) params[0];
                 int transporterType = (Integer) params[1];
                 Vector3f dockingPoint = getCraneByID((String) params[2]).position;
@@ -271,7 +271,7 @@ public class Main extends SimpleApplication {
                 transporters.add(t);
                 rootNode.attachChild(t);
                 break;
-            case 7: //REMOVE_TRANSPORTER
+            case Commands.REMOVE_TRANSPORTER:
                 String transporterID2 = (String) params[0];
                 for(Transporter trans : transporters){
                     if(trans.id.equals(transporterID2)){

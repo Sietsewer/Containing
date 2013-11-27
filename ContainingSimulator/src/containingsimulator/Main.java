@@ -22,7 +22,7 @@ import java.util.ArrayList;
  */
 public class Main extends SimpleApplication {
 
-    ServerListener listener;
+    static ServerListener listener;
     Spatial sky_geo;
     Spatial agvModel;
     /*
@@ -214,7 +214,7 @@ public class Main extends SimpleApplication {
         dock.setLocalTranslation(0f, 0f, 600f);
     }
 
-    void sendMessage(Message Message) {
+    static void sendMessage(Message Message) {
         listener.sendMessage(Message);
     }
 
@@ -265,13 +265,17 @@ public class Main extends SimpleApplication {
                 for (int i = 3; i < params.length - 3; i++) {
                     simContainers.add((SimContainer) params[i]);
                 }
-                transporters.add(new Transporter(transporterID1, simContainers, dockingPoint, transporterType));
+                Transporter t = new Transporter(transporterID1, simContainers, dockingPoint, transporterType);
+                transporters.add(t);
+                rootNode.attachChild(t);
                 break;
             case 7: //REMOVE_TRANSPORTER
                 String transporterID2 = (String) params[0];
-                for(Transporter t : transporters){
-                    if(t.id.equals(transporterID2))
-                        transporters.remove(t);
+                for(Transporter trans : transporters){
+                    if(trans.id.equals(transporterID2)){
+                        transporters.remove(trans);
+                        rootNode.detachChild(trans);
+                    }
                 }
                 break;
             default:
@@ -392,7 +396,7 @@ public class Main extends SimpleApplication {
      *
      * @param id the ID of the object.
      */
-    public void sendReady(String id) {
+    public static void sendReady(String id) {
         Object[] objectArray = new Object[1];
         objectArray[0] = id;
         Message message = new Message(0, objectArray);

@@ -322,17 +322,14 @@ public class Main extends SimpleApplication {
     private Container getContainerByID(String id){
         Container c = null;
         for(int i = 0; i < buffers.length; i++){
-            for(int j = 0; j < buffers[i].bufferArray.length; j++){
-               for(int k = 0; k < buffers[i].bufferArray[0].length; k++){
-                   for(int l = 0; l < buffers[i].bufferArray[0][0].length; l++){
-                       if(buffers[i].bufferArray[j][k][l] != null && buffers[i].bufferArray[j][k][l].id.equals(id)){
-                           return c;
-                       }
-                    }
-                } 
-            }
+            c = buffers[i].getContainerByID(id);
         }
-        //TODO: add code to look into containers on transport
+        
+        if (c == null){
+            for(Transporter t : transporters){
+              c = t.getContainerByID(id);
+           }
+        }
         return c;
     }
 

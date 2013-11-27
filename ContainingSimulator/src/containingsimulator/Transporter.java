@@ -184,6 +184,21 @@ public class Transporter extends Node {
 
         return tempCont;
     }
+    
+    public Container getContainerByID(String id){
+        Container tempCont = null;
+        for(int i = 0; i < containers.length; i++){
+            for(int j = 0; j < containers[0].length; j++){
+                for(int k = 0; k < containers[0][0].length; k++){
+                    if(containers[i][j][k] != null && containers[i][j][k].id.equals(id)){
+                        tempCont = containers[i][j][k];
+                        return tempCont;
+                    }
+                }
+            }
+        }
+        return tempCont;
+    }
 
     /**
      * Set which geometries have to be drawn and which not

@@ -4,6 +4,7 @@
  */
 package containingcontroller;
 
+import containing.xml.CustomVector3f;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;

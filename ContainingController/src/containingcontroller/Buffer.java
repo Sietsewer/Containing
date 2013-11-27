@@ -4,6 +4,7 @@
  */
 package containingcontroller;
 
+import containing.xml.CustomVector3f;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;

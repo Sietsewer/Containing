@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package containingcontroller;
+package containing.xml;
 
 import java.io.StringReader;
 import java.io.StringWriter;

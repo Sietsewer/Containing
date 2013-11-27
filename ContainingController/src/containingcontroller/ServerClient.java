@@ -4,6 +4,7 @@
  */
 package containingcontroller;
 
+import containing.xml.Message;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,6 +23,7 @@ public class ServerClient {
     private Socket client;//client's socket connection
     private PrintWriter output;//output stream from client
     private Server server;//server to relay message's
+    private boolean sendOnly = false;
 
     /**
      *
@@ -31,6 +33,11 @@ public class ServerClient {
     public ServerClient(Socket client, Server s) {
         this.client = client;
         server = s;
+    }
+
+    ServerClient(Socket client, Server s, boolean b) {
+        this(client, s);
+        sendOnly = b;
     }
 
     /**
@@ -48,6 +55,7 @@ public class ServerClient {
      * main function that listens to client
      */
     public void Run() {
+        boolean firstMessage = false;
         try {
             input = new BufferedReader(new InputStreamReader(client.getInputStream()));
             output = new PrintWriter(client.getOutputStream(), true);
@@ -58,10 +66,16 @@ public class ServerClient {
             try {
                 if (input.ready()) {
                     String s = input.readLine();
-                    if (!s.isEmpty()) {
-                        server.MessageRecieved(s);
-                        System.out.println("message from ip:" + client.getRemoteSocketAddress());
-                        System.out.println(s);
+                    if (firstMessage) {
+                        Message m = Message.decodeMessage(s);
+                                
+                         server.controller.PrintMessage("An");
+                    } else {
+                        if (!s.isEmpty()) {
+                            server.MessageRecieved(s);
+                            System.out.println("message from ip:" + client.getRemoteSocketAddress());
+                            System.out.println(s);
+                        }
                     }
                 }
             } catch (IOException ex) {

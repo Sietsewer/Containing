@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package containingcontroller;
+package containing.xml;
 
+import containingcontroller.Container;
 import java.util.Date;
 import org.simpleframework.xml.*;
 
@@ -25,7 +26,7 @@ public class SimContainer {
     public SimContainer() {
     }
 
-    SimContainer(Container c) {
+    public SimContainer(Container c) {
         this.id = c.getId();
         this.indexPosition = c.getPosition();
     }

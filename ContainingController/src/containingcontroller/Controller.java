@@ -4,6 +4,9 @@
  */
 package containingcontroller;
 
+import containing.xml.SimContainer;
+import containing.xml.CustomVector3f;
+import containing.xml.Message;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,7 +53,7 @@ public class Controller {
      * @param window mainwindow needed to write to textarea
      */
     public Controller(ControllerWindow window) {
-   
+
         this.window = window;
 
         buffers = new ArrayList<>();
@@ -527,5 +530,54 @@ public class Controller {
      */
     public PathFinder getPathFinder() {
         return pathFinder;
+    }
+
+    String getAndroidData() {
+
+        Message m = new Message();
+        m.setCommand(Commands.READY);
+
+        int containerCount = 0;
+        int containerCountInTransporter = 0;
+        int containerCountInBuffer = 0;
+        int containerCraneCount = 0;
+        int containerCountAGV= 0;
+        
+        for (Transporter t : currentTransporter) {
+            containerCountInTransporter += t.getContainerCount();
+        }
+        containerCount += containerCount;
+
+        for (Buffer b : buffers) {
+            containerCountInBuffer += b.getContainerCount();
+
+        }
+        containerCount += containerCountInBuffer;
+
+        List<Crane> cranes = new ArrayList<>();
+        cranes.addAll(bargeCranes);
+        cranes.addAll(lorreyCranes);
+        cranes.addAll(seaCranes);
+        cranes.addAll(trainCranes);
+
+        for (Crane c : cranes) {
+            if (c.container != null) {
+                containerCraneCount++;
+
+            }
+        }
+        containerCount += containerCraneCount;
+        
+           for (AGV a :agvs) {
+            if (a.container != null) {
+                containerCountAGV++;
+
+            }
+        }
+        containerCount += containerCountAGV;
+        
+        m.setParameters(new Object[]{containerCount, containerCountInTransporter,containerCountInBuffer,containerCraneCount,containerCountAGV});
+        return Message.encodeMessage(m);
+
     }
 }

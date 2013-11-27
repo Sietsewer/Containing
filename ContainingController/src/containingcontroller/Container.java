@@ -4,6 +4,7 @@
  */
 package containingcontroller;
 
+import containing.xml.CustomVector3f;
 import java.awt.Dimension;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

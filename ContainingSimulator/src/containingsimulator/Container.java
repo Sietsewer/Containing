@@ -4,6 +4,8 @@
  */
 package containingsimulator;
 
+import containing.xml.SimContainer;
+import containing.xml.CustomVector3f;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;

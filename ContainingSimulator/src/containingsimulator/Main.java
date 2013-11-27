@@ -1,5 +1,7 @@
 package containingsimulator;
 
+import containing.xml.SimContainer;
+import containing.xml.Message;
 import com.jme3.app.SimpleApplication;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;

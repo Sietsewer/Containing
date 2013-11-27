@@ -60,7 +60,9 @@ public class Buffer extends Node{
      */
     public void addParkingSpots(Vector3f loc){
         pSpots = new ParkingSpot[12];
+        loc.z -= 20;
         for(int i = 0; i < pSpots.length; i++){
+            //TODO: fix parking spot locations, something fucked up here
             if(i < 6){  //spots at north end of the buffer
                 pSpots[i] = new ParkingSpot(new Vector3f(loc.x + 6.1f, 10, loc.z + 7.925f - (i * 2.44f)), (float)Math.PI * 0.5f);
             }else{      //spots at opposite side

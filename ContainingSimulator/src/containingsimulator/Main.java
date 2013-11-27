@@ -198,10 +198,6 @@ public class Main extends SimpleApplication {
         //Init Transporters
         Transporter.makeGeometry(assetManager);
         transporters = new ArrayList<Transporter>();
-        
-        //Init AGVs
-        agvs = new ArrayList<AGV>();
-        init_AGVs();
 
         //Init empty buffers
         buffers = new Buffer[63];
@@ -212,6 +208,10 @@ public class Main extends SimpleApplication {
             buffers[i].setLocalTranslation(111.76f + (i * 22.035f), 11, 115);
             buffers[i].addParkingSpots(buffers[i].getLocalTranslation());
         }
+        
+        //Init AGVs
+        agvs = new ArrayList<AGV>();
+        init_AGVs();
 
         //Init of the small blue plane, representing water.
         Quad waterQuad = new Quad(1550f, 600f);
@@ -429,7 +429,14 @@ public class Main extends SimpleApplication {
              AGV agv = new AGV(id, agvModel.clone());
              agvs.add(agv);
              rootNode.attachChild(agv);
-             agv.setLocalTranslation(new Vector3f(0, i, 0));
+             //System.out.println("sup");
+             //agv.setLocalTranslation(new Vector3f(100 + (i * 2.44f), 10.25f, 100));
+         }
+         for(int i = 0; i < 100; i++){
+             //int pspotindex = i % 12;
+             //int bufferindex = i % 63;
+             agvs.get(i).setLocalTranslation(buffers[i % 63].pSpots[i % 12].translation);
+             agvs.get(i).rotate(0, buffers[0].pSpots[0].rotation, 0);
          }
      }
 

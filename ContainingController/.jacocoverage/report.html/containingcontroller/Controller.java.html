@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="nl"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>Controller.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;ContainingController&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.html" class="el_package">containingcontroller</a> &gt; <span class="el_source">Controller.java</span></div><h1>Controller.java</h1><pre class="source lang-java linenums">/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package containingcontroller;
+
+import containing.xml.SimContainer;
+import containing.xml.CustomVector3f;
+import containing.xml.Message;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author Hendrik
+ */
+public class Controller {
+
+    PathFinder pathFinder;
+    private Server server;//Server for communication between applications
+    private ControllerWindow window;//Mainwindow to print log
+    List&lt;Container&gt; allContainers;// this list holds all containers
+    Timer simTimer;//timer that progresses time in controller
+    Date simTime;
+    SimpleDateFormat timeFormat;
+    List&lt;Transporter&gt; currentTransporter;
+    List&lt;Buffer&gt; buffers;
+    List&lt;AGV&gt; agvs;
+    List&lt;Crane&gt; lorreyCranes;
+    List&lt;Crane&gt; seaCranes;
+    List&lt;Crane&gt; bargeCranes;
+    List&lt;Crane&gt; trainCranes;
+    HashMap&lt;AGV, Crane&gt; waitingToBeReadyAtCrane;
+    HashMap&lt;Crane, AGV&gt; waitingForCraneToPickUpFromAgv;
+    HashMap&lt;Crane, AGV&gt; waitingForCraneToPutToAgv;
+    HashMap&lt;Crane, Transporter&gt; dockedTransporter;
+
+    /**
+     *
+     * @param window mainwindow needed to write to textarea
+     */
+<span class="fc" id="L55">    public Controller(ControllerWindow window) {</span>
+
+<span class="fc" id="L57">        this.window = window;</span>
+
+<span class="fc" id="L59">        buffers = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L60">        agvs = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L61">        timeFormat = new SimpleDateFormat(&quot;dd-MM-yyyy HH:mm:ss&quot;);</span>
+<span class="fc" id="L62">        currentTransporter = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L63">        waitingToBeReadyAtCrane = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L64">        waitingForCraneToPickUpFromAgv = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L65">        waitingForCraneToPutToAgv = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L66">        pathFinder = new PathFinder();</span>
+<span class="fc" id="L67">        pathFinder.createMap();</span>
+<span class="fc" id="L68">        dockedTransporter = new HashMap&lt;&gt;();</span>
+        //Set time of simulator
+<span class="fc" id="L70">        Calendar cal = Calendar.getInstance();</span>
+<span class="fc" id="L71">        cal.set(Calendar.YEAR, 2004);</span>
+<span class="fc" id="L72">        cal.set(Calendar.MONTH, Calendar.DECEMBER);</span>
+<span class="fc" id="L73">        cal.set(Calendar.DAY_OF_MONTH, 4);</span>
+<span class="fc" id="L74">        cal.set(Calendar.HOUR_OF_DAY, 0);</span>
+<span class="fc" id="L75">        cal.set(Calendar.MINUTE, 0);</span>
+<span class="fc" id="L76">        cal.set(Calendar.SECOND, 0);</span>
+<span class="fc" id="L77">        cal.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L78">        simTime = cal.getTime();</span>
+
+<span class="fc" id="L80">        bargeCranes = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        for (int i = 1; i &lt;= 8; i++) {</span>
+<span class="fc" id="L82">            Crane c = new Crane(&quot;CBA&quot; + String.format(&quot;%03d&quot;, i));</span>
+<span class="fc" id="L83">            c.node = pathFinder.getMapCBA().get(i - 1);</span>
+<span class="fc" id="L84">            bargeCranes.add(c);</span>
+<span class="fc" id="L85">            PrintMessage(&quot;Bargecrane Created - &quot; + c.toString());</span>
+        }
+
+<span class="fc" id="L88">        seaCranes = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        for (int i = 1; i &lt;= 10; i++) {</span>
+<span class="fc" id="L90">            Crane c = new Crane(&quot;CSE&quot; + String.format(&quot;%03d&quot;, i));</span>
+<span class="fc" id="L91">            c.startRange = (i - 1) * 10;</span>
+<span class="fc" id="L92">            c.range = 10;</span>
+<span class="fc" id="L93">            c.node = pathFinder.getMapCSE().get(i - 1);</span>
+<span class="fc" id="L94">            seaCranes.add(c);</span>
+<span class="fc" id="L95">            PrintMessage(&quot;SeaCrane Created - &quot; + c.toString());</span>
+        }
+
+<span class="fc" id="L98">        trainCranes = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        for (int i = 1; i &lt;= 4; i++) {</span>
+<span class="fc" id="L100">            Crane c = new Crane(&quot;CTR&quot; + String.format(&quot;%03d&quot;, i));</span>
+<span class="fc" id="L101">            c.node = pathFinder.getMapCTR().get(i - 1);</span>
+<span class="fc" id="L102">            trainCranes.add(c);</span>
+<span class="fc" id="L103">            PrintMessage(&quot;Traincrane Created - &quot; + c.toString());</span>
+        }
+
+
+<span class="fc" id="L107">        lorreyCranes = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L108" title="All 2 branches covered.">        for (int i = 1; i &lt;= 20; i++) {</span>
+<span class="fc" id="L109">            Crane c = new Crane(&quot;CLO&quot; + String.format(&quot;%03d&quot;, i));</span>
+<span class="fc" id="L110">            c.node = pathFinder.getMapCLO().get(i - 1);</span>
+<span class="fc" id="L111">            lorreyCranes.add(c);</span>
+<span class="fc" id="L112">            PrintMessage(&quot;Lorreystop Created - &quot; + c.toString());</span>
+        }
+        //Create buffers and agv's
+<span class="fc bfc" id="L115" title="All 2 branches covered.">        for (int i = 1; i &lt;= 63; i++) {</span>
+<span class="fc" id="L116">            Buffer b = new Buffer();</span>
+<span class="fc" id="L117">            Crane c = new Crane(&quot;CBU&quot; + String.format(&quot;%03d&quot;, i));</span>
+<span class="fc" id="L118">            b.crane = c;</span>
+<span class="fc" id="L119">            PathNode upperNode = pathFinder.getMapBA().get(i - 1);</span>
+<span class="fc" id="L120">            PathNode downNode = pathFinder.getMapBB().get(i - 1);</span>
+<span class="fc" id="L121">            b.pathNodeUp = upperNode;</span>
+<span class="fc" id="L122">            b.pathNodeDown = downNode;</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">            for (int a = 0; a &lt; 4; a++) {</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">                if (a &lt; 2) {</span>
+<span class="fc" id="L125">                    AGV agv = new AGV(upperNode, b);</span>
+<span class="fc" id="L126">                    b.ownedAGV.add(agv);</span>
+<span class="fc" id="L127">                    agvs.add(agv);</span>
+<span class="fc" id="L128">                    PrintMessage(&quot;AGV Created - &quot; + agv.toString());</span>
+<span class="fc" id="L129">                } else {</span>
+<span class="fc" id="L130">                    AGV agv = new AGV(downNode, b);</span>
+<span class="fc" id="L131">                    b.ownedAGV.add(agv);</span>
+<span class="fc" id="L132">                    agvs.add(agv);</span>
+<span class="fc" id="L133">                    PrintMessage(&quot;AGV Created - &quot; + agv.toString());</span>
+                }
+            }
+<span class="fc" id="L136">            PrintMessage(&quot;Buffer Created - &quot; + b.toString());</span>
+<span class="fc" id="L137">            buffers.add(b);</span>
+
+
+
+
+
+
+        }
+<span class="fc" id="L145">        PrintMessage(&quot;Total AGV - &quot; + agvs.size());</span>
+<span class="fc" id="L146">        PrintMessage(&quot;Total Buffers - &quot; + buffers.size());</span>
+<span class="fc" id="L147">        PrintMessage(&quot;Total Lorreycranes - &quot; + lorreyCranes.size());</span>
+<span class="fc" id="L148">        PrintMessage(&quot;Total Seacranes - &quot; + seaCranes.size());</span>
+<span class="fc" id="L149">        PrintMessage(&quot;Total Bargecranes - &quot; + bargeCranes.size());</span>
+<span class="fc" id="L150">        PrintMessage(&quot;Total trainCrane - &quot; + trainCranes.size());</span>
+<span class="fc" id="L151">    }</span>
+
+    /**
+     * Start simulator with tick of 1 second is 1 second
+     */
+    public void Start() {
+<span class="fc" id="L157">        this.simTimer = new Timer();</span>
+<span class="fc" id="L158">        this.simTimer.schedule(new TimerTask() {</span>
+            @Override
+            public void run() {
+<span class="fc" id="L161">                timerTick();</span>
+<span class="fc" id="L162">            }</span>
+        }, 0, 1000);
+<span class="fc" id="L164">    }</span>
+
+    void sendMessage(Message Message) {
+<span class="nc" id="L167">        server.sendCommand(Message);</span>
+<span class="nc" id="L168">        this.PrintMessage(&quot;Message send - &quot; + Message.toString());</span>
+<span class="nc" id="L169">    }</span>
+
+    /**
+     * tick in simulator to give commands
+     */
+    public void timerTick() {
+<span class="fc" id="L175">        PrintMessage(&quot;simtime is now: &quot; + timeFormat.format(simTime));</span>
+
+<span class="fc" id="L177">        List&lt;Container&gt; _temp = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L178" title="1 of 2 branches missed.">        for (int i = 0; i &lt; allContainers.size(); i++) {</span>
+
+<span class="fc bfc" id="L180" title="All 2 branches covered.">            if (allContainers.get(i).getDateArrival().before(simTime)) {</span>
+<span class="fc" id="L181">                _temp.add(allContainers.get(i));</span>
+<span class="fc" id="L182">                allContainers.remove(i);</span>
+<span class="fc" id="L183">                i--;</span>
+            } else {
+                break;
+            }
+        }
+
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        if (_temp.size() &gt; 0) {</span>
+<span class="fc" id="L190">            List&lt;Transporter&gt; transporters = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L191">            Transporter seaShip = new Transporter(TransportTypes.SEASHIP);</span>
+<span class="fc" id="L192">            Transporter barge = new Transporter(TransportTypes.BARGE);</span>
+<span class="fc" id="L193">            Transporter train = new Transporter(TransportTypes.TRAIN);</span>
+<span class="fc" id="L194">            Transporter trolley = new Transporter(TransportTypes.TROLLEY);</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">            for (Container c : _temp) {</span>
+<span class="pc bpc" id="L196" title="1 of 2 branches missed.">                if (c.getTransportTypeArrival() == TransportTypes.SEASHIP) {</span>
+<span class="nc" id="L197">                    seaShip.loadContainer(c);</span>
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">                } else if (c.getTransportTypeArrival() == TransportTypes.BARGE) {</span>
+<span class="nc" id="L199">                    barge.loadContainer(c);</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">                } else if (c.getTransportTypeArrival() == TransportTypes.TRAIN) {</span>
+<span class="nc" id="L201">                    train.loadContainer(c);</span>
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">                } else if (c.getTransportTypeArrival() == TransportTypes.TROLLEY) {</span>
+<span class="fc" id="L203">                    trolley.loadContainer(c);</span>
+
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">                    for (Crane crane : lorreyCranes) {</span>
+<span class="pc bpc" id="L206" title="1 of 2 branches missed.">                        if (!dockedTransporter.containsKey(crane)) {</span>
+<span class="fc" id="L207">                            trolley.setDockingPoint(crane);</span>
+<span class="fc" id="L208">                            dockedTransporter.put(crane, trolley);</span>
+<span class="fc" id="L209">                            break;</span>
+                        }
+<span class="nc" id="L211">                    }</span>
+<span class="fc" id="L212">                    transporters.add(trolley);</span>
+<span class="fc" id="L213">                    trolley = new Transporter(TransportTypes.TROLLEY);</span>
+
+                }
+<span class="fc" id="L216">            }</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">            if (seaShip.getContainerCount() &gt; 0) {</span>
+
+<span class="nc" id="L219">                transporters.add(seaShip);</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">                for (int i = 0; i &lt; 10; i += 2) {</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">                    if (!dockedTransporter.containsKey(seaCranes.get(i))) {</span>
+
+<span class="nc" id="L223">                        Crane c = seaCranes.get(i);</span>
+
+<span class="nc" id="L225">                        seaShip.setDockingPoint(c);</span>
+
+<span class="nc" id="L227">                        dockedTransporter.put(c, seaShip);</span>
+
+<span class="nc" id="L229">                        break;</span>
+                    }
+                }
+
+            }
+<span class="pc bpc" id="L234" title="1 of 2 branches missed.">            if (barge.getContainerCount() &gt; 0) {</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">                for (int i = 0; i &lt; 8; i += 2) {</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">                    if (!dockedTransporter.containsKey(bargeCranes.get(i))) {</span>
+
+<span class="nc" id="L238">                        Crane c = bargeCranes.get(i);</span>
+
+<span class="nc" id="L240">                        barge.setDockingPoint(c);</span>
+
+<span class="nc" id="L242">                        dockedTransporter.put(c, barge);</span>
+
+<span class="nc" id="L244">                        break;</span>
+                    }
+                }
+<span class="nc" id="L247">                transporters.add(barge);</span>
+            }
+<span class="pc bpc" id="L249" title="1 of 2 branches missed.">            if (train.getContainerCount() &gt; 0) {</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">                for (int i = 0; i &lt; 4; i++) {</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">                    if (!dockedTransporter.containsKey(trainCranes.get(i))) {</span>
+
+<span class="nc" id="L253">                        Crane c = trainCranes.get(i);</span>
+
+<span class="nc" id="L255">                        train.setDockingPoint(c);</span>
+
+<span class="nc" id="L257">                        dockedTransporter.put(c, train);</span>
+
+<span class="nc" id="L259">                        break;</span>
+                    }
+                }
+<span class="nc" id="L262">                transporters.add(train);</span>
+            }
+<span class="pc bpc" id="L264" title="1 of 2 branches missed.">            if (transporters.size() &gt; 0) {</span>
+<span class="fc bfc" id="L265" title="All 2 branches covered.">                for (Transporter t : transporters) {</span>
+
+<span class="fc" id="L267">                    currentTransporter.add(t);</span>
+
+<span class="fc" id="L269">                    PrintMessage(&quot;Arriving: &quot; + t.toString());</span>
+
+<span class="fc" id="L271">                    Message m = new Message(Commands.CREATE_TRANSPORTER, null);</span>
+
+<span class="fc" id="L273">                    Object[] objects = new Object[t.getContainerCount() + 3];</span>
+<span class="fc" id="L274">                    objects[0] = t.id;</span>
+<span class="fc" id="L275">                    objects[1] = t.getTransportType();</span>
+<span class="fc" id="L276">                    objects[2] = t.getDockingPoint().id;</span>
+
+<span class="fc bfc" id="L278" title="All 2 branches covered.">                    for (int i = 0; i &lt; t.getContainerCount(); i++) {</span>
+<span class="fc" id="L279">                        objects[i + 3] = new SimContainer(t.getContainer(i));</span>
+                    }
+<span class="fc" id="L281">                    m.setParameters(objects);</span>
+<span class="fc" id="L282">                    server.sendCommand(m);</span>
+<span class="fc" id="L283">                }</span>
+            }
+        }
+
+
+
+
+
+<span class="fc" id="L291">        Calendar cal = Calendar.getInstance(); // creates calendar</span>
+<span class="fc" id="L292">        cal.setTime(simTime); // sets calendar time/date</span>
+<span class="fc" id="L293">        cal.add(Calendar.SECOND, 1); // adds one hour</span>
+<span class="fc" id="L294">        simTime = cal.getTime(); // returns new date object, one hour in the future</span>
+<span class="fc" id="L295">    }</span>
+
+    /**
+     * stop simulation
+     */
+    public void pause() {
+<span class="fc" id="L301">        this.simTimer.cancel();</span>
+<span class="fc" id="L302">    }</span>
+
+    /**
+     * start server for communication
+     */
+    public void startServer() {
+        try {
+<span class="fc" id="L309">            server = new Server(this);</span>
+<span class="nc" id="L310">        } catch (IOException ex) {</span>
+<span class="nc" id="L311">            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="fc" id="L312">        }</span>
+<span class="fc" id="L313">        new Thread(new Runnable() {</span>
+            @Override
+            public void run() {
+<span class="nc" id="L316">                server.Run();</span>
+<span class="nc" id="L317">            }</span>
+        }).start();
+<span class="fc" id="L319">    }</span>
+
+    /**
+     * Print message on window
+     *
+     * @param message
+     */
+    public final void PrintMessage(String message) {
+<span class="fc" id="L327">        window.WriteLogLine(message);</span>
+<span class="fc" id="L328">    }</span>
+
+    private void AGVReady(AGV agv) {
+<span class="nc" id="L331">        this.PrintMessage(&quot;AGV ready - &quot; + agv.name);</span>
+<span class="nc" id="L332">        agv.setIsReady(true);</span>
+<span class="nc bnc" id="L333" title="All 2 branches missed.">        if (waitingToBeReadyAtCrane.containsKey(agv)) {</span>
+
+<span class="nc" id="L335">            Crane c = waitingToBeReadyAtCrane.get(agv);</span>
+<span class="nc bnc" id="L336" title="All 2 branches missed.">            if (c.getReady()) {</span>
+<span class="nc" id="L337">                putContainer(agv, c);</span>
+            }
+        }
+
+<span class="nc" id="L341">    }</span>
+
+    private AGV getValueFromHashmap(HashMap&lt;AGV, Crane&gt; collection, Crane c) {
+<span class="nc" id="L344">        Iterator it = collection.entrySet().iterator();</span>
+<span class="nc bnc" id="L345" title="All 2 branches missed.">        while (it.hasNext()) {</span>
+<span class="nc" id="L346">            Map.Entry pairs = (Map.Entry) it.next();</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">            if (pairs.getValue() == c) {</span>
+<span class="nc" id="L348">                it.remove();</span>
+<span class="nc" id="L349">                return (AGV) pairs.getKey();</span>
+
+            }
+<span class="nc" id="L352">            it.remove();</span>
+<span class="nc" id="L353">        }</span>
+<span class="nc" id="L354">        return null;</span>
+    }
+
+    /**
+     * Put container onto agv
+     *
+     * @param agv
+     * @param crane
+     */
+    public void putContainer(AGV agv, Crane crane) {
+<span class="nc" id="L364">        Message m = new Message(Commands.GIVE_CONTAINER, null);</span>
+<span class="nc" id="L365">        m.setParameters(new Object[]{agv.name, crane.id});</span>
+<span class="nc" id="L366">        this.sendMessage(m);</span>
+<span class="nc" id="L367">        agv.container = crane.container;</span>
+<span class="nc" id="L368">        crane.container = null;</span>
+<span class="nc" id="L369">        agv.ready = false;</span>
+<span class="nc" id="L370">        crane.setIsReady(false);</span>
+<span class="nc" id="L371">        waitingForCraneToPutToAgv.put(crane, agv);</span>
+<span class="nc" id="L372">    }</span>
+
+    private void craneReady(Crane c) {
+<span class="nc" id="L375">        this.PrintMessage(&quot;Crane ready - &quot; + c.id);</span>
+<span class="nc" id="L376">        c.setIsReady(true);</span>
+<span class="nc bnc" id="L377" title="All 2 branches missed.">        if (waitingToBeReadyAtCrane.containsValue(c)) {</span>
+
+<span class="nc" id="L379">            AGV agv = getValueFromHashmap(waitingToBeReadyAtCrane, c);</span>
+<span class="nc bnc" id="L380" title="All 2 branches missed.">            if (agv.getIsReady()) {</span>
+
+<span class="nc" id="L382">                putContainer(agv, c);</span>
+
+            }
+<span class="nc bnc" id="L385" title="All 2 branches missed.">        } else if (waitingForCraneToPickUpFromAgv.containsKey(c)) {</span>
+<span class="nc" id="L386">            AGV v = waitingForCraneToPickUpFromAgv.get(c);</span>
+<span class="nc" id="L387">            v.moveToHome(c, this);</span>
+<span class="nc" id="L388">            waitingForCraneToPickUpFromAgv.remove(c);</span>
+
+<span class="nc" id="L390">        }//Kraan heeft container aan AGV gegeven</span>
+<span class="nc bnc" id="L391" title="All 2 branches missed.">        else if (waitingForCraneToPutToAgv.containsKey(c)) {</span>
+            //AGV wordt naar huis gestuurd
+<span class="nc" id="L393">            AGV v = waitingForCraneToPutToAgv.get(c);</span>
+<span class="nc" id="L394">            v.container = c.container;</span>
+<span class="nc" id="L395">            c.container = null;</span>
+<span class="nc" id="L396">            v.moveToHome(c, this);</span>
+<span class="nc" id="L397">            waitingForCraneToPutToAgv.remove(c);</span>
+
+            //Container krijgt opdracht om nieuwe container te pakken
+<span class="nc" id="L400">            Transporter t = dockedTransporter.get(c);</span>
+
+<span class="nc bnc" id="L402" title="All 2 branches missed.">            if (t.getContainerCount() &gt; 0) {</span>
+<span class="nc" id="L403">                CustomVector3f lastPosistion = c.container.getPosition();</span>
+<span class="nc" id="L404">                Container toMove = null;</span>
+<span class="nc bnc" id="L405" title="All 4 branches missed.">                for (int x = (int) lastPosistion.x; x &lt; c.range &amp;&amp; toMove == null; x++) {</span>
+<span class="nc bnc" id="L406" title="All 4 branches missed.">                    for (int z = (int) lastPosistion.z; z &lt;= 15 &amp;&amp; toMove == null; z++) {</span>
+<span class="nc bnc" id="L407" title="All 4 branches missed.">                        for (int y = 5; y &gt;= 0 &amp;&amp; toMove == null; y--) {</span>
+<span class="nc bnc" id="L408" title="All 2 branches missed.">                            for (Container cont : t.getContainers()) {</span>
+<span class="nc bnc" id="L409" title="All 6 branches missed.">                                if (cont.getPosition().x == x</span>
+                                        &amp;&amp; cont.getBufferPosition().z == z
+                                        &amp;&amp; cont.getPosition().y == y) {
+<span class="nc" id="L412">                                    toMove = cont;</span>
+<span class="nc" id="L413">                                    break;</span>
+                                }
+<span class="nc" id="L415">                            }</span>
+                        }
+                    }
+                }
+
+<span class="nc bnc" id="L420" title="All 2 branches missed.">                if (toMove == null) {</span>
+<span class="nc" id="L421">                    c.setIsReady(true);</span>
+                } else {
+<span class="nc" id="L423">                    Message m = new Message(Commands.PICKUP_CONTAINER, null);</span>
+<span class="nc" id="L424">                    ArrayList&lt;Object&gt; params = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L425">                    params.add(c.id);</span>
+
+<span class="nc" id="L427">                    params.add(toMove.getId());</span>
+
+<span class="nc" id="L429">                    params.add(toMove.getPosition().x);</span>
+
+<span class="nc" id="L431">                    params.add(toMove.getPosition().y);</span>
+
+<span class="nc" id="L433">                    params.add(toMove.getPosition().z);</span>
+
+<span class="nc" id="L435">                    m.setParameters(params.toArray());</span>
+
+<span class="nc" id="L437">                    this.sendMessage(m);</span>
+<span class="nc" id="L438">                    c.setIsReady(false);</span>
+<span class="nc bnc" id="L439" title="All 2 branches missed.">                    for (Buffer b : buffers) {</span>
+<span class="nc" id="L440">                        CustomVector3f bestpos = b.findBestBufferPlace(toMove);</span>
+<span class="nc" id="L441">                        AGV agv = b.AGVAvailable();</span>
+<span class="nc bnc" id="L442" title="All 4 branches missed.">                        if (bestpos != null &amp;&amp; agv != null) {</span>
+<span class="nc" id="L443">                            toMove.setBufferPosition(bestpos);</span>
+<span class="nc" id="L444">                            b.reservePosition(toMove);</span>
+<span class="nc" id="L445">                            agv.moveToCrane(c, this);</span>
+<span class="nc" id="L446">                            waitingToBeReadyAtCrane.put(agv, c);</span>
+<span class="nc" id="L447">                            agv.isHome = false;</span>
+<span class="nc" id="L448">                            agv.ready = false;</span>
+                        }
+<span class="nc" id="L450">                    }</span>
+                }
+<span class="nc" id="L452">            } else {</span>
+<span class="nc" id="L453">                Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{dockedTransporter.get(c).id});</span>
+<span class="nc" id="L454">                this.sendMessage(m);</span>
+<span class="nc" id="L455">                currentTransporter.remove(t);</span>
+<span class="nc" id="L456">                dockedTransporter.remove(c);</span>
+<span class="nc" id="L457">                c.ready = true;</span>
+            }
+        }
+
+<span class="nc" id="L461">    }</span>
+
+    /**
+     * Crane from buffer is ready
+     *
+     * @param b
+     */
+    public void bufferCraneReady(Buffer b) {
+<span class="nc" id="L469">    }</span>
+
+    private void transporterReady(Transporter t) {
+<span class="nc" id="L472">    }</span>
+
+    void setContainers(List&lt;Container&gt; containers) {
+<span class="fc" id="L475">        allContainers = containers;</span>
+<span class="fc" id="L476">        Collections.sort(containers, new ContainerComparer());</span>
+<span class="fc bfc" id="L477" title="All 2 branches covered.">        for (Container c : containers) {</span>
+<span class="fc" id="L478">            this.PrintMessage(&quot;Loaded - &quot; + c.toString());</span>
+<span class="fc" id="L479">        }</span>
+<span class="fc" id="L480">        this.PrintMessage(&quot;Total containers - &quot; + containers.size());</span>
+
+<span class="fc" id="L482">    }</span>
+
+    /**
+     * message has been recieved from simulator
+     *
+     * @param message the message object that has been recieved
+     */
+    public void recievedMessage(String message) {
+<span class="nc" id="L490">        PrintMessage(message);</span>
+<span class="nc" id="L491">        Message m = Message.decodeMessage(message);</span>
+<span class="nc bnc" id="L492" title="All 2 branches missed.">        if (m.getParameters()[0] instanceof String) {</span>
+<span class="nc" id="L493">            int id = Integer.getInteger(((String) m.getParameters()[0]).substring(3, 5));</span>
+<span class="nc bnc" id="L494" title="All 2 branches missed.">            switch (m.getCommand()) {</span>
+                case Commands.READY:
+<span class="nc bnc" id="L496" title="All 4 branches missed.">                    switch (((String) m.getParameters()[0]).charAt(0)) {</span>
+                        case 'C':
+<span class="nc bnc" id="L498" title="All 2 branches missed.">                            if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase(&quot;SE&quot;)) {</span>
+<span class="nc" id="L499">                                craneReady(seaCranes.get(id - 1));</span>
+<span class="nc bnc" id="L500" title="All 2 branches missed.">                            } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase(&quot;BA&quot;)) {</span>
+<span class="nc" id="L501">                                craneReady(bargeCranes.get(id - 1));</span>
+<span class="nc bnc" id="L502" title="All 2 branches missed.">                            } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase(&quot;LO&quot;)) {</span>
+<span class="nc" id="L503">                                craneReady(lorreyCranes.get(id - 1));</span>
+<span class="nc bnc" id="L504" title="All 2 branches missed.">                            } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase(&quot;TR&quot;)) {</span>
+<span class="nc" id="L505">                                craneReady(trainCranes.get(id - 1));</span>
+<span class="nc bnc" id="L506" title="All 2 branches missed.">                            } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase(&quot;BU&quot;)) {</span>
+<span class="nc" id="L507">                                bufferCraneReady(buffers.get(id - 1));</span>
+                            }
+                            break;
+                        case 'T':
+<span class="nc bnc" id="L511" title="All 2 branches missed.">                            for (Transporter t : currentTransporter) {</span>
+<span class="nc bnc" id="L512" title="All 2 branches missed.">                                if (t.id.equalsIgnoreCase(((String) m.getParameters()[0]))) {</span>
+<span class="nc" id="L513">                                    transporterReady(t);</span>
+<span class="nc" id="L514">                                    break;</span>
+                                }
+<span class="nc" id="L516">                            }</span>
+<span class="nc" id="L517">                            break;</span>
+                        case 'A':
+<span class="nc" id="L519">                            AGVReady(agvs.get(Integer.getInteger(((String) m.getParameters()[0]).substring(3, 5))));</span>
+                            break;
+                    }
+
+                    break;
+            }
+        }
+<span class="nc" id="L526">    }</span>
+
+    /**
+     * get path finder
+     *
+     * @return
+     */
+    public PathFinder getPathFinder() {
+<span class="nc" id="L534">        return pathFinder;</span>
+    }
+
+    String getAndroidData() {
+
+<span class="fc" id="L539">        Message m = new Message();</span>
+<span class="fc" id="L540">        m.setCommand(Commands.READY);</span>
+
+<span class="fc" id="L542">        int containerCount = 0;</span>
+<span class="fc" id="L543">        int containerCountInTransporter = 0;</span>
+<span class="fc" id="L544">        int containerCountInBuffer = 0;</span>
+<span class="fc" id="L545">        int containerCraneCount = 0;</span>
+<span class="fc" id="L546">        int containerCountAGV = 0;</span>
+
+<span class="fc bfc" id="L548" title="All 2 branches covered.">        for (Transporter t : currentTransporter) {</span>
+<span class="fc" id="L549">            containerCountInTransporter += t.getContainerCount();</span>
+<span class="fc" id="L550">        }</span>
+<span class="fc" id="L551">        containerCount += containerCountInTransporter;</span>
+
+<span class="fc bfc" id="L553" title="All 2 branches covered.">        for (Buffer b : buffers) {</span>
+<span class="fc" id="L554">            containerCountInBuffer += b.getContainerCount();</span>
+
+<span class="fc" id="L556">        }</span>
+<span class="fc" id="L557">        containerCount += containerCountInBuffer;</span>
+
+<span class="fc" id="L559">        List&lt;Crane&gt; cranes = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L560">        cranes.addAll(bargeCranes);</span>
+<span class="fc" id="L561">        cranes.addAll(lorreyCranes);</span>
+<span class="fc" id="L562">        cranes.addAll(seaCranes);</span>
+<span class="fc" id="L563">        cranes.addAll(trainCranes);</span>
+
+<span class="fc bfc" id="L565" title="All 2 branches covered.">        for (Crane c : cranes) {</span>
+<span class="pc bpc" id="L566" title="1 of 2 branches missed.">            if (c.container != null) {</span>
+<span class="nc" id="L567">                containerCraneCount++;</span>
+
+            }
+<span class="fc" id="L570">        }</span>
+<span class="fc" id="L571">        containerCount += containerCraneCount;</span>
+
+<span class="fc bfc" id="L573" title="All 2 branches covered.">        for (AGV a : agvs) {</span>
+<span class="pc bpc" id="L574" title="1 of 2 branches missed.">            if (a.container != null) {</span>
+<span class="nc" id="L575">                containerCountAGV++;</span>
+
+            }
+<span class="fc" id="L578">        }</span>
+<span class="fc" id="L579">        containerCount += containerCountAGV;</span>
+
+<span class="fc" id="L581">        m.setParameters(new Object[]{containerCount, containerCountInTransporter, containerCountInBuffer, containerCraneCount, containerCountAGV});</span>
+<span class="fc" id="L582">        return Message.encodeMessage(m);</span>
+
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

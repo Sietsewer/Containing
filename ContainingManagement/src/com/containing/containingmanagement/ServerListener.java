@@ -23,24 +23,24 @@ public class ServerListener {
     private BufferedReader input;//input stream from client
     private Socket client;//client's socket connection
     private PrintWriter output;//output stream from client
+   private MainActivity activity;
 
-    /**
-     * Listener to server and sender to server
-     * @param main
-     */
-    public ServerListener() {
+   
 
-        serverName = "127.0.0.1";
+    public ServerListener(MainActivity mainActivity, String ipAdress) {
+        serverName = ipAdress;
         port = 6066;
+        this.activity = mainActivity;
         Thread listenerThread = new Thread(new Runnable() {
             public void run() {
                 ServerListener.this.run();
             }
         });
         listenerThread.start();
-    }
+        
+	}
 
-    /**
+	/**
      * main methoded that is listining to server
      */
     public void run() {
@@ -55,6 +55,7 @@ public class ServerListener {
                     new PrintWriter(outToServer, true);
 
             input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            sendMessage(new Message(0, new Object[]{"android"}));
         } catch (UnknownHostException ex) {
             Logger.getLogger(ServerListener.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -68,7 +69,8 @@ public class ServerListener {
                 if (input.ready()) {
                     s = input.readLine();
                         System.out.println("message from ip:" + client.getRemoteSocketAddress());
-                        System.out.println(s);
+                        activity.messageRecieved(Message.decodeMessage(s));
+                        break;
                 }
             } catch (IOException ex) {
                 Logger.getLogger(ServerListener.class.getName()).log(Level.SEVERE, null, ex);

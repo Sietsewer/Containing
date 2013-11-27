@@ -16,7 +16,8 @@ import com.jme3.scene.Spatial;
  *
  * @author Ruben
  */
-public abstract class Crane extends Node implements MotionPathListener{
+public abstract class Crane extends Node implements MotionPathListener {
+
     /**
      * Crane ID
      */
@@ -25,7 +26,6 @@ public abstract class Crane extends Node implements MotionPathListener{
      * Crane Position
      */
     public Vector3f position;
-
     /**
      *
      * @param cont
@@ -45,67 +45,63 @@ public abstract class Crane extends Node implements MotionPathListener{
     protected static final float hookDur = 2f;
     protected Vector3f target;
     protected Transporter transporter;
-    
-    
-    public Crane(String id, Vector3f pos, Spatial base, Spatial hook)
-    {
-         this.id = id;
-         this.position = pos;
-         this.base = base.clone();
-         this.hook = hook.clone();
-       
-         this.attachChild(this.base);
- 
-         baseControl = new MotionEvent(this,basePath,baseDur/Main.globalSpeed,LoopMode.DontLoop);
-         hookControl = new MotionEvent(this.hook,hookPath,hookDur/Main.globalSpeed,LoopMode.DontLoop);
-       
-         basePath.setCycle(false);
-         hookPath.setCycle(false);
 
-         basePath.addListener(this);
-         hookPath.addListener(this);
+    public Crane(String id, Vector3f pos, Spatial base, Spatial hook) {
+        this.id = id;
+        this.position = pos;
+        this.base = base.clone();
+        this.hook = hook.clone();
+
+        this.attachChild(this.base);
+
+        baseControl = new MotionEvent(this, basePath, baseDur / Main.globalSpeed, LoopMode.DontLoop);
+        hookControl = new MotionEvent(this.hook, hookPath, hookDur / Main.globalSpeed, LoopMode.DontLoop);
+
+        basePath.setCycle(false);
+        hookPath.setCycle(false);
+
+        basePath.addListener(this);
+        hookPath.addListener(this);
     }
-    
-    public String getId()
-    {
+
+    public String getId() {
         return this.id;
     }
-    
-    public boolean isbusy()
-    {
+
+    public boolean isbusy() {
         return this.busy;
     }
-    
 
-    
     public abstract void loadContainer(Transporter transporter);
+
     /**
      *
      * @param cont
      */
-       
-    public void getContainer(Container cont)
-    {
-       
-       
-        
+    protected void sendReady() {
+        readyForL = true;
+        Main.sendReady(this.id);
+    }
+
+    public void getContainer(Container cont, Node trans) {
+        this.transporter = null;
         this.cont = cont;
         this.target = cont.getWorldTranslation();
         action = 1;
         busy = true;
-        
     }
-    public void getContainer(Vector3f pos)
-    {
-        if(pos != null)
-        {
-        this.target = pos;
-        action = 1;
-        busy = true;
+
+    public void getContainer(Vector3f pos) {
+        if (pos != null) {
+            this.target = pos;
+            action = 1;
+            busy = true;
         }
     }
     
-    public abstract void update(float tpf);
     
+
+    public abstract void update(float tpf);
+
     public abstract ParkingSpot getParkingspot();
 }

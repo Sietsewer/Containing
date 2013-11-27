@@ -60,6 +60,7 @@ public class Main extends SimpleApplication {
     Crane[] barCranes = new Crane[8];
     
     ArrayList<Transporter> transporters;
+    ArrayList<AGV> agvs;
     
     Buffer[] buffers;
     public static float globalSpeed = 1f;
@@ -197,6 +198,10 @@ public class Main extends SimpleApplication {
         //Init Transporters
         Transporter.makeGeometry(assetManager);
         transporters = new ArrayList<Transporter>();
+        
+        //Init AGVs
+        agvs = new ArrayList<AGV>();
+        init_AGVs();
 
         //Init empty buffers
         buffers = new Buffer[63];
@@ -241,12 +246,12 @@ public class Main extends SimpleApplication {
         Object[] params = decodedMessage.getParameters();
         switch (decodedMessage.getCommand()) {
             case Commands.MOVE:
-                String agvID1 = (String) params[0];
+                AGV agv1 = getAGVbyID((String) params[0]);
                 String[] pathIDs1 = new String[params.length - 1];
                 for (int i = 0; i < pathIDs1.length; i++) {
                     pathIDs1[i] = (String) params[i + 1];
                 }
-                //TODO: get AGV from ID, get waypoints from IDs
+                agv1.addWaypoints(pathIDs1);
                 break;
             case Commands.PICKUP_CONTAINER:
                 Crane crane1 = getCraneByID((String) params[0]);
@@ -349,6 +354,16 @@ public class Main extends SimpleApplication {
         }
         return c;
     }
+    
+    private AGV getAGVbyID(String id){
+        AGV agv = null;
+        for(AGV a : agvs){
+            if(a.id.equalsIgnoreCase(id)){
+                agv = a;
+            }
+        }
+        return agv;
+    }
 
     private void init_SeaCranes() {
         String cID = Path.getSeaID();
@@ -407,6 +422,16 @@ public class Main extends SimpleApplication {
             c.setLocalTranslation(Path.getVector(id));
         }
     }
+     
+     private void init_AGVs(){
+         for(int i = 0; i < 100; i++){
+             String id = "AGV" + String.format("%03d", i);
+             AGV agv = new AGV(id, agvModel.clone());
+             agvs.add(agv);
+             rootNode.attachChild(agv);
+             agv.setLocalTranslation(new Vector3f(0, i, 0));
+         }
+     }
 
     /**
      *

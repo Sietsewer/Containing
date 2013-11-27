@@ -9,6 +9,7 @@ import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Spline;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class AGV extends Node implements MotionPathListener{
     
     
     private MotionEvent motionEvent;
-    private ArrayList<Waypoint> waypointList;
+    private ArrayList<String> waypointList;
     private float deltaX;
     private float deltaY;
     
@@ -56,11 +57,13 @@ public class AGV extends Node implements MotionPathListener{
      * Adds waypoints to the current list of waypoints.
      * @param waypoints The waypoints to be added.
      */
-    public void addWaypoints(ArrayList<Waypoint> waypoints){
+    public void addWaypoints(String[] waypoints){
         this.path.clearWayPoints();
-        this.waypointList.addAll(waypoints);
-        for(Waypoint waypoint : waypoints){
-            path.addWayPoint(waypoint.location);
+        for(int i = 0; i < waypoints.length; i++){
+            waypointList.add(waypoints[i]);
+        }
+        for(String wp : waypoints){
+            path.addWayPoint(Path.getVector(wp));
         }
         
         this.motionEvent.play();
@@ -70,8 +73,8 @@ public class AGV extends Node implements MotionPathListener{
      */
     private void nextWaypoint(int wayPointIndex){
         this.waypointList.remove(0);
-        this.lookAt(this.waypointList.get(1).location, com.jme3.math.Vector3f.UNIT_Y);
-        this.motionEvent.setSpeed(this.waypointList.get(0).speed);
+        this.lookAt(Vector3f.ZERO, com.jme3.math.Vector3f.UNIT_Y);
+        this.motionEvent.setSpeed(0f);
     }
     /**
      * When called, places a container on the AGV. null can be sent.

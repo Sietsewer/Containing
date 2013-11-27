@@ -489,7 +489,7 @@ public class Controller {
     public void recievedMessage(String message) {
         PrintMessage(message);
         Message m = Message.decodeMessage(message);
-        if (m.getParameters()[0] instanceof String) {
+        if (!((String)m.getParameters()[0]).equalsIgnoreCase("simulator")) {
             int id = Integer.getInteger(((String) m.getParameters()[0]).substring(3, 5));
             switch (m.getCommand()) {
                 case Commands.READY:

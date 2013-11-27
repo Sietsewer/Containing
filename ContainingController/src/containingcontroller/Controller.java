@@ -489,37 +489,39 @@ public class Controller {
     public void recievedMessage(String message) {
         PrintMessage(message);
         Message m = Message.decodeMessage(message);
-        int id = Integer.getInteger(((String) m.getParameters()[0]).substring(3, 5));
-        switch (m.getCommand()) {
-            case Commands.READY:
-                switch (((String) m.getParameters()[0]).charAt(0)) {
-                    case 'C':
-                        if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("SE")) {
-                            craneReady(seaCranes.get(id - 1));
-                        } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("BA")) {
-                            craneReady(bargeCranes.get(id - 1));
-                        } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("LO")) {
-                            craneReady(lorreyCranes.get(id - 1));
-                        } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("TR")) {
-                            craneReady(trainCranes.get(id - 1));
-                        } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("BU")) {
-                            bufferCraneReady(buffers.get(id - 1));
-                        }
-                        break;
-                    case 'T':
-                        for (Transporter t : currentTransporter) {
-                            if (t.id.equalsIgnoreCase(((String) m.getParameters()[0]))) {
-                                transporterReady(t);
-                                break;
+        if (m.getParameters()[0] instanceof String) {
+            int id = Integer.getInteger(((String) m.getParameters()[0]).substring(3, 5));
+            switch (m.getCommand()) {
+                case Commands.READY:
+                    switch (((String) m.getParameters()[0]).charAt(0)) {
+                        case 'C':
+                            if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("SE")) {
+                                craneReady(seaCranes.get(id - 1));
+                            } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("BA")) {
+                                craneReady(bargeCranes.get(id - 1));
+                            } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("LO")) {
+                                craneReady(lorreyCranes.get(id - 1));
+                            } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("TR")) {
+                                craneReady(trainCranes.get(id - 1));
+                            } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("BU")) {
+                                bufferCraneReady(buffers.get(id - 1));
                             }
-                        }
-                        break;
-                    case 'A':
-                        AGVReady(agvs.get(Integer.getInteger(((String) m.getParameters()[0]).substring(3, 5))));
-                        break;
-                }
+                            break;
+                        case 'T':
+                            for (Transporter t : currentTransporter) {
+                                if (t.id.equalsIgnoreCase(((String) m.getParameters()[0]))) {
+                                    transporterReady(t);
+                                    break;
+                                }
+                            }
+                            break;
+                        case 'A':
+                            AGVReady(agvs.get(Integer.getInteger(((String) m.getParameters()[0]).substring(3, 5))));
+                            break;
+                    }
 
-                break;
+                    break;
+            }
         }
     }
 
@@ -541,12 +543,12 @@ public class Controller {
         int containerCountInTransporter = 0;
         int containerCountInBuffer = 0;
         int containerCraneCount = 0;
-        int containerCountAGV= 0;
-        
+        int containerCountAGV = 0;
+
         for (Transporter t : currentTransporter) {
             containerCountInTransporter += t.getContainerCount();
         }
-        containerCount += containerCount;
+        containerCount += containerCountInTransporter;
 
         for (Buffer b : buffers) {
             containerCountInBuffer += b.getContainerCount();
@@ -567,16 +569,16 @@ public class Controller {
             }
         }
         containerCount += containerCraneCount;
-        
-           for (AGV a :agvs) {
+
+        for (AGV a : agvs) {
             if (a.container != null) {
                 containerCountAGV++;
 
             }
         }
         containerCount += containerCountAGV;
-        
-        m.setParameters(new Object[]{containerCount, containerCountInTransporter,containerCountInBuffer,containerCraneCount,containerCountAGV});
+
+        m.setParameters(new Object[]{containerCount, containerCountInTransporter, containerCountInBuffer, containerCraneCount, containerCountAGV});
         return Message.encodeMessage(m);
 
     }

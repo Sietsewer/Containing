@@ -157,4 +157,9 @@ public class LorryCrane extends Crane implements MotionPathListener {
         this.attachChild(transporter);
         transporter.setLocalTranslation(0f, 0f, 20f);
     }
+
+    @Override
+    public ParkingSpot getParkingspot() {
+        return this.parkingSpot;
+    }
 }

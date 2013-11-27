@@ -9,7 +9,6 @@ import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Spline;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
@@ -46,24 +45,15 @@ public class AGV extends Node implements MotionPathListener{
     }
     
     /**
-     * 
-     * @param tpf Duration of a frame, will be multiplied for time modifier.
-     */
-    public void updateLocation(float tpf, float timeSpeed){
-        //this.setLocalTranslation(((deltaX*timeSpeed)*speed)*tpf, 10f, ((deltaY*timeSpeed)*speed)*tpf);
-        
-    }
-    /**
      * Adds waypoints to the current list of waypoints.
      * @param waypoints The waypoints to be added.
      */
     public void addWaypoints(String[] waypoints){
         this.path.clearWayPoints();
-        for(int i = 0; i < waypoints.length; i++){
-            waypointList.add(waypoints[i]);
-        }
-        for(String wp : waypoints){
-            path.addWayPoint(Path.getVector(wp));
+        
+        for(String pathID : waypoints){
+            path.addWayPoint(Path.getVector(pathID));
+            waypointList.add(pathID);
         }
         
         this.motionEvent.play();
@@ -73,8 +63,9 @@ public class AGV extends Node implements MotionPathListener{
      */
     private void nextWaypoint(int wayPointIndex){
         this.waypointList.remove(0);
-        this.lookAt(Vector3f.ZERO, com.jme3.math.Vector3f.UNIT_Y);
-        this.motionEvent.setSpeed(0f);
+        //this.lookAt(this.waypointList.get(1).location, com.jme3.math.Vector3f.UNIT_Y);
+        this.motionEvent.setSpeed((this.container == null?5.56f:2.78f));//Sets full speed (20km/h) if empty, half if full(in m/s)
+        
     }
     /**
      * When called, places a container on the AGV. null can be sent.
@@ -114,6 +105,7 @@ public class AGV extends Node implements MotionPathListener{
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
         if(waypointList.size() < 2){
             jumpToPark(null);//NOG NIET KLAAR <<<<<<<<<
+            Main.sendReady(id);
         } else {
             nextWaypoint(wayPointIndex);
         }

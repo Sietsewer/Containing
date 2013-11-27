@@ -168,5 +168,11 @@ public class BufferCrane extends Crane implements MotionPathListener{
         hookPath.removeWayPoint(0);
         hookControl.play();
     }
+
+    @Override
+    public ParkingSpot getParkingspot() {
+        //Wessel doe dit
+        return new ParkingSpot(Vector3f.ZERO,0f);
+    }
 }
 

@@ -107,5 +107,5 @@ public abstract class Crane extends Node implements MotionPathListener{
     
     public abstract void update(float tpf);
     
-            
+    public abstract ParkingSpot getParkingspot();
 }

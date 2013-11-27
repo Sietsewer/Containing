@@ -292,23 +292,23 @@ public class Main extends SimpleApplication {
      */
     private Crane getCraneByID(String id){
         for(int i = 0; i < seaCranes.length; i++){
-            if(seaCranes[i].id.equals(id))
+            if(seaCranes[i].id.equalsIgnoreCase(id))
                 return seaCranes[i];
         }
         for(int i = 0; i < bufCranes.length; i++){
-            if(bufCranes[i].id.equals(id))
+            if(bufCranes[i].id.equalsIgnoreCase(id))
                 return bufCranes[i];
         }
         for(int i = 0; i < lorCranes.length; i++){
-            if(lorCranes[i].id.equals(id))
+            if(lorCranes[i].id.equalsIgnoreCase(id))
                 return lorCranes[i];
         }
         for(int i = 0; i < trainCranes.length; i++){
-            if(trainCranes[i].id.equals(id))
+            if(trainCranes[i].id.equalsIgnoreCase(id))
                 return trainCranes[i];
         }
         for(int i = 0; i < barCranes.length; i++){
-            if(barCranes[i].id.equals(id))
+            if(barCranes[i].id.equalsIgnoreCase(id))
                 return barCranes[i];
         }
         return null;

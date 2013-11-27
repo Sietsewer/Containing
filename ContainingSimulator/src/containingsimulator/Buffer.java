@@ -119,7 +119,7 @@ public class Buffer extends Node{
         for(int i = 0; i < bufferArray.length; i++){
             for(int j = 0; j < bufferArray[0].length; j++){
                 for(int k = 0; k < bufferArray[0][0].length; k++){
-                    if(bufferArray[i][j][k] != null && bufferArray[i][j][k].id.equals(id)){
+                    if(bufferArray[i][j][k] != null && bufferArray[i][j][k].id.equalsIgnoreCase(id)){
                         tempCont = bufferArray[i][j][k];
                         return tempCont;
                     }

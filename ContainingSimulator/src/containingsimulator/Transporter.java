@@ -190,7 +190,7 @@ public class Transporter extends Node {
         for(int i = 0; i < containers.length; i++){
             for(int j = 0; j < containers[0].length; j++){
                 for(int k = 0; k < containers[0][0].length; k++){
-                    if(containers[i][j][k] != null && containers[i][j][k].id.equals(id)){
+                    if(containers[i][j][k] != null && containers[i][j][k].id.equalsIgnoreCase(id)){
                         tempCont = containers[i][j][k];
                         return tempCont;
                     }

@@ -55,7 +55,7 @@ public class ServerClient {
      * main function that listens to client
      */
     public void Run() {
-        boolean firstMessage = false;
+        boolean firstMessage = true;
         try {
             input = new BufferedReader(new InputStreamReader(client.getInputStream()));
             output = new PrintWriter(client.getOutputStream(), true);
@@ -68,8 +68,14 @@ public class ServerClient {
                     String s = input.readLine();
                     if (firstMessage) {
                         Message m = Message.decodeMessage(s);
-                                
-                         server.controller.PrintMessage("An");
+                        if (((String) m.getParameters()[0]).equalsIgnoreCase("simulator")) {
+                            server.controller.PrintMessage("Connected simulator - " + client.getRemoteSocketAddress());
+                        } else {
+                            server.controller.PrintMessage("Connected Android - " + client.getRemoteSocketAddress());
+                            sendMessage(server.controller.getAndroidData());
+                            break;
+                        }
+                        firstMessage = false;
                     } else {
                         if (!s.isEmpty()) {
                             server.MessageRecieved(s);

@@ -57,7 +57,6 @@ public class Server {
             try {
                 Socket server = serverSocket.accept();
                 System.out.println("new client at ip:" + server.getRemoteSocketAddress());
-                controller.PrintMessage("Connected to simulator:" + server.getRemoteSocketAddress());
                 if (clients.size() > 0) {
 
                      final ServerClient c = new ServerClient(server, this, true);

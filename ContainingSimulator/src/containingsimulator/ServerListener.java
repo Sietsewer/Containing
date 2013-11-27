@@ -71,6 +71,7 @@ public class ServerListener {
         while (true) {
             String s;
             try {
+                output.println(Message.encodeMessage(new Message(Commands.READY, new String[]{"simulator"})));
                 if (input.ready()) {
                     s = input.readLine();
                     if (!s.isEmpty()) {

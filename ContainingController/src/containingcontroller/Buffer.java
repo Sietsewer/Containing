@@ -163,12 +163,12 @@ public class Buffer {
         return "Buffer{" + "id=" + id + ", containers=" + containers + ", crane=" + crane.id + ", reservedSpace=" + reservedSpace + ", pathNodeUp=" + pathNodeUp.getId() + ", pathNodeDown=" + pathNodeDown.getId() + '}';
     }
 
-    AGV AGVAvailable(boolean up) {
+    public AGV AGVAvailable(boolean up) {
         for (AGV a : ownedAGV) {
-            if (a.isHome &&
-                    (up && a.home.getId().toLowerCase().contains("BFA".toLowerCase()))
-                    ||
-                    (!up && a.home.getId().toLowerCase().contains("BFB".toLowerCase()))) {
+            if (a.isIsHome() == true &&
+                    ((up && a.home.getId().toLowerCase().contains("BFA".toLowerCase())) 
+                    || (!up && a.home.getId().toLowerCase().contains("BFB".toLowerCase())))) {
+                
                 return a;
             }
         }

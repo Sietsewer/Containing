@@ -17,12 +17,12 @@ import javax.xml.soap.Node;
  */
 public class AGV {
     
-    boolean ready = false;
+    private boolean ready = false;
     static private int id = 1;
     /**
      * Indicating if cart is home
      */
-    public boolean isHome;
+    private boolean isHome;
     /**
      * Container that the AGV carries
      */
@@ -116,5 +116,21 @@ public class AGV {
     @Override
     public String toString() {
         return "AGV{" + "name=" + name + ", isHome=" + isHome + ", container=" + container + ", home=" + home  + ", homeBuffer=" + homeBuffer.id + '}';
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+
+    public boolean isIsHome() {
+        return isHome;
+    }
+
+    public void setIsHome(boolean isHome) {
+        this.isHome = isHome;
     }
 }

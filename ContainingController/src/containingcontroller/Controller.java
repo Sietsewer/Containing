@@ -346,17 +346,15 @@ public class Controller {
     }
 
     private AGV getValueFromHashmap(HashMap<AGV, Crane> collection, Crane c) {
-        Iterator it = collection.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry) it.next();
-            if (pairs.getValue() == c) {
-                it.remove();
-                return (AGV) pairs.getKey();
-
+         for (Map.Entry<AGV, Crane> e : collection.entrySet()) {
+              AGV key = e.getKey();
+            Crane value = e.getValue();
+            if (value.id.equalsIgnoreCase(c.id)) {
+                return key;
             }
-            it.remove();
+
         }
-        return null;
+         return null;
     }
 
     private Crane getDockingPoint(Transporter t) {
@@ -384,7 +382,7 @@ public class Controller {
         this.sendMessage(m);
         agv.container = crane.container;
         crane.container = null;
-        agv.ready = false;
+        agv.setReady(false);
         crane.setIsReady(false);
         waitingForCraneToPutToAgv.put(crane, agv);
     }
@@ -470,12 +468,13 @@ public class Controller {
                             }
                         }
                         if (bestpos != null && agv != null) {
+                            agv.setIsHome(false);
+                            agv.setReady(false);
                             toMove.setBufferPosition(bestpos);
                             b.reservePosition(toMove);
                             agv.moveToCrane(c, this);
                             waitingToBeReadyAtCrane.put(agv, c);
-                            agv.isHome = false;
-                            agv.ready = false;
+                     
                             break;
                         }
                     }
@@ -553,8 +552,8 @@ public class Controller {
                 b.reservePosition(toMove);
                 agv.moveToCrane(dockingpoint, this);
                 waitingToBeReadyAtCrane.put(agv, dockingpoint);
-                agv.isHome = false;
-                agv.ready = false;
+                agv.setIsHome(false);
+                agv.setReady(false);
                 break;
             }
         }

@@ -51,9 +51,10 @@ public class AGV extends Node implements MotionPathListener{
     public void addWaypoints(String[] waypoints,Crane targetCrane){
         this.path.clearWayPoints();
         
-        for(String pathID : waypoints){
-            path.addWayPoint(Path.getVector(pathID));
-            waypointList.add(pathID);
+        
+        for (int i = 2; i < waypoints.length; i++) {
+            path.addWayPoint(Path.getVector(waypoints[i-2]));
+            waypointList.add(waypoints[i-2]);
         }
         this.targetCrane = targetCrane;
         this.motionEvent.play();

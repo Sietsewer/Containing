@@ -51,14 +51,14 @@ public class PathFinder {
      */
     private void createBPoints() {
         float cost = smallCost * 2;
-        PathNode previousA = new PathNode(lblBA + 1);
-        PathNode previousB = new PathNode(lblBB + 1);
+        PathNode previousA = new PathNode(lblBA + "001");
+        PathNode previousB = new PathNode(lblBB + "001");
         getMapBA().add(previousA);
         getMapBB().add(previousB);
 
         for (int i = 2; i <= 63; i++) {
-            PathNode BAi = new PathNode(lblBA + i);
-            PathNode BBi = new PathNode(lblBB + i);
+            PathNode BAi = new PathNode(lblBA + String.format("%03d", i));
+            PathNode BBi = new PathNode(lblBB + String.format("%03d", i));
             getMapBA().add(BAi);
             getMapBB().add(BBi);
 
@@ -78,12 +78,12 @@ public class PathFinder {
      */
     private void createCBA() {
         float cost = smallCost * 6;
-        PathNode previousNode = new PathNode(lblCBA + 1);
+        PathNode previousNode = new PathNode(lblCBA + "001");
         int i = 2;
         getMapCBA().add(previousNode);
 
         while (i <= 8) {
-            PathNode CLi = new PathNode(lblCBA + i);
+            PathNode CLi = new PathNode(lblCBA + String.format("%03d", 1));
             getMapCBA().add(CLi);
 
             link(CLi, previousNode, cost);
@@ -124,11 +124,11 @@ public class PathFinder {
     private void createCSE() {
         float cost = smallCost * 5;
         int i = 2;
-        PathNode previousNode = new PathNode(lblCSE + 1);
+        PathNode previousNode = new PathNode(lblCSE + "001");
         getMapCSE().add(previousNode);
 
         while (i <= 10) {
-            PathNode cseNode = new PathNode(lblCSE + i);
+            PathNode cseNode = new PathNode(lblCSE + String.format("%03d", i));
             getMapCSE().add(cseNode);
 
             link(cseNode, previousNode, cost);
@@ -144,11 +144,11 @@ public class PathFinder {
     private void createCTR() {
         float cost = smallCost * 18;
         int i = 2;
-        PathNode previousNode = new PathNode(lblCTR + 1);
+        PathNode previousNode = new PathNode(lblCTR + "001");
         getMapCTR().add(previousNode);
 
         while (i <= 4) {
-            PathNode ctrNode = new PathNode(lblCTR + i);
+            PathNode ctrNode = new PathNode(lblCTR + String.format("%03d", i));
             getMapCTR().add(ctrNode);
             link(ctrNode, previousNode, cost);
             previousNode = ctrNode;
@@ -162,12 +162,12 @@ public class PathFinder {
      */
     private void createCLO() {
         float cost = smallCost;
-        PathNode previousNode = new PathNode(lblCLO + 1);
+        PathNode previousNode = new PathNode(lblCLO + "001");
         int i = 2;
         getMapCLO().add(previousNode);
 
         while (i <= 20) {
-            PathNode cloNode = new PathNode(lblCLO + i);
+            PathNode cloNode = new PathNode(lblCLO + String.format("%03d", i));
             getMapCLO().add(cloNode);
             link(cloNode, previousNode, cost);
             previousNode = cloNode;
@@ -190,9 +190,9 @@ public class PathFinder {
 
         //connect row BB with green dots
         link(greenR[0], getMapBB().get(0), smallCost * 2);
-        this.insertNode(lblBB + "30", lblBB + "31", greenR[3], smallCost, smallCost);
-        this.insertNode(lblBB + "34", lblBB + "35", greenR[4], smallCost, smallCost);
-        this.insertNode(lblBB + "44", lblBB + "45", greenR[5], smallCost, smallCost);
+        this.insertNode(lblBB + "030", lblBB + "031", greenR[3], smallCost, smallCost);
+        this.insertNode(lblBB + "034", lblBB + "035", greenR[4], smallCost, smallCost);
+        this.insertNode(lblBB + "044", lblBB + "045", greenR[5], smallCost, smallCost);
         link(greenR[6], getMapBB().get(62), smallCost * 6);
 
         //connect green dots counter clockwise
@@ -209,7 +209,7 @@ public class PathFinder {
         link(greenR[9], getMapCTR().get(3), smallCost * 30);
         link(greenR[10], getMapCTR().get(0), smallCost * 4);
         link(greenR[10], greenR[11], smallCost * 3);
-        this.insertNode(lblBA + "1", lblBA + "2", greenR[11], smallCost, smallCost);
+        this.insertNode(lblBA + "001", lblBA + "002", greenR[11], smallCost, smallCost);
         link(greenR[12], getMapBA().get(0), smallCost * 2); //
         link(greenR[12], greenR[15], smallCost * 38);
         link(greenR[12], greenR[13], smallCost * 3);

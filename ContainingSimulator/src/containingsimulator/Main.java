@@ -200,6 +200,16 @@ public class Main extends SimpleApplication {
         tcSModel.setMaterial(tcMat);
         tcHModel.setMaterial(tcMat);
         
+        //Init empty buffers
+        buffers = new Buffer[63];
+        for (int i = 0; i < buffers.length; i++) {
+            buffers[i] = new Buffer();
+            rootNode.attachChild(buffers[i]);
+            //some magic number abuse here, snap buffers to proper location on map:
+            buffers[i].setLocalTranslation(111.76f + (i * 22.035f), 11, 115);
+            buffers[i].addParkingSpots(buffers[i].getLocalTranslation());
+        }
+        
         init_SeaCranes();
         init_BargeCranes();
         init_BufferCranes();
@@ -213,15 +223,7 @@ public class Main extends SimpleApplication {
         Transporter.makeGeometry(assetManager);
         transporters = new ArrayList<Transporter>();
 
-        //Init empty buffers
-        buffers = new Buffer[63];
-        for (int i = 0; i < buffers.length; i++) {
-            buffers[i] = new Buffer();
-            rootNode.attachChild(buffers[i]);
-            //some magic number abuse here, snap buffers to proper location on map:
-            buffers[i].setLocalTranslation(111.76f + (i * 22.035f), 11, 115);
-            buffers[i].addParkingSpots(buffers[i].getLocalTranslation());
-        }
+        
         
         //Init AGVs
         agvs = new ArrayList<AGV>();
@@ -435,7 +437,7 @@ public class Main extends SimpleApplication {
 
         for (int i = 1; i <= 63; i++) {
             String id = cID + String.format("%03d", i);
-            Crane c = new BufferCrane(id, Path.getVector(id), bcModel, bcSModel, bcHModel);
+            Crane c = new BufferCrane(id, Path.getVector(id), bcModel, bcSModel, bcHModel, buffers[i -1]);
             bufCranes[i - 1] = c;
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));

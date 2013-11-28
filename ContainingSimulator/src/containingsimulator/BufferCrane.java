@@ -4,13 +4,8 @@
  */
 package containingsimulator;
 
-import com.jme3.animation.LoopMode;
-import com.jme3.cinematic.MotionPath;
-import com.jme3.cinematic.MotionPathListener;
-import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
@@ -18,10 +13,12 @@ import com.jme3.scene.Spatial;
  * @author User
  */
 public class BufferCrane extends Crane {
-
-    public BufferCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook)
+    Buffer buffer;
+    public BufferCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook, Buffer buffer)
     {
         super(id, basePos,base,slider, hook);
+        this.buffer = buffer;
+        System.out.println(buffer.pSpots.length);
         hNode.setLocalTranslation(new Vector3f(0,18.5f,0));
         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
     }
@@ -111,8 +108,7 @@ public class BufferCrane extends Crane {
 
     @Override
     public ParkingSpot getParkingspot() {
-        //Wessel doe dit
-        return new ParkingSpot(Vector3f.ZERO,0f);
+        return buffer.getBestParkingSpot();
     }
 }
 

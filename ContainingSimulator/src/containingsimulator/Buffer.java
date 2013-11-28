@@ -70,6 +70,15 @@ public class Buffer extends Node{
         }
     }
     
+    public ParkingSpot getBestParkingSpot(){
+        for (int i = 0; i < pSpots.length; i++) {
+            if(pSpots[i].occupied == false) {
+                return pSpots[i];
+            }
+        }
+        return null;
+    }
+    
     /**
      * Set which geometries have to be drawn and which not
      */

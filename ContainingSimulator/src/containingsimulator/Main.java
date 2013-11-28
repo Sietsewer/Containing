@@ -67,10 +67,8 @@ public class Main extends SimpleApplication {
     Crane[] lorCranes = new Crane[20];
     Crane[] trainCranes = new Crane[4];
     Crane[] barCranes = new Crane[8];
-    
     ArrayList<Transporter> transporters;
     ArrayList<AGV> agvs;
-    
     Buffer[] buffers;
     public static float globalSpeed = 1f;
 
@@ -90,7 +88,7 @@ public class Main extends SimpleApplication {
      */
     @Override
     public void simpleInitApp() {
-
+        setPauseOnLostFocus(false);
         loadAssets();
         init_Input();
         init_CrossHairs();
@@ -111,24 +109,19 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
         sky_geo.setLocalTranslation(cam.getLocation());
-        for(Crane c : seaCranes)
-        {
+        for (Crane c : seaCranes) {
             c.update(tpf);
         }
-        for(Crane c : lorCranes)
-        {
+        for (Crane c : lorCranes) {
             c.update(tpf);
         }
-        for(Crane c : bufCranes)
-        {
+        for (Crane c : bufCranes) {
             c.update(tpf);
         }
-        for(Crane c : barCranes)
-        {
+        for (Crane c : barCranes) {
             c.update(tpf);
         }
-        for(Crane c : trainCranes)
-        {
+        for (Crane c : trainCranes) {
             c.update(tpf);
         }
     }
@@ -183,13 +176,13 @@ public class Main extends SimpleApplication {
         bcModel.setMaterial(bcMat);
         bcSModel.setMaterial(bcMat);
         bcHModel.setMaterial(bcMat);
-        
+
         //Init lorryCrane
         lcModel = assetManager.loadModel("Models/lorrycrane/lorrycrane.j3o");
         Material lcMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         lcMat.setColor("Color", ColorRGBA.Yellow);
         lcModel.setMaterial(lcMat);
-        
+
         //Init trainCrane
         tcModel = assetManager.loadModel("Models/traincrane/traincrane.j3o");
         tcSModel = assetManager.loadModel("Models/traincrane/traincrane_slider.j3o");
@@ -199,7 +192,7 @@ public class Main extends SimpleApplication {
         tcModel.setMaterial(tcMat);
         tcSModel.setMaterial(tcMat);
         tcHModel.setMaterial(tcMat);
-        
+
         //Init empty buffers
         buffers = new Buffer[63];
         for (int i = 0; i < buffers.length; i++) {
@@ -209,7 +202,7 @@ public class Main extends SimpleApplication {
             buffers[i].setLocalTranslation(111.76f + (i * 22.035f), 11, 115);
             buffers[i].addParkingSpots(buffers[i].getLocalTranslation());
         }
-        
+
         init_SeaCranes();
         init_BargeCranes();
         init_BufferCranes();
@@ -217,14 +210,14 @@ public class Main extends SimpleApplication {
         init_TrainCranes();
         Node a = new Node();
         Node b = new Node();
-    
-        
+
+
         //Init Transporters
         Transporter.makeGeometry(assetManager);
         transporters = new ArrayList<Transporter>();
 
-        
-        
+
+
         //Init AGVs
         agvs = new ArrayList<AGV>();
         init_AGVs();
@@ -270,21 +263,20 @@ public class Main extends SimpleApplication {
                 Crane c = null;
                 String[] pathIDs1 = new String[params.length - 1];
                 for (int i = 1; i <= pathIDs1.length; i++) {
-                    pathIDs1[i-1] = (String) params[i ];
-                    
+                    pathIDs1[i - 1] = (String) params[i];
+
                 }
-                c = getCraneByID(pathIDs1[pathIDs1.length-1]);
-                agv.addWaypoints(pathIDs1,c);
+                c = getCraneByID(pathIDs1[pathIDs1.length - 1]);
+                agv.addWaypoints(pathIDs1, c);
                 break;
             case Commands.PICKUP_CONTAINER:
                 crane = getCraneByID((String) params[0]);
-                Transporter trans = getTransporterByID((String)params[1]);
+                Transporter trans = getTransporterByID((String) params[1]);
                 cont = getContainerByID((String) params[2]);
-                if (crane != null && trans != null && cont != null) 
-                {
-                    if(crane instanceof BufferCrane){
+                if (crane != null && trans != null && cont != null) {
+                    if (crane instanceof BufferCrane) {
                         //do something w/ buffer
-                    }else{
+                    } else {
                         crane.getContainer(cont, trans);
                     }
                     //do stuff, needs containers
@@ -302,13 +294,13 @@ public class Main extends SimpleApplication {
                 cont = getContainerByID((String) params[1]);
                 Vector3f cposition = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
                 //TODO: put container on transport/buffer
-                if(crane != null && cont != null){
-                    if(crane instanceof BufferCrane){
+                if (crane != null && cont != null) {
+                    if (crane instanceof BufferCrane) {
                         //do buffer stuff
-                    }else{
+                    } else {
                         //do transport stuff
                     }
-                }else{
+                } else {
                     System.err.println("Error: No crane/container with this ID");
                 }
                 break;
@@ -331,8 +323,8 @@ public class Main extends SimpleApplication {
                 break;
             case Commands.REMOVE_TRANSPORTER:
                 transporterID = (String) params[0];
-                for(Transporter transp : transporters){
-                    if(transp.id.equalsIgnoreCase(transporterID)){
+                for (Transporter transp : transporters) {
+                    if (transp.id.equalsIgnoreCase(transporterID)) {
                         rootNode.detachChild(transp);
                         transporters.remove(transp);
                     }
@@ -342,93 +334,88 @@ public class Main extends SimpleApplication {
                 System.err.println("Error: Invalid command for simulator.");
         }
     }
-    
-    private Transporter getTransporterByID(String id)
-    {
-        for(Transporter trans : this.transporters)
-        {
-            if(trans.id.equalsIgnoreCase(id))
-            {
+
+    private Transporter getTransporterByID(String id) {
+        for (Transporter trans : this.transporters) {
+            if (trans.id.equalsIgnoreCase(id)) {
                 return trans;
             }
         }
         return null;
     }
-    
+
     /**
      * Finds and returns a crane by crane ID
+     *
      * @param id the id to search for
      * @return reference to a crane that matches the ID
      */
-    private Crane getCraneByID(String id){
-        
-        String crane = id.substring(0,3);
-        if(crane.equalsIgnoreCase(Path.getSeaID()))
-        {
-        for(int i = 0; i < seaCranes.length; i++){
-            if(seaCranes[i].id.equalsIgnoreCase(id)){
-                return seaCranes[i];}
-        }
-        }
-        else if(crane.equalsIgnoreCase(Path.getBufferAID())||crane.equalsIgnoreCase(Path.getBufferBID()))
-        {
-        for(int i = 0; i < bufCranes.length; i++){
-            if(bufCranes[i].id.equalsIgnoreCase(id)){
-                return bufCranes[i];}
-        }
-        }
-        else if(crane.equalsIgnoreCase(Path.getLorryID()))
-        {
-        for(int i = 0; i < lorCranes.length; i++){
-            if(lorCranes[i].id.equalsIgnoreCase(id)){
-                return lorCranes[i];}
-        }}
-        else if(crane.equalsIgnoreCase(Path.getTrainID()))
-        {
-        for(int i = 0; i < trainCranes.length; i++){
-            if(trainCranes[i].id.equalsIgnoreCase(id)){
-                return trainCranes[i];}
-        }
-        }
-        else if(crane.equalsIgnoreCase(Path.getBargeID()))
-        {
-        for(int i = 0; i < barCranes.length; i++){
-            if(barCranes[i].id.equalsIgnoreCase(id)){
-                return barCranes[i];}
-        }
+    private Crane getCraneByID(String id) {
+
+        String crane = id.substring(0, 3);
+        if (crane.equalsIgnoreCase(Path.getSeaID())) {
+            for (int i = 0; i < seaCranes.length; i++) {
+                if (seaCranes[i].id.equalsIgnoreCase(id)) {
+                    return seaCranes[i];
+                }
+            }
+        } else if (crane.equalsIgnoreCase(Path.getBufferAID()) || crane.equalsIgnoreCase(Path.getBufferBID())) {
+            for (int i = 0; i < bufCranes.length; i++) {
+                if (bufCranes[i].id.equalsIgnoreCase(id)) {
+                    return bufCranes[i];
+                }
+            }
+        } else if (crane.equalsIgnoreCase(Path.getLorryID())) {
+            for (int i = 0; i < lorCranes.length; i++) {
+                if (lorCranes[i].id.equalsIgnoreCase(id)) {
+                    return lorCranes[i];
+                }
+            }
+        } else if (crane.equalsIgnoreCase(Path.getTrainID())) {
+            for (int i = 0; i < trainCranes.length; i++) {
+                if (trainCranes[i].id.equalsIgnoreCase(id)) {
+                    return trainCranes[i];
+                }
+            }
+        } else if (crane.equalsIgnoreCase(Path.getBargeID())) {
+            for (int i = 0; i < barCranes.length; i++) {
+                if (barCranes[i].id.equalsIgnoreCase(id)) {
+                    return barCranes[i];
+                }
+            }
         }
         return null;
     }
-    
+
     /**
      * Finds and returns a container by container ID
+     *
      * @param id the id to search for
      * @return reference to a container that matches the ID
      */
-    private Container getContainerByID(String id){
+    private Container getContainerByID(String id) {
         Container c = null;
-        for(int i = 0; i < buffers.length; i++){
+        for (int i = 0; i < buffers.length; i++) {
             c = buffers[i].getContainerByID(id);
         }
-        
-        if (c == null){
-            for(Transporter t : transporters){
-              c = t.getContainerByID(id);
-           }
+
+        if (c == null) {
+            for (Transporter t : transporters) {
+                c = t.getContainerByID(id);
+            }
         }
         return c;
     }
-    
-    private AGV getAGVbyID(String id){
-      
-        for(AGV a : agvs){
-            if(a.id.equalsIgnoreCase(id)){
+
+    private AGV getAGVbyID(String id) {
+
+        for (AGV a : agvs) {
+            if (a.id.equalsIgnoreCase(id)) {
                 return a;
             }
         }
         return null;
     }
-    
 
     private void init_SeaCranes() {
         String cID = Path.getSeaID();
@@ -446,7 +433,7 @@ public class Main extends SimpleApplication {
 
         for (int i = 1; i <= 63; i++) {
             String id = cID + String.format("%03d", i);
-            Crane c = new BufferCrane(id, Path.getVector(id), bcModel, bcSModel, bcHModel, buffers[i -1]);
+            Crane c = new BufferCrane(id, Path.getVector(id), bcModel, bcSModel, bcHModel, buffers[i - 1]);
             bufCranes[i - 1] = c;
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));
@@ -458,150 +445,116 @@ public class Main extends SimpleApplication {
 
         for (int i = 1; i <= 20; i++) {
             String id = cID + String.format("%03d", i);
-            LorryCrane c = new LorryCrane(id, Path.getVector(id), lcModel, scSModel,scHModel.clone().scale(0.4f).rotate(0, 90*FastMath.DEG_TO_RAD, 0));
+            LorryCrane c = new LorryCrane(id, Path.getVector(id), lcModel, scSModel, scHModel.clone().scale(0.4f).rotate(0, 90 * FastMath.DEG_TO_RAD, 0));
             lorCranes[i - 1] = c;
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));
         }
     }
-    private void init_BargeCranes()
-    {
+
+    private void init_BargeCranes() {
         String cID = Path.getBargeID();
-         for (int i = 1; i <= 8; i++) {
+        for (int i = 1; i <= 8; i++) {
             String id = cID + String.format("%03d", i);
-            Crane c = new BargeCrane(id, Path.getVector(id),scModel, scSModel, scHModel);
+            Crane c = new BargeCrane(id, Path.getVector(id), scModel, scSModel, scHModel);
             barCranes[i - 1] = c;
-          
+
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));
         }
     }
-     private void init_TrainCranes()
-    {
+
+    private void init_TrainCranes() {
         String cID = Path.getTrainID();
-         for (int i = 1; i <= 4; i++) {
+        for (int i = 1; i <= 4; i++) {
             String id = cID + String.format("%03d", i);
-            Crane c = new TrainCrane(id, Path.getVector(id),tcModel, tcSModel,tcHModel);
+            Crane c = new TrainCrane(id, Path.getVector(id), tcModel, tcSModel, tcHModel);
             trainCranes[i - 1] = c;
             rootNode.attachChild(c);
             c.setLocalTranslation(Path.getVector(id));
         }
     }
-     
-     private void init_AGVs(){
-         for(int i = 0; i < 100; i++){
-             String id = "AGV" + String.format("%03d", i);
-             AGV agv = new AGV(id, agvModel.clone());
-             agvs.add(agv);
-             rootNode.attachChild(agv);
-         }
-         
-         int j = 0;
-         for(int i = 0; i < 100; i+= 2){
-             agvs.get(i).setLocalTranslation(buffers[j].pSpots[0].translation);
-             agvs.get(i + 1).setLocalTranslation(buffers[j].pSpots[6].translation);
-             agvs.get(i).rotate(0, buffers[0].pSpots[0].rotation, 0);
-             agvs.get(i + 1).rotate(0, buffers[0].pSpots[0].rotation, 0);
-             j++;
-         }
-     }
+
+    private void init_AGVs() {
+        for (int i = 0; i < 100; i++) {
+            String id = "AGV" + String.format("%03d", i);
+            AGV agv = new AGV(id, agvModel.clone());
+            agvs.add(agv);
+            rootNode.attachChild(agv);
+        }
+
+        int j = 0;
+        for (int i = 0; i < 100; i += 2) {
+            agvs.get(i).setLocalTranslation(buffers[j].pSpots[0].translation);
+            agvs.get(i + 1).setLocalTranslation(buffers[j].pSpots[6].translation);
+            agvs.get(i).rotate(0, buffers[0].pSpots[0].rotation, 0);
+            agvs.get(i + 1).rotate(0, buffers[0].pSpots[0].rotation, 0);
+            j++;
+        }
+    }
 
     /**
      *
      * @param id the ID of the object.
      */
     public static void sendReady(String id) {
-        try
-        {
-        Object[] objectArray = new Object[1];
-        objectArray[0] = id;
-        Message message = new Message(0, objectArray);
-        sendMessage(message);
-        }
-        catch(Exception ex)
-        {
+        try {
+            Object[] objectArray = new Object[1];
+            objectArray[0] = id;
+            Message message = new Message(0, objectArray);
+            sendMessage(message);
+        } catch (Exception ex) {
             System.out.println("Connection problems");
         }
     }
 
-      
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-   //FOR TESTING///////FOR TESTING///////FOR TESTING////CLICK TO TEST SOMETHING! 
-   public void init_Input() 
-    {
+    //FOR TESTING///////FOR TESTING///////FOR TESTING////CLICK TO TEST SOMETHING! 
+    public void init_Input() {
         inputManager.addMapping("left-click",
                 new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
-        inputManager.addMapping("right-click", 
+        inputManager.addMapping("right-click",
                 new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-         inputManager.addListener(actionListener,"left-click");
-         inputManager.addListener(actionListener,"right-click");
+        inputManager.addListener(actionListener, "left-click");
+        inputManager.addListener(actionListener, "right-click");
     }
-    
-     private ActionListener actionListener = new ActionListener() 
-    {
+    private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
-            if (name.equals("right-click"))
-            {
-                globalSpeed*=1.5f; //fasten up
+            if (name.equals("right-click")) {
+                globalSpeed *= 1.5f; //fasten up
             }
-            if (name.equals("left-click")&& !keyPressed )
-            {
+            if (name.equals("left-click") && !keyPressed) {
                 CollisionResults results = new CollisionResults();
                 Ray ray = new Ray(cam.getLocation(), cam.getDirection().normalize());
-               rootNode.collideWith(ray, results);
+                rootNode.collideWith(ray, results);
                 //check if point of click was on the iceberg (only penguins on iceberg allowed!)
-                if (results.size() > 0) 
-                {
+                if (results.size() > 0) {
                     // The closest collision point is what was truly hit:
                     CollisionResult closest = results.getClosestCollision();
                     Vector3f hitPoint = closest.getContactPoint(); //where uve shot 
-                    
+
                     Crane[] cranes = seaCranes; //change crane array for testing
-                    if(!cranes[0].busy)
-                    {
-                    Container c = new Container(new SimContainer("1",new CustomVector3f(0,0,0)));
-                    rootNode.attachChild(c);
-                    c.setLocalTranslation( hitPoint.add(new Vector3f(0,c.size.y,0)));
-                    cranes[0].getContainer(c,rootNode);
-                    } 
-                    else if( cranes[0].readyForL)
-                    {
+                    if (!cranes[0].busy) {
+                        Container c = new Container(new SimContainer("1", new CustomVector3f(0, 0, 0)));
+                        rootNode.attachChild(c);
+                        c.setLocalTranslation(hitPoint.add(new Vector3f(0, c.size.y, 0)));
+                        cranes[0].getContainer(c, rootNode);
+                    } else if (cranes[0].readyForL) {
                         cranes[0].loadContainer(rootNode); //transfer container
                     }
                 }
-               
-                    }
-                }
-            
-        
+
+            }
+        }
     };
-    
-    
-   protected void init_CrossHairs()
-    {
-    setDisplayStatView(false);
-    BitmapText ch = new BitmapText(guiFont, false);
-    
-    ch.setSize(guiFont.getCharSet().getRenderedSize() * 2);
-    ch.setText("+"); // crosshairs
-    ch.setLocalTranslation( // center
-    settings.getWidth() / 2 - ch.getLineWidth()/2, settings.getHeight() / 2 + ch.getLineHeight()/2, 0);
-    guiNode.attachChildAt(ch, 0);
+
+    protected void init_CrossHairs() {
+        setDisplayStatView(false);
+        BitmapText ch = new BitmapText(guiFont, false);
+
+        ch.setSize(guiFont.getCharSet().getRenderedSize() * 2);
+        ch.setText("+"); // crosshairs
+        ch.setLocalTranslation( // center
+                settings.getWidth() / 2 - ch.getLineWidth() / 2, settings.getHeight() / 2 + ch.getLineHeight() / 2, 0);
+        guiNode.attachChildAt(ch, 0);
     }
- 
 }

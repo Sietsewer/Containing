@@ -360,16 +360,15 @@ public class Controller {
     }
 
     private Crane getDockingPoint(Transporter t) {
-        Iterator it = dockedTransporter.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pairs = (Map.Entry) it.next();
-            if (pairs.getValue() == t) {
-                it.remove();
-                return (Crane) pairs.getKey();
-
+        for (Map.Entry<Crane, Transporter> e : dockedTransporter.entrySet()) {
+            Crane key = e.getKey();
+            Transporter value = e.getValue();
+            if (t.id.equalsIgnoreCase(value.id)) {
+                return key;
             }
-            it.remove();
+
         }
+
         return null;
     }
 
@@ -472,11 +471,11 @@ public class Controller {
                     }
                 }
             } else {
-                Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{dockedTransporter.get(c).id});
-                this.sendMessage(m);
-                currentTransporter.remove(t);
-                dockedTransporter.remove(c);
-                c.ready = true;
+                /* Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{dockedTransporter.get(c).id});
+                 this.sendMessage(m);
+                 currentTransporter.remove(t);
+                 dockedTransporter.remove(c);
+                 c.ready = true;*/
             }
         }
 
@@ -510,9 +509,9 @@ public class Controller {
         Message m = new Message(Commands.PICKUP_CONTAINER, null);
         ArrayList<Object> params = new ArrayList<>();
         params.add(dockingpoint.id);
-        
+
         params.add(t.id);
-        
+
         params.add(toMove.getId());
 
         params.add(toMove.getPosition().x);
@@ -588,7 +587,7 @@ public class Controller {
                             }
                             break;
                         case 'A':
-                            AGVReady(agvs.get(Integer.getInteger(((String) m.getParameters()[0]).substring(3, 5))));
+                            AGVReady(agvs.get(Integer.parseInt(((String) m.getParameters()[0]).substring(3, 5))));
                             break;
                     }
 

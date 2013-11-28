@@ -59,6 +59,7 @@ public abstract class Crane extends Node implements MotionPathListener {
     protected Container cont;
     protected Transporter transporter;
     protected Node transportNode;
+    protected AGV agv;
 
     public Crane(String id, Vector3f pos, Spatial base, Spatial slider, Spatial hook) {
        
@@ -162,9 +163,16 @@ public abstract class Crane extends Node implements MotionPathListener {
      
      public void loadContainer(Transporter trans) 
      {
-        transporter.getContainer(cont.indexPosition);
+        //agv.getContainer(cont.indexPosition);
         this.target = trans.getWorldTranslation();
         loadContainer = true;
+     }
+     public void loadContainer(AGV agv)
+     {
+         this.agv = agv;
+        
+         this.target = agv.getWorldTranslation();
+         loadContainer = true;
      }
      
      private void detachContainer()
@@ -172,7 +180,12 @@ public abstract class Crane extends Node implements MotionPathListener {
          Vector3f pos = cont.getWorldTranslation();
          transportNode.attachChild(cont);
          //transporter.setContainer(cont);
+         if(agv!=null)
+         {
+          this.agv.setContainer(cont);
+         }
          cont.setLocalTranslation(pos);
+         
      }
      
      private void attachToHook() 

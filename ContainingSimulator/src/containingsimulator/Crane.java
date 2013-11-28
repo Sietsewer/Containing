@@ -107,13 +107,13 @@ public abstract class Crane extends Node implements MotionPathListener {
     protected void containerIsReady()
     {
          readyForL = true;
-        // Main.sendReady(this.id);
+         Main.sendReady(this.id);
          System.out.println("container ready for drop");
     }
     
     protected void transferFinished()
     {
-       // Main.sendReady(this.id);
+        Main.sendReady(this.id);
         System.out.println("transfer finished");
     }
     
@@ -129,6 +129,15 @@ public abstract class Crane extends Node implements MotionPathListener {
 
     public void getContainer(Container cont, Node trans) {
         this.transporter = null;
+        this.transportNode = trans;
+        this.cont = cont;
+        this.target = cont.getWorldTranslation();
+        action = 1;
+        busy = true;
+    }
+    public void GetContainer(Container cont, Transporter trans)
+    {
+        this.transporter = trans;
         this.transportNode = trans;
         this.cont = cont;
         this.target = cont.getWorldTranslation();

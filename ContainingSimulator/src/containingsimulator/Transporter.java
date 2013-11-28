@@ -119,7 +119,7 @@ public class Transporter extends Node {
                     if (containers[x][y][z] != null) {
                         Container con = containers[x][y][z];
                         Vector3f vec = con.getLocalTranslation();
-                        vec.y += 1.72f;
+                        vec.y += 1.5f;
                         vec.x -= size.x - 1.22f;
                         vec.z += size.z * 2;
 
@@ -130,9 +130,9 @@ public class Transporter extends Node {
         }
         setRendering();
 
-        currentGeometry.setLocalTranslation(position);
+        this.setLocalTranslation(position);
         this.attachChild(currentGeometry);
-        this.setLocalTranslation(0, 1.5f, 0);
+        //this.setLocalTranslation(0, 1.5f, 0);
         
         Main.sendReady(id);
     }

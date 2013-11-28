@@ -314,7 +314,7 @@ public class Main extends SimpleApplication {
                 int transporterType = (Integer) params[1];
                 Vector3f dockingPoint = getCraneByID((String) params[2]).position;
                 ArrayList<SimContainer> simContainers = new ArrayList<SimContainer>();
-                for (int i = 3; i < params.length - 3; i++) {
+                for (int i = 3; i < params.length; i++) {
                     simContainers.add((SimContainer) params[i]);
                 }
                 Transporter t = new Transporter(transporterID, simContainers, dockingPoint, transporterType);

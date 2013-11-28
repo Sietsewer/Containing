@@ -510,7 +510,9 @@ public class Controller {
         Message m = new Message(Commands.PICKUP_CONTAINER, null);
         ArrayList<Object> params = new ArrayList<>();
         params.add(dockingpoint.id);
-
+        
+        params.add(t.id);
+        
         params.add(toMove.getId());
 
         params.add(toMove.getPosition().x);

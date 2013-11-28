@@ -32,6 +32,7 @@ public class Controller {
     PathFinder pathFinder;
     private Server server;//Server for communication between applications
     private ControllerWindow window;//Mainwindow to print log
+    public List<Transporter> allArivingTransporters;
     List<Container> allContainers;// this list holds all containers
     Timer simTimer;//timer that progresses time in controller
     Date simTime;
@@ -66,11 +67,12 @@ public class Controller {
         pathFinder = new PathFinder();
         pathFinder.createMap();
         dockedTransporter = new HashMap<>();
+        allArivingTransporters = new ArrayList<>();
         //Set time of simulator
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2004);
         cal.set(Calendar.MONTH, Calendar.DECEMBER);
-        cal.set(Calendar.DAY_OF_MONTH, 4);
+        cal.set(Calendar.DAY_OF_MONTH, 21);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
@@ -174,118 +176,92 @@ public class Controller {
      */
     public void timerTick() {
         PrintMessage("simtime is now: " + timeFormat.format(simTime));
+        List<Transporter> arrivingTransporters = new ArrayList<>();
+        for (int i = 0; i < allArivingTransporters.size(); i++) {
+            if (allArivingTransporters.get(i).getContainer(0).getDateArrival().before(simTime)) {
 
-        List<Container> _temp = new ArrayList<>();
-        for (int i = 0; i < allContainers.size(); i++) {
-
-            if (allContainers.get(i).getDateArrival().before(simTime)) {
-                _temp.add(allContainers.get(i));
-                allContainers.remove(i);
+                arrivingTransporters.add(allArivingTransporters.get(i));
+                allArivingTransporters.remove(i);
                 i--;
             } else {
                 break;
             }
         }
+        for (Transporter t : arrivingTransporters) {
 
-        if (_temp.size() > 0) {
-            List<Transporter> transporters = new ArrayList<>();
-            Transporter seaShip = new Transporter(TransportTypes.SEASHIP);
-            Transporter barge = new Transporter(TransportTypes.BARGE);
-            Transporter train = new Transporter(TransportTypes.TRAIN);
-            Transporter trolley = new Transporter(TransportTypes.TROLLEY);
-            for (Container c : _temp) {
-                if (c.getTransportTypeArrival() == TransportTypes.SEASHIP) {
-                    seaShip.loadContainer(c);
-                } else if (c.getTransportTypeArrival() == TransportTypes.BARGE) {
-                    barge.loadContainer(c);
-                } else if (c.getTransportTypeArrival() == TransportTypes.TRAIN) {
-                    train.loadContainer(c);
-                } else if (c.getTransportTypeArrival() == TransportTypes.TROLLEY) {
-                    trolley.loadContainer(c);
+            switch (t.getTransportType()) {
+                case TransportTypes.BARGE:
 
-                    for (Crane crane : lorreyCranes) {
-                        if (!dockedTransporter.containsKey(crane)) {
-                            trolley.setDockingPoint(crane);
-                            dockedTransporter.put(crane, trolley);
+                    for (int i = 0; i < 8; i += 2) {
+                        if (!dockedTransporter.containsKey(bargeCranes.get(i))) {
+
+                            Crane c = bargeCranes.get(i);
+
+                            t.setDockingPoint(c);
+
+                            dockedTransporter.put(c, t);
+
                             break;
                         }
                     }
-                    transporters.add(trolley);
-                    trolley = new Transporter(TransportTypes.TROLLEY);
+                    break;
+                case TransportTypes.SEASHIP:
+                    for (int i = 0; i < 10; i += 2) {
+                        if (!dockedTransporter.containsKey(seaCranes.get(i))) {
 
-                }
-            }
-            if (seaShip.getContainerCount() > 0) {
+                            Crane c = seaCranes.get(i);
 
-                transporters.add(seaShip);
-                for (int i = 0; i < 10; i += 2) {
-                    if (!dockedTransporter.containsKey(seaCranes.get(i))) {
+                            t.setDockingPoint(c);
 
-                        Crane c = seaCranes.get(i);
+                            dockedTransporter.put(c, t);
 
-                        seaShip.setDockingPoint(c);
-
-                        dockedTransporter.put(c, seaShip);
-
-                        break;
+                            break;
+                        }
                     }
-                }
+                    break;
+                case TransportTypes.TRAIN:
+                    for (int i = 0; i < 4; i++) {
+                        if (!dockedTransporter.containsKey(trainCranes.get(i))) {
 
-            }
-            if (barge.getContainerCount() > 0) {
-                for (int i = 0; i < 8; i += 2) {
-                    if (!dockedTransporter.containsKey(bargeCranes.get(i))) {
+                            Crane c = trainCranes.get(i);
 
-                        Crane c = bargeCranes.get(i);
+                            t.setDockingPoint(c);
 
-                        barge.setDockingPoint(c);
+                            dockedTransporter.put(c, t);
 
-                        dockedTransporter.put(c, barge);
-
-                        break;
+                            break;
+                        }
                     }
-                }
-                transporters.add(barge);
-            }
-            if (train.getContainerCount() > 0) {
-                for (int i = 0; i < 4; i++) {
-                    if (!dockedTransporter.containsKey(trainCranes.get(i))) {
-
-                        Crane c = trainCranes.get(i);
-
-                        train.setDockingPoint(c);
-
-                        dockedTransporter.put(c, train);
-
-                        break;
+                    break;
+                case TransportTypes.TROLLEY:
+                    for (Crane crane : lorreyCranes) {
+                        if (!dockedTransporter.containsKey(crane)) {
+                            t.setDockingPoint(crane);
+                            dockedTransporter.put(crane, t);
+                            break;
+                        }
                     }
-                }
-                transporters.add(train);
+                    break;
+
             }
-            if (transporters.size() > 0) {
-                for (Transporter t : transporters) {
+            currentTransporter.add(t);
 
-                    currentTransporter.add(t);
+            PrintMessage("Arriving: " + t.toString());
 
-                    PrintMessage("Arriving: " + t.toString());
+            Message m = new Message(Commands.CREATE_TRANSPORTER, null);
 
-                    Message m = new Message(Commands.CREATE_TRANSPORTER, null);
+            Object[] objects = new Object[t.getContainerCount() + 3];
+            objects[0] = t.id;
+            objects[1] = t.getTransportType();
+            objects[2] = t.getDockingPoint().id;
 
-                    Object[] objects = new Object[t.getContainerCount() + 3];
-                    objects[0] = t.id;
-                    objects[1] = t.getTransportType();
-                    objects[2] = t.getDockingPoint().id;
-
-                    for (int i = 0; i < t.getContainerCount(); i++) {
-                        objects[i + 3] = new SimContainer(t.getContainer(i));
-                    }
-                    m.setParameters(objects);
-                    server.sendCommand(m);
-                }
+            for (int i = 0; i < t.getContainerCount(); i++) {
+                objects[i + 3] = new SimContainer(t.getContainer(i));
             }
+            m.setParameters(objects);
+            server.sendCommand(m);
+
         }
-
-
 
 
 
@@ -339,6 +315,34 @@ public class Controller {
             }
         }
 
+    }
+
+    private void createTransporters() {
+        Container previousContainer = null;
+        Transporter currentTransporter = null;
+        allArivingTransporters.clear();
+        for (int i = 0; i < allContainers.size(); i++) {
+            Container c = allContainers.get(i);
+            if (previousContainer == null) {
+                currentTransporter = new Transporter(c.getTransportTypeArrival());
+                currentTransporter.loadContainer(c);
+            } else {
+                if (c.getDateArrival().getTime() == previousContainer.getDateArrival().getTime()
+                        && c.getTransportTypeArrival() == currentTransporter.getTransportType()
+                        && c.getTransportTypeArrival() != TransportTypes.TROLLEY) {
+                    currentTransporter.loadContainer(c);
+                } else {
+                    allArivingTransporters.add(currentTransporter);
+                    currentTransporter = new Transporter(c.getTransportTypeArrival());
+                    currentTransporter.loadContainer(c);
+                }
+
+            }
+            previousContainer = c;
+            allContainers.remove(i);
+            i--;
+        }
+        allArivingTransporters.add(currentTransporter);
     }
 
     private AGV getValueFromHashmap(HashMap<AGV, Crane> collection, Crane c) {
@@ -439,6 +443,8 @@ public class Controller {
                     ArrayList<Object> params = new ArrayList<>();
                     params.add(c.id);
 
+                    params.add(t.id);
+
                     params.add(toMove.getId());
 
                     params.add(toMove.getPosition().x);
@@ -537,10 +543,11 @@ public class Controller {
     void setContainers(List<Container> containers) {
         allContainers = containers;
         Collections.sort(containers, new ContainerComparer());
-        for (Container c : containers) {
-            this.PrintMessage("Loaded - " + c.toString());
-        }
         this.PrintMessage("Total containers - " + containers.size());
+        createTransporters();
+        this.PrintMessage("Total tranporters  - " + allArivingTransporters.size());
+
+
 
     }
 

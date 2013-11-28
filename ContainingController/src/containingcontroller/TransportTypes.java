@@ -13,19 +13,19 @@ public class TransportTypes {
     /**
      * SEASHIP identifier
      */
-    static public int SEASHIP = 0;
+ final   static public int SEASHIP = 0;
     /**
      * BARGE identifier
      */
-    static public int BARGE = 1;
+   final static public int BARGE = 1;
     /**
      * TROLLEY identifier
      */
-    static public int TROLLEY = 2;
+   final static public int TROLLEY = 2;
     /**
      * TRAIN identifier
      */
-    static public int TRAIN = 3;
+   final static public int TRAIN = 3;
 
     /**
      * Get transporttype by type text

@@ -90,6 +90,7 @@ public class XMLParser {
                                 c.set(Calendar.HOUR, Integer.parseInt(time[0]));
                                 c.set(Calendar.MINUTE, Integer.parseInt(time[1]));
                                 c.set(Calendar.SECOND, 0);
+                                c.set(Calendar.MILLISECOND, 0);
                                 break;
                             case "tijd":
                                 if (sk.peek().equalsIgnoreCase("aankomst")) {
@@ -119,10 +120,10 @@ public class XMLParser {
                                 if (p.x > maxX && currentContainer.getTransportTypeArrival() == TransportTypes.SEASHIP) {
                                     maxX = (int) p.x;
                                 }
-                                if(currentContainer.getTransportTypeArrival() == TransportTypes.TROLLEY) {
-                                p.x =0;
+                                if (currentContainer.getTransportTypeArrival() == TransportTypes.TROLLEY) {
+                                    p.x = 0;
                                 }
-                                   
+
 
                                 break;
                             case "y":
@@ -133,7 +134,7 @@ public class XMLParser {
                                 break;
                             case "z":
                                 p.y = Integer.parseInt(tagContent);
-                               if (p.y > maxY) {
+                                if (p.y > maxY) {
                                     maxY = (int) p.y;
                                 }
 

@@ -85,7 +85,7 @@ public class Transporter extends Node {
 
         switch (type) {
             case TransportTypes.SEASHIP:
-                containers = new Container[20][5][15];
+                containers = new Container[20][6][15];
                 currentGeometry = SEASHIP.clone();
                 size = new Vector3f(SEASHIPb.xExtent, SEASHIPb.yExtent, SEASHIPb.yExtent);
                 break;

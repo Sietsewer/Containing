@@ -269,13 +269,11 @@ public class Main extends SimpleApplication {
                 agv = getAGVbyID((String) params[0]);
                 Crane c = null;
                 String[] pathIDs1 = new String[params.length - 1];
-                for (int i = 0; i < pathIDs1.length; i++) {
-                    pathIDs1[i] = (String) params[i + 1];
-                    if(c==null){
-                    {c = this.getCraneByID((String)params[i+1]);
-                        
-                    }}
+                for (int i = 1; i <= pathIDs1.length; i++) {
+                    pathIDs1[i-1] = (String) params[i ];
+                    
                 }
+                c = getCraneByID(pathIDs1[pathIDs1.length-1]);
                 agv.addWaypoints(pathIDs1,c);
                 break;
             case Commands.PICKUP_CONTAINER:
@@ -364,7 +362,7 @@ public class Main extends SimpleApplication {
      */
     private Crane getCraneByID(String id){
         
-        String crane = id.substring(0,4);
+        String crane = id.substring(0,3);
         if(crane.equalsIgnoreCase(Path.getSeaID()))
         {
         for(int i = 0; i < seaCranes.length; i++){

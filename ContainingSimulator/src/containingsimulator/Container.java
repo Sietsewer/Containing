@@ -144,7 +144,7 @@ public class Container extends Node{
         colors[5] = new ColorRGBA(0.463f, 0.227f, 0, 1);
         colors[6] = new ColorRGBA(0.051f, 0.051f, 0.051f, 1);
         colors[7] = new ColorRGBA(0.176f, 0.114f, 0.051f, 1);
-        colors[8] = new ColorRGBA(0.314f, 0.314f, 0.314f, 1);
+        colors[8] = new ColorRGBA(0.9f, 0.411f, 0.705f, 1);
         
         r = new Random();
 

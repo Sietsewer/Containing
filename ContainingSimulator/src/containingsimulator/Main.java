@@ -264,22 +264,30 @@ public class Main extends SimpleApplication {
         switch (decodedMessage.getCommand()) {
             case Commands.MOVE:
                 AGV agv1 = getAGVbyID((String) params[0]);
+                Crane c = null;
                 String[] pathIDs1 = new String[params.length - 1];
                 for (int i = 0; i < pathIDs1.length; i++) {
                     pathIDs1[i] = (String) params[i + 1];
+                    if(c==null){
+                    {c = this.getCraneByID((String)params[i+1]);
+                        
+                    }}
                 }
-                agv1.addWaypoints(pathIDs1);
+                agv1.addWaypoints(pathIDs1,c);
                 break;
             case Commands.PICKUP_CONTAINER:
                 crane = getCraneByID((String) params[0]);
-                cont = getContainerByID((String) params[1]);
+                Transporter trans = getTransporterByID((String)params[1]);
+                cont = getContainerByID((String) params[2]);
                 //param[2],[3] and [4] are for x, y and z of indexposition
                 //Little start here, I'll process this and the rest of the cases
                 //more once we get the required objects inside Main
-                if (crane != null) {
+                if (crane != null && trans != null && cont != null) 
+                {
+                    crane.getContainer(cont, trans);
                     //do stuff, needs containers
                 } else {
-                    System.err.println("Error: No crane with this ID.");
+                    System.err.println("Error: No crane/container/transporter with this ID");
                 }
                 break;
             case Commands.GIVE_CONTAINER:
@@ -312,10 +320,10 @@ public class Main extends SimpleApplication {
                 break;
             case Commands.REMOVE_TRANSPORTER:
                 transporterID = (String) params[0];
-                for(Transporter trans : transporters){
-                    if(trans.id.equalsIgnoreCase(transporterID)){
-                        rootNode.detachChild(trans);
-                        transporters.remove(trans);
+                for(Transporter transp : transporters){
+                    if(transp.id.equalsIgnoreCase(transporterID)){
+                        rootNode.detachChild(transp);
+                        transporters.remove(transp);
                     }
                 }
                 break;
@@ -324,31 +332,59 @@ public class Main extends SimpleApplication {
         }
     }
     
+    private Transporter getTransporterByID(String id)
+    {
+        for(Transporter trans : this.transporters)
+        {
+            if(trans.id.equalsIgnoreCase(id))
+            {
+                return trans;
+            }
+        }
+        return null;
+    }
+    
     /**
      * Finds and returns a crane by crane ID
      * @param id the id to search for
      * @return reference to a crane that matches the ID
      */
     private Crane getCraneByID(String id){
+        
+        String crane = id.substring(0,4);
+        if(crane.equalsIgnoreCase(Path.getSeaID()))
+        {
         for(int i = 0; i < seaCranes.length; i++){
-            if(seaCranes[i].id.equalsIgnoreCase(id))
-                return seaCranes[i];
+            if(seaCranes[i].id.equalsIgnoreCase(id)){
+                return seaCranes[i];}
         }
+        }
+        else if(crane.equalsIgnoreCase(Path.getBufferAID())||crane.equalsIgnoreCase(Path.getBufferBID()))
+        {
         for(int i = 0; i < bufCranes.length; i++){
-            if(bufCranes[i].id.equalsIgnoreCase(id))
-                return bufCranes[i];
+            if(bufCranes[i].id.equalsIgnoreCase(id)){
+                return bufCranes[i];}
         }
+        }
+        else if(crane.equalsIgnoreCase(Path.getLorryID()))
+        {
         for(int i = 0; i < lorCranes.length; i++){
-            if(lorCranes[i].id.equalsIgnoreCase(id))
-                return lorCranes[i];
-        }
+            if(lorCranes[i].id.equalsIgnoreCase(id)){
+                return lorCranes[i];}
+        }}
+        else if(crane.equalsIgnoreCase(Path.getTrainID()))
+        {
         for(int i = 0; i < trainCranes.length; i++){
-            if(trainCranes[i].id.equalsIgnoreCase(id))
-                return trainCranes[i];
+            if(trainCranes[i].id.equalsIgnoreCase(id)){
+                return trainCranes[i];}
         }
+        }
+        else if(crane.equalsIgnoreCase(Path.getBargeID()))
+        {
         for(int i = 0; i < barCranes.length; i++){
-            if(barCranes[i].id.equalsIgnoreCase(id))
-                return barCranes[i];
+            if(barCranes[i].id.equalsIgnoreCase(id)){
+                return barCranes[i];}
+        }
         }
         return null;
     }
@@ -373,14 +409,15 @@ public class Main extends SimpleApplication {
     }
     
     private AGV getAGVbyID(String id){
-        AGV agv = null;
+      
         for(AGV a : agvs){
             if(a.id.equalsIgnoreCase(id)){
-                agv = a;
+                return a;
             }
         }
-        return agv;
+        return null;
     }
+    
 
     private void init_SeaCranes() {
         String cID = Path.getSeaID();
@@ -463,12 +500,19 @@ public class Main extends SimpleApplication {
      * @param id the ID of the object.
      */
     public static void sendReady(String id) {
+        try
+        {
         Object[] objectArray = new Object[1];
         objectArray[0] = id;
         Message message = new Message(0, objectArray);
         sendMessage(message);
+        }
+        catch(Exception ex)
+        {
+            System.out.println("Connection problems");
+        }
     }
-    
+
       
     
     

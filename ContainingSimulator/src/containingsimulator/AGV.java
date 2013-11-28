@@ -22,7 +22,7 @@ public class AGV extends Node implements MotionPathListener{
     public Container container;
     public String id;
     
-    
+    private Crane targetCrane;
     private MotionEvent motionEvent;
     private ArrayList<String> waypointList;
     private float deltaX;
@@ -48,14 +48,14 @@ public class AGV extends Node implements MotionPathListener{
      * Adds waypoints to the current list of waypoints.
      * @param waypoints The waypoints to be added.
      */
-    public void addWaypoints(String[] waypoints){
+    public void addWaypoints(String[] waypoints,Crane targetCrane){
         this.path.clearWayPoints();
         
         for(String pathID : waypoints){
             path.addWayPoint(Path.getVector(pathID));
             waypointList.add(pathID);
         }
-        
+        this.targetCrane = targetCrane;
         this.motionEvent.play();
     }
     /**
@@ -106,7 +106,7 @@ public class AGV extends Node implements MotionPathListener{
         if(waypointList.size() > 2){
             nextWaypoint(wayPointIndex);
         } else {
-            jumpToPark(null);//NOG NIET KLAAR <<<<<<<<<
+            jumpToPark(targetCrane.getParkingspot());//NOG NIET KLAAR <<<<<<<<<
             Main.sendReady(id);
         }
         

@@ -81,7 +81,7 @@ public class Controller {
 
         bargeCranes = new ArrayList<>();
         for (int i = 1; i <= 8; i++) {
-            Crane c = new Crane("CBA" + String.format("%03d", i));
+            Crane c = new Crane("CBA" + String.format("%03d", i), Crane.BargeCrane);
             c.node = pathFinder.getMapCBA().get(i - 1);
             bargeCranes.add(c);
             PrintMessage("Bargecrane Created - " + c.toString());
@@ -89,7 +89,7 @@ public class Controller {
 
         seaCranes = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
-            Crane c = new Crane("CSE" + String.format("%03d", i));
+            Crane c = new Crane("CSE" + String.format("%03d", i), Crane.SeaCrane);
             c.startRange = (i - 1) * 10;
             c.range = 10;
             c.node = pathFinder.getMapCSE().get(i - 1);
@@ -99,7 +99,7 @@ public class Controller {
 
         trainCranes = new ArrayList<>();
         for (int i = 1; i <= 4; i++) {
-            Crane c = new Crane("CTR" + String.format("%03d", i));
+            Crane c = new Crane("CTR" + String.format("%03d", i), Crane.TrainCrane);
             c.node = pathFinder.getMapCTR().get(i - 1);
             trainCranes.add(c);
             PrintMessage("Traincrane Created - " + c.toString());
@@ -108,7 +108,7 @@ public class Controller {
 
         lorreyCranes = new ArrayList<>();
         for (int i = 1; i <= 20; i++) {
-            Crane c = new Crane("CLO" + String.format("%03d", i));
+            Crane c = new Crane("CLO" + String.format("%03d", i), Crane.LorryCrane);
             c.node = pathFinder.getMapCLO().get(i - 1);
             c.range = 2;
             lorreyCranes.add(c);
@@ -117,7 +117,7 @@ public class Controller {
         //Create buffers and agv's
         for (int i = 1; i <= 63; i++) {
             Buffer b = new Buffer();
-            Crane c = new Crane("CBU" + String.format("%03d", i));
+            Crane c = new Crane("CBU" + String.format("%03d", i), Crane.BufferCrane);
             b.crane = c;
             PathNode upperNode = pathFinder.getMapBA().get(i - 1);
             PathNode downNode = pathFinder.getMapBB().get(i - 1);
@@ -458,7 +458,17 @@ public class Controller {
                     c.setIsReady(false);
                     for (Buffer b : buffers) {
                         CustomVector3f bestpos = b.findBestBufferPlace(toMove);
-                        AGV agv = b.AGVAvailable();
+                        AGV agv = null;
+                        if (c.type == Crane.LorryCrane || c.type == Crane.BargeCrane) {
+                            agv = b.AGVAvailable(false);
+                        } else if (c.type == Crane.TrainCrane) {
+                            agv = b.AGVAvailable(true);
+                        } else {
+                            agv = b.AGVAvailable(true);
+                            if (agv == null) {
+                                agv = b.AGVAvailable(false);
+                            }
+                        }
                         if (bestpos != null && agv != null) {
                             toMove.setBufferPosition(bestpos);
                             b.reservePosition(toMove);
@@ -526,7 +536,18 @@ public class Controller {
         dockingpoint.setIsReady(false);
         for (Buffer b : buffers) {
             CustomVector3f bestpos = b.findBestBufferPlace(toMove);
-            AGV agv = b.AGVAvailable();
+            AGV agv = null;
+            if (dockingpoint.type == Crane.LorryCrane || dockingpoint.type == Crane.BargeCrane) {
+                agv = b.AGVAvailable(false);
+            } else if (dockingpoint.type == Crane.TrainCrane) {
+                agv = b.AGVAvailable(true);
+            } else {
+                agv = b.AGVAvailable(true);
+                if (agv == null) {
+                    agv = b.AGVAvailable(false);
+                }
+            }
+
             if (bestpos != null && agv != null) {
                 toMove.setBufferPosition(bestpos);
                 b.reservePosition(toMove);

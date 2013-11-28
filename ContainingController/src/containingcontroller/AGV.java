@@ -66,6 +66,7 @@ public class AGV {
      */
     public void moveToCrane(Crane destination, Controller c) {
         try {
+            isHome= false;
             PathFinder finder = c.getPathFinder();
             List<PathNode> path = finder.getShortestPath(home, destination.node,false);
             Message moveMessage = new Message(Commands.MOVE, null);

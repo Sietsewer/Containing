@@ -10,6 +10,11 @@ package containingcontroller;
  */
 public class Crane {
 
+    final static public int LorryCrane = 0;
+    final static public int TrainCrane = 1;
+    final static public int SeaCrane = 2;
+    final static public int BargeCrane = 3;
+    final static public int BufferCrane = 4;
     /**
      * Crane ID
      */
@@ -22,18 +27,21 @@ public class Crane {
     /**
      * start from range
      */
-    public int startRange =0;
+    public int startRange = 0;
     /**
      * Range for crane
      */
-    public int range=0;
+    public int range = 0;
+    int type;
+
     /**
      * create crane with id
      *
      * @param id
      */
-    public Crane(String id) {
+    public Crane(String id, int type) {
         this.id = id;
+        this.type = type;
     }
 
     /**
@@ -49,18 +57,18 @@ public class Crane {
      */
     public void getContainer(Container cont) {
     }
-    boolean ready =true;
+    boolean ready = true;
+
     boolean getReady() {
         return ready;
     }
 
     void setIsReady(boolean b) {
         ready = b;
-         }
+    }
 
     @Override
     public String toString() {
         return "Crane{" + "id=" + id + ", node=" + node + ", ready=" + ready + '}';
     }
-    
 }

@@ -132,10 +132,10 @@ public class BufferTest {
     public void testAGVAvailable() {
         System.out.println("AGVAvailable");
         Buffer instance = new Buffer();
-        AGV a =new AGV(null,instance);
+        AGV a =new AGV(new PathNode("BFA"),instance);
         instance.ownedAGV.add(a);
         AGV expResult = a;
-        AGV result = instance.AGVAvailable();
+        AGV result = instance.AGVAvailable(true);
         assertEquals(expResult, result);
     }
 }

@@ -77,6 +77,7 @@ public class Transporter extends Node {
      * @param type
      */
     public Transporter(String id, ArrayList<SimContainer> containersList, Vector3f position, int type) {
+        this.id = id;
         this.position = position;
         this.type = type;
 
@@ -137,6 +138,7 @@ public class Transporter extends Node {
     }
 
     public Transporter(String id, SimContainer container, Vector3f position) {
+        this.id = id;
         containers = new Container[1][1][1];
         Container con = new Container(container);
         Vector3f vec = con.getLocalTranslation();

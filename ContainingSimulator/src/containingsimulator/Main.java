@@ -263,9 +263,10 @@ public class Main extends SimpleApplication {
         Container cont;
         Crane crane;
         String transporterID;
+        AGV agv;
         switch (decodedMessage.getCommand()) {
             case Commands.MOVE:
-                AGV agv1 = getAGVbyID((String) params[0]);
+                agv = getAGVbyID((String) params[0]);
                 Crane c = null;
                 String[] pathIDs1 = new String[params.length - 1];
                 for (int i = 0; i < pathIDs1.length; i++) {
@@ -275,38 +276,48 @@ public class Main extends SimpleApplication {
                         
                     }}
                 }
-                agv1.addWaypoints(pathIDs1,c);
+                agv.addWaypoints(pathIDs1,c);
                 break;
             case Commands.PICKUP_CONTAINER:
                 crane = getCraneByID((String) params[0]);
                 Transporter trans = getTransporterByID((String)params[1]);
                 cont = getContainerByID((String) params[2]);
-                //param[2],[3] and [4] are for x, y and z of indexposition
-                //Little start here, I'll process this and the rest of the cases
-                //more once we get the required objects inside Main
                 if (crane != null && trans != null && cont != null) 
                 {
-                    crane.getContainer(cont, trans);
+                    if(crane instanceof BufferCrane){
+                        //do something w/ buffer
+                    }else{
+                        crane.getContainer(cont, trans);
+                    }
                     //do stuff, needs containers
                 } else {
                     System.err.println("Error: No crane/container/transporter with this ID");
                 }
                 break;
             case Commands.GIVE_CONTAINER:
-                cont = getContainerByID((String) params[0]);
-                crane = getCraneByID((String) params[1]);
-                //TODO: make this work when we have AGVs in Main
+                crane = getCraneByID((String) params[0]);
+                agv = getAGVbyID((String) params[1]);
+                //TODO: put container on AGV
                 break;
             case Commands.PUT_CONTAINER:
                 crane = getCraneByID((String) params[0]);
                 cont = getContainerByID((String) params[1]);
                 Vector3f cposition = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
-                //TODO: stuff
+                //TODO: put container on transport/buffer
+                if(crane != null && cont != null){
+                    if(crane instanceof BufferCrane){
+                        //do buffer stuff
+                    }else{
+                        //do transport stuff
+                    }
+                }else{
+                    System.err.println("Error: No crane/container with this ID");
+                }
                 break;
             case Commands.GET_CONTAINER:
-                //String agvID3 = (String) params[0];
+                agv = getAGVbyID((String) params[0]);
                 crane = getCraneByID((String) params[1]);
-                //TODO: you know the drill by now
+                //TODO: take container from AGV
                 break;
             case Commands.CREATE_TRANSPORTER:
                 transporterID = (String) params[0];

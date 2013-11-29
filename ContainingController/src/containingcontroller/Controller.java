@@ -101,6 +101,9 @@ public class Controller {
         for (int i = 1; i <= 4; i++) {
             Crane c = new Crane("CTR" + String.format("%03d", i), Crane.TrainCrane);
             c.node = pathFinder.getMapCTR().get(i - 1);
+            c.range=5;
+            c.startRange = (i-1)*c.range;
+            
             trainCranes.add(c);
             PrintMessage("Traincrane Created - " + c.toString());
         }
@@ -605,24 +608,24 @@ public class Controller {
         PrintMessage(message);
         Message m = Message.decodeMessage(message);
         if (!((String) m.getParameters()[0]).equalsIgnoreCase("simulator")) {
-            int id = Integer.parseInt(((String) m.getParameters()[0]).substring(3, 5));
+            int id = Integer.parseInt(((String) m.getParameters()[0]).substring(3, 6));
             switch (m.getCommand()) {
                 case Commands.READY:
-                    switch (((String) m.getParameters()[0]).charAt(0)) {
-                        case 'C':
-                            if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("SE")) {
+                    switch (((String) m.getParameters()[0]).toLowerCase().charAt(0)) {
+                        case 'c':
+                            if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("SE")) {
                                 craneReady(seaCranes.get(id - 1));
-                            } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("BA")) {
+                            } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("BA")) {
                                 craneReady(bargeCranes.get(id - 1));
-                            } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("LO")) {
+                            } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("LO")) {
                                 craneReady(lorreyCranes.get(id - 1));
-                            } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("TR")) {
+                            } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("TR")) {
                                 craneReady(trainCranes.get(id - 1));
-                            } else if (((String) m.getParameters()[0]).substring(1, 2).equalsIgnoreCase("BU")) {
+                            } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("BU")) {
                                 bufferCraneReady(buffers.get(id - 1));
                             }
                             break;
-                        case 'T':
+                        case 't':
                             for (Transporter t : currentTransporter) {
                                 if (t.id.equalsIgnoreCase(((String) m.getParameters()[0]))) {
                                     transporterReady(t);
@@ -630,7 +633,7 @@ public class Controller {
                                 }
                             }
                             break;
-                        case 'A':
+                        case 'a':
                             AGVReady(agvs.get(Integer.parseInt(((String) m.getParameters()[0]).substring(3, 6)) - 1));
                             break;
                     }

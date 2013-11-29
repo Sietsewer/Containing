@@ -279,7 +279,9 @@ public class PathFinder {
         List<PathNode> alreadyChecked = new ArrayList();
         List<PathNode> shortestRoute = new ArrayList();
         List<PathNode> unSettledNodes = new ArrayList();
-
+        
+      
+        
         PathNode srceNode = srce;
         PathNode destNode = dest;
 
@@ -309,12 +311,22 @@ public class PathFinder {
                     unSettledNodes.add(neighbour);
                 }
             }
+            
+            
+            
             shortestRoute.add(destNode); //add dest to shortest path
             destNode.getRoute(shortestRoute); //create shortest path
             Collections.reverse(shortestRoute); //reverse path , srce to dest
+           
             if (optimize) {
                 optimize(shortestRoute); //delete useless nodes
             }
+             for(PathNode node :alreadyChecked)
+                  {
+                      node.setCost(-1, null);
+                  }
+             
+          
             return shortestRoute;
         } else {
             throw new Exception("source and/or destination not found in map");

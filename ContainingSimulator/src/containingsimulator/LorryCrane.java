@@ -59,14 +59,26 @@ public class LorryCrane extends Crane implements MotionPathListener {
                 {
                    moveBase2();
                 }
-                break;
             case 5:
-                waitProcess();
+                if(!baseControl.isEnabled())
+                {target = parkingSpot.translation;
+                  moveBase();
+                }
                 break;
             case 6:
-                dropProcess();
+                waitProcess();
                 break;
             case 7:
+                dropProcess();
+                break;
+            case 8:
+                if(!baseControl.isEnabled())
+                {
+                    target = this.position;
+                  moveBase2();
+                }
+                break;
+            case 9:
                 this.resetAll();
                 break;
         }

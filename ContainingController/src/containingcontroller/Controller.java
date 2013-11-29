@@ -381,7 +381,7 @@ public class Controller {
      */
     public void putContainer(AGV agv, Crane crane) {
         Message m = new Message(Commands.GIVE_CONTAINER, null);
-        m.setParameters(new Object[]{agv.name, crane.id});
+        m.setParameters(new Object[]{ crane.id,agv.name});
         this.sendMessage(m);
         agv.container = crane.container;
         crane.container = null;

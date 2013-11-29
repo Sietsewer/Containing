@@ -9,6 +9,7 @@ import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Spline;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
@@ -24,7 +25,6 @@ public class AGV extends Node implements MotionPathListener{
     
     private Crane targetCrane;
     private MotionEvent motionEvent;
-    private ArrayList<String> waypointList;
     private float deltaX;
     private float deltaY;
     
@@ -34,7 +34,6 @@ public class AGV extends Node implements MotionPathListener{
     private Spatial viewModel;
 
     public AGV(String ID, Spatial viewModel) {
-        this.waypointList = new ArrayList();
         this.id = ID;
         this.viewModel = viewModel.clone();
         path.setCycle(false);
@@ -52,9 +51,8 @@ public class AGV extends Node implements MotionPathListener{
         this.path.clearWayPoints();
         
         
-        for (int i = 2; i < waypoints.length; i++) {
-            path.addWayPoint(Path.getVector(waypoints[i-2]));
-            waypointList.add(waypoints[i-2]);
+        for (int i = 0; i < waypoints.length; i++) {
+            path.addWayPoint(Path.getVector(waypoints[i]));
         }
         this.targetCrane = targetCrane;
         this.motionEvent.play();
@@ -63,8 +61,7 @@ public class AGV extends Node implements MotionPathListener{
      * Removes the current waypoint, the one reached, and makes the AGV snap towards the next waypoint on the list.
      */
     private void nextWaypoint(int wayPointIndex){
-        this.waypointList.remove(0);
-        //this.lookAt(this.waypointList.get(1).location, com.jme3.math.Vector3f.UNIT_Y);
+        this.lookAt(path.getWayPoint(wayPointIndex),Vector3f.UNIT_Y);
         this.motionEvent.setSpeed((this.container == null?0.6f:.05f));//Sets full speed (20km/h) if empty, half if full(in m/s)
         
     }
@@ -104,11 +101,11 @@ public class AGV extends Node implements MotionPathListener{
     }
 
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-        if(waypointList.size() > 2){
-            nextWaypoint(wayPointIndex);
-        } else {
-            jumpToPark(targetCrane.getParkingspot());//NOG NIET KLAAR <<<<<<<<<
+        if(wayPointIndex == path.getNbWayPoints()-1){
+            jumpToPark(targetCrane.getParkingspot());
             Main.sendReady(id);
+        } else {
+            nextWaypoint(wayPointIndex);
         }
         
     }

@@ -19,7 +19,7 @@ import com.jme3.scene.Spatial;
  */
 public class LorryCrane extends Crane implements MotionPathListener {
 
-    public ParkingSpot parkingSpot = new ParkingSpot(Vector3f.ZERO,0);
+    public ParkingSpot parkingSpot;
     
     public LorryCrane(String id, Vector3f pos, Spatial base, Spatial slider, Spatial hook) 
     {
@@ -27,6 +27,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
         sNode.setLocalTranslation(new Vector3f(0, -10, 0));
         this.slider.setLocalTranslation(new Vector3f(0, 6.5f, 0));
         this.hNode.setLocalTranslation(new Vector3f(0, 16.5f, 0));
+        this.parkingSpot = new ParkingSpot(new Vector3f(pos.x,pos.y,pos.z-25f),0f);
     }
     public void update(float tpf)
     {

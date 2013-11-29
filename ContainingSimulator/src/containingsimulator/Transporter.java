@@ -139,8 +139,6 @@ public class Transporter extends Node {
         }
         this.attachChild(currentGeometry);
         //this.setLocalTranslation(0, 1.5f, 0);
-        
-        Main.sendReady(id);
     }
 
     public Transporter(String id, SimContainer container, Vector3f position) {

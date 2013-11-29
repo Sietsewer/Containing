@@ -53,6 +53,7 @@ public class Container extends Node{
      * @param sc SimContainer you want to create a Container for
      */
     public Container(SimContainer sc){
+        super(sc.getId());
         this.id = sc.getId();
         CustomVector3f cv = sc.getIndexPosition();
         setIndexPosition(new Vector3f(cv.x, cv.y, cv.z));

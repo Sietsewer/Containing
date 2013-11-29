@@ -94,7 +94,7 @@ public class AGV {
             List<PathNode> path = finder.getShortestPath(source.node, this.home, false);
             Message moveMessage = new Message(Commands.MOVE, null);
             ArrayList<String> parameters = new ArrayList<>();
-            parameters.add(name);
+            parameters.add(this.name);
             for (PathNode node : path) {
                 parameters.add(node.getId());
             }

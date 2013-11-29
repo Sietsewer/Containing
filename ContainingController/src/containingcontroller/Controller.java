@@ -101,9 +101,9 @@ public class Controller {
         for (int i = 1; i <= 4; i++) {
             Crane c = new Crane("CTR" + String.format("%03d", i), Crane.TrainCrane);
             c.node = pathFinder.getMapCTR().get(i - 1);
-            c.range=5;
-            c.startRange = (i-1)*c.range;
-            
+            c.range = 5;
+            c.startRange = (i - 1) * c.range;
+
             trainCranes.add(c);
             PrintMessage("Traincrane Created - " + c.toString());
         }
@@ -314,7 +314,10 @@ public class Controller {
 
             Crane c = waitingToBeReadyAtCrane.get(agv);
             if (c.getReady()) {
-                putContainer(agv, c);
+                putContainer(agv, c);        
+                waitingToBeReadyAtCrane.remove(agv);
+                
+                
             }
         }
 
@@ -381,7 +384,7 @@ public class Controller {
      */
     public void putContainer(AGV agv, Crane crane) {
         Message m = new Message(Commands.GIVE_CONTAINER, null);
-        m.setParameters(new Object[]{ crane.id,agv.name});
+        m.setParameters(new Object[]{crane.id, agv.name});
         this.sendMessage(m);
         agv.container = crane.container;
         crane.container = null;
@@ -394,11 +397,12 @@ public class Controller {
         this.PrintMessage("Crane ready - " + c.id);
         c.setIsReady(true);
         if (waitingToBeReadyAtCrane.containsValue(c)) {
-
+            System.out.println("waiting agv ");
             AGV agv = getValueFromHashmap(waitingToBeReadyAtCrane, c);
             if (agv.getIsReady()) {
 
                 putContainer(agv, c);
+                waitingToBeReadyAtCrane.remove(agv);
 
             }
         } else if (waitingForCraneToPickUpFromAgv.containsKey(c)) {
@@ -408,10 +412,12 @@ public class Controller {
 
         }//Kraan heeft container aan AGV gegeven
         else if (waitingForCraneToPutToAgv.containsKey(c)) {
+            System.out.println("Move agv home");
+
             //AGV wordt naar huis gestuurd
             AGV v = waitingForCraneToPutToAgv.get(c);
-            v.container = c.container;
-            c.container = null;
+            /*v.container = c.container;
+             c.container = null;*/
             v.moveToHome(c, this);
             waitingForCraneToPutToAgv.remove(c);
 
@@ -458,30 +464,6 @@ public class Controller {
                     this.sendMessage(m);
                     c.setIsReady(false);
                     sendAGVTo(c, toMove);
-                    /*   for (Buffer b : buffers) {
-                     CustomVector3f bestpos = b.findBestBufferPlace(toMove);
-                     AGV agv = null;
-                     if (c.type == Crane.LorryCrane || c.type == Crane.BargeCrane) {
-                     agv = b.AGVAvailable(false);
-                     } else if (c.type == Crane.TrainCrane) {
-                     agv = b.AGVAvailable(true);
-                     } else {
-                     agv = b.AGVAvailable(true);
-                     if (agv == null) {
-                     agv = b.AGVAvailable(false);
-                     }
-                     }
-                     if (bestpos != null && agv != null) {
-                     agv.setIsHome(false);
-                     agv.setReady(false);
-                     toMove.setBufferPosition(bestpos);
-                     b.reservePosition(toMove);
-                     agv.moveToCrane(c, this);
-                     waitingToBeReadyAtCrane.put(agv, c);
-
-                     break;
-                     }*
-                     }*/
                 }
             } else {
                 /* Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{dockedTransporter.get(c).id});

@@ -477,7 +477,7 @@ public class Main extends SimpleApplication {
 
     private void init_AGVs() {
         for (int i = 0; i < buffers.length * 4; i++) {
-            String id = "AGV" + String.format("%03d", i);
+            String id = "AGV" + String.format("%03d", i + 1);
             AGV agv = new AGV(id, agvModel.clone());
             agvs.add(agv);
             rootNode.attachChild(agv);

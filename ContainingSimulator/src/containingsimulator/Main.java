@@ -219,8 +219,6 @@ public class Main extends SimpleApplication {
         init_BufferCranes();
         init_LorryCranes();
         init_TrainCranes();
-        Node a = new Node();
-        Node b = new Node();
 
 
         //Init Transporters
@@ -381,7 +379,8 @@ public class Main extends SimpleApplication {
             }
         } else if (crane.equalsIgnoreCase(Path.getBufferAID()) || crane.equalsIgnoreCase(Path.getBufferBID())) {
             for (int i = 0; i < bufCranes.length; i++) {
-                if (bufCranes[i].id.equalsIgnoreCase(id)) {
+                if (bufCranes[i].getId().equalsIgnoreCase(id)||bufCranes[i].getId().equalsIgnoreCase(Path.getBufferAID()+id.substring(3)))
+                {
                     return bufCranes[i];
                 }
             }

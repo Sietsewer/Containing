@@ -56,13 +56,14 @@ public class AGV extends Node implements MotionPathListener{
         }
         this.targetCrane = targetCrane;
         this.motionEvent.play();
+        
     }
     /**
      * Removes the current waypoint, the one reached, and makes the AGV snap towards the next waypoint on the list.
      */
     private void nextWaypoint(int wayPointIndex){
         this.lookAt(path.getWayPoint(wayPointIndex),Vector3f.UNIT_Y);
-        this.motionEvent.setSpeed((this.container == null?0.6f:.05f));//Sets full speed (20km/h) if empty, half if full(in m/s)
+        this.motionEvent.setSpeed((this.container == null?0.6f:.5f));//Sets full speed (20km/h) if empty, half if full(in m/s)
         
     }
     /**

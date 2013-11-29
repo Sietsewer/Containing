@@ -69,13 +69,41 @@ public class Buffer extends Node{
             }
         }
     }
-    
-    public ParkingSpot getBestParkingSpot(){
-        for (int i = 0; i < pSpots.length; i++) {
+     
+     
+    public ParkingSpot getBestParkingSpot()
+     {
+     for (int i = 0; i < pSpots.length; i++) {
             if(pSpots[i].occupied == false) {
                 return pSpots[i];
             }
         }
+        return null;
+     }
+    
+    public ParkingSpot getBestParkingSpot(boolean up){
+        //up buffer or downside of the buffer
+       int i = up ? 0 : pSpots.length/2;
+       int max = up ? pSpots.length/2 : pSpots.length;
+       
+        
+             while(i < max) 
+             {
+                 if(pSpots[i].occupied == false) 
+                 {
+                    return pSpots[i];
+                 }
+                  i++;
+             }
+             
+       
+           
+      /* Original
+        for (int i = 0; i < pSpots.length; i++) {
+            if(pSpots[i].occupied == false) {
+                return pSpots[i];
+            }
+        }*/
         return null;
     }
     

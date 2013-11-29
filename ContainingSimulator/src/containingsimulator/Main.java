@@ -268,8 +268,9 @@ public class Main extends SimpleApplication {
 
     private void messageRecieved(Message decodedMessage) {
         Object[] params = decodedMessage.getParameters();
-        Container cont;
+        Container cont = null;
         Crane crane;
+      
         String transporterID;
         AGV agv;
         switch (decodedMessage.getCommand()) {
@@ -302,11 +303,14 @@ public class Main extends SimpleApplication {
             case Commands.GIVE_CONTAINER:
                 crane = getCraneByID((String) params[0]);
                 agv = getAGVbyID((String) params[1]);
+                crane.loadContainer(agv);
+                
                 //TODO: put container on AGV
                 break;
             case Commands.PUT_CONTAINER:
                 crane = getCraneByID((String) params[0]);
-                cont = getContainerByID((String) params[1]);
+              
+                
                 Vector3f cposition = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
                 //TODO: put container on transport/buffer
                 if (crane != null && cont != null) {

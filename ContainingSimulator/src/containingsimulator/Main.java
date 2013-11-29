@@ -409,11 +409,17 @@ public class Main extends SimpleApplication {
         Container c = null;
         for (int i = 0; i < buffers.length; i++) {
             c = buffers[i].getContainerByID(id);
+            if (c != null){
+                return c;
+            }
         }
 
         if (c == null) {
             for (Transporter t : transporters) {
                 c = t.getContainerByID(id);
+                if (c != null){
+                    return c;
+                }
             }
         }
         return c;

@@ -102,6 +102,7 @@ public class AGV extends Node implements MotionPathListener{
 
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
         if(wayPointIndex == path.getNbWayPoints()-1){
+            path.clearWayPoints();
             jumpToPark(targetCrane.getParkingspot());
             Main.sendReady(id);
         } else {

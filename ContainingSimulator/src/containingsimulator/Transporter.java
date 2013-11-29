@@ -8,6 +8,7 @@ import containing.xml.SimContainer;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -90,16 +91,23 @@ public class Transporter extends Node {
                 containers = new Container[20][6][16];
                 currentGeometry = SEASHIP.clone();
                 size = new Vector3f(SEASHIPb.xExtent, SEASHIPb.yExtent, SEASHIPb.yExtent);
+                position.y -= 10f;
+                position.x -= 40f;
                 break;
             case TransportTypes.BARGE:
-                containers = new Container[12][2][3];
+                containers = new Container[12][4][4];
                 currentGeometry = BARGE.clone();
                 size = new Vector3f(BARGEb.xExtent, BARGEb.yExtent, BARGEb.yExtent);
+                this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+                position.y -= 10f;
+                position.z += 20f;
                 break;
             case TransportTypes.TRAIN:
                 containers = new Container[29][1][1];
                 currentGeometry = TRAIN.clone();
                 size = new Vector3f(TRAINb.xExtent, TRAINb.yExtent, TRAINb.yExtent);
+                position.z -= 8f;
+                this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
                 break;
             default:
             case TransportTypes.LORRY:
@@ -110,7 +118,13 @@ public class Transporter extends Node {
         }
 
         for (SimContainer container : containersList) {
-            this.containers[(int) container.getIndexPosition().x][(int) container.getIndexPosition().y][(int) container.getIndexPosition().z] = new Container(container);
+       
+            try {
+                this.containers[(int) container.getIndexPosition().x][(int) container.getIndexPosition().y][(int) container.getIndexPosition().z] = new Container(container);
+            } catch (Exception e) {
+                System.err.println(e.getMessage() + " " + container.getIndexPosition());
+            }
+
         }
 
 
@@ -130,13 +144,9 @@ public class Transporter extends Node {
             }
         }
         setRendering();
-        if(type == TransportTypes.SEASHIP) {
-            position.y -= 10f;
-            position.x -= 40f;
-            this.setLocalTranslation(position);
-        } else {
-            this.setLocalTranslation(position);
-        }
+
+        this.setLocalTranslation(position);
+        
         this.attachChild(currentGeometry);
         //this.setLocalTranslation(0, 1.5f, 0);
     }
@@ -233,7 +243,7 @@ public class Transporter extends Node {
     public static void makeGeometry(AssetManager am) {
         SEASHIPb = new Box(new Vector3f(0, 0, 128f), 18.3f, 0.5f, 134.1f); //container size in m divided by 2 because box size grows both ways
         SEASHIP = new Geometry("Seaship", SEASHIPb);
-        BARGEb = new Box(new Vector3f(0, 0, 80f), 3.66f, 0.5f, 85f); //container size in m divided by 2 because box size grows both ways
+        BARGEb = new Box(new Vector3f(0, 0, 80f), 4.88f, 0.5f, 85f); //container size in m divided by 2 because box size grows both ways
         BARGE = new Geometry("Barge", BARGEb);
 
         LORRYb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 6.705f); //container size in m divided by 2 because box size grows both ways

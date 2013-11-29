@@ -184,7 +184,7 @@ public abstract class Crane extends Node implements MotionPathListener {
          {
           this.agv.setContainer(cont);
          }
-         cont.setLocalTranslation(pos);
+        // cont.setLocalTranslation(pos);
          
      }
      

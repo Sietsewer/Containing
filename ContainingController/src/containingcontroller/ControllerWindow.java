@@ -139,6 +139,7 @@ public class ControllerWindow extends javax.swing.JFrame {
      * @param message line
      */
     public void WriteLogLine(String message) {
+       
         logTxtArea.append(System.getProperty("line.separator") + "[" + timeFormat.format(new Date()) + "]" + message);
         JScrollBar vertical = jScrollPane1.getVerticalScrollBar();
         vertical.setValue(vertical.getMaximum());

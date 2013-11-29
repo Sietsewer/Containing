@@ -346,15 +346,15 @@ public class Controller {
     }
 
     private AGV getValueFromHashmap(HashMap<AGV, Crane> collection, Crane c) {
-         for (Map.Entry<AGV, Crane> e : collection.entrySet()) {
-              AGV key = e.getKey();
+        for (Map.Entry<AGV, Crane> e : collection.entrySet()) {
+            AGV key = e.getKey();
             Crane value = e.getValue();
             if (value.id.equalsIgnoreCase(c.id)) {
                 return key;
             }
 
         }
-         return null;
+        return null;
     }
 
     private Crane getDockingPoint(Transporter t) {
@@ -454,30 +454,31 @@ public class Controller {
 
                     this.sendMessage(m);
                     c.setIsReady(false);
-                    for (Buffer b : buffers) {
-                        CustomVector3f bestpos = b.findBestBufferPlace(toMove);
-                        AGV agv = null;
-                        if (c.type == Crane.LorryCrane || c.type == Crane.BargeCrane) {
-                            agv = b.AGVAvailable(false);
-                        } else if (c.type == Crane.TrainCrane) {
-                            agv = b.AGVAvailable(true);
-                        } else {
-                            agv = b.AGVAvailable(true);
-                            if (agv == null) {
-                                agv = b.AGVAvailable(false);
-                            }
-                        }
-                        if (bestpos != null && agv != null) {
-                            agv.setIsHome(false);
-                            agv.setReady(false);
-                            toMove.setBufferPosition(bestpos);
-                            b.reservePosition(toMove);
-                            agv.moveToCrane(c, this);
-                            waitingToBeReadyAtCrane.put(agv, c);
-                     
-                            break;
-                        }
-                    }
+                    sendAGVTo(c, toMove);
+                    /*   for (Buffer b : buffers) {
+                     CustomVector3f bestpos = b.findBestBufferPlace(toMove);
+                     AGV agv = null;
+                     if (c.type == Crane.LorryCrane || c.type == Crane.BargeCrane) {
+                     agv = b.AGVAvailable(false);
+                     } else if (c.type == Crane.TrainCrane) {
+                     agv = b.AGVAvailable(true);
+                     } else {
+                     agv = b.AGVAvailable(true);
+                     if (agv == null) {
+                     agv = b.AGVAvailable(false);
+                     }
+                     }
+                     if (bestpos != null && agv != null) {
+                     agv.setIsHome(false);
+                     agv.setReady(false);
+                     toMove.setBufferPosition(bestpos);
+                     b.reservePosition(toMove);
+                     agv.moveToCrane(c, this);
+                     waitingToBeReadyAtCrane.put(agv, c);
+
+                     break;
+                     }*
+                     }*/
                 }
             } else {
                 /* Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{dockedTransporter.get(c).id});
@@ -532,20 +533,44 @@ public class Controller {
         m.setParameters(params.toArray());
 
         this.sendMessage(m);
+        sendAGVTo(dockingpoint, toMove);
+    }
+
+    private void sendAGVTo(Crane dockingpoint, Container toMove) {
         dockingpoint.setIsReady(false);
-        for (Buffer b : buffers) {
+        List<Buffer> preverdBuffers = new ArrayList<>();
+        int startBuffer = 0;
+        int endBuffer = 0;
+        boolean up = true;
+        if (dockingpoint.type == Crane.LorryCrane) {
+            startBuffer = 34;
+            endBuffer = 44;
+            up = false;
+        } else if (dockingpoint.type == Crane.BargeCrane) {
+            startBuffer = 14;
+            endBuffer = 24;
+            up = false;
+        } else if (dockingpoint.type == Crane.TrainCrane) {
+            startBuffer = 6;
+            endBuffer = 13;
+            up = true;
+        }
+        for (int i = startBuffer - 1; i < endBuffer; i++) {
+            preverdBuffers.add(buffers.get(i));
+        }
+        if (!sendAGVToCrane(preverdBuffers, dockingpoint, toMove, up)) {
+            if (!sendAGVToCrane(buffers, dockingpoint, toMove, up)) {
+                sendAGVToCrane(buffers, dockingpoint, toMove, up);
+            }
+        }
+    }
+
+    private boolean sendAGVToCrane(List<Buffer> selectedBuffer, Crane dockingpoint, Container toMove, boolean up) {
+        for (Buffer b : selectedBuffer) {
             CustomVector3f bestpos = b.findBestBufferPlace(toMove);
             AGV agv = null;
-            if (dockingpoint.type == Crane.LorryCrane || dockingpoint.type == Crane.BargeCrane) {
-                agv = b.AGVAvailable(false);
-            } else if (dockingpoint.type == Crane.TrainCrane) {
-                agv = b.AGVAvailable(true);
-            } else {
-                agv = b.AGVAvailable(true);
-                if (agv == null) {
-                    agv = b.AGVAvailable(false);
-                }
-            }
+            agv = b.AGVAvailable(up);
+
 
             if (bestpos != null && agv != null) {
                 toMove.setBufferPosition(bestpos);
@@ -554,11 +579,10 @@ public class Controller {
                 waitingToBeReadyAtCrane.put(agv, dockingpoint);
                 agv.setIsHome(false);
                 agv.setReady(false);
-                break;
+                return true;
             }
         }
-
-
+        return false;
     }
 
     void setContainers(List<Container> containers) {
@@ -607,7 +631,7 @@ public class Controller {
                             }
                             break;
                         case 'A':
-                            AGVReady(agvs.get(Integer.parseInt(((String) m.getParameters()[0]).substring(3, 5))));
+                            AGVReady(agvs.get(Integer.parseInt(((String) m.getParameters()[0]).substring(3, 6)) - 1));
                             break;
                     }
 

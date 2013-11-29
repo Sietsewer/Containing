@@ -25,6 +25,8 @@ import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
 import containing.xml.CustomVector3f;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * test
@@ -72,7 +74,7 @@ public class Main extends SimpleApplication {
     Buffer[] buffers;
     public static float globalSpeed = 1f;
     
-    private ArrayList<Message> messagesTodo;
+    private Collection<Message> messagesTodo;
 
     /**
      *
@@ -97,7 +99,7 @@ public class Main extends SimpleApplication {
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
         listener = new ServerListener(this);
-        messagesTodo= new ArrayList<>();
+        messagesTodo= new ArrayList<Message>();
         new Thread(new Runnable() {
             public void run() {
                 listener.run();
@@ -127,11 +129,12 @@ public class Main extends SimpleApplication {
         for (Crane c : trainCranes) {
             c.update(tpf);
         }
-        
-        for(Message m: this.messagesTodo){
+        Collection<Message> temp =Collections.synchronizedCollection(new ArrayList(messagesTodo));
+        for(Message m: temp){
             this.messageRecieved(m);
+            messagesTodo.remove(m);
         }
-        messagesTodo.clear();
+     
     }
 
     /**

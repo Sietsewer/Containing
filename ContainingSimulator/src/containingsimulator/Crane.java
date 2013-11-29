@@ -62,7 +62,7 @@ public abstract class Crane extends Node implements MotionPathListener {
     protected AGV agv;
 
     public Crane(String id, Vector3f pos, Spatial base, Spatial slider, Spatial hook) {
-       
+        super(id);
         this.id = id;
         this.position = pos;
         this.base = base.clone();

@@ -77,6 +77,7 @@ public class Transporter extends Node {
      * @param type
      */
     public Transporter(String id, ArrayList<SimContainer> containersList, Vector3f position, int type) {
+        super(id);
         this.id = id;
         this.position = position;
         this.type = type;
@@ -86,7 +87,7 @@ public class Transporter extends Node {
 
         switch (type) {
             case TransportTypes.SEASHIP:
-                containers = new Container[20][6][15];
+                containers = new Container[20][6][16];
                 currentGeometry = SEASHIP.clone();
                 size = new Vector3f(SEASHIPb.xExtent, SEASHIPb.yExtent, SEASHIPb.yExtent);
                 break;
@@ -129,8 +130,13 @@ public class Transporter extends Node {
             }
         }
         setRendering();
-
-        this.setLocalTranslation(position);
+        if(type == TransportTypes.SEASHIP) {
+            position.y -= 10f;
+            position.x -= 40f;
+            this.setLocalTranslation(position);
+        } else {
+            this.setLocalTranslation(position);
+        }
         this.attachChild(currentGeometry);
         //this.setLocalTranslation(0, 1.5f, 0);
         

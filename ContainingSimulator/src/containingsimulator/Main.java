@@ -71,6 +71,8 @@ public class Main extends SimpleApplication {
     ArrayList<AGV> agvs;
     Buffer[] buffers;
     public static float globalSpeed = 1f;
+    
+    private ArrayList<Message> messagesTodo;
 
     /**
      *
@@ -124,6 +126,11 @@ public class Main extends SimpleApplication {
         for (Crane c : trainCranes) {
             c.update(tpf);
         }
+        
+        for(Message m: this.messagesTodo){
+            this.messageRecieved(m);
+        }
+        messagesTodo.clear();
     }
 
     /**
@@ -250,8 +257,12 @@ public class Main extends SimpleApplication {
     static void sendMessage(Message Message) {
         listener.sendMessage(Message);
     }
+    
+    public void messageReceivedEvent(Message decodedMessage){
+        this.messagesTodo.add(decodedMessage);
+    }
 
-    void messageRecieved(Message decodedMessage) {
+    private void messageRecieved(Message decodedMessage) {
         Object[] params = decodedMessage.getParameters();
         Container cont;
         Crane crane;

@@ -485,9 +485,9 @@ public class Main extends SimpleApplication {
 
         int j = 0;
         for (int i = 0; i < buffers.length * 4; i += 4) {
-            agvs.get(i).setLocalTranslation(buffers[j].pSpots[0].translation);
-            agvs.get(i + 1).setLocalTranslation(buffers[j].pSpots[6].translation);
-            agvs.get(i + 2).setLocalTranslation(buffers[j].pSpots[1].translation);
+            agvs.get(i).setLocalTranslation(buffers[j].pSpots[1].translation);
+            agvs.get(i + 1).setLocalTranslation(buffers[j].pSpots[0].translation);
+            agvs.get(i + 2).setLocalTranslation(buffers[j].pSpots[6].translation);
             agvs.get(i + 3).setLocalTranslation(buffers[j].pSpots[7].translation);
             agvs.get(i).rotate(0, buffers[0].pSpots[0].rotation, 0);
             agvs.get(i + 1).rotate(0, buffers[0].pSpots[0].rotation, 0);

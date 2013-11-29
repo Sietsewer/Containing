@@ -97,6 +97,7 @@ public class Main extends SimpleApplication {
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
         listener = new ServerListener(this);
+        messagesTodo= new ArrayList<>();
         new Thread(new Runnable() {
             public void run() {
                 listener.run();

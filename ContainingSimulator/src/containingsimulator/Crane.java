@@ -188,10 +188,12 @@ public abstract class Crane extends Node implements MotionPathListener {
          
      }
      
-     private void attachToHook() 
+    private void attachToHook() 
     {
+        float y = base.getWorldRotation().toAngles(null)[1];
         hNode.attachChild(cont);
         cont.setLocalTranslation(hook.getLocalTranslation().add(new Vector3f(0,cont.size.y,0)));
+        cont.rotate(0, y, 0);
     }
      
      protected void waitProcess()

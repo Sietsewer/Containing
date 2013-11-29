@@ -18,10 +18,11 @@ class Transporter {
     private int transportType;
     String id;
     static int tranporterID = 0;
-     private Crane dockingPoint;
+    private Crane dockingPoint;
+
     public Transporter(int transportType) {
         this.transportType = transportType;
-        this.id = "TRS" + String.format("%03d",tranporterID++);
+        this.id = "TRS" + String.format("%03d", tranporterID++);
 
     }
 
@@ -162,5 +163,14 @@ class Transporter {
     public void setDockingPoint(Crane dockingPoint) {
         this.dockingPoint = dockingPoint;
     }
-    
+
+    int getLenghtTransporter() {
+        int maxX = 0;
+        for (Container c : containers) {
+            if (c.getPosition().x > maxX) {
+                maxX = (int) c.getPosition().x;
+            }
+        }
+        return maxX;
+    }
 }

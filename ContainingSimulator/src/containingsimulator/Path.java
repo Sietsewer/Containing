@@ -161,7 +161,7 @@ public class Path {
   private static void createCLO()
   {
       int dist = 11;
-             Vector3f vecCLO = new Vector3f(850.5f,10,560);
+             Vector3f vecCLO = new Vector3f(850.5f,10,520);//z was 560
              String clo = "clo";
                map.put(clo+String.format("%03d", 1), vecCLO);
              for(int i=2;i<=20;i++)

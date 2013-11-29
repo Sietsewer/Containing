@@ -470,10 +470,11 @@ public class Main extends SimpleApplication {
 
         for (int i = 1; i <= 20; i++) {
             String id = cID + String.format("%03d", i);
-            LorryCrane c = new LorryCrane(id, Path.getVector(id), lcModel, scSModel, scHModel.clone().scale(0.4f).rotate(0, 90 * FastMath.DEG_TO_RAD, 0));
+            Vector3f pos = Path.getVector(id).add(new Vector3f(0,0,40f));
+            LorryCrane c = new LorryCrane(id, pos, lcModel, scSModel, scHModel.clone().scale(0.4f).rotate(0, 90 * FastMath.DEG_TO_RAD, 0));
             lorCranes[i - 1] = c;
             rootNode.attachChild(c);
-            c.setLocalTranslation(Path.getVector(id));
+            c.setLocalTranslation(pos);
         }
     }
 

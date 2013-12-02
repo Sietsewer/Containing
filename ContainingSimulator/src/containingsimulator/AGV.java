@@ -115,7 +115,7 @@ public class AGV extends Node implements MotionPathListener{
         
     }
     
-    private void jumpToPark(ParkingSpot spot){
+    public void jumpToPark(ParkingSpot spot){
         this.setLocalTranslation(spot.translation);
         this.setLocalRotation(new Quaternion().fromAngles(0f, spot.rotation, 0f));
         this.pSpot = spot;

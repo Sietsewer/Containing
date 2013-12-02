@@ -193,10 +193,10 @@ public class Transporter extends Node {
      */
     public Container getContainer(Vector3f position) {
         Container tempCont = null;
-        if (this.containers[(int) position.x][(int) position.x][(int) position.z] != null) {
-            tempCont = (Container) this.containers[(int) position.x][(int) position.x][(int) position.z].clone();
-            this.detachChild(this.containers[(int) position.x][(int) position.x][(int) position.z]);
-            this.containers[(int) position.x][(int) position.x][(int) position.z] = null;
+        if (this.containers[(int) position.x][(int) position.y][(int) position.z] != null) {
+            tempCont = (Container) this.containers[(int) position.x][(int) position.y][(int) position.z].clone();
+            this.detachChild(this.containers[(int) position.x][(int) position.y][(int) position.z]);
+            this.containers[(int) position.x][(int) position.y][(int) position.z] = null;
             setRendering();
         }
 

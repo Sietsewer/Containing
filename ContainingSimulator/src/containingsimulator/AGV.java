@@ -37,6 +37,7 @@ public class AGV extends Node implements MotionPathListener{
 
     public AGV(String ID, Spatial viewModel) {
         this.id = ID;
+ 
         this.viewModel = viewModel.clone();
         path.setCycle(false);
         path.setPathSplineType(Spline.SplineType.Linear);
@@ -106,19 +107,17 @@ public class AGV extends Node implements MotionPathListener{
     }
 
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-        if(wayPointIndex == path.getNbWayPoints()-1){
-            path.clearWayPoints();
+        if(wayPointIndex+1 == path.getNbWayPoints()){
             if(targetCrane instanceof BufferCrane){
                 jumpToPark(((BufferCrane)targetCrane).buffer.getBestParkingSpot(up));
             }else{
                 targetCrane.getParkingspot();
             }
-            
             Main.sendReady(id);
         } else {
             nextWaypoint(wayPointIndex);
         }
-        
+
     }
     
     public void jumpToPark(ParkingSpot spot){

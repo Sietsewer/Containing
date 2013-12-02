@@ -95,7 +95,7 @@ public class SeaCrane extends Crane {
     
     private void moveBase() {
         basePath.clearWayPoints();
-        basePath.addWayPoint(this.getLocalTranslation());
+        basePath.addWayPoint(this.getLocalTranslation().add(0,0,0.1f));
         basePath.addWayPoint(new Vector3f(this.getLocalTranslation().x, this.getLocalTranslation().y, target.z));
         baseControl.play();
     }

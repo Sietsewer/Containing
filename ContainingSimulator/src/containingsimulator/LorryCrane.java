@@ -87,7 +87,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
     private void moveBase()
     {
          basePath.clearWayPoints();
-         basePath.addWayPoint(this.getLocalTranslation());
+         basePath.addWayPoint(this.getLocalTranslation().add(0.1f,0,0));
          basePath.addWayPoint(new Vector3f(this.getLocalTranslation().x,this.getLocalTranslation().y,target.z));
          baseControl.play();
     }

@@ -112,6 +112,7 @@ public class Controller {
         for (int i = 1; i <= 20; i++) {
             Crane c = new Crane("CLO" + String.format("%03d", i), Crane.LorryCrane);
             c.node = pathFinder.getMapCLO().get(i - 1);
+            lorreyCranes.add(c);
             PrintMessage("Lorreystop Created - " + c.toString());
         }
         //Create buffers and agv's
@@ -422,7 +423,7 @@ public class Controller {
             if (t.getContainerCount() > 0) {
                 CustomVector3f lastPosistion = v.container.getPosition();
                 Container toMove = null;
-                for (int x = (int) lastPosistion.x; x < 30 && toMove == null; x++) {
+                for (int x = c.startRange; x < c.range+c.startRange && toMove == null; x++) {
                     for (int z = (int) lastPosistion.z; z <= 16 && toMove == null; z++) {
                         for (int y = 6; y >= 0 && toMove == null; y--) {
                             for (Container cont : t.getContainers()) {

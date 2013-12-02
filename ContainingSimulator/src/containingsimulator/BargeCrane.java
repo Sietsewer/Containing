@@ -117,7 +117,7 @@ public class BargeCrane extends Crane {
 
     @Override
     public ParkingSpot getParkingspot() {
-        return new ParkingSpot(this.getWorldTranslation(),(float)Math.PI/2f);
+        return new ParkingSpot(this.base.getWorldTranslation(),(float)Math.PI/2f);
     }
 }
 

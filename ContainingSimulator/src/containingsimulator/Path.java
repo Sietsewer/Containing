@@ -149,7 +149,6 @@ public class Path {
   {
       int dist = 66;
              Vector3f vecCBA = new Vector3f(222,10,537);
-             String cba = "cba";
              map.put(cba+String.format("%03d", 1), vecCBA);
              for(int i=2;i<=8;i++)
              {

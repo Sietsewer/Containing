@@ -68,7 +68,7 @@ public class AGV extends Node implements MotionPathListener{
      */
     private void nextWaypoint(int wayPointIndex){
         this.lookAt(path.getWayPoint(wayPointIndex),Vector3f.UNIT_Y);
-        this.motionEvent.setSpeed((this.container == null?0.6f:.5f));//Sets full speed (20km/h) if empty, half if full(in m/s)
+        this.motionEvent.setSpeed((this.container == null?0.6f*Main.globalSpeed:.5f*Main.globalSpeed));//Sets full speed (20km/h) if empty, half if full(in m/s)
         
     }
     /**

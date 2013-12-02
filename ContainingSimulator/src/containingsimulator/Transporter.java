@@ -86,7 +86,7 @@ public class Transporter extends Node implements MotionPathListener {
     public Transporter(String id, ArrayList<SimContainer> containersList, Vector3f position, int type) {
         super(id);
         this.id = id;
-        this.position = position;
+        this.position = position.clone();
         this.type = type;
 
         Geometry currentGeometry;
@@ -98,22 +98,22 @@ public class Transporter extends Node implements MotionPathListener {
                 containers = new Container[20][6][16];
                 currentGeometry = SEASHIP.clone();
                 size = new Vector3f(SEASHIPb.xExtent, SEASHIPb.yExtent, SEASHIPb.yExtent);
-                position.y -= 10f;
-                position.x -= 40f;
+                this.position.y -= 10f;
+                this.position.x -= 40f;
                 break;
             case TransportTypes.BARGE:
                 containers = new Container[12][4][4];
                 currentGeometry = BARGE.clone();
                 size = new Vector3f(BARGEb.xExtent, BARGEb.yExtent, BARGEb.yExtent);
                 this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-                position.y -= 10f;
-                position.z += 20f;
+                this.position.y -= 10f;
+                this.position.z += 20f;
                 break;
             case TransportTypes.TRAIN:
                 containers = new Container[29][1][1];
                 currentGeometry = TRAIN.clone();
                 size = new Vector3f(TRAINb.xExtent, TRAINb.yExtent, TRAINb.yExtent);
-                position.z -= 8f;
+                this.position.z -= 8f;
                 this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
                  
                 break;
@@ -126,7 +126,7 @@ public class Transporter extends Node implements MotionPathListener {
                 break;
         }
         
-        Vector3f first = new Vector3f(position);
+        Vector3f first = new Vector3f(this.position);
         
         switch (type) {
             case TransportTypes.SEASHIP:
@@ -160,7 +160,7 @@ public class Transporter extends Node implements MotionPathListener {
         motionEvent = new MotionEvent(this,this.path);
 
         path.addWayPoint(first);
-        path.addWayPoint(position);
+        path.addWayPoint(this.position);
 
 
         for (int z = 0; z < containers[0][0].length; z++) {
@@ -180,7 +180,7 @@ public class Transporter extends Node implements MotionPathListener {
         }
         setRendering();
 
-        this.setLocalTranslation(position);
+        this.setLocalTranslation(this.position);
         
         this.attachChild(currentGeometry);
         this.motionEvent.play();
@@ -188,6 +188,7 @@ public class Transporter extends Node implements MotionPathListener {
 
     public Transporter(String id, SimContainer container, Vector3f position) {
         this.id = id;
+        this.position = position.clone();
         containers = new Container[1][1][1];
         Container con = new Container(container);
         Vector3f vec = con.getLocalTranslation();
@@ -200,10 +201,10 @@ public class Transporter extends Node implements MotionPathListener {
         this.path.addListener(this);
         motionEvent = new MotionEvent(this,this.path);
         
-        Vector3f first = new Vector3f(position);
+        Vector3f first = new Vector3f(this.position);
         first.z += 10f; 
         path.addWayPoint(first);
-        path.addWayPoint(position);
+        path.addWayPoint(this.position);
         
         this.attachChild(con);
         this.attachChild(LORRY.clone());

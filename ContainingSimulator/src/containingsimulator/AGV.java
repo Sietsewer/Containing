@@ -23,6 +23,7 @@ public class AGV extends Node implements MotionPathListener{
     public Container container;
     public String id;
     public ParkingSpot pSpot;
+    boolean up;
     
     private Crane targetCrane;
     private MotionEvent motionEvent;
@@ -107,7 +108,12 @@ public class AGV extends Node implements MotionPathListener{
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
         if(wayPointIndex == path.getNbWayPoints()-1){
             path.clearWayPoints();
-            jumpToPark(targetCrane.getParkingspot());
+            if(targetCrane instanceof BufferCrane){
+                jumpToPark(((BufferCrane)targetCrane).buffer.getBestParkingSpot(up));
+            }else{
+                targetCrane.getParkingspot();
+            }
+            
             Main.sendReady(id);
         } else {
             nextWaypoint(wayPointIndex);

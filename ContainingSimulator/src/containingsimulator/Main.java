@@ -512,6 +512,10 @@ public class Main extends SimpleApplication {
             agvs.get(i + 1).jumpToPark(buffers[j].pSpots[0]);
             agvs.get(i + 2).jumpToPark(buffers[j].pSpots[6]);
             agvs.get(i + 3).jumpToPark(buffers[j].pSpots[7]);
+            agvs.get(i).up = true;
+            agvs.get(i + 1).up = true;
+            agvs.get(i + 2).up = false;
+            agvs.get(i + 3).up = false;
             
             j++;
         }

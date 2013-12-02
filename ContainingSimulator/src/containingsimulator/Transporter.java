@@ -6,9 +6,13 @@ package containingsimulator;
 
 import containing.xml.SimContainer;
 import com.jme3.asset.AssetManager;
+import com.jme3.cinematic.MotionPath;
+import com.jme3.cinematic.MotionPathListener;
+import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.math.Spline;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -19,7 +23,7 @@ import java.util.ArrayList;
  *
  * @author Ruben
  */
-public class Transporter extends Node {
+public class Transporter extends Node implements MotionPathListener {
 
     /**
      * Container array
@@ -69,6 +73,8 @@ public class Transporter extends Node {
      * TRAIN Box
      */
     public static Box TRAINb;
+    private MotionEvent motionEvent;
+    MotionPath path = new MotionPath();
 
     /**
      * Constructor
@@ -85,6 +91,7 @@ public class Transporter extends Node {
 
         Geometry currentGeometry;
         Vector3f size;
+        
 
         switch (type) {
             case TransportTypes.SEASHIP:
@@ -108,14 +115,35 @@ public class Transporter extends Node {
                 size = new Vector3f(TRAINb.xExtent, TRAINb.yExtent, TRAINb.yExtent);
                 position.z -= 8f;
                 this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+                 
                 break;
             default:
             case TransportTypes.LORRY:
                 containers = new Container[2][1][1];
                 currentGeometry = LORRY.clone();
                 size = new Vector3f(LORRYb.xExtent, LORRYb.yExtent, LORRYb.yExtent);
+                
                 break;
         }
+        
+        Vector3f first = new Vector3f(position);
+        
+        switch (type) {
+            case TransportTypes.SEASHIP:
+                first.z -= 200f; 
+                break;
+            case TransportTypes.BARGE:
+                first.x -= 200f;
+                break;
+            case TransportTypes.TRAIN:
+                first.x += 1000f;
+                break;
+            default:
+            case TransportTypes.LORRY:
+                first.z += 50f; 
+                break;
+        }
+            
 
         for (SimContainer container : containersList) {
        
@@ -126,6 +154,13 @@ public class Transporter extends Node {
             }
 
         }
+        path.setCycle(false);
+        path.setPathSplineType(Spline.SplineType.Linear);
+        path.addListener(this);
+        motionEvent = new MotionEvent(this,this.path);
+
+        path.addWayPoint(first);
+        path.addWayPoint(position);
 
 
         for (int z = 0; z < containers[0][0].length; z++) {
@@ -148,7 +183,7 @@ public class Transporter extends Node {
         this.setLocalTranslation(position);
         
         this.attachChild(currentGeometry);
-        //this.setLocalTranslation(0, 1.5f, 0);
+        this.motionEvent.play();
     }
 
     public Transporter(String id, SimContainer container, Vector3f position) {
@@ -159,8 +194,20 @@ public class Transporter extends Node {
         vec.y += 1.72f;
 
         containers[0][0][0] = con;
+        
+        path.setCycle(false);
+        path.setPathSplineType(Spline.SplineType.Linear);
+        this.path.addListener(this);
+        motionEvent = new MotionEvent(this,this.path);
+        
+        Vector3f first = new Vector3f(position);
+        first.z += 10f; 
+        path.addWayPoint(first);
+        path.addWayPoint(position);
+        
         this.attachChild(con);
         this.attachChild(LORRY.clone());
+        this.motionEvent.play();
     }
 
     /**
@@ -233,6 +280,21 @@ public class Transporter extends Node {
             }
         }
     }
+    
+    private void nextWaypoint(int wayPointIndex){
+        this.lookAt(path.getWayPoint(wayPointIndex),Vector3f.UNIT_Y);
+        this.motionEvent.setSpeed(.5f*Main.globalSpeed);
+        
+    }
+    
+    public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
+        if(wayPointIndex == path.getNbWayPoints()-1){
+            path.clearWayPoints();
+            Main.sendReady(id);
+        } else {
+            nextWaypoint(wayPointIndex);
+        }
+    }
 
     /**
      * Prepare Geometry object IMPORTANT: call this before instantiating a
@@ -269,4 +331,6 @@ public class Transporter extends Node {
      */
     public void loadContainer(Container container) {
     }
+
+    
 }

@@ -334,7 +334,6 @@ public class Main extends SimpleApplication {
                 Transporter t = new Transporter(transporterID, simContainers, dockingPoint, transporterType);
                 transporters.add(t);
                 rootNode.attachChild(t);
-                sendReady(t.id);
                 break;
             case Commands.REMOVE_TRANSPORTER:
                 transporterID = (String) params[0];

@@ -71,13 +71,16 @@ public class BargeCrane extends Crane {
                 dropProcess();
                 break;
             case 8:
+                /*
                 if(!baseControl.isEnabled())
-                {
+                {  
+                   
                    moveBase2();
-                }
+                }*/
+                   resetAll();
                 break;
             case 9:
-                 resetAll();
+              
                 break;
         }
         

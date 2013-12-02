@@ -79,13 +79,15 @@ public class SeaCrane extends Crane {
                dropProcess();
                 break;
             case 8:
+                /*
                 if (!baseControl.isEnabled()) 
                 {
+                    
                     moveBase2();
-                }
+                }*/
+                this.resetAll();
                 break;
             case 9:
-                this.resetAll();
                 break;
         }
     }

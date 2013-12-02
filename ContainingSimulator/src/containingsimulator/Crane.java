@@ -8,6 +8,7 @@ import com.jme3.animation.LoopMode;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -26,6 +27,7 @@ public abstract class Crane extends Node implements MotionPathListener {
      * Crane Position
      */
     public Vector3f position;
+    
     /**
      *
      * @param cont
@@ -191,6 +193,7 @@ public abstract class Crane extends Node implements MotionPathListener {
          if(agv!=null)
          {
           this.agv.setContainer(cont);
+         
           agv = null;
          }
          else if(transporter!=null)
@@ -198,6 +201,8 @@ public abstract class Crane extends Node implements MotionPathListener {
              transporter.setContainer(cont);
              transporter = null;
          }
+         
+        
      }
      
     private void attachToHook() 

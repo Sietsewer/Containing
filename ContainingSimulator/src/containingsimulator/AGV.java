@@ -81,6 +81,7 @@ public class AGV extends Node implements MotionPathListener{
             this.container = container;
             this.attachChild(container);
             this.container.setLocalTranslation(0f, 3f, 0f);
+            this.container.setLocalRotation(this.viewModel.getLocalRotation());
             return true;
         } else {
             return false;
@@ -111,7 +112,7 @@ public class AGV extends Node implements MotionPathListener{
             if(targetCrane instanceof BufferCrane){
                 jumpToPark(((BufferCrane)targetCrane).buffer.getBestParkingSpot(up));
             }else{
-                targetCrane.getParkingspot();
+                 jumpToPark(targetCrane.getParkingspot());
             }
             Main.sendReady(id);
         } else {

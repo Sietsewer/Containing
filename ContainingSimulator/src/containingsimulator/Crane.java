@@ -62,6 +62,12 @@ public abstract class Crane extends Node implements MotionPathListener {
     protected Transporter transporter = null;
     protected Node transportNode= null;
     protected AGV agv = null;
+    
+    protected Vector3f defPosHook;
+    protected Vector3f defPosSlider;
+    protected Vector3f defPosBase;
+
+
 
     public Crane(String id, Vector3f pos, Spatial base, Spatial slider, Spatial hook) {
         super(id);
@@ -100,26 +106,14 @@ public abstract class Crane extends Node implements MotionPathListener {
     public boolean isbusy() {
         return this.busy;
     }
-    public abstract void update(float tpf);
-    public abstract ParkingSpot getParkingspot();
+
 
     /**
      *
      * @param cont
      */
-    protected void containerIsReady()
-    {
-         readyForL = true;
-         Main.sendReady(this.id);
-         System.out.println("container ready for drop");
-    }
-    
-    protected void transferFinished()
-    {
-        Main.sendReady(this.id);
-        System.out.println("transfer finished");
-    }
-    
+
+
     protected void resetAll()
     {
         System.out.println("crane is back to idle");
@@ -131,9 +125,18 @@ public abstract class Crane extends Node implements MotionPathListener {
          this.cont = null;
          this.transporter = null;
          this.transportNode= null;
-         this.transferFinished();
+         this.sNode.setLocalTranslation(this.defPosSlider);
+         this.hNode.setLocalTranslation(this.defPosHook);
+         sendMessage("transfer finished");
+    }
+    
+    protected void sendMessage(String message)
+    {
+        System.out.println(message);
+          Main.sendReady(this.id);
     }
 
+    //only for point click testing
     public void getContainer(Container cont, Node trans) {
         
         this.transporter = null;
@@ -143,29 +146,19 @@ public abstract class Crane extends Node implements MotionPathListener {
         action = 1;
         busy = true;
     }
+    
+    
     public void getContainer(Container cont, Transporter trans)
     {
-        if(this.cont==null&&this.transporter==null&&this.target==null)
-        {
         this.transporter = trans;
       //  this.transportNode = trans;
         this.cont = cont;
         this.target = cont.getWorldTranslation();
         action = 1;
         busy = true;
-        }
-       
     }
-/*
-    public void getContainer(Vector3f pos) 
-    {
-        if (pos != null) 
-        {
-            this.target = pos;
-            action = 1;
-            busy = true;
-        }
-    }*/
+
+    
      public void loadContainer(Node node) 
      {
         this.target = this.position;
@@ -185,15 +178,11 @@ public abstract class Crane extends Node implements MotionPathListener {
          loadContainer = true;
      }
      
-     private void detachContainer()
+     protected void contOffHook()
      {
-     
-       //  transportNode.attachChild(cont);
-         //transporter.setContainer(cont);
          if(agv!=null)
          {
           this.agv.setContainer(cont);
-         
           agv = null;
          }
          else if(transporter!=null)
@@ -201,78 +190,42 @@ public abstract class Crane extends Node implements MotionPathListener {
              transporter.setContainer(cont);
              transporter = null;
          }
-         
-        
      }
      
-    private void attachToHook() 
+    protected void contToHook() 
     {
         float y = base.getWorldRotation().toAngles(null)[1];
         hNode.attachChild(cont);
         cont.setLocalTranslation(hook.getLocalTranslation().add(new Vector3f(0,cont.size.y,0)));
+        
         if(transporter != null){
-            //System.out.println(cont.indexPosition.toString());
             transporter.getContainer(cont.indexPosition);
+            transporter = null;
         }
         cont.rotate(0, y, 0);
     }
      
-     protected void waitProcess()
+     protected boolean readyToLoad()
      {
            if (!readyForL && !loadContainer) 
             {
-                this.containerIsReady();
+                readyForL = true;
+                sendMessage("container ready for drop");
             } 
             else if (readyForL && loadContainer)
             {
-                if (!hookControl.isEnabled())
-                {
-                        moveHook();
-                }
+                return true;
             }
-     }
-     protected void dropProcess()
-     {
-          if (!hookControl.isEnabled()) {
-                    
-                    //drop container
-                    detachContainer();
-                 
-                    moveHook2();
-          }
+           return false;
      }
      
-     protected void attachProcess()
-     {
-         if (!hookControl.isEnabled()) {
-                    this.attachToHook();
-                    moveHook2();
-                }
-     }
-     
-     
-     protected abstract void moveHook();
-     
-     protected  void moveHook2()
-     {
-        hookPath.addWayPoint(hookPath.getWayPoint(0));
-        hookPath.removeWayPoint(0);
-        hookControl.play();
-     }
-     
-     protected void moveSlider2()
-     {
-        sliderPath.addWayPoint(sliderPath.getWayPoint(0));
-        sliderPath.removeWayPoint(0);
-        sliderControl.play();
-     }
-     
-     protected void moveBase2()
-     {
-         basePath.addWayPoint(basePath.getWayPoint(0));
-         basePath.removeWayPoint(0);
-         baseControl.play();
-     }
+
+     protected abstract void moveHook(boolean reversed);
+     protected abstract void moveBase(boolean reversed);
+     protected abstract void moveSlider(boolean reversed);
+     public abstract void update(float tpf);
+     public abstract ParkingSpot getParkingspot();
+
      
      protected void updateSpeed() 
      {

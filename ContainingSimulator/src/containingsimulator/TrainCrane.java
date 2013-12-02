@@ -25,7 +25,11 @@ public class TrainCrane extends Crane implements MotionPathListener{
         this.base.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         hNode.setLocalTranslation(new Vector3f(0,12,0));
+        this.defPosBase = this.base.getWorldTranslation().clone();
+        this.defPosHook = this.hNode.getWorldTranslation().clone();
+        this.defPosSlider = this.sNode.getWorldTranslation().clone();
     }
+
     
     @Override
     public void update(float tpf)
@@ -34,7 +38,6 @@ public class TrainCrane extends Crane implements MotionPathListener{
         {
             return;
         }
-        
         updateSpeed();
 
         switch(action)
@@ -42,72 +45,116 @@ public class TrainCrane extends Crane implements MotionPathListener{
             case 1: 
                 if(!baseControl.isEnabled())
                 {
-                   moveBase();
+                   moveBase(false);
                 }
                 break;
             case 2: 
                 if(!sliderControl.isEnabled())
                 {
-                   moveSlider();
+                   moveSlider(false);
                 }
                 break;
             case 3:
                 if(!hookControl.isEnabled())
                 {
-                   moveHook();
+                   moveHook(false);
                 }
                 break;
             case 4:
-                  this.attachProcess();
+                 if (!hookControl.isEnabled()) {
+                    contToHook();
+                    moveHook(true);
+                 }
                 break;
             case 5:
                  if(!sliderControl.isEnabled())
                 {
-                    moveSlider2();
+                     this.hNode.setLocalTranslation(hNode.getLocalTranslation().x,this.defPosHook.y,hNode.getLocalTranslation().z);
+                    moveSlider(true);
                 }
                 break;
             case 6:
-                if(!baseControl.isEnabled())
-                {
-                   moveBase2();
-                }
-                break;
-            case 7:
-                  waitProcess();
+                  if(readyToLoad())
+                  {
+                      if (!hookControl.isEnabled())
+                    {  this.sNode.setLocalTranslation(sNode.getLocalTranslation().x,this.defPosSlider.y,sNode.getLocalTranslation().z);
+                        moveHook(false);
+                    }
+                  }
                  break;
-            case 8:
-                 dropProcess();
+            case 7:
+                 contOffHook();
+                   if (!hookControl.isEnabled())
+                    {
+                        moveHook(true);
+                    }
                 break;
-            case 9:
+            case 8:
              this.resetAll();
                 break;
         }
     }
 
-    private void moveBase()
-    {
-         basePath.clearWayPoints();
-         basePath.addWayPoint(this.getLocalTranslation().add(0,0,0.1f));
-         basePath.addWayPoint(new Vector3f(target.x,this.getLocalTranslation().y,this.getLocalTranslation().z));
+    @Override
+    protected void moveBase(boolean reversed)
+    { 
+        basePath.clearWayPoints();
+        
+        Vector3f startPos = this.getLocalTranslation().add(0,0,0.1f);
+        
+        if(reversed)
+        {
+        basePath.addWayPoint(startPos);    
+        basePath.addWayPoint(defPosBase);
+        }
+        else
+        {
+        
+         basePath.addWayPoint(startPos);
+         basePath.addWayPoint(new Vector3f(target.x,startPos.y,startPos.z));
+        }
+       
+        
          baseControl.play();
     }
-    private void moveSlider()
+   
+    @Override
+    protected void moveSlider(boolean reversed)
     {
-         sliderPath.clearWayPoints();
-         sliderPath.addWayPoint(sNode.getLocalTranslation());
-         sliderPath.addWayPoint(new Vector3f(
-                 sNode.getLocalTranslation().x
-                 ,sNode.getLocalTranslation().y,
-                 target.z-this.getWorldTranslation().z));
+        sliderPath.clearWayPoints();
+        
+        Vector3f startPoint = sNode.getLocalTranslation();
+        if(reversed)
+        {
+            sliderPath.addWayPoint(startPoint);
+            sliderPath.addWayPoint(defPosSlider);
+        }
+        else
+        {
+             
+         sliderPath.addWayPoint(startPoint);
+         sliderPath.addWayPoint(new Vector3f(startPoint.x ,startPoint.y, target.z-this.getWorldTranslation().z));  
+        }
          sliderControl.play();
     }
     
-    @Override
-    protected void moveHook()
+   
+    protected void moveHook(boolean reversed)
     {
         hookPath.clearWayPoints();
-        hookPath.addWayPoint(hNode.getLocalTranslation());
-        hookPath.addWayPoint(new Vector3f(hook.getLocalTranslation().x,target.y-sNode.getWorldTranslation().y, hook.getLocalTranslation().z));
+    
+        Vector3f startPoint = this.hNode.getLocalTranslation();
+        
+        if(reversed)
+        {
+         hookPath.addWayPoint(startPoint);
+         hookPath.addWayPoint(defPosHook);
+        }
+        else
+        {
+        hookPath.addWayPoint(startPoint);
+        hookPath.addWayPoint(new Vector3f(startPoint.x,target.y-sNode.getWorldTranslation().y, startPoint.z));
+        }
         hookControl.play();
     }
 

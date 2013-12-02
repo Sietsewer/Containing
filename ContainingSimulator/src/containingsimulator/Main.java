@@ -337,12 +337,13 @@ public class Main extends SimpleApplication {
                 break;
             case Commands.REMOVE_TRANSPORTER:
                 transporterID = (String) params[0];
-                for (Transporter transp : transporters) {
+                //uitgezet want geeft modification concurrent crash. -Len
+/*                for (Transporter transp : transporters) {
                     if (transp.id.equalsIgnoreCase(transporterID)) {
                         rootNode.detachChild(transp);
                         transporters.remove(transp);
                     }
-                }
+                }*/
                 break;
             default:
                 System.err.println("Error: Invalid command for simulator.");

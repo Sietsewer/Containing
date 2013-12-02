@@ -83,7 +83,7 @@ public class PathFinder {
         getMapCBA().add(previousNode);
 
         while (i <= 8) {
-            PathNode CLi = new PathNode(lblCBA + String.format("%03d", 1));
+            PathNode CLi = new PathNode(lblCBA + String.format("%03d", i));
             getMapCBA().add(CLi);
 
             link(CLi, previousNode, cost);

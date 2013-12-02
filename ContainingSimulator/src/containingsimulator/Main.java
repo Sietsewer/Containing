@@ -519,6 +519,10 @@ public class Main extends SimpleApplication {
             agvs.get(i + 1).rotate(0, buffers[0].pSpots[0].rotation, 0);
             agvs.get(i + 2).rotate(0, buffers[0].pSpots[0].rotation, 0);
             agvs.get(i + 3).rotate(0, buffers[0].pSpots[0].rotation, 0);
+            agvs.get(i).pSpot = buffers[j].pSpots[1];
+            agvs.get(i + 1).pSpot = buffers[j].pSpots[0];
+            agvs.get(i + 2).pSpot = buffers[j].pSpots[6];
+            agvs.get(i + 3).pSpot = buffers[j].pSpots[7];
             j++;
         }
     }

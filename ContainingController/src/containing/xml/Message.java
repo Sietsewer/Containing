@@ -114,6 +114,6 @@ public class Message {
 
     @Override
     public String toString() {
-        return "Message{" + "command=" + command + ", parameters=" + parameters + '}';
+        return "Message{" + "command=" + command + ", parameters=" + parameters.length + '}';
     }
 }

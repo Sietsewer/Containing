@@ -27,6 +27,8 @@ import containing.xml.CustomVector3f;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * test
@@ -81,7 +83,7 @@ public class Main extends SimpleApplication {
      * @param args
      */
     public static void main(String[] args) {
-
+        Logger.getLogger("com.jme3").setLevel(Level.SEVERE);
         Main app = new Main();
 
         app.start();
@@ -100,11 +102,6 @@ public class Main extends SimpleApplication {
         cam.setFrustumFar(5000f);
         listener = new ServerListener(this);
         messagesTodo= new ArrayList<Message>();
-        new Thread(new Runnable() {
-            public void run() {
-                listener.run();
-            }
-        }).start();
     }
 
     /**
@@ -511,14 +508,11 @@ public class Main extends SimpleApplication {
 
         int j = 0;
         for (int i = 0; i < buffers.length * 4; i += 4) {
-            agvs.get(i).setLocalTranslation(buffers[j].pSpots[1].translation);
-            agvs.get(i + 1).setLocalTranslation(buffers[j].pSpots[0].translation);
-            agvs.get(i + 2).setLocalTranslation(buffers[j].pSpots[6].translation);
-            agvs.get(i + 3).setLocalTranslation(buffers[j].pSpots[7].translation);
-            agvs.get(i).rotate(0, buffers[0].pSpots[0].rotation, 0);
-            agvs.get(i + 1).rotate(0, buffers[0].pSpots[0].rotation, 0);
-            agvs.get(i + 2).rotate(0, buffers[0].pSpots[0].rotation, 0);
-            agvs.get(i + 3).rotate(0, buffers[0].pSpots[0].rotation, 0);
+            agvs.get(i).jumpToPark(buffers[j].pSpots[1]);
+            agvs.get(i + 1).jumpToPark(buffers[j].pSpots[0]);
+            agvs.get(i + 2).jumpToPark(buffers[j].pSpots[6]);
+            agvs.get(i + 3).jumpToPark(buffers[j].pSpots[7]);
+            
             j++;
         }
     }

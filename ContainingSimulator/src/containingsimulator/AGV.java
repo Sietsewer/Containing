@@ -22,6 +22,7 @@ public class AGV extends Node implements MotionPathListener{
 
     public Container container;
     public String id;
+    public ParkingSpot pSpot;
     
     private Crane targetCrane;
     private MotionEvent motionEvent;
@@ -50,13 +51,15 @@ public class AGV extends Node implements MotionPathListener{
     public void addWaypoints(String[] waypoints,Crane targetCrane){
         this.path.clearWayPoints();
         
-        
         for (int i = 0; i < waypoints.length; i++) {
             path.addWayPoint(Path.getVector(waypoints[i]));
         }
         this.targetCrane = targetCrane;
         this.motionEvent.play();
         
+        if(this.pSpot != null){
+            this.pSpot.occupied = false;
+        }
     }
     /**
      * Removes the current waypoint, the one reached, and makes the AGV snap towards the next waypoint on the list.
@@ -112,8 +115,10 @@ public class AGV extends Node implements MotionPathListener{
         
     }
     
-    private void jumpToPark(ParkingSpot spot){
+    public void jumpToPark(ParkingSpot spot){
         this.setLocalTranslation(spot.translation);
         this.setLocalRotation(new Quaternion().fromAngles(0f, spot.rotation, 0f));
+        this.pSpot = spot;
+        pSpot.occupied = true;
     }
 }

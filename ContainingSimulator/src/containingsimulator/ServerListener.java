@@ -75,7 +75,7 @@ public class ServerListener {
                     s = input.readLine();
                     if (!s.isEmpty()) {
                         System.out.println("message from ip:" + client.getRemoteSocketAddress());
-                        System.out.println(s);
+                   //     System.out.println(s);
                         main.messageReceivedEvent(Message.decodeMessage(s));
                     }
                 }

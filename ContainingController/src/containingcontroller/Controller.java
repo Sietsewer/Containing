@@ -423,8 +423,8 @@ public class Controller {
             if (t.getContainerCount() > 0) {
                 CustomVector3f lastPosistion = v.container.getPosition();
                 Container toMove = null;
-                for (int x = c.startRange; x < c.range+c.startRange && toMove == null; x++) {
-                    for (int z = (int) lastPosistion.z; z <= 16 && toMove == null; z++) {
+                for (int x = c.startRange; x <= c.range+c.startRange && toMove == null; x++) {
+                    for (int z =0; z <= 16 && toMove == null; z++) {
                         for (int y = 6; y >= 0 && toMove == null; y--) {
                             for (Container cont : t.getContainers()) {
                                 if (cont.getPosition().x == x

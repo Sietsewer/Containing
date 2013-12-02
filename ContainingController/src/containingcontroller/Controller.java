@@ -72,7 +72,7 @@ public class Controller {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2004);
         cal.set(Calendar.MONTH, Calendar.DECEMBER);
-        cal.set(Calendar.DAY_OF_MONTH, 21);
+        cal.set(Calendar.DAY_OF_MONTH, 22);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
@@ -83,8 +83,6 @@ public class Controller {
         for (int i = 1; i <= 8; i++) {
             Crane c = new Crane("CBA" + String.format("%03d", i), Crane.BargeCrane);
             c.node = pathFinder.getMapCBA().get(i - 1);
-            c.range = 4;
-            c.startRange = (i - 1) * c.range;
 
             bargeCranes.add(c);
             PrintMessage("Bargecrane Created - " + c.toString());
@@ -93,8 +91,7 @@ public class Controller {
         seaCranes = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
             Crane c = new Crane("CSE" + String.format("%03d", i), Crane.SeaCrane);
-            c.range = 2;
-            c.startRange = (i - 1) * c.range;
+
 
             c.node = pathFinder.getMapCSE().get(i - 1);
             seaCranes.add(c);
@@ -105,8 +102,6 @@ public class Controller {
         for (int i = 1; i <= 4; i++) {
             Crane c = new Crane("CTR" + String.format("%03d", i), Crane.TrainCrane);
             c.node = pathFinder.getMapCTR().get(i - 1);
-            c.range = 5;
-            c.startRange = (i - 1) * c.range;
 
             trainCranes.add(c);
             PrintMessage("Traincrane Created - " + c.toString());
@@ -117,8 +112,6 @@ public class Controller {
         for (int i = 1; i <= 20; i++) {
             Crane c = new Crane("CLO" + String.format("%03d", i), Crane.LorryCrane);
             c.node = pathFinder.getMapCLO().get(i - 1);
-            c.range = 2;
-            lorreyCranes.add(c);
             PrintMessage("Lorreystop Created - " + c.toString());
         }
         //Create buffers and agv's
@@ -252,7 +245,7 @@ public class Controller {
             }
             currentTransporter.add(t);
 
-            //PrintMessage("Arriving: " + t.toString());
+            PrintMessage("Arriving: " + t.toString());
 
             Message m = new Message(Commands.CREATE_TRANSPORTER, null);
 
@@ -361,7 +354,6 @@ public class Controller {
             if (value.id.equalsIgnoreCase(c.id)) {
                 return key;
             }
-
         }
         return null;
     }
@@ -430,9 +422,9 @@ public class Controller {
             if (t.getContainerCount() > 0) {
                 CustomVector3f lastPosistion = v.container.getPosition();
                 Container toMove = null;
-                for (int x = (int) lastPosistion.x; x < c.startRange + c.range && toMove == null; x++) {
-                    for (int z = (int) lastPosistion.z; z <= 15 && toMove == null; z++) {
-                        for (int y = 5; y >= 0 && toMove == null; y--) {
+                for (int x = (int) lastPosistion.x; x < 30 && toMove == null; x++) {
+                    for (int z = (int) lastPosistion.z; z <= 16 && toMove == null; z++) {
+                        for (int y = 6; y >= 0 && toMove == null; y--) {
                             for (Container cont : t.getContainers()) {
                                 if (cont.getPosition().x == x
                                         && cont.getPosition().z == z
@@ -497,31 +489,46 @@ public class Controller {
         List<Crane> _cranes = new ArrayList<Crane>();
         _cranes.add(dockingpoint);
         if (t.getTransportType() == TransportTypes.SEASHIP) {
-            for (Crane c : seaCranes) {
-                if (c.startRange < t.getLenghtTransporter()) {
-                    if (c != dockingpoint) {
-                        _cranes.add(c);
+            int range = t.getLenghtTransporter() / 10;
+            if (range < 2) {
+                range = 2;
+            }
+            for (int i = 0; i < seaCranes.size(); i++) {
+                if (i * range <= t.getLenghtTransporter()+1) {
+                    seaCranes.get(i).startRange = i * range;
+                    seaCranes.get(i).range = range;
+                    if (seaCranes.get(i) != dockingpoint) {
+                        _cranes.add(seaCranes.get(i));
                     }
-                } else {
+                }
+                else
+                {
                     break;
                 }
             }
-        } else if (t.getTransportType() == TransportTypes.BARGE) {
-            for (Crane c : bargeCranes) {
-                if (c.startRange < t.getLenghtTransporter()) {
-                    if (c != dockingpoint) {
-                        _cranes.add(c);
+        } else if (t.getTransportType()
+                == TransportTypes.BARGE) {
+            int range = t.getLenghtTransporter() / 8;
+            if (range < 2) {
+                range = 2;
+            }
+            for (int i = 0; i < bargeCranes.size(); i++) {
+                if (i * range <= t.getLenghtTransporter()) {
+                    bargeCranes.get(i).startRange = i * range;
+                    bargeCranes.get(i).range = range;
+                    if (bargeCranes.get(i) != dockingpoint) {
+                        _cranes.add(bargeCranes.get(i));
                     }
-                } else {
+                }
+                else
+                {
                     break;
                 }
             }
         }
-
-
         for (Crane crane : _cranes) {
             Container toMove = null;
-            for (int x = crane.startRange; x < crane.range + crane.startRange && toMove == null; x++) {
+            for (int x = crane.startRange; x >= crane.startRange && toMove == null; x--) {
                 for (int z = 0; z <= 15 && toMove == null; z++) {
                     for (int y = 5; y >= 0 && toMove == null; y--) {
                         for (Container cont : t.getContainers()) {

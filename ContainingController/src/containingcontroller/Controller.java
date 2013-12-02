@@ -423,8 +423,8 @@ public class Controller {
             if (t.getContainerCount() > 0) {
                 CustomVector3f lastPosistion = v.container.getPosition();
                 Container toMove = null;
-                for (int x = c.startRange; x <= c.range+c.startRange && toMove == null; x++) {
-                    for (int z =0; z <= 16 && toMove == null; z++) {
+                for (int x = c.startRange; x <= c.range + c.startRange && toMove == null; x++) {
+                    for (int z = 0; z <= 16 && toMove == null; z++) {
                         for (int y = 6; y >= 0 && toMove == null; y--) {
                             for (Container cont : t.getContainers()) {
                                 if (cont.getPosition().x == x
@@ -467,11 +467,13 @@ public class Controller {
                     sendAGVTo(c, toMove);
                 }
             } else {
-                /* Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{dockedTransporter.get(c).id});
-                 this.sendMessage(m);
-                 currentTransporter.remove(t);
-                 dockedTransporter.remove(c);
-                 c.ready = true;*/
+                if (currentTransporter.contains(t)) {
+                    Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{dockedTransporter.get(c).id});
+                    this.sendMessage(m);
+                    currentTransporter.remove(t);
+                }
+                dockedTransporter.remove(c);
+                c.ready = true;
             }
         }
 
@@ -495,15 +497,13 @@ public class Controller {
                 range = 2;
             }
             for (int i = 0; i < seaCranes.size(); i++) {
-                if (i * range <= t.getLenghtTransporter()+1) {
+                if (i * range <= t.getLenghtTransporter() + 1) {
                     seaCranes.get(i).startRange = i * range;
                     seaCranes.get(i).range = range;
                     if (seaCranes.get(i) != dockingpoint) {
                         _cranes.add(seaCranes.get(i));
                     }
-                }
-                else
-                {
+                } else {
                     break;
                 }
             }
@@ -520,9 +520,7 @@ public class Controller {
                     if (bargeCranes.get(i) != dockingpoint) {
                         _cranes.add(bargeCranes.get(i));
                     }
-                }
-                else
-                {
+                } else {
                     break;
                 }
             }
@@ -574,38 +572,47 @@ public class Controller {
     private void sendAGVTo(Crane dockingpoint, Container toMove) {
         dockingpoint.setIsReady(false);
         List<Buffer> preverdBuffers = new ArrayList<>();
+        PreferedAGV prefrence = PreferedAGV.BOTH;
         int startBuffer = 1;
         int endBuffer = 63;
         boolean up = true;
         if (dockingpoint.type == Crane.LorryCrane) {
             startBuffer = 34;
             endBuffer = 44;
-            up = false;
+            prefrence = PreferedAGV.DOWN;
         } else if (dockingpoint.type == Crane.BargeCrane) {
             startBuffer = 14;
             endBuffer = 24;
-            up = false;
+            prefrence = PreferedAGV.DOWN;
         } else if (dockingpoint.type == Crane.TrainCrane) {
             startBuffer = 6;
             endBuffer = 13;
-            up = true;
+            prefrence = PreferedAGV.UP;
         }
         for (int i = startBuffer - 1; i < endBuffer - 1; i++) {
             preverdBuffers.add(buffers.get(i));
         }
-        if (!sendAGVToCrane(preverdBuffers, dockingpoint, toMove, up)) {
-            if (!sendAGVToCrane(buffers, dockingpoint, toMove, up)) {
-                sendAGVToCrane(buffers, dockingpoint, toMove, up);
+        if (!sendAGVToCrane(preverdBuffers, dockingpoint, toMove, prefrence)) {
+            if (!sendAGVToCrane(buffers, dockingpoint, toMove, prefrence)) {
+                sendAGVToCrane(buffers, dockingpoint, toMove, prefrence);
             }
         }
     }
 
-    private boolean sendAGVToCrane(List<Buffer> selectedBuffer, Crane dockingpoint, Container toMove, boolean up) {
+    private boolean sendAGVToCrane(List<Buffer> selectedBuffer, Crane dockingpoint, Container toMove, PreferedAGV up) {
         for (Buffer b : selectedBuffer) {
             CustomVector3f bestpos = b.findBestBufferPlace(toMove);
             AGV agv = null;
-            agv = b.AGVAvailable(up);
-
+            if (up == PreferedAGV.UP) {
+                agv = b.AGVAvailable(true);
+            } else if (up == PreferedAGV.DOWN) {
+                agv = b.AGVAvailable(false);
+            } else {
+                agv = b.AGVAvailable(false);
+                if (agv == null) {
+                    agv = b.AGVAvailable(true);
+                }
+            }
 
             if (bestpos != null && agv != null) {
                 toMove.setBufferPosition(bestpos);

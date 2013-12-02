@@ -525,6 +525,24 @@ public class Controller {
                 }
             }
         }
+        else if (t.getTransportType()
+                == TransportTypes.TRAIN) {
+            int range = t.getLenghtTransporter() / 4;
+            if (range < 2) {
+                range = 2;
+            }
+            for (int i = 0; i < trainCranes.size(); i++) {
+                if (i * range <= t.getLenghtTransporter()) {
+                    trainCranes.get(i).startRange = i * range;
+                    trainCranes.get(i).range = range;
+                    if (trainCranes.get(i) != dockingpoint) {
+                        _cranes.add(trainCranes.get(i));
+                    }
+                } else {
+                    break;
+                }
+            }
+        }
         for (Crane crane : _cranes) {
             Container toMove = null;
             for (int x = crane.startRange; x >= crane.startRange && toMove == null; x--) {

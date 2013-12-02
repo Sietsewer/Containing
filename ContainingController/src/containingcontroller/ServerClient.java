@@ -47,7 +47,7 @@ public class ServerClient {
      */
     public void sendMessage(String message) {
         System.out.println("message to ip:" + client.getRemoteSocketAddress());
-        System.out.println(message);
+        //System.out.println(message);
         output.println(message);
     }
 
@@ -81,7 +81,7 @@ public class ServerClient {
                         if (!s.isEmpty()) {
                             server.MessageRecieved(s);
                             System.out.println("message from ip:" + client.getRemoteSocketAddress());
-                            System.out.println(s);
+                           // System.out.println(s);
                         }
                     }
                 }

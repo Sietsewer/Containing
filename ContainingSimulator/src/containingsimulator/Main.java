@@ -27,6 +27,8 @@ import containing.xml.CustomVector3f;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * test
@@ -81,7 +83,7 @@ public class Main extends SimpleApplication {
      * @param args
      */
     public static void main(String[] args) {
-
+        Logger.getLogger("com.jme3").setLevel(Level.SEVERE);
         Main app = new Main();
 
         app.start();
@@ -100,11 +102,6 @@ public class Main extends SimpleApplication {
         cam.setFrustumFar(5000f);
         listener = new ServerListener(this);
         messagesTodo= new ArrayList<Message>();
-        new Thread(new Runnable() {
-            public void run() {
-                listener.run();
-            }
-        }).start();
     }
 
     /**

@@ -324,7 +324,7 @@ public class Main extends SimpleApplication {
             case Commands.GET_CONTAINER:
                 agv = getAGVbyID((String) params[0]);
                 crane = getCraneByID((String) params[1]);
-                if (crane != null && cont != null) {
+                if (crane != null ) {
                         crane.getContainer(agv);
                 } else {
                     System.err.println("Error: No crane/container/transporter with this ID");

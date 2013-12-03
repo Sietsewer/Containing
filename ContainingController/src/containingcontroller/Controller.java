@@ -49,6 +49,7 @@ public class Controller {
     HashMap<Crane, AGV> waitingForCraneToPickUpFromAgv;
     HashMap<Crane, AGV> waitingForCraneToPutToAgv;
     HashMap<Crane, Transporter> dockedTransporter;
+    HashMap<AGV, Crane> waitingForBufferCrane;
 
     /**
      *
@@ -153,6 +154,7 @@ public class Controller {
         PrintMessage("Total Seacranes - " + seaCranes.size());
         PrintMessage("Total Bargecranes - " + bargeCranes.size());
         PrintMessage("Total trainCrane - " + trainCranes.size());
+        waitingForBufferCrane = new HashMap<>();
         agvLoadedMovingHome = new ArrayList<>();
     }
 
@@ -299,6 +301,15 @@ public class Controller {
         }).start();
     }
 
+    public void getContainerBuffer(AGV agv, Crane bufferCrane) {
+        bufferCrane.ready = false;
+        Message message = new Message(Commands.GET_CONTAINER, new Object[]{bufferCrane.id, agv.container.getId()});
+        agv.homeBuffer.addContainer(agv.container);
+        agv.container = null;
+        this.PrintMessage(Message.encodeMessage(message));
+        sendMessage(message);
+    }
+
     /**
      * Print message on window
      *
@@ -322,12 +333,11 @@ public class Controller {
             }
         } else if (agvLoadedMovingHome.contains(agv)) {
             Crane bufferCrane = agv.homeBuffer.crane;
-            Message message = new Message(Commands.PICKUP_CONTAINER, new Object[]{bufferCrane.id, agv.container.getId(),
-                agv.container.getBufferPosition().x, agv.container.getBufferPosition().y, agv.container.getBufferPosition().z});
-            agv.homeBuffer.addContainer(agv.container);
-            agv.container = null;
-            sendMessage(message);
-
+            if (bufferCrane.ready) {
+                getContainerBuffer(agv, bufferCrane);
+            } else {
+                waitingForBufferCrane.put(agv, bufferCrane);
+            }
         }
 
     }
@@ -371,6 +381,18 @@ public class Controller {
         return null;
     }
 
+    private AGV getWaitingAGV(Crane bufferCrane) {
+        for (Map.Entry<AGV, Crane> e : waitingForBufferCrane.entrySet()) {
+            AGV key = e.getKey();
+            Crane value = e.getValue();
+            if (bufferCrane.id.equalsIgnoreCase(value.id)) {
+                return key;
+            }
+        }
+
+        return null;
+    }
+
     private Crane getDockingPoint(Transporter t) {
         for (Map.Entry<Crane, Transporter> e : dockedTransporter.entrySet()) {
             Crane key = e.getKey();
@@ -378,7 +400,6 @@ public class Controller {
             if (t.id.equalsIgnoreCase(value.id)) {
                 return key;
             }
-
         }
 
         return null;
@@ -499,6 +520,11 @@ public class Controller {
      * @param b
      */
     public void bufferCraneReady(Buffer b) {
+        b.crane.ready = true;
+        if (waitingForBufferCrane.containsValue(b.crane)) {
+            AGV agv = getWaitingAGV(b.crane);
+            getContainerBuffer(agv, b.crane);
+        }
     }
 
     private void transporterReady(Transporter t) {

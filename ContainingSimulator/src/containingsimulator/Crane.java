@@ -152,26 +152,28 @@ public abstract class Crane extends Node implements MotionPathListener {
     
     //from transport/buffer to agv
     public void pickupContainer(Container cont, Transporter trans)
-    {
+    {if(!busy){
         this.transporter = trans;
       //  this.transportNode = trans;
         this.cont = cont;
         this.target = cont.getWorldTranslation();
         action = 1;
         busy = true;
-        pickupContainer = true;
+        pickupContainer = true;}
     }
     
     //From agv to transport/buffer
     public void getContainer(AGV agv)
     {
+        if(!busy){
         pickupContainer = false;
-        this.cont = agv.getContainerObject();
         
-        this.target = this.cont.getWorldTranslation();
+        this.agv = agv;
+        this.cont = this.agv.getContainerObject();
+        this.target = this.agv.getWorldTranslation();
         action = 1;
         busy = true;
-        pickupContainer = false;
+        pickupContainer = false;}
     }
 
     
@@ -198,12 +200,13 @@ public abstract class Crane extends Node implements MotionPathListener {
          this.target = nextPosition;
          if(cont !=null)
          {
+             System.out.println(nextPosition + " " + indexPosition);
          this.cont.setIndexPosition(indexPosition);
          loadContainer = true;
          }
-         else if(busy)
+         else
          {
-             System.out.println("cont is null " + nextPosition + " " + indexPosition);
+             System.out.println("cont is null ");
          }
          
      }
@@ -237,7 +240,7 @@ public abstract class Crane extends Node implements MotionPathListener {
         }
         else if(agv!= null)
         {
-            agv.getContainer();
+            agv.getContainer();//this.cont=
             agv = null;
         }
         

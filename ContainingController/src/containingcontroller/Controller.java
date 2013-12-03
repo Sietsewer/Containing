@@ -303,7 +303,7 @@ public class Controller {
 
     public void getContainerBuffer(AGV agv, Crane bufferCrane) {
         bufferCrane.ready = false;
-        Message message = new Message(Commands.GET_CONTAINER, new Object[]{bufferCrane.id, agv.container.getId()});
+        Message message = new Message(Commands.GET_CONTAINER, new Object[]{ agv.name,bufferCrane.id});
         agv.homeBuffer.addContainer(agv.container);
         agv.container = null;
         this.PrintMessage(Message.encodeMessage(message));

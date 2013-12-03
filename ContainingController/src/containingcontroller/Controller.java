@@ -303,7 +303,7 @@ public class Controller {
 
     public void getContainerBuffer(AGV agv, Crane bufferCrane) {
         bufferCrane.ready = false;
-        Message message = new Message(Commands.GET_CONTAINER, new Object[]{ agv.name,bufferCrane.id});
+        Message message = new Message(Commands.GET_CONTAINER, new Object[]{agv.name, bufferCrane.id});
         agv.homeBuffer.addContainer(agv.container);
         agv.container = null;
         this.PrintMessage(Message.encodeMessage(message));
@@ -521,9 +521,17 @@ public class Controller {
      */
     public void bufferCraneReady(Buffer b) {
         b.crane.ready = true;
-        if (waitingForBufferCrane.containsValue(b.crane)) {
-            AGV agv = getWaitingAGV(b.crane);
-            getContainerBuffer(agv, b.crane);
+        if (b.crane.container == null) {
+            if (waitingForBufferCrane.containsValue(b.crane)) {
+                AGV agv = getWaitingAGV(b.crane);
+                getContainerBuffer(agv, b.crane);
+            }
+        } else {
+            Message message = new Message(Commands.PUT_CONTAINER, new Object[]{b.crane.id, b.crane.container.getBufferPosition().x,
+                b.crane.container.getBufferPosition().y,
+                b.crane.container.getBufferPosition().z});
+            b.crane.ready = false;
+            this.sendMessage(message);
         }
     }
 

@@ -559,7 +559,7 @@ public class Main extends SimpleApplication {
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("right-click")) {
-                globalSpeed *= 1.5f; //fasten up
+                changeGlobalSpeed(globalSpeed*1.5f); //fasten up
             }
             if (name.equals("left-click") && !keyPressed) {
                 CollisionResults results = new CollisionResults();
@@ -576,6 +576,18 @@ public class Main extends SimpleApplication {
             }
         }
     };
+    private void changeGlobalSpeed(float acceleration)
+    {
+        if(acceleration<15&&acceleration > 0)
+        {
+        globalSpeed = acceleration;
+        
+        for(AGV agv: agvs)
+        {
+            agv.globalSpeedChanged();
+        }
+        }
+    }
 
     protected void init_CrossHairs() {
         setDisplayStatView(false);

@@ -49,7 +49,7 @@ public class Buffer extends Node{
      * Empty constructor, initalizes empty buffer
      */
     public Buffer(){
-        this.bufferSize = new Vector3f(6, 6, 26);
+        this.bufferSize = new Vector3f(26, 6, 6);
         bufferArray = new Container[(int)bufferSize.x][(int)bufferSize.y][(int)bufferSize.z];
         bufferNode = new Node();
         this.attachChild(bufferNode);
@@ -105,6 +105,13 @@ public class Buffer extends Node{
             }
         }*/
         return null;
+    }
+    
+    public Vector3f getRealContainerPosition(Vector3f indexpos){
+        Vector3f csize = new Vector3f(1.22f, 1.22f, 6.705f);
+        Vector3f pos = new Vector3f(indexpos.x * 2 * csize.x, indexpos.y * 2 *
+                csize.y, indexpos.z * 2 * csize.z);
+        return pos.add(this.getWorldTranslation());
     }
     
     /**

@@ -235,7 +235,7 @@ public class Container {
      * @return
      */
     public CustomVector3f getBufferPosition() {
-<span class="nc" id="L238">        return bufferPosition;</span>
+<span class="fc" id="L238">        return bufferPosition;</span>
     }
 
     /**
@@ -243,8 +243,8 @@ public class Container {
      * @param bufferPosition
      */
     public void setBufferPosition(CustomVector3f bufferPosition) {
-<span class="nc" id="L246">        this.bufferPosition = bufferPosition;</span>
-<span class="nc" id="L247">    }</span>
+<span class="fc" id="L246">        this.bufferPosition = bufferPosition;</span>
+<span class="fc" id="L247">    }</span>
 
     /**
      *
@@ -430,20 +430,20 @@ public class Container {
 
     @Override
     public boolean equals(Object obj) {
-<span class="nc bnc" id="L433" title="All 2 branches missed.">        if (obj == null) {</span>
+<span class="pc bpc" id="L433" title="1 of 2 branches missed.">        if (obj == null) {</span>
 <span class="nc" id="L434">            return false;</span>
         }
-<span class="nc bnc" id="L436" title="All 2 branches missed.">        if (getClass() != obj.getClass()) {</span>
+<span class="pc bpc" id="L436" title="1 of 2 branches missed.">        if (getClass() != obj.getClass()) {</span>
 <span class="nc" id="L437">            return false;</span>
         }
-<span class="nc" id="L439">        final Container other = (Container) obj;</span>
-<span class="nc bnc" id="L440" title="All 2 branches missed.">        if (!Objects.equals(this.id, other.id)) {</span>
-<span class="nc" id="L441">            return false;</span>
+<span class="fc" id="L439">        final Container other = (Container) obj;</span>
+<span class="fc bfc" id="L440" title="All 2 branches covered.">        if (!Objects.equals(this.id, other.id)) {</span>
+<span class="fc" id="L441">            return false;</span>
         }
-<span class="nc bnc" id="L443" title="All 2 branches missed.">        if (this.containerNumber != other.containerNumber) {</span>
+<span class="pc bpc" id="L443" title="1 of 2 branches missed.">        if (this.containerNumber != other.containerNumber) {</span>
 <span class="nc" id="L444">            return false;</span>
         }
-<span class="nc" id="L446">        return true;</span>
+<span class="fc" id="L446">        return true;</span>
     }
     
 }

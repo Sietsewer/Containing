@@ -64,8 +64,8 @@ public class Server {
 <span class="fc" id="L64">                    new Thread(new Runnable() {</span>
                         @Override
                         public void run() {
-<span class="fc" id="L67">                            c.Run();</span>
-<span class="fc" id="L68">                        }</span>
+<span class="nc" id="L67">                            c.Run();</span>
+<span class="nc" id="L68">                        }</span>
                     }).start();
 <span class="fc" id="L70">                } else {</span>
 <span class="fc" id="L71">                    final ServerClient c = new ServerClient(server, this, false);</span>
@@ -126,7 +126,7 @@ public class Server {
     }
 
     void MessageRecieved(String ln) {
-<span class="nc" id="L129">        controller.recievedMessage(ln);</span>
-<span class="nc" id="L130">    }</span>
+<span class="fc" id="L129">        controller.recievedMessage(ln);</span>
+<span class="fc" id="L130">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

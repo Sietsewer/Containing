@@ -46,7 +46,7 @@ public class Message {
      * @return command number
      */
     public int getCommand() {
-<span class="nc" id="L49">        return command;</span>
+<span class="fc" id="L49">        return command;</span>
     }
 
     /**
@@ -54,8 +54,8 @@ public class Message {
      * @param command
      */
     public void setCommand(int command) {
-<span class="fc" id="L57">        this.command = command;</span>
-<span class="fc" id="L58">    }</span>
+<span class="nc" id="L57">        this.command = command;</span>
+<span class="nc" id="L58">    }</span>
 
     /**
      * parameters toevoegen
@@ -114,7 +114,7 @@ public class Message {
 
     @Override
     public String toString() {
-<span class="nc" id="L117">        return &quot;Message{&quot; + &quot;command=&quot; + command + &quot;, parameters=&quot; + parameters + '}';</span>
+<span class="nc" id="L117">        return &quot;Message{&quot; + &quot;command=&quot; + command + &quot;, parameters=&quot; + parameters.length + '}';</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

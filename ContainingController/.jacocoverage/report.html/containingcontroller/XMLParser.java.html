@@ -90,114 +90,115 @@ import javax.xml.stream.XMLStreamReader;
 <span class="fc" id="L90">                                c.set(Calendar.HOUR, Integer.parseInt(time[0]));</span>
 <span class="fc" id="L91">                                c.set(Calendar.MINUTE, Integer.parseInt(time[1]));</span>
 <span class="fc" id="L92">                                c.set(Calendar.SECOND, 0);</span>
-<span class="fc" id="L93">                                break;</span>
+<span class="fc" id="L93">                                c.set(Calendar.MILLISECOND, 0);</span>
+<span class="fc" id="L94">                                break;</span>
                             case &quot;tijd&quot;:
-<span class="fc bfc" id="L95" title="All 2 branches covered.">                                if (sk.peek().equalsIgnoreCase(&quot;aankomst&quot;)) {</span>
-<span class="fc" id="L96">                                    currentContainer.setDateArrival(c.getTime());//wat te doen met tijd</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">                                if (sk.peek().equalsIgnoreCase(&quot;aankomst&quot;)) {</span>
+<span class="fc" id="L97">                                    currentContainer.setDateArrival(c.getTime());//wat te doen met tijd</span>
                                 } else {
-<span class="fc" id="L98">                                    currentContainer.setDateDeparture(c.getTime());</span>
+<span class="fc" id="L99">                                    currentContainer.setDateDeparture(c.getTime());</span>
                                 }
-<span class="fc" id="L100">                                break;</span>
+<span class="fc" id="L101">                                break;</span>
                             case &quot;soort_vervoer&quot;:
-<span class="fc bfc" id="L102" title="All 2 branches covered.">                                if (sk.peek().equalsIgnoreCase(&quot;aankomst&quot;)) {</span>
-<span class="fc" id="L103">                                    currentContainer.setTransportTypeArrival(TransportTypes.getTransportType(tagContent));</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">                                if (sk.peek().equalsIgnoreCase(&quot;aankomst&quot;)) {</span>
+<span class="fc" id="L104">                                    currentContainer.setTransportTypeArrival(TransportTypes.getTransportType(tagContent));</span>
                                 } else {
-<span class="fc" id="L105">                                    currentContainer.setTransportTypeDeparture(TransportTypes.getTransportType(tagContent));</span>
+<span class="fc" id="L106">                                    currentContainer.setTransportTypeDeparture(TransportTypes.getTransportType(tagContent));</span>
                                 }
-<span class="fc" id="L107">                                break;</span>
+<span class="fc" id="L108">                                break;</span>
                             case &quot;bedrijf&quot;:
-<span class="fc bfc" id="L109" title="All 2 branches covered.">                                if (sk.peek().equalsIgnoreCase(&quot;aankomst&quot;)) {</span>
-<span class="fc" id="L110">                                    currentContainer.setCargoCompanyArrival(tagContent);</span>
-<span class="pc bpc" id="L111" title="1 of 2 branches missed.">                                } else if (sk.peek().equalsIgnoreCase(&quot;vertrek&quot;)) {</span>
-<span class="fc" id="L112">                                    currentContainer.setCargoCompanyDeparture(tagContent);</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">                                if (sk.peek().equalsIgnoreCase(&quot;aankomst&quot;)) {</span>
+<span class="fc" id="L111">                                    currentContainer.setCargoCompanyArrival(tagContent);</span>
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">                                } else if (sk.peek().equalsIgnoreCase(&quot;vertrek&quot;)) {</span>
+<span class="fc" id="L113">                                    currentContainer.setCargoCompanyDeparture(tagContent);</span>
                                 }
 
                                 break;
                             case &quot;x&quot;:
-<span class="fc" id="L117">                                p = new CustomVector3f();</span>
-<span class="fc" id="L118">                                p.x = Integer.parseInt(tagContent);</span>
-<span class="pc bpc" id="L119" title="2 of 4 branches missed.">                                if (p.x &gt; maxX &amp;&amp; currentContainer.getTransportTypeArrival() == TransportTypes.SEASHIP) {</span>
-<span class="nc" id="L120">                                    maxX = (int) p.x;</span>
+<span class="fc" id="L118">                                p = new CustomVector3f();</span>
+<span class="fc" id="L119">                                p.x = Integer.parseInt(tagContent);</span>
+<span class="pc bpc" id="L120" title="1 of 4 branches missed.">                                if (p.x &gt; maxX &amp;&amp; currentContainer.getTransportTypeArrival() == TransportTypes.SEASHIP) {</span>
+<span class="nc" id="L121">                                    maxX = (int) p.x;</span>
                                 }
-<span class="pc bpc" id="L122" title="1 of 2 branches missed.">                                if(currentContainer.getTransportTypeArrival() == TransportTypes.TROLLEY) {</span>
-<span class="fc" id="L123">                                p.x =0;</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">                                if (currentContainer.getTransportTypeArrival() == TransportTypes.TROLLEY) {</span>
+<span class="nc" id="L124">                                    p.x = 0;</span>
                                 }
-                                   
+
 
                                 break;
                             case &quot;y&quot;:
-<span class="fc" id="L129">                                p.z = Integer.parseInt(tagContent);</span>
-<span class="pc bpc" id="L130" title="1 of 2 branches missed.">                                if (p.z &gt; maxZ) {</span>
-<span class="nc" id="L131">                                    maxZ = (int) p.z;</span>
+<span class="fc" id="L130">                                p.z = Integer.parseInt(tagContent);</span>
+<span class="fc bfc" id="L131" title="All 2 branches covered.">                                if (p.z &gt; maxZ) {</span>
+<span class="fc" id="L132">                                    maxZ = (int) p.z;</span>
                                 }
                                 break;
                             case &quot;z&quot;:
-<span class="fc" id="L135">                                p.y = Integer.parseInt(tagContent);</span>
-<span class="pc bpc" id="L136" title="1 of 2 branches missed.">                               if (p.y &gt; maxY) {</span>
-<span class="nc" id="L137">                                    maxY = (int) p.y;</span>
+<span class="fc" id="L136">                                p.y = Integer.parseInt(tagContent);</span>
+<span class="fc bfc" id="L137" title="All 2 branches covered.">                                if (p.y &gt; maxY) {</span>
+<span class="fc" id="L138">                                    maxY = (int) p.y;</span>
                                 }
 
                                 break;
                             case &quot;positie&quot;:
-<span class="fc" id="L142">                                currentContainer.setPosition(p);</span>
-<span class="fc" id="L143">                                break;</span>
+<span class="fc" id="L143">                                currentContainer.setPosition(p);</span>
+<span class="fc" id="L144">                                break;</span>
                             case &quot;naam&quot;:
-<span class="fc bfc" id="L145" title="All 2 branches covered.">                                if (sk.peek().equalsIgnoreCase(&quot;eigenaar&quot;)) {</span>
-<span class="fc" id="L146">                                    currentContainer.setOwner(tagContent);</span>
+<span class="fc bfc" id="L146" title="All 2 branches covered.">                                if (sk.peek().equalsIgnoreCase(&quot;eigenaar&quot;)) {</span>
+<span class="fc" id="L147">                                    currentContainer.setOwner(tagContent);</span>
                                 } else {
-<span class="fc" id="L148">                                    currentContainer.setContents(tagContent);</span>
+<span class="fc" id="L149">                                    currentContainer.setContents(tagContent);</span>
                                 }
-<span class="fc" id="L150">                                break;</span>
+<span class="fc" id="L151">                                break;</span>
                             case &quot;containernr&quot;:
-<span class="fc" id="L152">                                currentContainer.setContainerNumber(Integer.parseInt(tagContent));</span>
-<span class="fc" id="L153">                                break;</span>
+<span class="fc" id="L153">                                currentContainer.setContainerNumber(Integer.parseInt(tagContent));</span>
+<span class="fc" id="L154">                                break;</span>
                             case &quot;l&quot;:
-<span class="fc" id="L155">                                currentContainer.setLenght(tagContent);</span>
-<span class="fc" id="L156">                                break;</span>
+<span class="fc" id="L156">                                currentContainer.setLenght(tagContent);</span>
+<span class="fc" id="L157">                                break;</span>
                             case &quot;h&quot;:
-<span class="fc" id="L158">                                currentContainer.setHeight(tagContent);</span>
-<span class="fc" id="L159">                                break;</span>
+<span class="fc" id="L159">                                currentContainer.setHeight(tagContent);</span>
+<span class="fc" id="L160">                                break;</span>
                             case &quot;b&quot;:
-<span class="fc" id="L161">                                currentContainer.setWidth(tagContent);</span>
-<span class="fc" id="L162">                                break;</span>
+<span class="fc" id="L162">                                currentContainer.setWidth(tagContent);</span>
+<span class="fc" id="L163">                                break;</span>
                             case &quot;leeg&quot;:
-<span class="fc" id="L164">                                currentContainer.setWeightEmpty(Integer.parseInt(tagContent));</span>
-<span class="fc" id="L165">                                break;</span>
+<span class="fc" id="L165">                                currentContainer.setWeightEmpty(Integer.parseInt(tagContent));</span>
+<span class="fc" id="L166">                                break;</span>
                             case &quot;inhoud&quot;:
-<span class="pc bpc" id="L167" title="1 of 2 branches missed.">                                if (sk.peek().equalsIgnoreCase(&quot;aankomst&quot;)) {</span>
-<span class="nc bnc" id="L168" title="All 2 branches missed.">                                    if (!tagContent.isEmpty()) {</span>
-<span class="nc" id="L169">                                        currentContainer.setWeightLoaded(Integer.parseInt(tagContent));</span>
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">                                if (sk.peek().equalsIgnoreCase(&quot;aankomst&quot;)) {</span>
+<span class="nc bnc" id="L169" title="All 2 branches missed.">                                    if (!tagContent.isEmpty()) {</span>
+<span class="nc" id="L170">                                        currentContainer.setWeightLoaded(Integer.parseInt(tagContent));</span>
                                     }
                                 }
                                 break;
                             case &quot;soort&quot;:
-<span class="fc" id="L174">                                currentContainer.setContentType(tagContent);</span>
-<span class="fc" id="L175">                                break;</span>
+<span class="fc" id="L175">                                currentContainer.setContentType(tagContent);</span>
+<span class="fc" id="L176">                                break;</span>
                             case &quot;gevaar&quot;:
-<span class="fc" id="L177">                                currentContainer.setContentDanger(tagContent);</span>
-<span class="fc" id="L178">                                break;</span>
+<span class="fc" id="L178">                                currentContainer.setContentDanger(tagContent);</span>
+<span class="fc" id="L179">                                break;</span>
                             case &quot;iso&quot;:
-<span class="fc" id="L180">                                currentContainer.setIso(tagContent);</span>
+<span class="fc" id="L181">                                currentContainer.setIso(tagContent);</span>
                                 break;
 
                         }
-<span class="fc" id="L184">                        break;</span>
+<span class="fc" id="L185">                        break;</span>
 
 
 
                     case XMLStreamConstants.START_DOCUMENT:
-<span class="nc" id="L189">                        containersList = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L190">                        containersList = new ArrayList&lt;&gt;();</span>
                         break;
                 }
 
-<span class="fc" id="L193">            }</span>
-<span class="fc" id="L194">            System.out.println(&quot;maxX:&quot; + maxX);</span>
-<span class="fc" id="L195">            System.out.println(&quot;maxY:&quot; + maxY);</span>
-<span class="fc" id="L196">            System.out.println(&quot;maxZ:&quot; + maxZ);</span>
-<span class="fc" id="L197">            return containersList;</span>
-<span class="nc" id="L198">        } catch (XMLStreamException ex) {</span>
-<span class="nc" id="L199">            Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);</span>
-<span class="nc" id="L200">            return null;</span>
+<span class="fc" id="L194">            }</span>
+<span class="fc" id="L195">            System.out.println(&quot;maxX:&quot; + maxX);</span>
+<span class="fc" id="L196">            System.out.println(&quot;maxY:&quot; + maxY);</span>
+<span class="fc" id="L197">            System.out.println(&quot;maxZ:&quot; + maxZ);</span>
+<span class="fc" id="L198">            return containersList;</span>
+<span class="nc" id="L199">        } catch (XMLStreamException ex) {</span>
+<span class="nc" id="L200">            Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L201">            return null;</span>
         }
 
 

@@ -139,10 +139,11 @@ public class ControllerWindow extends javax.swing.JFrame {
      * @param message line
      */
     public void WriteLogLine(String message) {
-<span class="fc" id="L142">        logTxtArea.append(System.getProperty(&quot;line.separator&quot;) + &quot;[&quot; + timeFormat.format(new Date()) + &quot;]&quot; + message);</span>
-<span class="fc" id="L143">        JScrollBar vertical = jScrollPane1.getVerticalScrollBar();</span>
-<span class="fc" id="L144">        vertical.setValue(vertical.getMaximum());</span>
-<span class="fc" id="L145">    }</span>
+       
+<span class="fc" id="L143">        logTxtArea.append(System.getProperty(&quot;line.separator&quot;) + &quot;[&quot; + timeFormat.format(new Date()) + &quot;]&quot; + message);</span>
+<span class="fc" id="L144">        JScrollBar vertical = jScrollPane1.getVerticalScrollBar();</span>
+<span class="fc" id="L145">        vertical.setValue(vertical.getMaximum());</span>
+<span class="fc" id="L146">    }</span>
 
     /**
      * @param args the command line arguments
@@ -154,30 +155,30 @@ public class ControllerWindow extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-<span class="pc bpc" id="L157" title="1 of 2 branches missed.">            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {</span>
-<span class="fc bfc" id="L158" title="All 2 branches covered.">                if (&quot;Nimbus&quot;.equals(info.getName())) {</span>
-<span class="fc" id="L159">                    javax.swing.UIManager.setLookAndFeel(info.getClassName());</span>
-<span class="fc" id="L160">                    break;</span>
+<span class="pc bpc" id="L158" title="1 of 2 branches missed.">            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">                if (&quot;Nimbus&quot;.equals(info.getName())) {</span>
+<span class="fc" id="L160">                    javax.swing.UIManager.setLookAndFeel(info.getClassName());</span>
+<span class="fc" id="L161">                    break;</span>
                 }
             }
-<span class="nc" id="L163">        } catch (ClassNotFoundException ex) {</span>
-<span class="nc" id="L164">            java.util.logging.Logger.getLogger(ControllerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);</span>
-<span class="nc" id="L165">        } catch (InstantiationException ex) {</span>
-<span class="nc" id="L166">            java.util.logging.Logger.getLogger(ControllerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);</span>
-<span class="nc" id="L167">        } catch (IllegalAccessException ex) {</span>
-<span class="nc" id="L168">            java.util.logging.Logger.getLogger(ControllerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);</span>
-<span class="nc" id="L169">        } catch (javax.swing.UnsupportedLookAndFeelException ex) {</span>
-<span class="nc" id="L170">            java.util.logging.Logger.getLogger(ControllerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);</span>
-<span class="pc" id="L171">        }</span>
+<span class="nc" id="L164">        } catch (ClassNotFoundException ex) {</span>
+<span class="nc" id="L165">            java.util.logging.Logger.getLogger(ControllerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);</span>
+<span class="nc" id="L166">        } catch (InstantiationException ex) {</span>
+<span class="nc" id="L167">            java.util.logging.Logger.getLogger(ControllerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);</span>
+<span class="nc" id="L168">        } catch (IllegalAccessException ex) {</span>
+<span class="nc" id="L169">            java.util.logging.Logger.getLogger(ControllerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);</span>
+<span class="nc" id="L170">        } catch (javax.swing.UnsupportedLookAndFeelException ex) {</span>
+<span class="nc" id="L171">            java.util.logging.Logger.getLogger(ControllerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);</span>
+<span class="pc" id="L172">        }</span>
         //&lt;/editor-fold&gt;
 
         /* Create and display the form */
-<span class="fc" id="L175">        java.awt.EventQueue.invokeLater(new Runnable() {</span>
+<span class="fc" id="L176">        java.awt.EventQueue.invokeLater(new Runnable() {</span>
             public void run() {
-<span class="fc" id="L177">                new ControllerWindow().setVisible(true);</span>
-<span class="fc" id="L178">            }</span>
+<span class="fc" id="L178">                new ControllerWindow().setVisible(true);</span>
+<span class="fc" id="L179">            }</span>
         });
-<span class="fc" id="L180">    }</span>
+<span class="fc" id="L181">    }</span>
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;

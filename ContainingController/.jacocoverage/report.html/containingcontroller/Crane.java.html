@@ -10,6 +10,11 @@ package containingcontroller;
  */
 public class Crane {
 
+    final static public int LorryCrane = 0;
+    final static public int TrainCrane = 1;
+    final static public int SeaCrane = 2;
+    final static public int BargeCrane = 3;
+    final static public int BufferCrane = 4;
     /**
      * Crane ID
      */
@@ -22,46 +27,49 @@ public class Crane {
     /**
      * start from range
      */
-<span class="fc" id="L25">    public int startRange =0;</span>
+<span class="fc" id="L30">    public int startRange = 0;</span>
     /**
      * Range for crane
      */
-<span class="fc" id="L29">    public int range=0;</span>
+<span class="fc" id="L34">    public int range = 0;</span>
+    int type;
+
     /**
      * create crane with id
      *
      * @param id
      */
-<span class="fc" id="L35">    public Crane(String id) {</span>
-<span class="fc" id="L36">        this.id = id;</span>
-<span class="fc" id="L37">    }</span>
+<span class="fc" id="L42">    public Crane(String id, int type) {</span>
+<span class="fc" id="L43">        this.id = id;</span>
+<span class="fc" id="L44">        this.type = type;</span>
+<span class="fc" id="L45">    }</span>
 
     /**
      *
      * @param cont
      */
     public void loadContainer(Container cont) {
-<span class="nc" id="L44">    }</span>
+<span class="nc" id="L52">    }</span>
 
     /**
      *
      * @param cont
      */
     public void getContainer(Container cont) {
-<span class="nc" id="L51">    }</span>
-<span class="fc" id="L52">    boolean ready =true;</span>
+<span class="nc" id="L59">    }</span>
+<span class="fc" id="L60">    boolean ready = true;</span>
+
     boolean getReady() {
-<span class="nc" id="L54">        return ready;</span>
+<span class="fc" id="L63">        return ready;</span>
     }
 
     void setIsReady(boolean b) {
-<span class="nc" id="L58">        ready = b;</span>
-<span class="nc" id="L59">         }</span>
+<span class="fc" id="L67">        ready = b;</span>
+<span class="fc" id="L68">    }</span>
 
     @Override
     public String toString() {
-<span class="fc" id="L63">        return &quot;Crane{&quot; + &quot;id=&quot; + id + &quot;, node=&quot; + node + &quot;, ready=&quot; + ready + '}';</span>
+<span class="fc" id="L72">        return &quot;Crane{&quot; + &quot;id=&quot; + id + &quot;, node=&quot; + node + &quot;, ready=&quot; + ready + '}';</span>
     }
-    
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

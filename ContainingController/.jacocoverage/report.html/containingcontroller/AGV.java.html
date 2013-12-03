@@ -17,12 +17,12 @@ import javax.xml.soap.Node;
  */
 public class AGV {
     
-<span class="fc" id="L20">    boolean ready = false;</span>
+<span class="fc" id="L20">    private boolean ready = false;</span>
 <span class="fc" id="L21">    static private int id = 1;</span>
     /**
      * Indicating if cart is home
      */
-    public boolean isHome;
+    private boolean isHome;
     /**
      * Container that the AGV carries
      */
@@ -66,18 +66,21 @@ public class AGV {
      */
     public void moveToCrane(Crane destination, Controller c) {
         try {
-<span class="nc" id="L69">            PathFinder finder = c.getPathFinder();</span>
-<span class="nc" id="L70">            List&lt;PathNode&gt; path = finder.getShortestPath(home, destination.node,false);</span>
-<span class="nc" id="L71">            Message moveMessage = new Message(Commands.MOVE, null);</span>
-<span class="nc" id="L72">            ArrayList&lt;String&gt; nodeIds = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L73" title="All 2 branches missed.">            for (PathNode node : path) {</span>
-<span class="nc" id="L74">            nodeIds.add(node.getId());</span>
-<span class="nc" id="L75">            }</span>
-<span class="nc" id="L76">            moveMessage.setParameters(new Object[]{nodeIds});</span>
-<span class="nc" id="L77">        } catch (Exception ex) {</span>
-<span class="nc" id="L78">            Logger.getLogger(AGV.class.getName()).log(Level.SEVERE, null, ex);</span>
-<span class="nc" id="L79">        }</span>
-<span class="nc" id="L80">    }</span>
+<span class="fc" id="L69">            isHome= false;</span>
+<span class="fc" id="L70">            PathFinder finder = c.getPathFinder();</span>
+<span class="fc" id="L71">            List&lt;PathNode&gt; path = finder.getShortestPath(home, destination.node,false);</span>
+<span class="fc" id="L72">            Message moveMessage = new Message(Commands.MOVE, null);</span>
+<span class="fc" id="L73">            ArrayList&lt;String&gt; nodeIds = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            for (PathNode node : path) {</span>
+<span class="fc" id="L75">            nodeIds.add(node.getId());</span>
+<span class="fc" id="L76">            }</span>
+<span class="fc" id="L77">            nodeIds.add(0, this.name);</span>
+<span class="fc" id="L78">            moveMessage.setParameters(nodeIds.toArray());</span>
+<span class="fc" id="L79">            c.sendMessage(moveMessage);</span>
+<span class="nc" id="L80">        } catch (Exception ex) {</span>
+<span class="nc" id="L81">            Logger.getLogger(AGV.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="fc" id="L82">        }</span>
+<span class="fc" id="L83">    }</span>
 
     /**
      * Send AGV home
@@ -87,32 +90,48 @@ public class AGV {
      */
     public void moveToHome(Crane source, Controller c) {
         try {
-<span class="nc" id="L90">            PathFinder finder = c.getPathFinder();</span>
-<span class="nc" id="L91">            List&lt;PathNode&gt; path = finder.getShortestPath(source.node, this.home, false);</span>
-<span class="nc" id="L92">            Message moveMessage = new Message(Commands.MOVE, null);</span>
-<span class="nc" id="L93">            ArrayList&lt;String&gt; parameters = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L94">            parameters.add(name);</span>
-<span class="nc bnc" id="L95" title="All 2 branches missed.">            for (PathNode node : path) {</span>
-<span class="nc" id="L96">                parameters.add(node.getId());</span>
-<span class="nc" id="L97">            }</span>
-<span class="nc" id="L98">            moveMessage.setParameters(parameters.toArray());</span>
-<span class="nc" id="L99">            c.sendMessage(moveMessage);</span>
-<span class="nc" id="L100">        } catch (Exception ex) {</span>
-<span class="nc" id="L101">            Logger.getLogger(AGV.class.getName()).log(Level.SEVERE, null, ex);</span>
-<span class="nc" id="L102">        }</span>
-<span class="nc" id="L103">    }</span>
+<span class="fc" id="L93">            PathFinder finder = c.getPathFinder();</span>
+<span class="fc" id="L94">            List&lt;PathNode&gt; path = finder.getShortestPath(source.node, this.home, false);</span>
+<span class="fc" id="L95">            Message moveMessage = new Message(Commands.MOVE, null);</span>
+<span class="fc" id="L96">            ArrayList&lt;String&gt; parameters = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L97">            parameters.add(this.name);</span>
+<span class="fc bfc" id="L98" title="All 2 branches covered.">            for (PathNode node : path) {</span>
+<span class="fc" id="L99">                parameters.add(node.getId());</span>
+<span class="fc" id="L100">            }</span>
+<span class="fc" id="L101">            moveMessage.setParameters(parameters.toArray());</span>
+<span class="fc" id="L102">            c.sendMessage(moveMessage);</span>
+<span class="nc" id="L103">        } catch (Exception ex) {</span>
+<span class="nc" id="L104">            Logger.getLogger(AGV.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="fc" id="L105">        }</span>
+<span class="fc" id="L106">    }</span>
     
     boolean getIsReady() {
-<span class="nc" id="L106">        return ready;</span>
+<span class="fc" id="L109">        return ready;</span>
     }
 
     void setIsReady(boolean newValue) {
-<span class="nc" id="L110">        ready = newValue;</span>
-<span class="nc" id="L111">    }</span>
+<span class="fc" id="L113">        ready = newValue;</span>
+<span class="fc" id="L114">    }</span>
     
     @Override
     public String toString() {
-<span class="fc" id="L115">        return &quot;AGV{&quot; + &quot;name=&quot; + name + &quot;, isHome=&quot; + isHome + &quot;, container=&quot; + container + &quot;, home=&quot; + home  + &quot;, homeBuffer=&quot; + homeBuffer.id + '}';</span>
+<span class="fc" id="L118">        return &quot;AGV{&quot; + &quot;name=&quot; + name + &quot;, isHome=&quot; + isHome + &quot;, container=&quot; + container + &quot;, home=&quot; + home  + &quot;, homeBuffer=&quot; + homeBuffer.id + '}';</span>
     }
+
+    public boolean isReady() {
+<span class="nc" id="L122">        return ready;</span>
+    }
+
+    public void setReady(boolean ready) {
+<span class="fc" id="L126">        this.ready = ready;</span>
+<span class="fc" id="L127">    }</span>
+
+    public boolean isIsHome() {
+<span class="fc" id="L130">        return isHome;</span>
+    }
+
+    public void setIsHome(boolean isHome) {
+<span class="fc" id="L134">        this.isHome = isHome;</span>
+<span class="fc" id="L135">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

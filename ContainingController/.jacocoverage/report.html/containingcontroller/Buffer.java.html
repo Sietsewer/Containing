@@ -69,7 +69,7 @@ public class Buffer {
 <span class="fc" id="L69">        this.id = &quot;BFR&quot; + String.format(&quot;%03d&quot;, Buffer.ID++);</span>
 <span class="fc" id="L70">        this.ownedAGV = new ArrayList&lt;&gt;();</span>
 <span class="fc" id="L71">        this.reservedSpace = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L72">        this.containers = new Container[6][6][26];</span>
+<span class="fc" id="L72">        this.containers = new Container[26][6][6];</span>
 <span class="fc" id="L73">    }</span>
 
     /**
@@ -100,16 +100,16 @@ public class Buffer {
      * @return Vector3f
      */
     public CustomVector3f findBestBufferPlace(Container container) {
-<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (int z = 0; z &lt; 26; z++) {</span>
-<span class="nc bnc" id="L104" title="All 2 branches missed.">            for (int x = 0; x &lt; 6; x++) {</span>
-<span class="nc bnc" id="L105" title="All 2 branches missed.">                for (int y = 0; y &lt; 6; y++) {</span>
-<span class="nc bnc" id="L106" title="All 2 branches missed.">                    if (containers[x][y][z] == null) {</span>
-<span class="nc bnc" id="L107" title="All 4 branches missed.">                        if (y &gt; 0 &amp;&amp; containers[x][y - 1][z] != null) {</span>
+<span class="pc bpc" id="L103" title="1 of 2 branches missed.">        for (int x = 0; x &lt; 26; x++) {</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">            for (int z = 0; z &lt; 6; z++) {</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">                for (int y = 0; y &lt; 6; y++) {</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">                    if (containers[x][y][z] == null) {</span>
+<span class="pc bpc" id="L107" title="3 of 4 branches missed.">                        if (y &gt; 0 &amp;&amp; containers[x][y - 1][z] != null) {</span>
 <span class="nc bnc" id="L108" title="All 2 branches missed.">                            if (containers[x][y - 1][z].getDateDeparture().after(container.getDateDeparture())) {</span>
 <span class="nc" id="L109">                                return new CustomVector3f(x, y, z);</span>
                             }
                         } else {
-<span class="nc" id="L112">                            return new CustomVector3f(x, y, z);</span>
+<span class="fc" id="L112">                            return new CustomVector3f(x, y, z);</span>
                         }
                     }
                 }
@@ -136,8 +136,8 @@ public class Buffer {
      * @param container
      */
     public void removeContainer(Container container) {
-<span class="nc bnc" id="L139" title="All 2 branches missed.">        for (int z = 0; z &lt; 26; z++) {</span>
-<span class="nc bnc" id="L140" title="All 2 branches missed.">            for (int x = 0; x &lt; 6; x++) {</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        for (int x = 0; x &lt; 26; x++) {</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            for (int z = 0; z &lt; 6; z++) {</span>
 <span class="nc bnc" id="L141" title="All 2 branches missed.">                for (int y = 0; y &lt; 6; y++) {</span>
 <span class="nc bnc" id="L142" title="All 2 branches missed.">                    if (containers[x][y][z].getId().equals(container.getId())) {</span>
 <span class="nc" id="L143">                        containers[x][y][z] = null;</span>
@@ -153,37 +153,40 @@ public class Buffer {
      * @param container
      */
     public void reservePosition(Container container) {
-<span class="nc bnc" id="L156" title="All 2 branches missed.">        if (containers[(int) container.getBufferPosition().x][(int) container.getBufferPosition().y][(int) container.getBufferPosition().z] == null) {</span>
-<span class="nc" id="L157">            reservedSpace.put(container.getBufferPosition(), container);</span>
+<span class="pc bpc" id="L156" title="1 of 2 branches missed.">        if (containers[(int) container.getBufferPosition().x][(int) container.getBufferPosition().y][(int) container.getBufferPosition().z] == null) {</span>
+<span class="fc" id="L157">            reservedSpace.put(container.getBufferPosition(), container);</span>
         }
-<span class="nc" id="L159">    }</span>
+<span class="fc" id="L159">    }</span>
 
     @Override
     public String toString() {
 <span class="fc" id="L163">        return &quot;Buffer{&quot; + &quot;id=&quot; + id + &quot;, containers=&quot; + containers + &quot;, crane=&quot; + crane.id + &quot;, reservedSpace=&quot; + reservedSpace + &quot;, pathNodeUp=&quot; + pathNodeUp.getId() + &quot;, pathNodeDown=&quot; + pathNodeDown.getId() + '}';</span>
     }
 
-    AGV AGVAvailable() {
-<span class="nc bnc" id="L167" title="All 2 branches missed.">        for (AGV a : ownedAGV) {</span>
-<span class="nc bnc" id="L168" title="All 2 branches missed.">            if (a.isHome) {</span>
-<span class="nc" id="L169">                return a;</span>
+    public AGV AGVAvailable(boolean up) {
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        for (AGV a : ownedAGV) {</span>
+<span class="fc bfc" id="L168" title="All 10 branches covered.">            if (a.isIsHome() == true &amp;&amp;</span>
+                    ((up &amp;&amp; a.home.getId().toLowerCase().contains(&quot;BFA&quot;.toLowerCase())) 
+                    || (!up &amp;&amp; a.home.getId().toLowerCase().contains(&quot;BFB&quot;.toLowerCase())))) {
+                
+<span class="fc" id="L172">                return a;</span>
             }
-<span class="nc" id="L171">        }</span>
-<span class="nc" id="L172">        return null;</span>
+<span class="fc" id="L174">        }</span>
+<span class="fc" id="L175">        return null;</span>
     }
 
     public int getContainerCount() {
-<span class="fc" id="L176">        int counter = 0;</span>
-<span class="fc bfc" id="L177" title="All 2 branches covered.">        for (int z = 0; z &lt; 26; z++) {</span>
-<span class="fc bfc" id="L178" title="All 2 branches covered.">            for (int x = 0; x &lt; 6; x++) {</span>
-<span class="fc bfc" id="L179" title="All 2 branches covered.">                for (int y = 0; y &lt; 6; y++) {</span>
-<span class="pc bpc" id="L180" title="1 of 2 branches missed.">                    if (containers[x][y][z] != null) {</span>
-<span class="nc" id="L181">                        counter++;</span>
+<span class="nc" id="L179">        int counter = 0;</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        for (int x = 0; x &lt; 26; x++) {</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">            for (int z = 0; z &lt; 6; z++) {</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">                for (int y = 0; y &lt; 6; y++) {</span>
+<span class="nc bnc" id="L183" title="All 2 branches missed.">                    if (containers[x][y][z] != null) {</span>
+<span class="nc" id="L184">                        counter++;</span>
                     }
                 }
             }
         }
-<span class="fc" id="L186">        return counter;</span>
+<span class="nc" id="L189">        return counter;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

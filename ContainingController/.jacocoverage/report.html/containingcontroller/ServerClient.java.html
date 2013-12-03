@@ -47,7 +47,7 @@ public class ServerClient {
      */
     public void sendMessage(String message) {
 <span class="fc" id="L49">        System.out.println(&quot;message to ip:&quot; + client.getRemoteSocketAddress());</span>
-<span class="fc" id="L50">        System.out.println(message);</span>
+        //System.out.println(message);
 <span class="fc" id="L51">        output.println(message);</span>
 <span class="fc" id="L52">    }</span>
 
@@ -66,22 +66,22 @@ public class ServerClient {
             try {
 <span class="fc bfc" id="L67" title="All 2 branches covered.">                if (input.ready()) {</span>
 <span class="fc" id="L68">                    String s = input.readLine();</span>
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">                    if (firstMessage) {</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">                    if (firstMessage) {</span>
 <span class="fc" id="L70">                        firstMessage = false;</span>
 <span class="fc" id="L71">                        Message m = Message.decodeMessage(s);</span>
-<span class="fc bfc" id="L72" title="All 2 branches covered.">                        if (((String) m.getParameters()[0]).equalsIgnoreCase(&quot;simulator&quot;)) {</span>
+<span class="pc bpc" id="L72" title="1 of 2 branches missed.">                        if (((String) m.getParameters()[0]).equalsIgnoreCase(&quot;simulator&quot;)) {</span>
 <span class="fc" id="L73">                            server.controller.PrintMessage(&quot;Connected simulator - &quot; + client.getRemoteSocketAddress());</span>
                         } else {
-<span class="fc" id="L75">                            server.controller.PrintMessage(&quot;Connected Android - &quot; + client.getRemoteSocketAddress());</span>
-<span class="fc" id="L76">                            sendMessage(server.controller.getAndroidData());</span>
-<span class="fc" id="L77">                            break;</span>
+<span class="nc" id="L75">                            server.controller.PrintMessage(&quot;Connected Android - &quot; + client.getRemoteSocketAddress());</span>
+<span class="nc" id="L76">                            sendMessage(server.controller.getAndroidData());</span>
+<span class="nc" id="L77">                            break;</span>
                         }
                         
 <span class="fc" id="L80">                    } else {</span>
-<span class="nc bnc" id="L81" title="All 2 branches missed.">                        if (!s.isEmpty()) {</span>
-<span class="nc" id="L82">                            server.MessageRecieved(s);</span>
-<span class="nc" id="L83">                            System.out.println(&quot;message from ip:&quot; + client.getRemoteSocketAddress());</span>
-<span class="nc" id="L84">                            System.out.println(s);</span>
+<span class="pc bpc" id="L81" title="1 of 2 branches missed.">                        if (!s.isEmpty()) {</span>
+<span class="fc" id="L82">                            server.MessageRecieved(s);</span>
+<span class="fc" id="L83">                            System.out.println(&quot;message from ip:&quot; + client.getRemoteSocketAddress());</span>
+                           // System.out.println(s);
                         }
                     }
                 }
@@ -91,6 +91,6 @@ public class ServerClient {
 <span class="fc" id="L91">            }</span>
 
         }
-<span class="fc" id="L94">    }</span>
+<span class="nc" id="L94">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span></div></body></html>

@@ -49,7 +49,7 @@ public class Buffer extends Node{
      * Empty constructor, initalizes empty buffer
      */
     public Buffer(){
-        this.bufferSize = new Vector3f(6, 26, 6);
+        this.bufferSize = new Vector3f(26, 6, 6);
         bufferArray = new Container[(int)bufferSize.x][(int)bufferSize.y][(int)bufferSize.z];
         bufferNode = new Node();
         this.attachChild(bufferNode);

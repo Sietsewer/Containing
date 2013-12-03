@@ -14,6 +14,8 @@ public class Commands {
      * Device is ready
      */
     final static public int READY = 0;
+    
+    final static public int SHUTDOWN = 9;
     /**
      * Container must be moved by AVG
      */

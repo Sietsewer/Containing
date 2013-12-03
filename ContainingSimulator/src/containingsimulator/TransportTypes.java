@@ -42,7 +42,7 @@ public class TransportTypes {
         } else if (type.toLowerCase().contains("binnenschip")) {
             return BARGE;
         }
-        return 0;
+        return 9;
 
     }
 

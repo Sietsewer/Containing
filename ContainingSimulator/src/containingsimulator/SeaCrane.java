@@ -27,19 +27,65 @@ public class SeaCrane extends Crane {
         super(id, basePos, base,slider, hook);
         hNode.setLocalTranslation(new Vector3f(0,25,0));
         
-        this.defPosBase = this.getWorldTranslation().clone();
+        this.defPosBase =  this.position.add(0.1f,0,0);
         this.defPosHook = hNode.getWorldTranslation().clone();
         this.defPosSlider = sNode.getWorldTranslation().clone();
-      
-        
     }
 
    @Override
     protected void updateGet()
     {
+         switch (action) {
+             default:
+                 commonActions();
+                break;
+            case 5:
+                if(readyToLoad())
+                {
+                    if(doAction(2,false))
+                    {
+                       resetPos(3);
+                    }
+                }
+                break;
+            case 6:
+                doAction(3,false);
+                break;
+           case 7:
+                if(doAction(3,true))
+                {
+                   contOffHook();
+                }
+                break; 
+            case 8:
+                if(doAction(2,true)){
+                    resetPos(3);
+                }
+                break;
+            case 9:
+             this.resetAll();
+                break;
+         }
+    }
+    private void commonActions()
+    {
         switch(action)
         {
-            
+            case 1:
+                doAction(1,false);
+                break;
+            case 2:
+                 doAction(2,false);
+                break;
+            case 3:
+                 doAction(3,false);
+                break;
+            case 4:
+                if(doAction(3,true))
+                {
+                    this.contToHook();
+                }
+                break;
         }
     }
 
@@ -47,57 +93,39 @@ public class SeaCrane extends Crane {
     protected void updatePickup() 
     {
         switch (action) {
-            case 1:
-                if (!baseControl.isEnabled()) {
-                    moveBase(false);
-                }
-                break;
-            case 2:
-                if (!sliderControl.isEnabled()) {
-                    moveSlider(false);
-                }
-                break;
-            case 3:
-                if (!hookControl.isEnabled()) {
-                    moveHook(false);
-                }
-                break;
-            case 4:
-                if (!hookControl.isEnabled()) {
-                    
-                    this.contToHook();
-                    moveHook(true);
-                }
+            default:
+               commonActions();
                 break;
             case 5:
-                if (!sliderControl.isEnabled()) {
-                     this.hNode.setLocalTranslation(hNode.getLocalTranslation().x,this.defPosHook.y,hNode.getLocalTranslation().z);
-                    moveSlider(true);
+                if (!doAction(2,true))
+                {
+                    resetPos(3);
                 }
                 break;
             case 6:
                 if(readyToLoad())
                 {
-                    if (!hookControl.isEnabled())
-                    {                     this.sNode.setLocalTranslation(sNode.getLocalTranslation().x,this.defPosSlider.y,sNode.getLocalTranslation().z);
-                        moveHook(false);
+                    if (doAction(3,false))
+                    {
+                    resetPos(2);
                     }
                 }
                 break;
             case 7:
-                contOffHook();
-                if (!hookControl.isEnabled())
-                    {
-                        moveHook(true);
-                    }
+                if(doAction(3,true))
+                {
+                    contOffHook();
+                   
+                }
                 break;
             case 8:
+                 resetPos(2);
+                 resetPos(3);
                 this.resetAll();
                 break;
         }
     }
 
-    
     @Override
     protected void moveBase(boolean reversed) 
     {

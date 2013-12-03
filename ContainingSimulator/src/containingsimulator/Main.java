@@ -6,8 +6,10 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
+import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
@@ -21,8 +23,8 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
+import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
-import containing.xml.CustomVector3f;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -73,6 +75,7 @@ public class Main extends SimpleApplication {
     ArrayList<Transporter> transporters;
     ArrayList<AGV> agvs;
     Buffer[] buffers;
+    private static Main app = null;
     public static float globalSpeed = 1f;
     private Collection<Message> messagesTodo;
 
@@ -82,10 +85,24 @@ public class Main extends SimpleApplication {
      */
     public static void main(String[] args) {
         Logger.getLogger("com.jme3").setLevel(Level.SEVERE);
-        Main app = new Main();
-
+        app = new Main();
+        
+        app.setShowSettings(false);
+        app.setDisplayFps(true);
+        app.setDisplayStatView(true);
+        
+        AppSettings settings = new AppSettings(true);
+        settings.put("Width", 1280);
+        settings.put("Height", 720);
+        settings.put("Title", "Project Containing - by Sjaal");
+        settings.put("VSync", true);
+         //Anti-Aliasing
+        settings.put("Samples", 0);
+        app.setSettings(settings);  
+        
         app.start();
     }
+    
 
     /**
      *
@@ -267,6 +284,10 @@ public class Main extends SimpleApplication {
         String transporterID;
         AGV agv;
         switch (decodedMessage.getCommand()) {
+            
+            case Commands.SHUTDOWN:
+                System.exit(1);
+                break;
             case Commands.MOVE:
                 agv = getAGVbyID((String) params[0]);
                 Crane c = null;
@@ -283,11 +304,7 @@ public class Main extends SimpleApplication {
                 Transporter trans = getTransporterByID((String) params[1]);
                 cont = getContainerByID((String) params[2]);
                 if (crane != null && trans != null && cont != null) {
-                    if (crane instanceof BufferCrane) {
-                        //do something w/ buffer
-                    } else {
                         crane.pickupContainer(cont, trans);
-                    }
                     //do stuff, needs containers
                 } else {
                     System.err.println("Error: No crane/container/transporter with this ID");
@@ -296,12 +313,18 @@ public class Main extends SimpleApplication {
             case Commands.GIVE_CONTAINER:
                 crane = getCraneByID((String) params[0]);
                 agv = getAGVbyID((String) params[1]);
+                if(agv!=null)
+                {
                 crane.loadContainer(agv);
+                }
+                else
+                {
+                 System.err.println("Error: agv is null");
+                }
 
-                //TODO: put container on AGV
+                //TODO: put container on Transporter/Buffer
                 break;
             case Commands.PUT_CONTAINER:
-                
                 crane = getCraneByID((String) params[0]);
                 Vector3f indexPosition = new Vector3f((Float) params[1], (Float) params[2], (Float) params[3]);
                 Vector3f realPosition = null;
@@ -345,13 +368,40 @@ public class Main extends SimpleApplication {
                 break;
             case Commands.REMOVE_TRANSPORTER:
                 transporterID = (String) params[0];
-                //uitgezet want geeft modification concurrent crash. -Len
+                
                 Transporter temp = null;
                 for (Transporter transp : transporters) {
                     if (transp.id.equalsIgnoreCase(transporterID)) {
                         temp = transp;
                         break;
                     }
+                }
+                switch(temp.type)
+                {
+                    case TransportTypes.BARGE:
+                        for(Crane cr : barCranes)
+                        {
+                            cr.moveToHome();
+                        }
+                        break;
+                    case TransportTypes.LORRY:
+                        for(Crane cr : lorCranes)
+                        {
+                            cr.moveToHome();
+                        }
+                        break;
+                    case TransportTypes.SEASHIP:
+                        for(Crane cr : seaCranes)
+                        {
+                            cr.moveToHome();
+                        }
+                        break;
+                    case TransportTypes.TRAIN:
+                        for(Crane cr : trainCranes)
+                        {
+                            cr.moveToHome();
+                        }
+                        break;
                 }
 
                 rootNode.detachChild(temp);
@@ -553,11 +603,19 @@ public class Main extends SimpleApplication {
                 new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addMapping("right-click",
                 new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
+          inputManager.addMapping("esc-button",
+                new KeyTrigger(KeyInput.KEY_ESCAPE));
+          
         inputManager.addListener(actionListener, "left-click");
         inputManager.addListener(actionListener, "right-click");
+        inputManager.addListener(actionListener, "esc-button");
     }
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
+            if(name.equals("esc-button"))
+            {
+                System.exit(1);
+            }
             if (name.equals("right-click")) {
                 changeGlobalSpeed(globalSpeed*1.5f); //fasten up
             }
@@ -570,7 +628,6 @@ public class Main extends SimpleApplication {
                     // The closest collision point is what was truly hit:
                     CollisionResult closest = results.getClosestCollision();
                     Vector3f hitPoint = closest.getContactPoint(); //where uve shot 
-
                 }
 
             }

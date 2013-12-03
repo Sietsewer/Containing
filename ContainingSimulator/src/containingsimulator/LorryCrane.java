@@ -19,6 +19,9 @@ import com.jme3.scene.Spatial;
  */
 public class LorryCrane extends Crane implements MotionPathListener {
 
+    
+    
+
     public ParkingSpot parkingSpot;
     
     public LorryCrane(String id, Vector3f pos, Spatial base, Spatial slider, Spatial hook) 
@@ -30,7 +33,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
       
         this.parkingSpot = new ParkingSpot(new Vector3f(pos.x,pos.y,pos.z-25f),0f);
         
-         this.defPosBase = this.base.getWorldTranslation().clone();
+        this.defPosBase = this.position.add(0,0,0.1f);
         this.defPosHook = this.hNode.getLocalTranslation().clone();
         this.defPosSlider = this.sNode.getWorldTranslation().clone();
     }
@@ -38,78 +41,95 @@ public class LorryCrane extends Crane implements MotionPathListener {
     @Override
     protected void updateGet()
     {
-        
+        switch(action)
+        {
+            case 1:
+                target = parkingSpot.translation;
+               doAction(1,false);;
+                break;
+            case 2:
+                if(readyToLoad())
+                 {
+                     if (doAction(3,false))
+                    {
+                       resetPos(2);
+                    }
+                 }
+                break;
+            case 3:
+                doAction(1,false);
+                break;
+            case 4:
+                doAction(3,false);
+                break;
+            case 5:
+                if(doAction(3,true))
+                {
+                    contOffHook();
+                    //cont.setLocalTranslation(cont.getLocalTranslation().subtract(0,1.5f,0));
+                }
+                break;
+            case 6:
+                doAction(1,true);
+                break;
+            case 7:
+                resetPos(2);
+                resetPos(3);
+                this.resetAll();
+                break;
+        }
         
     }
-     
+
     @Override
     protected void updatePickup()
     {
         switch(action)
         {
             case 1: 
-                if(!baseControl.isEnabled())
-                {
-                   moveBase(false);
-                }
+                doAction(1,false);
                 break;
             case 2:
-                if(!sliderControl.isEnabled())
-                {
-                   moveSlider(false);
-                }
+                doAction(3,false);
                 break;
             case 3:
-                if(!hookControl.isEnabled())
+                if(doAction(3,true))
                 {
-                   moveHook(false);
+                    contToHook();
+                    cont.setLocalTranslation(cont.getLocalTranslation().subtract(0,1.5f,0));
                 }
                 break;
             case 4:
-                if (!hookControl.isEnabled()) {
-                    contToHook();
-                    cont.setLocalTranslation(cont.getLocalTranslation().subtract(0,1.5f,0));
-                    moveHook(true);
+                target = parkingSpot.translation;
+                if(doAction(1,false))
+                { 
+                   resetPos(3);
                 }
                 break;
             case 5:
-                if(!baseControl.isEnabled())
-                { 
-                    this.hNode.setLocalTranslation(hNode.getLocalTranslation().x,this.defPosHook.y,hNode.getLocalTranslation().z);
-                    target = parkingSpot.translation;
-                  moveBase(false);
-                }
-                break;
-            case 6:
                  if(readyToLoad())
                  {
-                     if (!hookControl.isEnabled())
-                    {this.sNode.setLocalTranslation(sNode.getLocalTranslation().x,this.defPosSlider.y,sNode.getLocalTranslation().z);
-                        moveHook(false);
-                    }
+                     target = agv.getWorldTranslation().add(0,cont.size.y*2,0);     
+                     doAction(3,false);
                  }
                 break;
-            case 7:
-                contOffHook();
-                 if (!hookControl.isEnabled())
+            case 6:
+                 if (!doAction(3,true))
                     {  
-                        moveHook(true);
+                        contOffHook();
                     }
                 break;
-            case 8:
-                if(!baseControl.isEnabled())
-                {
-                  target = this.position;
-                  moveBase(false);
-                }
+            case 7:
+                target = this.position;
+                doAction(1,false);
                 break;
-            case 9:
+            case 8:
+                resetPos(2);
+                resetPos(3);
                 this.resetAll();
                 break;
         }
     }
-
-
 
     @Override
     protected void moveHook(boolean reversed)
@@ -127,7 +147,6 @@ public class LorryCrane extends Crane implements MotionPathListener {
         
         hookPath.addWayPoint(startPoint);
         hookPath.addWayPoint(new Vector3f(startPoint.x,target.y-sNode.getWorldTranslation().y,startPoint.z));
-        // hookPath.addWayPoint(new Vector3f(target.x - sNode.getWorldTranslation().x, target.y - sNode.getWorldTranslation().y, sNode.getLocalTranslation().z));
         }
         hookControl.play();
     }

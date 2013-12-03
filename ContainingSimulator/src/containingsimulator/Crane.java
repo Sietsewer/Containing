@@ -120,8 +120,6 @@ public abstract class Crane extends Node implements MotionPathListener {
          this.cont = null;
          this.transporter = null;
          this.transportNode= null;
-         this.sNode.setLocalTranslation(this.defPosSlider);
-         this.hNode.setLocalTranslation(this.defPosHook);
          sendMessage(this.id + " transfer finished");
     }
     
@@ -228,7 +226,7 @@ public abstract class Crane extends Node implements MotionPathListener {
         }
     }
         
-     public void loadContainer(Transporter trans) 
+    /* public void loadContainer(Transporter trans) 
      {
          if(!loadContainer)
          {
@@ -239,7 +237,7 @@ public abstract class Crane extends Node implements MotionPathListener {
          {
               debugMessage(4,"loadContainer");
          }
-     }
+     }*/
      public void loadContainer(AGV agv)
      {
         if(!loadContainer)
@@ -314,6 +312,7 @@ public abstract class Crane extends Node implements MotionPathListener {
     {
         hNode.attachChild(cont);
         cont.setLocalTranslation(hook.getLocalTranslation().add(new Vector3f(0,cont.size.y,0)));
+        
         if(pickupContainer && transporter != null){
             transporter.getContainer(cont.indexPosition);
             transporter = null;
@@ -322,9 +321,28 @@ public abstract class Crane extends Node implements MotionPathListener {
         {
             agv.getContainer();//this.cont=
             agv = null;
+        } 
+        else if(this instanceof BufferCrane)
+        {
+            ((BufferCrane)this).buffer.removeContainer(cont.indexPosition);
         }
         cont.rotate(0, base.getWorldRotation().toAngles(null)[1], 0);
     }
+    
+       protected void resetPos(int option)
+       {
+        switch(option)
+        {
+            case 1:
+                break;
+            case 2:
+                  this.sNode.setLocalTranslation(defPosSlider);
+                break;
+            case 3:
+                 this.hNode.setLocalTranslation(defPosHook);
+                break;
+        }
+       }
      
      protected boolean readyToLoad()
      {
@@ -336,7 +354,12 @@ public abstract class Crane extends Node implements MotionPathListener {
             return (readyForL && loadContainer);
      }
      
-
+     public void moveToHome()
+     {
+         
+        doAction(1,true);
+     }
+     
      protected abstract void moveHook(boolean reversed);
      protected abstract void moveBase(boolean reversed);
      protected abstract void moveSlider(boolean reversed);

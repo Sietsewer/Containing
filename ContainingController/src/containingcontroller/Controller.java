@@ -283,6 +283,12 @@ public class Controller {
             this.simTimer.cancel();
         }
     }
+    public void shutDown()
+    {//shutdowns client
+       Message m = new Message(Commands.SHUTDOWN, null);
+       m.setParameters(new Object[]{});
+       this.sendMessage(m);
+    }
 
     /**
      * start server for communication

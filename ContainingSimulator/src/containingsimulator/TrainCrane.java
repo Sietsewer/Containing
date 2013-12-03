@@ -25,7 +25,8 @@ public class TrainCrane extends Crane implements MotionPathListener{
         this.base.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         hNode.setLocalTranslation(new Vector3f(0,12,0));
-        this.defPosBase = this.base.getWorldTranslation().clone();
+        
+        this.defPosBase = this.position.add(0.1f,0,0);//new Vector3f(this.getWorldTranslation().clone().z,this.getLocalTranslation().clone().y,this.getWorldTranslation().clone().x);
         this.defPosHook = this.hNode.getWorldTranslation().clone();
         this.defPosSlider = this.sNode.getWorldTranslation().clone();
     }
@@ -44,53 +45,44 @@ public class TrainCrane extends Crane implements MotionPathListener{
         switch(action)
         {
             case 1: 
-                if(!baseControl.isEnabled())
-                {
-                   moveBase(false);
-                }
+                doAction(1,false);
                 break;
             case 2: 
-                if(!sliderControl.isEnabled())
-                {
-                   moveSlider(false);
-                }
+                doAction(2,false);
                 break;
             case 3:
-                if(!hookControl.isEnabled())
-                {
-                   moveHook(false);
-                }
+                doAction(3,false);
                 break;
             case 4:
-                 if (!hookControl.isEnabled()) {
+                 if(doAction(3,true)){
                     contToHook();
-                    moveHook(true);
                  }
                 break;
             case 5:
-                 if(!sliderControl.isEnabled())
-                {
-                     this.hNode.setLocalTranslation(hNode.getLocalTranslation().x,this.defPosHook.y,hNode.getLocalTranslation().z);
-                    moveSlider(true);
-                }
+                 if(doAction(2,true))
+                 {
+                    resetPos(3);
+                 }
                 break;
             case 6:
                   if(readyToLoad())
                   {
-                      if (!hookControl.isEnabled())
-                    {  this.sNode.setLocalTranslation(sNode.getLocalTranslation().x,this.defPosSlider.y,sNode.getLocalTranslation().z);
-                        moveHook(false);
-                    }
+                       target = agv.getWorldTranslation().add(0,cont.size.y*2,0); 
+                      if (doAction(3,false))
+                      { 
+                        resetPos(2);
+                      }
                   }
                  break;
             case 7:
-                 contOffHook();
-                   if (!hookControl.isEnabled())
-                    {
-                        moveHook(true);
-                    }
+                  if(doAction(3,true))
+                  {
+                      contOffHook();
+                  }
                 break;
             case 8:
+                resetPos(2);
+                resetPos(3);
              this.resetAll();
                 break;
         }

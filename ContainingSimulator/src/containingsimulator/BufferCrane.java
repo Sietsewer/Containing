@@ -50,8 +50,7 @@ public class BufferCrane extends Crane {
                 break;
          }
      }
-    
-        
+
      @Override
     protected void updateGet()
     {
@@ -65,7 +64,7 @@ public class BufferCrane extends Crane {
                   {
                     if (doAction(1,false))
                     {  
-                        this.sNode.setLocalTranslation(sNode.getLocalTranslation().x,this.defPosSlider.y,sNode.getLocalTranslation().z);
+                        resetPos(2);
                     }
                   }
                 break;
@@ -86,6 +85,9 @@ public class BufferCrane extends Crane {
                 doAction(1,true);
                 break;
             case 10:
+                resetPos(1);
+                resetPos(2);
+                resetPos(3);
              this.resetAll();
                 break;
          }
@@ -106,7 +108,7 @@ public class BufferCrane extends Crane {
             case 6:
                 doAction(1,true);
                 break;
-            case 7:
+            case 7: //nog niet af vanaf hier
                   if(readyToLoad())
                   {
                     doAction(3,false);
@@ -116,6 +118,9 @@ public class BufferCrane extends Crane {
                  contOffHook();
                 break;
             case 9:
+                resetPos(1);
+                resetPos(2);
+                resetPos(3);
              this.resetAll();
                 break;
         }

@@ -55,6 +55,11 @@ public class ControllerWindow extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         logTxtArea.setEditable(false);
         logTxtArea.setColumns(20);
@@ -132,6 +137,13 @@ public class ControllerWindow extends javax.swing.JFrame {
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         controller.pause();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    //calls controller, which sends client message to close
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+
+        controller.shutDown();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * write line to log window

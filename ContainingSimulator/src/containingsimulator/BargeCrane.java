@@ -28,79 +28,107 @@ public class BargeCrane extends Crane {
         
         defPosHook = this.hNode.getWorldTranslation().clone();
         defPosSlider = this.sNode.getWorldTranslation().clone();
-        defPosBase = this.base.getLocalTranslation().clone();
+        
+        defPosBase = this.position.add(0,0,0.1f).clone();
     }
+    
     
     @Override
     protected void updateGet()
     {
-        
+          switch (action) {
+             default:
+                commonActions();
+                break;
+            case 5:
+                if(readyToLoad())
+                {
+                    if(doAction(2,false))
+                    {
+                       resetPos(3);
+                    }
+                }
+                break;
+            case 6:
+                doAction(3,false);
+                break;
+           case 7:
+                if(doAction(3,true))
+                {
+                   contOffHook();
+                }
+                break; 
+            case 8:
+                if(doAction(2,true)){
+                    resetPos(3);
+                }
+                break;
+            case 9:
+             this.resetAll();
+                break;
     }
+    }
+    
+    private void commonActions()
+    {
+        switch(action)
+        {
+            case 1:
+                doAction(1,false);
+                break;
+            case 2:
+                 doAction(2,false);
+                break;
+            case 3:
+                 doAction(3,false);
+                break;
+            case 4:
+                if(doAction(3,true))
+                {
+                    this.contToHook();
+                }
+                break;
+        }
+    }
+    
 
     @Override
     protected void updatePickup()
     {
         switch(action)
         {
-            case 1: 
-                if(!baseControl.isEnabled())
-                {
-                   moveBase(false);
-                }
-                break;
-            case 2: 
-                if(!sliderControl.isEnabled())
-                {
-                   moveSlider(false);
-                }
-                break;
-            case 3:
-               if(!hookControl.isEnabled())
-                {
-                   moveHook(false);
-                }
-                break;
-            case 4:
-                if (!hookControl.isEnabled()) {
-                    contToHook();
-                    moveHook(true);
-                }
+            default:
+                commonActions();
                 break;
             case 5:
-                 if(!sliderControl.isEnabled())
-                {   
-                   this.hNode.setLocalTranslation(hNode.getLocalTranslation().x,this.defPosHook.y,hNode.getLocalTranslation().z);
-                    moveSlider(true);
+                 if(doAction(2,true))
+                 {
+                  resetPos(3);
                 }
                 break;
             case 6:
                 if(readyToLoad())
                 {
-                    if (!hookControl.isEnabled())
+                    if(doAction(3,false))
                     {
-                     this.sNode.setLocalTranslation(sNode.getLocalTranslation().x,this.defPosSlider.y,sNode.getLocalTranslation().z);
-                        moveHook(false);
+                    resetPos(2);
                     }
                 }
                 break;
             case 7:
-                contOffHook();
-                 if (!hookControl.isEnabled())
-                    {
-                        moveHook(true);
+                 if (doAction(3,true))
+                    { 
+                        contOffHook();
                     }
                 break;
             case 8:
+                resetPos(2);
+                resetPos(3);
                    resetAll();
                 break;
-            case 9:
-              
-                break;
         }
-        
-        
     }
-    
+
     @Override
     protected void moveBase(boolean reversed)
     {

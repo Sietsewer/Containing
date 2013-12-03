@@ -9,11 +9,14 @@ package containingsimulator;
  * @author Hendrik
  */
 public class Commands {
+    
+
+    static public final int SHUTDOWN = 9;
     /**
      *Device is ready
      */
     static public final int READY = 0;
-
+     
     /**
      *Move AGV
      */

@@ -18,6 +18,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import containing.xml.CustomVector3f;
 import java.util.ArrayList;
 
 /**
@@ -246,12 +247,15 @@ public class Transporter extends Node implements MotionPathListener {
     }
     
     public Vector3f getRealContainerPosition(Vector3f indexpos){
-        Vector3f csize = new Vector3f(1.22f, 1.22f, 6.705f);
-        Vector3f pos = new Vector3f(indexpos.x * 2 * csize.x, indexpos.y * 2 *
-                csize.y, indexpos.z * 2 * csize.z);
-        pos.y += 1.5f;
-        pos.x += 1.22f;
-        return pos.add(this.getWorldTranslation());
+        if (this.containers[(int) position.x][(int) position.y][(int) position.z] != null) {
+            return this.containers[(int) position.x][(int) position.y][(int) position.z].getWorldTranslation();
+        } else {
+            Container tempCont = new Container(new SimContainer("Temp", new CustomVector3f(indexpos.x, indexpos.y, indexpos.z)));
+            setContainer(tempCont); //temporarily add container to transport
+            Vector3f pos = tempCont.getWorldTranslation(); //get world translation
+            tempCont = null; //remove tempCont
+            return pos;
+        }
     }
 
     /**

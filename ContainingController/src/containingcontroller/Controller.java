@@ -533,6 +533,7 @@ public class Controller {
             Message message = new Message(Commands.PUT_CONTAINER, new Object[]{b.crane.id, b.crane.container.getBufferPosition().x,
                 b.crane.container.getBufferPosition().y,
                 b.crane.container.getBufferPosition().z});
+            b.crane.container = null;
             b.crane.ready = false;
             this.sendMessage(message);
             this.PrintMessage("Put down - " + b.crane.id);

@@ -301,6 +301,7 @@ public class Controller {
     }
 
     public void getContainerBuffer(AGV agv, Crane bufferCrane) {
+        bufferCrane.ready = false;
         Message message = new Message(Commands.GET_CONTAINER, new Object[]{bufferCrane.id, agv.container.getId()});
         agv.homeBuffer.addContainer(agv.container);
         agv.container = null;

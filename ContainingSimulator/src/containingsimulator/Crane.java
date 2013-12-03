@@ -118,7 +118,7 @@ public abstract class Crane extends Node implements MotionPathListener {
 
     protected void resetAll()
     {
-        System.out.println("crane is back to idle");
+        System.out.println(this.id + " is back to idle");
          this.action = 0;
          this.busy = false;
          this.readyForL = false;
@@ -129,7 +129,7 @@ public abstract class Crane extends Node implements MotionPathListener {
          this.transportNode= null;
          this.sNode.setLocalTranslation(this.defPosSlider);
          this.hNode.setLocalTranslation(this.defPosHook);
-         sendMessage("transfer finished");
+         sendMessage(this.id + " transfer finished");
     }
     
     protected void sendMessage(String message)
@@ -167,6 +167,7 @@ public abstract class Crane extends Node implements MotionPathListener {
     {
         pickupContainer = false;
         this.cont = agv.getContainerObject();
+        
         this.target = this.cont.getWorldTranslation();
         action = 1;
         busy = true;
@@ -195,8 +196,15 @@ public abstract class Crane extends Node implements MotionPathListener {
      public void putContainer(Vector3f nextPosition,Vector3f indexPosition)
      {
          this.target = nextPosition;
+         if(cont !=null)
+         {
          this.cont.setIndexPosition(indexPosition);
          loadContainer = true;
+         }
+         else if(busy)
+         {
+             System.out.println("cont is null " + nextPosition + " " + indexPosition);
+         }
          
      }
      
@@ -212,6 +220,8 @@ public abstract class Crane extends Node implements MotionPathListener {
              transporter.setContainer(cont);
              transporter = null;
          }
+         
+         
      }
     
      

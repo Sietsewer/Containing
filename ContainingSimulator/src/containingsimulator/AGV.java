@@ -41,6 +41,7 @@ public class AGV extends Node implements MotionPathListener{
         this.viewModel = viewModel.clone();
         path.setCycle(false);
         path.setPathSplineType(Spline.SplineType.Linear);
+        path.setCurveTension(1f);
         this.path.addListener(this);
         motionEvent = new MotionEvent(this,this.path);
         this.attachChild(viewModel);
@@ -50,13 +51,14 @@ public class AGV extends Node implements MotionPathListener{
      * Adds waypoints to the current list of waypoints.
      * @param waypoints The waypoints to be added.
      */
-    public void addWaypoints(String[] waypoints,Crane targetCrane){
+ public void addWaypoints(String[] waypoints,Crane targetCrane){
         this.path.clearWayPoints();
         
         for (int i = 0; i < waypoints.length; i++) {
             path.addWayPoint(Path.getVector(waypoints[i]));
         }
         this.targetCrane = targetCrane;
+        motionEvent.setInitialDuration(path.getLength()/11.11f);
         this.motionEvent.play();
         
         if(this.pSpot != null){
@@ -66,9 +68,18 @@ public class AGV extends Node implements MotionPathListener{
     /**
      * Removes the current waypoint, the one reached, and makes the AGV snap towards the next waypoint on the list.
      */
-    private void nextWaypoint(int wayPointIndex){
-        this.lookAt(path.getWayPoint(wayPointIndex),Vector3f.UNIT_Y);
-        this.motionEvent.setSpeed((this.container == null?0.6f*Main.globalSpeed:.5f*Main.globalSpeed));//Sets full speed (20km/h) if empty, half if full(in m/s)
+private void nextWaypoint(int wayPointIndex){
+        this.lookAt(path.getWayPoint(wayPointIndex+1),Vector3f.UNIT_Y);
+        this.motionEvent.setSpeed((this.container == null?2f:1f));
+        
+        /**
+         * NOTE:
+         * Beware when setting speed. Speed is calculated by dividing the speed var with base speed.
+         * actualSpeed = motionPath.initialSpeed/motionPath.speed
+         * 
+         * 11.11 m/s = 40 kph
+         * 5.55  m/s = 20 kph
+         */
         
     }
     /**
@@ -76,6 +87,9 @@ public class AGV extends Node implements MotionPathListener{
      * @param container The container to be placed on the AGV.
      * @return True if the container was received, False if there already is a container.
      */
+    public void globalSpeedChanged(){
+        motionEvent.setInitialDuration(path.getLength()/11.11f/Main.globalSpeed);
+    }
     public boolean setContainer(Container container){
         if(this.container == null){
             this.container = container;

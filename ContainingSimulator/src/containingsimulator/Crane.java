@@ -109,16 +109,9 @@ public abstract class Crane extends Node implements MotionPathListener {
         return this.busy;
     }
 
-
-    /**
-     *
-     * @param cont
-     */
-
-
     protected void resetAll()
     {
-        System.out.println(this.id + " is back to idle");
+        
          this.action = 0;
          this.busy = false;
          this.readyForL = false;
@@ -137,78 +130,73 @@ public abstract class Crane extends Node implements MotionPathListener {
         System.out.println(message);
           Main.sendReady(this.id);
     }
-
-    //only for point click testing
-    public void pickupContainer(Container cont, Node trans) {
-        
-        this.transporter = null;
-        this.transportNode = trans;
-        this.cont = cont;
-        this.target = cont.getWorldTranslation();
-        action = 1;
-        busy = true;
-        pickupContainer = true;
-    }
     
     //from transport/buffer to agv
     public void pickupContainer(Container cont, Transporter trans)
-    {if(!busy){
+    {
+        if(!busy)
+        {
+        pickupContainer = true;
         this.transporter = trans;
-      //  this.transportNode = trans;
         this.cont = cont;
         this.target = cont.getWorldTranslation();
         action = 1;
         busy = true;
-        pickupContainer = true;}
+        }
     }
+    
+     public void loadContainer(Transporter trans) 
+     {
+        this.target = trans.getWorldTranslation();
+        loadContainer = true;
+     }
+     
     
     //From agv to transport/buffer
     public void getContainer(AGV agv)
     {
-        if(!busy){
+        if(!busy)
+        {
         pickupContainer = false;
-        
         this.agv = agv;
         this.cont = this.agv.getContainerObject();
+        if(cont!=null)
+        {
         this.target = this.agv.getWorldTranslation();
         action = 1;
         busy = true;
-        pickupContainer = false;}
+        }
+        else
+        {
+            System.out.println("Container is null");
+        }
+        }
     }
-
     
-     public void loadContainer(Node node) 
-     {
-        this.target = this.position;
-        loadContainer = true;
-     }
-     
-     public void loadContainer(Transporter trans) 
-     {
-        //agv.getContainer(cont.indexPosition);
-        this.target = trans.getWorldTranslation();
-        loadContainer = true;
-     }
-     public void loadContainer(AGV agv)
-     {
+    public void loadContainer(AGV agv)
+    {
+        if(!loadContainer)
+        {
          this.agv = agv;
          this.target = agv.getWorldTranslation();
          loadContainer = true;
-     }
+        }
+    }
+    
      public void putContainer(Vector3f nextPosition,Vector3f indexPosition)
      {
-         this.target = nextPosition;
+         
          if(cont !=null)
          {
-             System.out.println(nextPosition + " " + indexPosition);
+         this.target = nextPosition;
+         System.out.println(nextPosition + " " + indexPosition);
          this.cont.setIndexPosition(indexPosition);
          loadContainer = true;
          }
          else
          {
-             System.out.println("cont is null ");
+             System.out.println(this.id + " gets cont is null ");
          }
-         
      }
      
      protected void contOffHook()
@@ -223,10 +211,7 @@ public abstract class Crane extends Node implements MotionPathListener {
              transporter.setContainer(cont);
              transporter = null;
          }
-         
-         
      }
-    
      
     protected void contToHook() 
     {

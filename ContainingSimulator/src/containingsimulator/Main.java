@@ -301,6 +301,7 @@ public class Main extends SimpleApplication {
                 //TODO: put container on AGV
                 break;
             case Commands.PUT_CONTAINER:
+                
                 crane = getCraneByID((String) params[0]);
                 Vector3f indexPosition = new Vector3f((Float) params[1], (Float) params[2], (Float) params[3]);
                 Vector3f realPosition = null;
@@ -312,8 +313,8 @@ public class Main extends SimpleApplication {
                 else
                 if (crane != null) {
                     {
-                     //  realPosition = crane.transporter.getRealContainerPosition(indexPosition);
-                        //crane.putContainer(realPosition);
+                      realPosition = crane.transporter.getRealContainerPosition(indexPosition);
+                      crane.putContainer(realPosition,indexPosition);
                     }
                 } 
                 else {
@@ -570,15 +571,6 @@ public class Main extends SimpleApplication {
                     CollisionResult closest = results.getClosestCollision();
                     Vector3f hitPoint = closest.getContactPoint(); //where uve shot 
 
-                    Crane[] cranes = seaCranes; //change crane array for testing
-                    if (!cranes[0].busy) {
-                        Container c = new Container(new SimContainer("1", new CustomVector3f(0, 0, 0)));
-                        rootNode.attachChild(c);
-                        c.setLocalTranslation(hitPoint.add(new Vector3f(0, c.size.y, 0)));
-                        cranes[0].pickupContainer(c, rootNode);
-                    } else if (cranes[0].readyForL) {
-                        cranes[0].loadContainer(rootNode); //transfer container
-                    }
                 }
 
             }

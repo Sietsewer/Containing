@@ -154,6 +154,7 @@ public class Controller {
         PrintMessage("Total Seacranes - " + seaCranes.size());
         PrintMessage("Total Bargecranes - " + bargeCranes.size());
         PrintMessage("Total trainCrane - " + trainCranes.size());
+        waitingForBufferCrane = new HashMap<>();
         agvLoadedMovingHome = new ArrayList<>();
     }
 

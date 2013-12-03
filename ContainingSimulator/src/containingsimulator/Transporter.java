@@ -244,6 +244,15 @@ public class Transporter extends Node implements MotionPathListener {
         }
         return tempCont;
     }
+    
+    public Vector3f getRealContainerPosition(Vector3f indexpos){
+        Vector3f csize = new Vector3f(1.22f, 1.22f, 6.705f);
+        Vector3f pos = new Vector3f(indexpos.x * 2 * csize.x, indexpos.y * 2 *
+                csize.y, indexpos.z * 2 * csize.z);
+        pos.y += 1.5f;
+        pos.x += 1.22f;
+        return pos.add(this.getWorldTranslation());
+    }
 
     /**
      * Set which geometries have to be drawn and which not

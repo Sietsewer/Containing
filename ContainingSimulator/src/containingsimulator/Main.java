@@ -303,17 +303,21 @@ public class Main extends SimpleApplication {
                 break;
             case Commands.PUT_CONTAINER:
                 crane = getCraneByID((String) params[0]);
-
-
-                Vector3f cposition = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
-                //TODO: put container on transport/buffer
-                if (crane != null && cont != null) {
-                    if (crane instanceof BufferCrane) {
-                        //do buffer stuff
-                    } else {
-                        //do transport stuff
+                Vector3f indexPosition = new Vector3f((Float) params[1], (Float) params[2], (Float) params[3]);
+                Vector3f realPosition = null;
+                if(crane != null && crane instanceof BufferCrane)
+                {
+                    realPosition = ((BufferCrane)crane).buffer.getRealContainerPosition(indexPosition);
+                    crane.putContainer(realPosition);
+                }
+                else
+                if (crane != null) {
+                    {
+                     //  realPosition = crane.transporter.getRealContainerPosition(indexPosition);
+                        //crane.putContainer(realPosition);
                     }
-                } else {
+                } 
+                else {
                     System.err.println("Error: No crane/container with this ID");
                 }
                 break;

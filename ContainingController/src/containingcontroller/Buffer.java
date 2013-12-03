@@ -69,7 +69,7 @@ public class Buffer {
         this.id = "BFR" + String.format("%03d", Buffer.ID++);
         this.ownedAGV = new ArrayList<>();
         this.reservedSpace = new HashMap<>();
-        this.containers = new Container[6][6][26];
+        this.containers = new Container[26][6][6];
     }
 
     /**
@@ -100,8 +100,8 @@ public class Buffer {
      * @return Vector3f
      */
     public CustomVector3f findBestBufferPlace(Container container) {
-        for (int z = 0; z < 26; z++) {
-            for (int x = 0; x < 6; x++) {
+        for (int x = 0; x < 26; x++) {
+            for (int z = 0; z < 6; z++) {
                 for (int y = 0; y < 6; y++) {
                     if (containers[x][y][z] == null) {
                         if (y > 0 && containers[x][y - 1][z] != null) {
@@ -136,8 +136,8 @@ public class Buffer {
      * @param container
      */
     public void removeContainer(Container container) {
-        for (int z = 0; z < 26; z++) {
-            for (int x = 0; x < 6; x++) {
+        for (int x = 0; x < 26; x++) {
+            for (int z = 0; z < 6; z++) {
                 for (int y = 0; y < 6; y++) {
                     if (containers[x][y][z].getId().equals(container.getId())) {
                         containers[x][y][z] = null;
@@ -177,8 +177,8 @@ public class Buffer {
 
     public int getContainerCount() {
         int counter = 0;
-        for (int z = 0; z < 26; z++) {
-            for (int x = 0; x < 6; x++) {
+        for (int x = 0; x < 26; x++) {
+            for (int z = 0; z < 6; z++) {
                 for (int y = 0; y < 6; y++) {
                     if (containers[x][y][z] != null) {
                         counter++;

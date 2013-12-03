@@ -44,6 +44,7 @@ public class Controller {
     List<Crane> seaCranes;
     List<Crane> bargeCranes;
     List<Crane> trainCranes;
+    List<AGV> agvLoadedMovingHome;
     HashMap<AGV, Crane> waitingToBeReadyAtCrane;
     HashMap<Crane, AGV> waitingForCraneToPickUpFromAgv;
     HashMap<Crane, AGV> waitingForCraneToPutToAgv;
@@ -152,6 +153,7 @@ public class Controller {
         PrintMessage("Total Seacranes - " + seaCranes.size());
         PrintMessage("Total Bargecranes - " + bargeCranes.size());
         PrintMessage("Total trainCrane - " + trainCranes.size());
+        agvLoadedMovingHome = new ArrayList<>();
     }
 
     /**
@@ -275,7 +277,9 @@ public class Controller {
      * stop simulation
      */
     public void pause() {
-        this.simTimer.cancel();
+        if (this.simTimer != null) {
+            this.simTimer.cancel();
+        }
     }
 
     /**
@@ -316,6 +320,14 @@ public class Controller {
 
 
             }
+        } else if (agvLoadedMovingHome.contains(agv)) {
+            Crane bufferCrane = agv.homeBuffer.crane;
+            Message message = new Message(Commands.PICKUP_CONTAINER, new Object[]{bufferCrane.id, agv.container.getId(),
+                agv.container.getBufferPosition().x, agv.container.getBufferPosition().y, agv.container.getBufferPosition().z});
+            agv.homeBuffer.addContainer(agv.container);
+            agv.container = null;
+            sendMessage(message);
+
         }
 
     }
@@ -404,6 +416,7 @@ public class Controller {
         } else if (waitingForCraneToPickUpFromAgv.containsKey(c)) {
             AGV v = waitingForCraneToPickUpFromAgv.get(c);
             v.moveToHome(c, this);
+            agvLoadedMovingHome.add(v);
             waitingForCraneToPickUpFromAgv.remove(c);
 
         }//Kraan heeft container aan AGV gegeven
@@ -415,9 +428,10 @@ public class Controller {
 
 
             v.moveToHome(c, this);
+            agvLoadedMovingHome.add(v);
             waitingForCraneToPutToAgv.remove(c);
 
-            //Container krijgt opdracht om nieuwe container te pakken
+            //kraan krijgt opdracht om nieuwe container te pakken
             Transporter t = dockedTransporter.get(c);
 
             if (t.getContainerCount() > 0) {
@@ -524,8 +538,7 @@ public class Controller {
                     break;
                 }
             }
-        }
-        else if (t.getTransportType()
+        } else if (t.getTransportType()
                 == TransportTypes.TRAIN) {
             int range = t.getLenghtTransporter() / 4;
             if (range < 2) {

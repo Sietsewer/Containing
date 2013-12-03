@@ -249,9 +249,6 @@ public class Main extends SimpleApplication {
         Spatial dock = assetManager.loadModel("Models/dockBase/dockBase.j3o");
         rootNode.attachChild(dock);
         dock.setLocalTranslation(0f, 0f, 600f);
-        
-        buffers[0].addContainer(Vector3f.ZERO, new Container(new SimContainer("a", new CustomVector3f(0, 0, 0))));
-        buffers[0].addContainer(new Vector3f(0, 0, 25), new Container(new SimContainer("a", new CustomVector3f(0, 0, 0))));
     }
 
     static void sendMessage(Message Message) {

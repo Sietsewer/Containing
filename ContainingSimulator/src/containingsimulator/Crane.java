@@ -192,6 +192,11 @@ public abstract class Crane extends Node implements MotionPathListener {
          this.target = agv.getWorldTranslation();
          loadContainer = true;
      }
+     public void putContainer(Vector3f nextPosition)
+     {
+         this.target = nextPosition;
+         loadContainer = true;
+     }
      
      protected void contOffHook()
      {

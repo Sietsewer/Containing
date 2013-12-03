@@ -19,7 +19,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
@@ -207,7 +206,7 @@ public class Main extends SimpleApplication {
             rootNode.attachChild(buffers[i]);
             //some magic number abuse here, snap buffers to proper location on map:
             buffers[i].setLocalTranslation(111.76f + (i * 22.035f), 11, 115);
-            buffers[i].addParkingSpots(buffers[i].getLocalTranslation());
+            buffers[i].addParkingSpots(buffers[i].getLocalTranslation().clone());
         }
 
         init_SeaCranes();
@@ -308,7 +307,7 @@ public class Main extends SimpleApplication {
                 if(crane != null && crane instanceof BufferCrane)
                 {
                     realPosition = ((BufferCrane)crane).buffer.getRealContainerPosition(indexPosition);
-                    crane.putContainer(realPosition);
+                    crane.putContainer(realPosition,indexPosition);
                 }
                 else
                 if (crane != null) {
@@ -466,10 +465,10 @@ public class Main extends SimpleApplication {
 
         for (int i = 1; i <= 63; i++) {
             String id = cID + String.format("%03d", i);
-            Crane c = new BufferCrane(id, Path.getVector(id), bcModel, bcSModel, bcHModel, buffers[i - 1]);
+            Crane c = new BufferCrane(id, Path.getVector(id).add(0,0,200), bcModel, bcSModel, bcHModel, buffers[i - 1]);
             bufCranes[i - 1] = c;
             rootNode.attachChild(c);
-            c.setLocalTranslation(Path.getVector(id));
+            c.setLocalTranslation(Path.getVector(id).add(0,0,200));
         }
     }
 

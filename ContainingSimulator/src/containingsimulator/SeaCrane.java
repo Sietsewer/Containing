@@ -65,7 +65,7 @@ public class SeaCrane extends Crane {
             case 4:
                 if (!hookControl.isEnabled()) {
                     
-                   this.contToHook();
+                    this.contToHook();
                     moveHook(true);
                 }
                 break;

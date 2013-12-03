@@ -303,8 +303,8 @@ public class Controller {
 
     public void getContainerBuffer(AGV agv, Crane bufferCrane) {
         bufferCrane.ready = false;
-        Message message = new Message(Commands.GET_CONTAINER, new Object[]{ agv.name,bufferCrane.id});
-        agv.homeBuffer.addContainer(agv.container);
+        Message message = new Message(Commands.GET_CONTAINER, new Object[]{agv.name, bufferCrane.id});
+        bufferCrane.container = agv.container;
         agv.container = null;
         this.PrintMessage(Message.encodeMessage(message));
         sendMessage(message);
@@ -338,6 +338,7 @@ public class Controller {
             } else {
                 waitingForBufferCrane.put(agv, bufferCrane);
             }
+            agvLoadedMovingHome.remove(agv);
         }
 
     }
@@ -520,10 +521,21 @@ public class Controller {
      * @param b
      */
     public void bufferCraneReady(Buffer b) {
+        this.PrintMessage("Buffer ready - " + b.crane.id);
         b.crane.ready = true;
-        if (waitingForBufferCrane.containsValue(b.crane)) {
-            AGV agv = getWaitingAGV(b.crane);
-            getContainerBuffer(agv, b.crane);
+        if (b.crane.container == null) {
+            if (waitingForBufferCrane.containsValue(b.crane)) {
+                AGV agv = getWaitingAGV(b.crane);
+                getContainerBuffer(agv, b.crane);
+                this.PrintMessage("Buffer pickup new  - " + b.crane.id);
+            }
+        } else {
+            Message message = new Message(Commands.PUT_CONTAINER, new Object[]{b.crane.id, b.crane.container.getBufferPosition().x,
+                b.crane.container.getBufferPosition().y,
+                b.crane.container.getBufferPosition().z});
+            b.crane.ready = false;
+            this.sendMessage(message);
+            this.PrintMessage("Put down - " + b.crane.id);
         }
     }
 
@@ -705,36 +717,38 @@ public class Controller {
         Message m = Message.decodeMessage(message);
         if (!((String) m.getParameters()[0]).equalsIgnoreCase("simulator")) {
             int id = Integer.parseInt(((String) m.getParameters()[0]).substring(3, 6));
-            switch (m.getCommand()) {
-                case Commands.READY:
-                    switch (((String) m.getParameters()[0]).toLowerCase().charAt(0)) {
-                        case 'c':
-                            if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("SE")) {
-                                craneReady(seaCranes.get(id - 1));
-                            } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("BA")) {
-                                craneReady(bargeCranes.get(id - 1));
-                            } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("LO")) {
-                                craneReady(lorreyCranes.get(id - 1));
-                            } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("TR")) {
-                                craneReady(trainCranes.get(id - 1));
-                            } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("BU")) {
-                                bufferCraneReady(buffers.get(id - 1));
-                            }
-                            break;
-                        case 't':
-                            for (Transporter t : currentTransporter) {
-                                if (t.id.equalsIgnoreCase(((String) m.getParameters()[0]))) {
-                                    transporterReady(t);
-                                    break;
+            if (((String) m.getParameters()[0]).toLowerCase().startsWith("BFA".toLowerCase())) {
+                bufferCraneReady(buffers.get(id - 1));
+            } else {
+                switch (m.getCommand()) {
+                    case Commands.READY:
+                        switch (((String) m.getParameters()[0]).toLowerCase().charAt(0)) {
+                            case 'c':
+                                if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("SE")) {
+                                    craneReady(seaCranes.get(id - 1));
+                                } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("BA")) {
+                                    craneReady(bargeCranes.get(id - 1));
+                                } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("LO")) {
+                                    craneReady(lorreyCranes.get(id - 1));
+                                } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("TR")) {
+                                    craneReady(trainCranes.get(id - 1));
                                 }
-                            }
-                            break;
-                        case 'a':
-                            AGVReady(agvs.get(Integer.parseInt(((String) m.getParameters()[0]).substring(3, 6)) - 1));
-                            break;
-                    }
+                                break;
+                            case 't':
+                                for (Transporter t : currentTransporter) {
+                                    if (t.id.equalsIgnoreCase(((String) m.getParameters()[0]))) {
+                                        transporterReady(t);
+                                        break;
+                                    }
+                                }
+                                break;
+                            case 'a':
+                                AGVReady(agvs.get(Integer.parseInt(((String) m.getParameters()[0]).substring(3, 6)) - 1));
+                                break;
+                        }
 
-                    break;
+                        break;
+                }
             }
         }
     }

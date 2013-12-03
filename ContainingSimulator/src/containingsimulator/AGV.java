@@ -58,7 +58,7 @@ public class AGV extends Node implements MotionPathListener{
             path.addWayPoint(Path.getVector(waypoints[i]));
         }
         this.targetCrane = targetCrane;
-        motionEvent.setInitialDuration(path.getLength()/11.11f);
+        motionEvent.setInitialDuration(path.getLength()/11.11f/Main.globalSpeed);
         this.motionEvent.play();
         
         if(this.pSpot != null){

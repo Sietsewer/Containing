@@ -308,7 +308,7 @@ public class Main extends SimpleApplication {
                 if(crane != null && crane instanceof BufferCrane)
                 {
                     realPosition = ((BufferCrane)crane).buffer.getRealContainerPosition(indexPosition);
-                    crane.putContainer(realPosition);
+                    crane.putContainer(realPosition,indexPosition);
                 }
                 else
                 if (crane != null) {
@@ -466,10 +466,10 @@ public class Main extends SimpleApplication {
 
         for (int i = 1; i <= 63; i++) {
             String id = cID + String.format("%03d", i);
-            Crane c = new BufferCrane(id, Path.getVector(id), bcModel, bcSModel, bcHModel, buffers[i - 1]);
+            Crane c = new BufferCrane(id, Path.getVector(id).add(0,0,200), bcModel, bcSModel, bcHModel, buffers[i - 1]);
             bufCranes[i - 1] = c;
             rootNode.attachChild(c);
-            c.setLocalTranslation(Path.getVector(id));
+            c.setLocalTranslation(Path.getVector(id).add(0,0,200));
         }
     }
 

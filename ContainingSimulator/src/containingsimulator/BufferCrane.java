@@ -59,30 +59,39 @@ public class BufferCrane extends Crane {
                 }
                 break;
             case 5:
-                 if(!sliderControl.isEnabled())
+                  if(readyToLoad())
                 {
-                    moveSlider(true);
+                    if (!baseControl.isEnabled())
+                    {   this.sNode.setLocalTranslation(sNode.getLocalTranslation().x,this.defPosSlider.y,sNode.getLocalTranslation().z);
+                       moveBase(false);
+                    }
                 }
                 break;
             case 6:
-                if(!baseControl.isEnabled())
+                if(!sliderControl.isEnabled())
                 {
-                   moveBase(true);
+                   moveSlider(false);
                 }
                 break;
             case 7:
-                  if(readyToLoad())
-                  {
-                      if (!hookControl.isEnabled())
-                    {
-                        moveHook(false);
-                    }
-                  }
+                if(!hookControl.isEnabled())
+                {
+                   moveHook(false);
+                }
                 break;
             case 8:
-                 contOffHook();
-                break;
+                if(!hookControl.isEnabled())
+                {  this.buffer.addContainer(cont.indexPosition, cont);
+                   moveHook(true);
+                }
+                break; 
             case 9:
+                if(!baseControl.isEnabled())
+                {
+                    moveBase(true);
+                }
+                break;
+            case 10:
              this.resetAll();
                 break;
          }
@@ -151,14 +160,17 @@ public class BufferCrane extends Crane {
     protected void moveBase(boolean reversed)
     {
         basePath.clearWayPoints();
+        
+       Vector3f startPos = this.getLocalTranslation().add(0,0,0.1f);
         if(reversed)
         {
-            
+        basePath.addWayPoint(startPos);    
+        basePath.addWayPoint(defPosBase);
         }
         else
         {
-         basePath.addWayPoint(this.getLocalTranslation().add(0.1f,0,0));
-         basePath.addWayPoint(new Vector3f(this.getLocalTranslation().x,this.getLocalTranslation().y,target.z));    
+         basePath.addWayPoint(startPos);
+         basePath.addWayPoint(new Vector3f(startPos.x,startPos.y,target.z));    
         }
         
          baseControl.play();
@@ -168,17 +180,20 @@ public class BufferCrane extends Crane {
     protected void moveSlider(boolean reversed)
     {
          sliderPath.clearWayPoints();
-         if(reversed)
-         {
-             
-         }
+        Vector3f startPoint = sNode.getLocalTranslation();
+        
+        if(reversed)
+        {
+            sliderPath.addWayPoint(startPoint);
+            sliderPath.addWayPoint(defPosSlider);
+        }
          else
          {
-         sliderPath.addWayPoint(sNode.getLocalTranslation());
+         sliderPath.addWayPoint(startPoint);
          sliderPath.addWayPoint(new Vector3f(
                  target.x-this.getWorldTranslation().x
-                 ,sNode.getLocalTranslation().y,
-                 sNode.getLocalTranslation().z));    
+                 ,startPoint.y,
+                 startPoint.z));    
          }
          
          sliderControl.play();
@@ -189,14 +204,16 @@ public class BufferCrane extends Crane {
     {
           hookPath.clearWayPoints();
         
-          if(reversed)
-          {
-              hookPath.addWayPoint(new Vector3f(target.x-sNode.getWorldTranslation().x,target.y-sNode.getWorldTranslation().y,sNode.getLocalTranslation().z));
-              hookPath.addWayPoint(hNode.getLocalTranslation());
-          }
+          Vector3f startPoint = this.hNode.getLocalTranslation();
+        
+        if(reversed)
+        {
+         hookPath.addWayPoint(startPoint);
+         hookPath.addWayPoint(defPosHook);
+        }
           else
           {
-              hookPath.addWayPoint(hNode.getLocalTranslation());
+              hookPath.addWayPoint(startPoint);
               hookPath.addWayPoint(new Vector3f(target.x-sNode.getWorldTranslation().x,target.y-sNode.getWorldTranslation().y,sNode.getLocalTranslation().z));
           }
       

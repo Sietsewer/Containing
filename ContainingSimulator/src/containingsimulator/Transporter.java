@@ -16,6 +16,7 @@ import com.jme3.math.Spline;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
 import java.util.ArrayList;
 
@@ -44,15 +45,15 @@ public class Transporter extends Node implements MotionPathListener {
     /**
      * SEASHIP Geometry
      */
-    public static Geometry SEASHIP;
+    public static Spatial SEASHIP;
     /**
      * BARGE Geometry
      */
-    public static Geometry BARGE;
+    public static Spatial BARGE;
     /**
      * TROLLEY Geometry
      */
-    public static Geometry LORRY;
+    public static Spatial LORRY;
     /**
      * TRAIN Geometry
      */
@@ -89,24 +90,25 @@ public class Transporter extends Node implements MotionPathListener {
         this.position = position.clone();
         this.type = type;
 
-        Geometry currentGeometry;
+        Geometry currentGeometry = null;
+        Spatial currentSpatial = null;
         Vector3f size;
         
 
         switch (type) {
             case TransportTypes.SEASHIP:
                 containers = new Container[20][6][16];
-                currentGeometry = SEASHIP.clone();
-                size = new Vector3f(SEASHIPb.xExtent, SEASHIPb.yExtent, SEASHIPb.yExtent);
+                currentSpatial = SEASHIP.clone();
+                size = new Vector3f(18.3f, 12.2f, 134.1f);
                 this.position.y -= 10f;
                 this.position.x -= 40f;
                 break;
             case TransportTypes.BARGE:
                 containers = new Container[12][4][4];
-                currentGeometry = BARGE.clone();
-                size = new Vector3f(BARGEb.xExtent, BARGEb.yExtent, BARGEb.yExtent);
+                currentSpatial = BARGE.clone();
+                size = new Vector3f(4.88f, 1f, 85f);
                 this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-                this.position.y -= 10f;
+                //position.y -= 10f;
                 this.position.z += 20f;
                 break;
             case TransportTypes.TRAIN:
@@ -120,9 +122,8 @@ public class Transporter extends Node implements MotionPathListener {
             default:
             case TransportTypes.LORRY:
                 containers = new Container[2][1][1];
-                currentGeometry = LORRY.clone();
-                size = new Vector3f(LORRYb.xExtent, LORRYb.yExtent, LORRYb.yExtent);
-                
+                currentSpatial = LORRY.clone();
+                size = new Vector3f(1.22f, 1.5f, 6.705f);
                 break;
         }
         
@@ -160,7 +161,7 @@ public class Transporter extends Node implements MotionPathListener {
         motionEvent = new MotionEvent(this,this.path);
 
         path.addWayPoint(first);
-        path.addWayPoint(this.position);
+        path.addWayPoint(position);
 
 
         for (int z = 0; z < containers[0][0].length; z++) {
@@ -169,9 +170,9 @@ public class Transporter extends Node implements MotionPathListener {
                     if (containers[x][y][z] != null) {
                         Container con = containers[x][y][z];
                         Vector3f vec = con.getLocalTranslation();
-                        vec.y += 1.5f;
+                        vec.y += 1.5f + size.y;
                         vec.x -= size.x - 1.22f;
-                        vec.z += size.z * 2;
+                        //vec.z += size.z;
 
                         this.attachChild(con);
                     }
@@ -181,14 +182,16 @@ public class Transporter extends Node implements MotionPathListener {
         setRendering();
 
         this.setLocalTranslation(this.position);
-        
-        this.attachChild(currentGeometry);
+        if(currentGeometry != null) {
+            this.attachChild(currentGeometry);
+        } else  if(currentSpatial != null) {
+            this.attachChild(currentSpatial);
+        }
         this.motionEvent.play();
     }
 
     public Transporter(String id, SimContainer container, Vector3f position) {
         this.id = id;
-        this.position = position.clone();
         containers = new Container[1][1][1];
         Container con = new Container(container);
         Vector3f vec = con.getLocalTranslation();
@@ -201,10 +204,10 @@ public class Transporter extends Node implements MotionPathListener {
         this.path.addListener(this);
         motionEvent = new MotionEvent(this,this.path);
         
-        Vector3f first = new Vector3f(this.position);
+        Vector3f first = new Vector3f(position);
         first.z += 10f; 
         path.addWayPoint(first);
-        path.addWayPoint(this.position);
+        path.addWayPoint(position);
         
         this.attachChild(con);
         this.attachChild(LORRY.clone());
@@ -304,13 +307,23 @@ public class Transporter extends Node implements MotionPathListener {
      * @param am the AssetManager to load materials from
      */
     public static void makeGeometry(AssetManager am) {
-        SEASHIPb = new Box(new Vector3f(0, 0, 128f), 18.3f, 0.5f, 134.1f); //container size in m divided by 2 because box size grows both ways
-        SEASHIP = new Geometry("Seaship", SEASHIPb);
-        BARGEb = new Box(new Vector3f(0, 0, 80f), 4.88f, 0.5f, 85f); //container size in m divided by 2 because box size grows both ways
-        BARGE = new Geometry("Barge", BARGEb);
+        SEASHIP = am.loadModel("Models/seaShip/seaShip.j3o");
+        BARGE = SEASHIP.clone();
+        
+        SEASHIP.setLocalScale(134.1f, 1f, 19.52f);
+        SEASHIP.rotate(0, -90f*FastMath.DEG_TO_RAD, 0);
+        SEASHIP.setLocalTranslation(0, 20f, 128f);
+        
+        BARGE.setLocalScale(50f, 1f, 4.88f);
+        BARGE.rotate(0, -90f*FastMath.DEG_TO_RAD, 0);
+        BARGE.setLocalTranslation(0, 10f, 40f);
 
-        LORRYb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 6.705f); //container size in m divided by 2 because box size grows both ways
-        LORRY = new Geometry("Lorry", LORRYb);
+        LORRY = am.loadModel("Models/lorry/lorry.j3o");
+        LORRY.setLocalScale(1f, 1f, 1f);
+        LORRY.setLocalTranslation(0, 1f, 0f);
+        
+        //LORRYb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 6.705f); //container size in m divided by 2 because box size grows both ways
+        //LORRY = new Geometry("Lorry", LORRYb);
         TRAINb = new Box(new Vector3f(0, 0, 190f), 1.22f, 0.5f, 200f); //container size in m divided by 2 because box size grows both ways
         TRAIN = new Geometry("Train", TRAINb);
 

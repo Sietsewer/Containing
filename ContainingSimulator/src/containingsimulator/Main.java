@@ -19,7 +19,6 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.texture.Texture;
@@ -207,7 +206,7 @@ public class Main extends SimpleApplication {
             rootNode.attachChild(buffers[i]);
             //some magic number abuse here, snap buffers to proper location on map:
             buffers[i].setLocalTranslation(111.76f + (i * 22.035f), 11, 115);
-            buffers[i].addParkingSpots(buffers[i].getLocalTranslation());
+            buffers[i].addParkingSpots(buffers[i].getLocalTranslation().clone());
         }
 
         init_SeaCranes();
@@ -250,6 +249,9 @@ public class Main extends SimpleApplication {
         Spatial dock = assetManager.loadModel("Models/dockBase/dockBase.j3o");
         rootNode.attachChild(dock);
         dock.setLocalTranslation(0f, 0f, 600f);
+        
+        buffers[0].addContainer(Vector3f.ZERO, new Container(new SimContainer("a", new CustomVector3f(0, 0, 0))));
+        buffers[0].addContainer(new Vector3f(0, 0, 25), new Container(new SimContainer("a", new CustomVector3f(0, 0, 0))));
     }
 
     static void sendMessage(Message Message) {

@@ -161,7 +161,7 @@ public class Transporter extends Node implements MotionPathListener {
         motionEvent = new MotionEvent(this,this.path);
 
         path.addWayPoint(first);
-        path.addWayPoint(position);
+        path.addWayPoint(this.position);
 
 
         for (int z = 0; z < containers[0][0].length; z++) {
@@ -187,30 +187,6 @@ public class Transporter extends Node implements MotionPathListener {
         } else  if(currentSpatial != null) {
             this.attachChild(currentSpatial);
         }
-        this.motionEvent.play();
-    }
-
-    public Transporter(String id, SimContainer container, Vector3f position) {
-        this.id = id;
-        containers = new Container[1][1][1];
-        Container con = new Container(container);
-        Vector3f vec = con.getLocalTranslation();
-        vec.y += 1.72f;
-
-        containers[0][0][0] = con;
-        
-        path.setCycle(false);
-        path.setPathSplineType(Spline.SplineType.Linear);
-        this.path.addListener(this);
-        motionEvent = new MotionEvent(this,this.path);
-        
-        Vector3f first = new Vector3f(position);
-        first.z += 10f; 
-        path.addWayPoint(first);
-        path.addWayPoint(position);
-        
-        this.attachChild(con);
-        this.attachChild(LORRY.clone());
         this.motionEvent.play();
     }
 

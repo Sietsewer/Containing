@@ -75,7 +75,6 @@ public class Main extends SimpleApplication {
     ArrayList<AGV> agvs;
     Buffer[] buffers;
     public static float globalSpeed = 1f;
-    
     private Collection<Message> messagesTodo;
 
     /**
@@ -101,7 +100,7 @@ public class Main extends SimpleApplication {
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
         listener = new ServerListener(this);
-        messagesTodo= new ArrayList<Message>();
+        messagesTodo = new ArrayList<Message>();
     }
 
     /**
@@ -126,12 +125,12 @@ public class Main extends SimpleApplication {
         for (Crane c : trainCranes) {
             c.update(tpf);
         }
-        Collection<Message> temp =Collections.synchronizedCollection(new ArrayList(messagesTodo));
-        for(Message m: temp){
+        Collection<Message> temp = Collections.synchronizedCollection(new ArrayList(messagesTodo));
+        for (Message m : temp) {
             this.messageRecieved(m);
             messagesTodo.remove(m);
         }
-     
+
     }
 
     /**
@@ -256,8 +255,8 @@ public class Main extends SimpleApplication {
     static void sendMessage(Message Message) {
         listener.sendMessage(Message);
     }
-    
-    public void messageReceivedEvent(Message decodedMessage){
+
+    public void messageReceivedEvent(Message decodedMessage) {
         this.messagesTodo.add(decodedMessage);
     }
 
@@ -265,7 +264,7 @@ public class Main extends SimpleApplication {
         Object[] params = decodedMessage.getParameters();
         Container cont = null;
         Crane crane;
-      
+
         String transporterID;
         AGV agv;
         switch (decodedMessage.getCommand()) {
@@ -299,13 +298,13 @@ public class Main extends SimpleApplication {
                 crane = getCraneByID((String) params[0]);
                 agv = getAGVbyID((String) params[1]);
                 crane.loadContainer(agv);
-                
+
                 //TODO: put container on AGV
                 break;
             case Commands.PUT_CONTAINER:
                 crane = getCraneByID((String) params[0]);
-              
-                
+
+
                 Vector3f cposition = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
                 //TODO: put container on transport/buffer
                 if (crane != null && cont != null) {
@@ -338,12 +337,16 @@ public class Main extends SimpleApplication {
             case Commands.REMOVE_TRANSPORTER:
                 transporterID = (String) params[0];
                 //uitgezet want geeft modification concurrent crash. -Len
-/*                for (Transporter transp : transporters) {
+                Transporter temp = null;
+                for (Transporter transp : transporters) {
                     if (transp.id.equalsIgnoreCase(transporterID)) {
-                        rootNode.detachChild(transp);
-                        transporters.remove(transp);
+                        temp = transp;
+                        break;
                     }
-                }*/
+                }
+
+                rootNode.detachChild(temp);
+                transporters.remove(temp);
                 break;
             default:
                 System.err.println("Error: Invalid command for simulator.");
@@ -376,8 +379,7 @@ public class Main extends SimpleApplication {
             }
         } else if (crane.equalsIgnoreCase(Path.getBufferAID()) || crane.equalsIgnoreCase(Path.getBufferBID())) {
             for (int i = 0; i < bufCranes.length; i++) {
-                if (bufCranes[i].getId().equalsIgnoreCase(id)||bufCranes[i].getId().equalsIgnoreCase(Path.getBufferAID()+id.substring(3)))
-                {
+                if (bufCranes[i].getId().equalsIgnoreCase(id) || bufCranes[i].getId().equalsIgnoreCase(Path.getBufferAID() + id.substring(3))) {
                     return bufCranes[i];
                 }
             }
@@ -413,7 +415,7 @@ public class Main extends SimpleApplication {
         Container c = null;
         for (int i = 0; i < buffers.length; i++) {
             c = buffers[i].getContainerByID(id);
-            if (c != null){
+            if (c != null) {
                 return c;
             }
         }
@@ -421,7 +423,7 @@ public class Main extends SimpleApplication {
         if (c == null) {
             for (Transporter t : transporters) {
                 c = t.getContainerByID(id);
-                if (c != null){
+                if (c != null) {
                     return c;
                 }
             }
@@ -467,7 +469,7 @@ public class Main extends SimpleApplication {
 
         for (int i = 1; i <= 20; i++) {
             String id = cID + String.format("%03d", i);
-            Vector3f pos = Path.getVector(id).add(new Vector3f(0,0,40f));
+            Vector3f pos = Path.getVector(id).add(new Vector3f(0, 0, 40f));
             LorryCrane c = new LorryCrane(id, pos, lcModel, scSModel, scHModel.clone().scale(0.4f).rotate(0, 90 * FastMath.DEG_TO_RAD, 0));
             lorCranes[i - 1] = c;
             rootNode.attachChild(c);
@@ -516,7 +518,7 @@ public class Main extends SimpleApplication {
             agvs.get(i + 1).up = true;
             agvs.get(i + 2).up = false;
             agvs.get(i + 3).up = false;
-            
+
             j++;
         }
     }

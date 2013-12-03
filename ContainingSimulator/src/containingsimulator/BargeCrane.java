@@ -31,16 +31,15 @@ public class BargeCrane extends Crane {
         defPosBase = this.base.getLocalTranslation().clone();
     }
     
-    
-    //updates crane motion
-    public void update(float tpf)
+    @Override
+    protected void updateGet()
     {
-        if(target==null)
-        {
-            return;
-        }
-        updateSpeed();
+        
+    }
 
+    @Override
+    protected void updatePickup()
+    {
         switch(action)
         {
             case 1: 

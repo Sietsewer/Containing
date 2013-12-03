@@ -100,6 +100,11 @@ public class AGV extends Node implements MotionPathListener{
         
         return tempCont;
     }
+    
+    public Container getContainerObject()
+    {
+        return this.container;
+    }
     /**
      * @return null if there is no container. Returns the ID if there is one.
      */

@@ -35,14 +35,16 @@ public class LorryCrane extends Crane implements MotionPathListener {
         this.defPosSlider = this.sNode.getWorldTranslation().clone();
     }
 
-    public void update(float tpf)
+    @Override
+    protected void updateGet()
     {
-        if(target==null)
-        {
-            return;
-        }
-        updateSpeed();
         
+        
+    }
+     
+    @Override
+    protected void updatePickup()
+    {
         switch(action)
         {
             case 1: 

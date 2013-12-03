@@ -63,6 +63,8 @@ public abstract class Crane extends Node implements MotionPathListener {
     protected Node transportNode= null;
     protected AGV agv = null;
     
+    protected boolean pickupContainer;
+    
     protected Vector3f defPosHook;
     protected Vector3f defPosSlider;
     protected Vector3f defPosBase;
@@ -137,7 +139,7 @@ public abstract class Crane extends Node implements MotionPathListener {
     }
 
     //only for point click testing
-    public void getContainer(Container cont, Node trans) {
+    public void pickupContainer(Container cont, Node trans) {
         
         this.transporter = null;
         this.transportNode = trans;
@@ -145,10 +147,11 @@ public abstract class Crane extends Node implements MotionPathListener {
         this.target = cont.getWorldTranslation();
         action = 1;
         busy = true;
+        pickupContainer = true;
     }
     
-    
-    public void getContainer(Container cont, Transporter trans)
+    //from transport/buffer to agv
+    public void pickupContainer(Container cont, Transporter trans)
     {
         this.transporter = trans;
       //  this.transportNode = trans;
@@ -156,6 +159,18 @@ public abstract class Crane extends Node implements MotionPathListener {
         this.target = cont.getWorldTranslation();
         action = 1;
         busy = true;
+        pickupContainer = true;
+    }
+    
+    //From agv to transport/buffer
+    public void getContainer(AGV agv)
+    {
+        pickupContainer = false;
+        this.cont = agv.getContainerObject();
+        this.target = this.cont.getWorldTranslation();
+        action = 1;
+        busy = true;
+        pickupContainer = false;
     }
 
     
@@ -223,10 +238,28 @@ public abstract class Crane extends Node implements MotionPathListener {
      protected abstract void moveHook(boolean reversed);
      protected abstract void moveBase(boolean reversed);
      protected abstract void moveSlider(boolean reversed);
-     public abstract void update(float tpf);
+     protected abstract void updateGet();
+     protected abstract void updatePickup();
      public abstract ParkingSpot getParkingspot();
-
      
+     public void update(float tpf)
+     {
+         if(target!=null)
+         {
+         updateSpeed();
+
+         if(pickupContainer)
+         {
+          updatePickup();
+         }
+         else
+         {
+          updateGet();
+         }
+         
+         }
+
+     }
      protected void updateSpeed() 
      {
         baseControl.setInitialDuration(baseDur / Main.globalSpeed);

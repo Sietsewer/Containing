@@ -32,14 +32,15 @@ public class TrainCrane extends Crane implements MotionPathListener{
 
     
     @Override
-    public void update(float tpf)
+    protected void updateGet()
     {
-        if(target==null)
-        {
-            return;
-        }
-        updateSpeed();
-
+        
+        
+    }
+     
+    @Override
+    protected void updatePickup()
+    {
         switch(action)
         {
             case 1: 

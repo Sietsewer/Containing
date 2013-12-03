@@ -287,7 +287,7 @@ public class Main extends SimpleApplication {
                     if (crane instanceof BufferCrane) {
                         //do something w/ buffer
                     } else {
-                        crane.getContainer(cont, trans);
+                        crane.pickupContainer(cont, trans);
                     }
                     //do stuff, needs containers
                 } else {
@@ -320,6 +320,11 @@ public class Main extends SimpleApplication {
             case Commands.GET_CONTAINER:
                 agv = getAGVbyID((String) params[0]);
                 crane = getCraneByID((String) params[1]);
+                if (crane != null && cont != null) {
+                        crane.getContainer(agv);
+                } else {
+                    System.err.println("Error: No crane/container/transporter with this ID");
+                }
                 //TODO: take container from AGV
                 break;
             case Commands.CREATE_TRANSPORTER:
@@ -567,7 +572,7 @@ public class Main extends SimpleApplication {
                         Container c = new Container(new SimContainer("1", new CustomVector3f(0, 0, 0)));
                         rootNode.attachChild(c);
                         c.setLocalTranslation(hitPoint.add(new Vector3f(0, c.size.y, 0)));
-                        cranes[0].getContainer(c, rootNode);
+                        cranes[0].pickupContainer(c, rootNode);
                     } else if (cranes[0].readyForL) {
                         cranes[0].loadContainer(rootNode); //transfer container
                     }

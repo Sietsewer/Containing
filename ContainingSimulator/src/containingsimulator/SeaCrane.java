@@ -34,17 +34,18 @@ public class SeaCrane extends Crane {
         
     }
 
-
-
-    //updates crane motion
-    public void update(float tpf) {
-       
-        if (target == null) 
+   @Override
+    protected void updateGet()
+    {
+        switch(action)
         {
-            return;
+            
         }
-        updateSpeed();
+    }
 
+    @Override
+    protected void updatePickup() 
+    {
         switch (action) {
             case 1:
                 if (!baseControl.isEnabled()) {

@@ -131,57 +131,154 @@ public abstract class Crane extends Node implements MotionPathListener {
           Main.sendReady(this.id);
     }
     
+    protected boolean doAction(int globalAction, boolean reversed)
+    {
+        switch(globalAction)
+        {
+            case 1: //move base
+                 if(!baseControl.isEnabled())
+                {
+                   moveBase(reversed);
+                   return true;
+                }
+                break;
+            case 2: //move slider
+                if(!sliderControl.isEnabled())
+                {
+                   moveSlider(reversed);
+                   return true;
+                }
+                break;
+            case 3:
+                 if(!hookControl.isEnabled())
+                {
+                   moveHook(reversed);
+                   return true;
+                }
+                break;
+        }
+        return false;
+    }
     //from transport/buffer to agv
     public void pickupContainer(Container cont, Transporter trans)
     {
-        if(!busy)
+        if(!busy )
         {
+            if(cont!= null)
+            {
+                if(trans != null)
+                {
         pickupContainer = true;
         this.transporter = trans;
         this.cont = cont;
+        initializeStartUp();
+                }
+                else
+                {
+                    debugMessage(2,"pickupContainer");
+                }
+            }
+            else
+            {
+                 debugMessage(3,"pickupContainer");
+            }
+        }
+         else
+        {
+              debugMessage(4,"pickupContainer");
+        }
+    }
+    private void initializeStartUp()
+    {
         this.target = cont.getWorldTranslation();
         action = 1;
         busy = true;
-        }
     }
-    
-     public void loadContainer(Transporter trans) 
-     {
-        this.target = trans.getWorldTranslation();
-        loadContainer = true;
-     }
-     
-    
+
+        
     //From agv to transport/buffer
     public void getContainer(AGV agv)
     {
         if(!busy)
         {
         pickupContainer = false;
+        
+        if(agv != null)
+        {
         this.agv = agv;
         this.cont = this.agv.getContainerObject();
+        
         if(cont!=null)
         {
-        this.target = this.agv.getWorldTranslation();
-        action = 1;
-        busy = true;
+        initializeStartUp();
         }
         else
         {
-            System.out.println("Container is null");
+             debugMessage(3,"getContainer");
         }
+        }
+        else
+        {
+             debugMessage(1,"getContainer");
+        }
+        }
+        else
+        {
+              debugMessage(4,"getContainer");
         }
     }
-    
-    public void loadContainer(AGV agv)
-    {
+        
+     public void loadContainer(Transporter trans) 
+     {
+         if(!loadContainer)
+         {
+        this.target = trans.getWorldTranslation();
+        loadContainer = true;
+         }
+         else
+         {
+              debugMessage(4,"loadContainer");
+         }
+     }
+     public void loadContainer(AGV agv)
+     {
         if(!loadContainer)
         {
+            if(agv!= null)
+            {
          this.agv = agv;
          this.target = agv.getWorldTranslation();
          loadContainer = true;
+            }
+            else
+            {
+               debugMessage(1,"getContainer");
+            }
         }
+        else
+         {
+              debugMessage(4,"loadContainer");
+         }
     }
+     
+     private void debugMessage(int option, String message)
+     {
+         switch(option)
+         {
+             case 1: //agv is null
+                  System.out.println(this.id + " - agv is null - " + message);
+                 break;
+             case 2: //transporter is null
+                  System.out.println(this.id + " - transporter is null - " + message);
+                 break;
+             case 3: // container is null
+                 System.out.println(this.id + " - container is null - " + message);
+                 break;
+             case 4: //already received
+                 System.out.println(this.id + " - message already received - " + message);
+                 break;
+         }
+     }
     
      public void putContainer(Vector3f nextPosition,Vector3f indexPosition)
      {
@@ -195,18 +292,18 @@ public abstract class Crane extends Node implements MotionPathListener {
          }
          else
          {
-             System.out.println(this.id + " gets cont is null ");
+             debugMessage(1,"putContainer");
          }
      }
      
      protected void contOffHook()
      {
-         if(agv!=null)
+         if(pickupContainer && this.agv!= null)
          {
           this.agv.setContainer(cont);
           agv = null;
          }
-         else if(transporter!=null)
+         else if(!pickupContainer && this.transporter!= null)
          {
              transporter.setContainer(cont);
              transporter = null;
@@ -215,35 +312,28 @@ public abstract class Crane extends Node implements MotionPathListener {
      
     protected void contToHook() 
     {
-        float y = base.getWorldRotation().toAngles(null)[1];
         hNode.attachChild(cont);
         cont.setLocalTranslation(hook.getLocalTranslation().add(new Vector3f(0,cont.size.y,0)));
-        
-        if(transporter != null){
+        if(pickupContainer && transporter != null){
             transporter.getContainer(cont.indexPosition);
             transporter = null;
         }
-        else if(agv!= null)
+        else if(!pickupContainer && agv!= null)
         {
             agv.getContainer();//this.cont=
             agv = null;
         }
-        
-        cont.rotate(0, y, 0);
+        cont.rotate(0, base.getWorldRotation().toAngles(null)[1], 0);
     }
      
      protected boolean readyToLoad()
      {
-           if (!readyForL && !loadContainer) 
+           if (!readyForL) 
             {
                 readyForL = true;
                 sendMessage("container ready for drop");
             } 
-            else if (readyForL && loadContainer)
-            {
-                return true;
-            }
-           return false;
+            return (readyForL && loadContainer);
      }
      
 
@@ -252,6 +342,7 @@ public abstract class Crane extends Node implements MotionPathListener {
      protected abstract void moveSlider(boolean reversed);
      protected abstract void updateGet();
      protected abstract void updatePickup();
+     
      public abstract ParkingSpot getParkingspot();
      
      public void update(float tpf)
@@ -268,7 +359,6 @@ public abstract class Crane extends Node implements MotionPathListener {
          {
           updateGet();
          }
-         
          }
 
      }
@@ -278,6 +368,7 @@ public abstract class Crane extends Node implements MotionPathListener {
         sliderControl.setInitialDuration(sliDur / Main.globalSpeed);
         hookControl.setInitialDuration(hookDur / Main.globalSpeed);
      }
+     
      
      @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {

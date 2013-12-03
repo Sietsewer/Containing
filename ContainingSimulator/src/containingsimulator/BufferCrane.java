@@ -29,124 +29,87 @@ public class BufferCrane extends Crane {
         this.defPosSlider = sNode.getWorldTranslation().clone();
     }
 
+    private void commonSteps()
+    {
+        switch(action)
+        {
+         case 1: 
+                doAction(1,false);
+                break;
+            case 2: 
+                doAction(2,false);
+                break;
+            case 3:
+                doAction(3,false);
+                break;
+            case 4:
+               if(doAction(3,true))
+               {
+                    contToHook();
+               }
+                break;
+         }
+     }
+    
+        
      @Override
     protected void updateGet()
     {
          switch(action)
         {
-            case 1: 
-                if(!baseControl.isEnabled())
-                {
-                   moveBase(false);
-                }
-                break;
-            case 2: 
-                if(!sliderControl.isEnabled())
-                {
-                   moveSlider(false);
-                }
-                break;
-            case 3:
-                if(!hookControl.isEnabled())
-                {
-                   moveHook(false);
-                }
-                break;
-            case 4:
-               if (!hookControl.isEnabled()) {
-                   contToHook();
-                    moveHook(true);
-                }
-                break;
+             default:
+                 commonSteps();
+                 break;
             case 5:
                   if(readyToLoad())
-                {
-                    if (!baseControl.isEnabled())
-                    {   this.sNode.setLocalTranslation(sNode.getLocalTranslation().x,this.defPosSlider.y,sNode.getLocalTranslation().z);
-                       moveBase(false);
+                  {
+                    if (doAction(1,false))
+                    {  
+                        this.sNode.setLocalTranslation(sNode.getLocalTranslation().x,this.defPosSlider.y,sNode.getLocalTranslation().z);
                     }
-                }
+                  }
                 break;
             case 6:
-                if(!sliderControl.isEnabled())
-                {
-                   moveSlider(false);
-                }
+                doAction(2,false);
                 break;
             case 7:
-                if(!hookControl.isEnabled())
-                {
-                   moveHook(false);
-                }
+                doAction(3,false);
                 break;
             case 8:
-                if(!hookControl.isEnabled())
-                {  
+                if(doAction(3,true))
+                {
                    this.buffer.addContainer(cont.indexPosition, cont);
                    this.hNode.detachChild(cont);
-                   moveHook(true);
                 }
                 break; 
             case 9:
-                if(!baseControl.isEnabled())
-                {
-                    moveBase(true);
-                }
+                doAction(1,true);
                 break;
             case 10:
              this.resetAll();
                 break;
          }
     }
+ 
      
     @Override
     protected void updatePickup()
     {
         switch(action)
         {
-            case 1: 
-                if(!baseControl.isEnabled())
-                {
-                   moveBase(false);
-                }
-                break;
-            case 2: 
-                if(!sliderControl.isEnabled())
-                {
-                   moveSlider(false);
-                }
-                break;
-            case 3:
-                if(!hookControl.isEnabled())
-                {
-                   moveHook(false);
-                }
-                break;
-            case 4:
-               if (!hookControl.isEnabled()) {
-                   contToHook();
-                    moveHook(true);
-                }
+            default:
+                commonSteps();
                 break;
             case 5:
-                 if(!sliderControl.isEnabled())
-                {
-                    moveSlider(true);
-                }
+                doAction(2,true);
                 break;
             case 6:
-                if(!baseControl.isEnabled())
-                {
-                   moveBase(true);
-                }
+                doAction(1,true);
                 break;
             case 7:
                   if(readyToLoad())
                   {
-                      if (!hookControl.isEnabled())
-                    {
-                        moveHook(false);
-                    }
+                    doAction(3,false);
                   }
                 break;
             case 8:

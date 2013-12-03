@@ -120,7 +120,7 @@ public class Controller {
         //Create buffers and agv's
         for (int i = 1; i <= 63; i++) {
             Buffer b = new Buffer();
-            Crane c = new Crane("CBU" + String.format("%03d", i), Crane.BufferCrane);
+            Crane c = new Crane("BFA" + String.format("%03d", i), Crane.BufferCrane);
             b.crane = c;
             PathNode upperNode = pathFinder.getMapBA().get(i - 1);
             PathNode downNode = pathFinder.getMapBB().get(i - 1);

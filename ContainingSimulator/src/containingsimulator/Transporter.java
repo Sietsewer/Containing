@@ -252,7 +252,7 @@ public class Transporter extends Node implements MotionPathListener {
         } else {
             Container tempCont = new Container(new SimContainer("Temp", new CustomVector3f(indexpos.x, indexpos.y, indexpos.z)));
             setContainer(tempCont); //temporarily add container to transport
-            Vector3f pos = tempCont.getWorldTranslation(); //get world translation
+            Vector3f pos = tempCont.getWorldTranslation().clone(); //get world translation
             getContainer(indexpos);
             return pos;
         }

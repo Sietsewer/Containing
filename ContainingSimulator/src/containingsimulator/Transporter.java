@@ -107,7 +107,7 @@ public class Transporter extends Node implements MotionPathListener {
             case TransportTypes.BARGE:
                 containers = new Container[12][4][4];
                 currentSpatial = BARGE.clone();
-                size = new Vector3f(4.88f, 1f, 85f);
+                size = new Vector3f(4.88f, -7f, 85f);
                 this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
                 //position.y -= 10f;
                 this.position.z += 20f;
@@ -297,15 +297,14 @@ public class Transporter extends Node implements MotionPathListener {
      */
     public static void makeGeometry(AssetManager am) {
         SEASHIP = am.loadModel("Models/seaShip/seaShip.j3o");
-        BARGE = SEASHIP.clone();
-        
         SEASHIP.setLocalScale(134.1f, 1f, 19.52f);
         SEASHIP.rotate(0, -90f*FastMath.DEG_TO_RAD, 0);
         SEASHIP.setLocalTranslation(0, 20f, 128f);
         
-        BARGE.setLocalScale(50f, 1f, 4.88f);
+        BARGE = am.loadModel("Models/barge/barge.j3o");
+        BARGE.setLocalScale(50f, 1f, 5.5f);
         BARGE.rotate(0, -90f*FastMath.DEG_TO_RAD, 0);
-        BARGE.setLocalTranslation(0, 10f, 40f);
+        BARGE.setLocalTranslation(0, -7f, 40f);
 
         LORRY = am.loadModel("Models/lorry/lorry.j3o");
         LORRY.setLocalScale(1f, 1f, 1f);

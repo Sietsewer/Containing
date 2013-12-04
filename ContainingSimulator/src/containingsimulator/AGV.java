@@ -94,7 +94,7 @@ private void nextWaypoint(int wayPointIndex){
         if(this.container == null){
             this.container = container;
             this.attachChild(container);
-            this.container.setLocalTranslation(0f, 3f, 0f);
+            this.container.setLocalTranslation(0f, 4f, 0f);
             this.container.setLocalRotation(this.viewModel.getLocalRotation());
             return true;
         } else {
@@ -114,6 +114,9 @@ private void nextWaypoint(int wayPointIndex){
         
         return tempCont;
     }
+     /**
+     * @return null if there is no container. Returns the ID if there is one.
+     */
     
     public Container getContainerObject()
     {

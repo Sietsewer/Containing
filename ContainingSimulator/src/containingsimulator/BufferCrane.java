@@ -81,10 +81,6 @@ public class BufferCrane extends Crane {
                 }
                 break; 
             case 9:
-                doAction(1,true);
-                break;
-            case 10:
-                resetPos(1);
                 resetPos(2);
                 resetPos(3);
              this.resetAll();

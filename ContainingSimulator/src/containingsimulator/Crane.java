@@ -336,10 +336,10 @@ public abstract class Crane extends Node implements MotionPathListener {
             case 1:
                 break;
             case 2:
-                  this.sNode.setLocalTranslation(defPosSlider);
+                  this.sNode.setLocalTranslation(defPosSlider.add(0.1f,0,0.1f));
                 break;
             case 3:
-                 this.hNode.setLocalTranslation(defPosHook);
+                 this.hNode.setLocalTranslation(defPosHook.add(0.1f,0,0.1f));
                 break;
         }
        }

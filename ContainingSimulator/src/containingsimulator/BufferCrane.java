@@ -23,9 +23,9 @@ public class BufferCrane extends Crane {
         hNode.setLocalTranslation(new Vector3f(0,18.5f,0));
         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         
-        this.defPosBase = this.position.clone();
-        this.defPosHook = hNode.getWorldTranslation().clone();
-        this.defPosSlider = sNode.getWorldTranslation().clone();
+        this.defPosBase = this.position.add(0.1f,0,0).clone();
+        this.defPosHook = hNode.getWorldTranslation().add(0.1f,0,0).clone();
+        this.defPosSlider = sNode.getWorldTranslation().add(0.1f,0,0).clone();
     }
 
     private void commonSteps()

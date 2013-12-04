@@ -131,7 +131,7 @@ public class SeaCrane extends Crane {
     {
         basePath.clearWayPoints();
         
-        Vector3f startPos = this.getLocalTranslation().add(0,0,0.1f);
+        Vector3f startPos = this.getLocalTranslation().add(0.1f,0,0.1f);
         if(reversed)
         {
         basePath.addWayPoint(startPos);    

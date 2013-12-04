@@ -631,15 +631,14 @@ public class Main extends SimpleApplication {
     };
     private void changeGlobalSpeed(float acceleration)
     {
-        if(acceleration<15&&acceleration > 0)
-        {
+        
         globalSpeed = acceleration;
         
         for(AGV agv: agvs)
         {
             agv.globalSpeedChanged();
         }
-        }
+        
     }
 
     protected void init_CrossHairs() {

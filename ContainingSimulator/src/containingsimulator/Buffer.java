@@ -152,7 +152,7 @@ public class Buffer extends Node{
     public void addContainer(Vector3f index, Container c1){
         Container c2 = (Container)c1.clone();
         bufferArray[(int)index.z][(int)index.y][(int)index.x] = c2;
-        c2.setIndexPosition(index);
+        c2.setIndexPosition(new Vector3f(index.z, index.y, index.x));
         c2.setLocalTranslation(new Vector3f(index.z * 2 * c2.size.x,
                 index.y * 2 * c2.size.y, index.x * 2 * c2.size.z)); //fit container into buffer
         bufferNode.attachChild(c2);

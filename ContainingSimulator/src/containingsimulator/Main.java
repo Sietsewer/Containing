@@ -101,7 +101,7 @@ public class Main extends SimpleApplication {
     
 
     /**
-     *
+     * Simulator initialization
      */
     @Override
     public void simpleInitApp() {
@@ -116,7 +116,7 @@ public class Main extends SimpleApplication {
     }
 
     /**
-     *
+     * Update function
      * @param tpf
      */
     @Override
@@ -155,7 +155,7 @@ public class Main extends SimpleApplication {
     }
 
     /**
-     * Load all used assets
+     * Load all used assets and initialize simulator objects
      */
     void loadAssets() {
 
@@ -275,6 +275,10 @@ public class Main extends SimpleApplication {
         listener.sendMessage(Message);
     }
 
+    /**
+     * Adds incoming message to todo list
+     * @param decodedMessage the message which to add
+     */
     public void messageReceivedEvent(Message decodedMessage) {
         this.messagesTodo.add(decodedMessage);
     }

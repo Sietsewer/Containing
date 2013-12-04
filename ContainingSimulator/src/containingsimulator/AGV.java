@@ -129,6 +129,11 @@ private void nextWaypoint(int wayPointIndex){
         return container == null ? null : container.id;
     }
 
+    /**
+     * Moves AGV to next waypoint, stops AGV and sends READY to controller once end is reached
+     * @param motionControl MotionEvent class
+     * @param wayPointIndex current index of list of waypoints
+     */
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
         if(wayPointIndex+1 == path.getNbWayPoints()){
             if(targetCrane instanceof BufferCrane){
@@ -143,6 +148,10 @@ private void nextWaypoint(int wayPointIndex){
 
     }
     
+    /**
+     * Snaps AGV to parking spot location and sets its rotation
+     * @param spot the parking spot which to snap the AGV to
+     */
     public void jumpToPark(ParkingSpot spot){
         this.setLocalTranslation(spot.translation);
         this.setLocalRotation(new Quaternion().fromAngles(0f, spot.rotation, 0f));

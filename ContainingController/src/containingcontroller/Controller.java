@@ -273,7 +273,7 @@ public class Controller {
 
         Calendar cal = Calendar.getInstance(); // creates calendar
         cal.setTime(simTime); // sets calendar time/date
-        cal.add(Calendar.SECOND, 1); // adds one hour
+        cal.add(Calendar.SECOND, 1); // adds one minute
         simTime = cal.getTime(); // returns new date object, one hour in the future
     }
 
@@ -715,6 +715,10 @@ public class Controller {
         this.PrintMessage("Total containers - " + containers.size());
         createTransporters();
         this.PrintMessage("Total tranporters  - " + allArivingTransporters.size());
+        if(allArivingTransporters.size()>0)
+        {
+          simTime =  allArivingTransporters.get(0).getContainers().get(0).getDateArrival();
+        }
 
 
 

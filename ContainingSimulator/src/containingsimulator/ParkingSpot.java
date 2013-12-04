@@ -13,12 +13,12 @@ import com.jme3.math.Vector3f;
 public class ParkingSpot {
     public Vector3f translation;        //local translation of parking space
     public float rotation;              //rotation of parking space
-    public boolean occupied;
+    public boolean occupied;            //whether this spot is occupied or not
     
     /**
      * Constructor
-     * @param translation
-     * @param rotation 
+     * @param translation the location of this parking spot
+     * @param rotation the rotation for the parked vehicle
      */
     public ParkingSpot(Vector3f translation, float rotation){
         this.translation = translation;

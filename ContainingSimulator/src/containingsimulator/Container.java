@@ -86,9 +86,9 @@ public class Container extends Node{
     }
     
     /**
-     * Count adjacent neighbours in buffer
+     * Count adjacent neighbours in a group of containers
      * @param buffer the array in which to check for neighbours
-     * @return 
+     * @return the amount of neighbors the container has inside this array
      */
     private int getNeighbours(Container[][][] buffer){
         int neighbours = 0;
@@ -154,6 +154,10 @@ public class Container extends Node{
         geom.setMaterial(mat);
     }
 
+    /**
+     * Write this container as string
+     * @return container information inside a string
+     */
     @Override
     public String toString() {
         return "Container{" + "id=" + id + ", realPosition=" + realPosition + ", indexPosition=" + indexPosition + ", size=" + size + '}';

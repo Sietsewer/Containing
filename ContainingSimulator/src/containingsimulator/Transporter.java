@@ -246,6 +246,11 @@ public class Transporter extends Node implements MotionPathListener {
         return tempCont;
     }
     
+    /**
+     * Find the actual position of a container inside this simulation
+     * @param indexpos index of the container for which to find the position inside the simulation
+     * @return the position of the container with this index inside the simulation
+     */
     public Vector3f getRealContainerPosition(Vector3f indexpos){
         if (this.containers[(int) position.x][(int) position.y][(int) position.z] != null) {
             return this.containers[(int) position.x][(int) position.y][(int) position.z].getWorldTranslation();

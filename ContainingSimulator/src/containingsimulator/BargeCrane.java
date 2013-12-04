@@ -32,11 +32,8 @@ public class BargeCrane extends Crane {
         defPosBase = this.position.add(0,0,0.1f).clone();
         
         this.baseDur = 2.2f;
-        this.baseDurLoaded = 0.83f; 
         this.sliDur = 5f;
-        this.sliDurLoaded = 5f;
         this.hookDur = 5f;
-        this.hookDurLoaded = 5f;
     }
     
     
@@ -152,6 +149,7 @@ public class BargeCrane extends Crane {
          basePath.addWayPoint(startPos);
          basePath.addWayPoint(new Vector3f(target.x,startPos.y,startPos.z));    
         }
+         baseControl.setInitialDuration(basePath.getLength()/baseDur/Main.globalSpeed);
          baseControl.play();
     }
     
@@ -175,7 +173,7 @@ public class BargeCrane extends Crane {
                  ,startPoint.y,
                  target.z-sNode.getWorldTranslation().z));    
         }
-        
+          sliderControl.setInitialDuration(sliderPath.getLength()/sliDur/Main.globalSpeed);
          sliderControl.play();
     }
     
@@ -195,6 +193,7 @@ public class BargeCrane extends Crane {
         hookPath.addWayPoint(startPoint);
         hookPath.addWayPoint(new Vector3f(startPoint.x,target.y-sNode.getWorldTranslation().y,target.z-sNode.getWorldTranslation().z));
         }
+        hookControl.setInitialDuration(hookPath.getLength()/hookDur/Main.globalSpeed);
         hookControl.play();
     }
 

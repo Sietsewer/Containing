@@ -31,11 +31,11 @@ public class TrainCrane extends Crane implements MotionPathListener{
         this.defPosSlider = this.sNode.getWorldTranslation().clone();
         
          this.baseDur = 3f;
-        this.baseDurLoaded = 2f;
+       // this.baseDurLoaded = 2f;
         this.sliDur = 5f;
-        this.sliDurLoaded = 5f;
+       // this.sliDurLoaded = 5f;
         this.hookDur = 5f;
-        this.hookDurLoaded = 5f;
+       // this.hookDurLoaded = 5f;
     }
 
     

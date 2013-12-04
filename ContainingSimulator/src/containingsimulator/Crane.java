@@ -110,11 +110,11 @@ public abstract class Crane extends Node implements MotionPathListener {
      */
     protected float sliDur = 2f;
     
-    protected float  sliDurLoaded = 1f;
+    protected float  sliSpeedLoaded = 1f;
     
-    protected float hookDurLoaded = 1f;
+    protected float hookSpeedLoaded = 1f;
     
-    protected  float baseDurLoaded = 1f;
+    protected  float baseSpeedLoaded = 1f;
     /**
      *Next vector in simulator where the crane should go to
      */
@@ -151,7 +151,7 @@ public abstract class Crane extends Node implements MotionPathListener {
      */
     protected Vector3f defPosBase;
 
-   
+    protected boolean loaded = false;
 
     /**
      *
@@ -429,6 +429,7 @@ public abstract class Crane extends Node implements MotionPathListener {
              transporter.setContainer(cont);
              transporter = null;
          }
+         loaded = false;
      }
      
     /**
@@ -453,6 +454,7 @@ public abstract class Crane extends Node implements MotionPathListener {
             ((BufferCrane)this).buffer.removeContainer(cont.indexPosition);
         }
         cont.rotate(0, base.getWorldRotation().toAngles(null)[1], 0);
+        loaded = true;
     }
     
        /**
@@ -556,48 +558,12 @@ public abstract class Crane extends Node implements MotionPathListener {
      */
     protected void updateSpeed() 
      {
-       //path.getLength()/11.11f/Main.globalSpeed = 40kph
-         //5.55  m/s = 20 kph
-        
-        baseControl.setInitialDuration(basePath.getLength()/baseDur/Main.globalSpeed);
-        sliderControl.setInitialDuration(sliderPath.getLength()/sliDur/ Main.globalSpeed);
-        hookControl.setInitialDuration(hookPath.getLength()/hookDur / Main.globalSpeed);
+        baseControl.setSpeed(loaded ? 0.5f : 1);
+        sliderControl.setSpeed(loaded ? .5f : 1);
+        hookControl.setSpeed(loaded ? 0.5f : 1);
      }
-    protected void changeDuration(MotionEvent mC,boolean loaded)
-    {
-        MotionPath path = mC.getPath();
+    
 
-        if(loaded)
-        {
-            if(path.equals(basePath))
-            {
-            mC.setInitialDuration(mC.getPath().getLength()/baseDurLoaded/Main.globalSpeed);
-            }
-            else if(path.equals(sliderPath))
-            {
-            mC.setInitialDuration(mC.getPath().getLength()/sliDurLoaded/Main.globalSpeed);
-            }
-            else{
-            mC.setInitialDuration(mC.getPath().getLength()/hookDurLoaded/Main.globalSpeed);
-            }}    
-        else
-        {
-            if(path.equals(basePath))
-            {
-               mC.setInitialDuration(mC.getPath().getLength()/baseDur/Main.globalSpeed);
-            }
-            else if(path.equals(sliderPath))
-            {
-               mC.setInitialDuration(mC.getPath().getLength()/sliDur/Main.globalSpeed);
-            }
-            else
-            {
-               mC.setInitialDuration(mC.getPath().getLength()/hookDur/Main.globalSpeed);
-            }
-        }
-    }
-   
-     
      
      /**
      * Keeping track of where the motionpath is

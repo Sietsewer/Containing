@@ -31,13 +31,9 @@ public class SeaCrane extends Crane {
         this.defPosHook = hNode.getWorldTranslation().clone();
         this.defPosSlider = sNode.getWorldTranslation().clone();
         
-        
         this.baseDur = 1.1f;
-        this.baseDurLoaded = this.baseDur;
-        this.sliDur = 1.8f;
-        this.sliDurLoaded = 1.8f;
-        this.hookDur = 1.8f;
-        this.hookDurLoaded = 1.8f;
+        this.sliDur = 12f;
+        this.hookDur = 8f;
     }
 
    @Override
@@ -150,6 +146,7 @@ public class SeaCrane extends Crane {
         basePath.addWayPoint(startPos);
         basePath.addWayPoint(new Vector3f(startPos.x,startPos.y, target.z));     
         }
+       baseControl.setInitialDuration(basePath.getLength()/baseDur/Main.globalSpeed);
         baseControl.play();
     }
 
@@ -169,6 +166,7 @@ public class SeaCrane extends Crane {
           sliderPath.addWayPoint(startPoint);
           sliderPath.addWayPoint(new Vector3f(target.x - sNode.getWorldTranslation().x, startPoint.y,startPoint.z));
         }
+         sliderControl.setInitialDuration(sliderPath.getLength()/sliDur/Main.globalSpeed);
         sliderControl.play();
     }
 
@@ -189,7 +187,7 @@ public class SeaCrane extends Crane {
         hookPath.addWayPoint(startPoint);
         hookPath.addWayPoint(new Vector3f(startPoint.x, target.y - sNode.getWorldTranslation().y, startPoint.z));
         }
-        
+        hookControl.setInitialDuration(hookPath.getLength()/hookDur/Main.globalSpeed);
         hookControl.play();
     }
 

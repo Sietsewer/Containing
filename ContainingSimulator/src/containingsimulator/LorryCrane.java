@@ -19,8 +19,6 @@ import com.jme3.scene.Spatial;
  */
 public class LorryCrane extends Crane implements MotionPathListener {
 
-    
-    
 
     public ParkingSpot parkingSpot;
     
@@ -38,11 +36,11 @@ public class LorryCrane extends Crane implements MotionPathListener {
         this.defPosSlider = this.sNode.getWorldTranslation().clone();
         
         this.baseDur = 5.5f;
-        this.baseDurLoaded = 4.16f;
+       // this.baseDurLoaded = 4.16f;
         this.sliDur = 5f;
-        this.sliDurLoaded = 5f;
+       // this.sliDurLoaded = 5f;
         this.hookDur = 5f;
-        this.hookDurLoaded = 5f;
+       // this.hookDurLoaded = 5f;
         
     }
 

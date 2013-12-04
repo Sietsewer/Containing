@@ -29,11 +29,8 @@ public class BufferCrane extends Crane {
         this.defPosSlider = sNode.getWorldTranslation().add(0.1f,0,0).clone();
         
         this.baseDur = 3f;
-        this.baseDurLoaded = 2f;
-        this.sliDur = 2f;
-        this.sliDurLoaded = 2f;
-        this.hookDur = 2f;
-        this.hookDurLoaded = 2f;
+        this.sliDur = 14f;
+        this.hookDur = 12f;
     }
 
     private void commonSteps()
@@ -145,7 +142,7 @@ public class BufferCrane extends Crane {
          basePath.addWayPoint(startPos);
          basePath.addWayPoint(new Vector3f(startPos.x,startPos.y,target.z));    
         }
-        
+         baseControl.setInitialDuration(basePath.getLength()/baseDur/Main.globalSpeed);
          baseControl.play();
     }
     
@@ -168,7 +165,7 @@ public class BufferCrane extends Crane {
                  ,startPoint.y,
                  startPoint.z));    
          }
-         
+           sliderControl.setInitialDuration(sliderPath.getLength()/sliDur/Main.globalSpeed);
          sliderControl.play();
     }
     
@@ -189,6 +186,7 @@ public class BufferCrane extends Crane {
               hookPath.addWayPoint(startPoint);
               hookPath.addWayPoint(new Vector3f(target.x-sNode.getWorldTranslation().x,target.y-sNode.getWorldTranslation().y,sNode.getLocalTranslation().z));
           }
+          hookControl.setInitialDuration(hookPath.getLength()/hookDur/Main.globalSpeed);
       
        
         hookControl.play();

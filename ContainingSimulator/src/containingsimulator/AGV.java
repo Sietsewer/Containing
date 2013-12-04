@@ -130,7 +130,8 @@ private void nextWaypoint(int wayPointIndex){
     }
 
     /**
-     * Moves AGV to next waypoint, stops AGV and sends READY to controller once end is reached
+     * Moves AGV to next waypoint, stops AGV and sends READY to controller once
+     * the end is reached
      * @param motionControl MotionEvent class
      * @param wayPointIndex current index of list of waypoints
      */

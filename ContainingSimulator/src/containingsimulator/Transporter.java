@@ -81,9 +81,9 @@ public class Transporter extends Node implements MotionPathListener {
     /**
      * Constructor
      *
-     * @param containersList
-     * @param position
-     * @param type
+     * @param containersList a list of SimContainers to create Containers from
+     * @param position position of this transporter inside the simulation
+     * @param type type of transporter, see TransportTypes class for identifiers
      */
     public Transporter(String id, ArrayList<SimContainer> containersList, Vector3f position, int type) {
         super(id);
@@ -231,6 +231,12 @@ public class Transporter extends Node implements MotionPathListener {
         return tempCont;
     }
     
+    /**
+     * Finds and returns a container by container ID
+     *
+     * @param id the id to search for
+     * @return reference to a container that matches the ID
+     */
     public Container getContainerByID(String id){
         Container tempCont = null;
         for(int i = 0; i < containers.length; i++){
@@ -279,12 +285,22 @@ public class Transporter extends Node implements MotionPathListener {
         }
     }
     
+    /**
+     * Move transporter to next waypoint and rotate it accordingly
+     * @param wayPointIndex the index of the waypoint to move towards
+     */
     private void nextWaypoint(int wayPointIndex){
         this.lookAt(path.getWayPoint(wayPointIndex),Vector3f.UNIT_Y);
         this.motionEvent.setSpeed(.5f*Main.globalSpeed);
         
     }
     
+    /**
+     * Moves transporter to next waypoint, stops transporter and sends READY to
+     * controller once the end is reached
+     * @param motionControl MotionEvent class
+     * @param wayPointIndex current index of list of waypoints
+     */
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
         if(wayPointIndex == path.getNbWayPoints()-1){
             path.clearWayPoints();
@@ -330,14 +346,4 @@ public class Transporter extends Node implements MotionPathListener {
         LORRY.setMaterial(mat);
         TRAIN.setMaterial(mat);
     }
-
-    /**
-     * Load containers
-     *
-     * @param container
-     */
-    public void loadContainer(Container container) {
-    }
-
-    
 }

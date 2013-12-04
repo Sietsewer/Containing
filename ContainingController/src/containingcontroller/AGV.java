@@ -118,18 +118,34 @@ public class AGV {
         return "AGV{" + "name=" + name + ", isHome=" + isHome + ", container=" + container + ", home=" + home  + ", homeBuffer=" + homeBuffer.id + '}';
     }
 
+    /**
+     * check if agv is ready
+     * @return
+     */
     public boolean isReady() {
         return ready;
     }
 
+    /**
+     * set if agv is ready
+     * @param ready
+     */
     public void setReady(boolean ready) {
         this.ready = ready;
     }
 
+    /**
+     * check if agv is gome
+     * @return
+     */
     public boolean isIsHome() {
         return isHome;
     }
 
+    /**
+     *  set if agv is home
+     * @param isHome
+     */
     public void setIsHome(boolean isHome) {
         this.isHome = isHome;
     }

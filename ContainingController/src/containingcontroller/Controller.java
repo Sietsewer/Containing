@@ -29,28 +29,36 @@ import java.util.logging.Logger;
  */
 public class Controller {
 
+    //pathfinde variable
     PathFinder pathFinder;
+    //server variables
     private Server server;//Server for communication between applications
     private ControllerWindow window;//Mainwindow to print log
-    public List<Transporter> allArivingTransporters;
-    List<Container> allContainers;// this list holds all containers
+    //timer variables
     Timer simTimer;//timer that progresses time in controller
-    Date simTime;
-    SimpleDateFormat timeFormat;
-    List<Transporter> currentTransporter;
-    List<Buffer> buffers;
-    List<AGV> agvs;
-    List<Crane> lorreyCranes;
-    List<Crane> seaCranes;
-    List<Crane> bargeCranes;
-    List<Crane> trainCranes;
-    List<AGV> agvLoadedMovingHome;
+    Date simTime; // time in the simulation
+    SimpleDateFormat timeFormat; // time format for window
+    //objects lists
+    List<Buffer> buffers;//list of all buffers
+    List<AGV> agvs;//list of all agvs
+    List<Crane> lorreyCranes;//list of all lorreyCranes
+    List<Crane> seaCranes;//list of all seaCranes
+    List<Crane> bargeCranes;//list of all bargeCranes
+    List<Crane> trainCranes;//list of all trainCranes
+    //run time lists
+    List<Transporter> currentTransporter;//list of current transporters on the map
+    List<AGV> agvLoadedMovingHome;//
     HashMap<AGV, Crane> waitingToBeReadyAtCrane;
     HashMap<Crane, AGV> waitingForCraneToPickUpFromAgv;
     HashMap<Crane, AGV> waitingForCraneToPutToAgv;
     HashMap<Crane, Transporter> dockedTransporter;
     HashMap<AGV, Crane> waitingForBufferCrane;
     HashMap<Crane, AGV> waitingForBuferCranePickup;
+    //list from xml load
+    /**
+     * list of all transporters that are arriving
+     */
+    public List<Transporter> allArivingTransporters; // this list holds all loaded transporters
 
     /**
      *
@@ -239,7 +247,7 @@ public class Controller {
                         }
                     }
                     break;
-                case TransportTypes.TROLLEY:
+                case TransportTypes.LORREY:
                     for (Crane crane : lorreyCranes) {
                         if (!dockedTransporter.containsKey(crane)) {
                             t.setDockingPoint(crane);
@@ -269,7 +277,10 @@ public class Controller {
 
         }
 
-
+        ArrayList<Container> departingContainers = new ArrayList();
+        for (Buffer buf : buffers) {
+            departingContainers.addAll(buf.checkDepartingContainers(simTime));
+        }
 
         Calendar cal = Calendar.getInstance(); // creates calendar
         cal.setTime(simTime); // sets calendar time/date
@@ -286,6 +297,9 @@ public class Controller {
         }
     }
 
+    /**
+     * shutdowns client
+     */
     public void shutDown() {//shutdowns client
         Message m = new Message(Commands.SHUTDOWN, null);
         m.setParameters(new Object[]{});
@@ -309,6 +323,12 @@ public class Controller {
         }).start();
     }
 
+    /**
+     * Let buffer crane pickup container from agv
+     *
+     * @param agv
+     * @param bufferCrane
+     */
     public void getContainerBuffer(AGV agv, Crane bufferCrane) {
         bufferCrane.ready = false;
         Message message = new Message(Commands.GET_CONTAINER, new Object[]{agv.name, bufferCrane.id});
@@ -351,7 +371,7 @@ public class Controller {
 
     }
 
-    private void createTransporters() {
+    private void createTransporters(List<Container> allContainers) {
         Container previousContainer = null;
         Transporter currentTransporter = null;
         allArivingTransporters.clear();
@@ -363,7 +383,7 @@ public class Controller {
             } else {
                 if (c.getDateArrival().getTime() == previousContainer.getDateArrival().getTime()
                         && c.getTransportTypeArrival() == currentTransporter.getTransportType()
-                        && c.getTransportTypeArrival() != TransportTypes.TROLLEY) {
+                        && c.getTransportTypeArrival() != TransportTypes.LORREY) {
                     currentTransporter.loadContainer(c);
                 } else {
                     allArivingTransporters.add(currentTransporter);
@@ -710,14 +730,12 @@ public class Controller {
     }
 
     void setContainers(List<Container> containers) {
-        allContainers = containers;
         Collections.sort(containers, new ContainerComparer());
         this.PrintMessage("Total containers - " + containers.size());
-        createTransporters();
+        createTransporters(containers);
         this.PrintMessage("Total tranporters  - " + allArivingTransporters.size());
-        if(allArivingTransporters.size()>0)
-        {
-          simTime =  allArivingTransporters.get(0).getContainers().get(0).getDateArrival();
+        if (allArivingTransporters.size() > 0) {
+            simTime = allArivingTransporters.get(0).getContainers().get(0).getDateArrival();
         }
 
 

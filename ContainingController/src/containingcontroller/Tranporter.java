@@ -80,7 +80,7 @@ class Transporter {
                     }
                 }
             }
-        } else if (transportType == TransportTypes.TROLLEY) {
+        } else if (transportType == TransportTypes.LORREY) {
             if (containers.size() > 0) {
                 return null;
             } else {

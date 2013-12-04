@@ -15,6 +15,9 @@ public class Commands {
      */
     final static public int READY = 0;
     
+    /**
+     * Shutdown simulator
+     */
     final static public int SHUTDOWN = 9;
     /**
      * Container must be moved by AVG
@@ -41,5 +44,8 @@ public class Commands {
      */
     static public int CREATE_TRANSPORTER = 6;
     
+    /**
+     * remove transporter from simulator
+     */
     static public int REMOVE_TRANSPORTER = 7;
 }

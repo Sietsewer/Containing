@@ -121,6 +121,13 @@ public class Buffer {
         return null;
     }
 
+    /**
+     * Check if space has been reserverd for other container
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
     public boolean checkSpaceReserved(float x, float y,float z)
     {
         for (Map.Entry<Container, CustomVector3f> e : reservedSpace.entrySet()) {
@@ -176,6 +183,11 @@ public class Buffer {
         return "Buffer{" + "id=" + id + ", containers=" + containers + ", crane=" + crane.id + ", reservedSpace=" + reservedSpace + ", pathNodeUp=" + pathNodeUp.getId() + ", pathNodeDown=" + pathNodeDown.getId() + '}';
     }
 
+    /**
+     * Check if there is an AGV Abailable from up or down-side
+     * @param up
+     * @return
+     */
     public AGV AGVAvailable(boolean up) {
         for (AGV a : ownedAGV) {
             if (a.isIsHome() == true
@@ -188,6 +200,10 @@ public class Buffer {
         return null;
     }
 
+    /**
+     * get number of containers in buffer
+     * @return
+     */
     public int getContainerCount() {
         int counter = 0;
         for (int x = 0; x < 26; x++) {

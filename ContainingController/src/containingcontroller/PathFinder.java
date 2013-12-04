@@ -31,6 +31,9 @@ public class PathFinder {
     private static String lblM = "m"; //main points
     private float smallCost = 0.5f; //smallest cost (the lorry points)
 
+    /**
+     *
+     */
     public PathFinder() {
     }
 

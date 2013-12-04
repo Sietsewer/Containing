@@ -19,9 +19,9 @@ public class TransportTypes {
      */
    final static public int BARGE = 1;
     /**
-     * TROLLEY identifier
+     * LORREY identifier
      */
-   final static public int TROLLEY = 2;
+   final static public int LORREY = 2;
     /**
      * TRAIN identifier
      */
@@ -35,7 +35,7 @@ public class TransportTypes {
      */
     public static int getTransportType(String type) {
         if (type.toLowerCase().contains("vrachtauto")) {
-            return TROLLEY;
+            return LORREY;
         } else if (type.toLowerCase().contains("trein")) {
             return TRAIN;
         } else if (type.toLowerCase().contains("zeeschip")) {
@@ -54,7 +54,7 @@ public class TransportTypes {
      * @return
      */
     public static String getTransportType(int type) {
-        if (type == TROLLEY) {
+        if (type == LORREY) {
             return "vrachtauto";
         } else if (type == TRAIN) {
             return "trein";

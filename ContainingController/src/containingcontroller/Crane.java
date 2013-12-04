@@ -10,10 +10,25 @@ package containingcontroller;
  */
 public class Crane {
 
+    /**
+     * kind of crane
+     */
     final static public int LorryCrane = 0;
+    /**
+     *kind of crane
+     */
     final static public int TrainCrane = 1;
+    /**
+     *kind of crane
+     */
     final static public int SeaCrane = 2;
+    /**
+     *kind of crane
+     */
     final static public int BargeCrane = 3;
+    /**
+     *kind of crane
+     */
     final static public int BufferCrane = 4;
     /**
      * Crane ID
@@ -38,6 +53,7 @@ public class Crane {
      * create crane with id
      *
      * @param id
+     * @param type  
      */
     public Crane(String id, int type) {
         this.id = id;

@@ -120,7 +120,7 @@ public class XMLParser {
                                 if (p.x > maxX && currentContainer.getTransportTypeArrival() == TransportTypes.SEASHIP) {
                                     maxX = (int) p.x;
                                 }
-                                if (currentContainer.getTransportTypeArrival() == TransportTypes.TROLLEY) {
+                                if (currentContainer.getTransportTypeArrival() == TransportTypes.LORREY) {
                                     p.x = 0;
                                 }
 

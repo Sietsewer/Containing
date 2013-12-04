@@ -87,15 +87,11 @@ public class Main extends SimpleApplication {
         Logger.getLogger("com.jme3").setLevel(Level.SEVERE);
         app = new Main();
         
-        app.setShowSettings(false);
         app.setDisplayFps(true);
         app.setDisplayStatView(true);
         
         AppSettings settings = new AppSettings(true);
-        settings.put("Width", 1280);
-        settings.put("Height", 720);
         settings.put("Title", "Project Containing - by Sjaal");
-        settings.put("VSync", true);
          //Anti-Aliasing
         settings.put("Samples", 0);
         app.setSettings(settings);  

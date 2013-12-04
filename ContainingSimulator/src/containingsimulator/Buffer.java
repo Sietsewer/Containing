@@ -109,8 +109,8 @@ public class Buffer extends Node{
     
     public Vector3f getRealContainerPosition(Vector3f indexpos){
         Vector3f csize = new Vector3f(1.22f, 1.22f, 6.705f);
-        Vector3f pos = new Vector3f(indexpos.x * 2 * csize.x, indexpos.y * 2 *
-                csize.y, indexpos.z * 2 * csize.z);
+        Vector3f pos = new Vector3f(indexpos.z * 2 * csize.x, indexpos.y * 2 *
+                csize.y, indexpos.x * 2 * csize.z);
         return pos.add(this.getWorldTranslation());
     }
     
@@ -136,10 +136,10 @@ public class Buffer extends Node{
      * @return 
      */
     public Container removeContainer(Vector3f index){
-        Container c1 = bufferArray[(int)index.x][(int)index.y][(int)index.z];
+        Container c1 = bufferArray[(int)index.z][(int)index.y][(int)index.x];
         Container c2 = (Container)c1.clone();
         bufferNode.detachChild(c1);
-        bufferArray[(int)index.x][(int)index.y][(int)index.z] = null;
+        bufferArray[(int)index.z][(int)index.y][(int)index.x] = null;
         setRendering();
         return c2;
     }
@@ -151,10 +151,10 @@ public class Buffer extends Node{
      */
     public void addContainer(Vector3f index, Container c1){
         Container c2 = (Container)c1.clone();
-        bufferArray[(int)index.x][(int)index.y][(int)index.z] = c2;
+        bufferArray[(int)index.z][(int)index.y][(int)index.x] = c2;
         c2.setIndexPosition(index);
-        c2.setLocalTranslation(new Vector3f(index.x * 2 * c2.size.x,
-                index.y * 2 * c2.size.y, index.z * 2 * c2.size.z)); //fit container into buffer
+        c2.setLocalTranslation(new Vector3f(index.z * 2 * c2.size.x,
+                index.y * 2 * c2.size.y, index.x * 2 * c2.size.z)); //fit container into buffer
         bufferNode.attachChild(c2);
         setRendering();
     }

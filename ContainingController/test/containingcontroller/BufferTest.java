@@ -20,22 +20,22 @@ import static org.junit.Assert.*;
  * @author Hendrik
  */
 public class BufferTest {
-    
+
     public BufferTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -54,9 +54,9 @@ public class BufferTest {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        Date date  = cal.getTime();
+        Date date = cal.getTime();
         Buffer instance = new Buffer();
-        Container c =new Container();
+        Container c = new Container();
         c.setDateDeparture(date);
         instance.containers[0][0][0] = c;
         ArrayList<Container> expResult = new ArrayList<>();
@@ -73,7 +73,7 @@ public class BufferTest {
         System.out.println("findBestBufferPlace");
         Container container = null;
         Buffer instance = new Buffer();
-        CustomVector3f expResult = new CustomVector3f(0,0,0);
+        CustomVector3f expResult = new CustomVector3f(0, 0, 0);
         CustomVector3f result = instance.findBestBufferPlace(container);
         assertEquals(expResult, result);
     }
@@ -85,13 +85,13 @@ public class BufferTest {
     public void testAddContainer() {
         System.out.println("addContainer");
         Container container = new Container();
-        CustomVector3f vec =new CustomVector3f(0,0,0);
+        CustomVector3f vec = new CustomVector3f(0, 0, 0);
         container.setBufferPosition(vec);
         Buffer instance = new Buffer();
-        instance.reservedSpace.put(vec, container);
+        instance.reservedSpace.put(container, vec);
         instance.addContainer(container);
-       int expResult = 1;
-       assertEquals(expResult, instance.getContainerCount());
+        int expResult = 1;
+        assertEquals(expResult, instance.getContainerCount());
 
     }
 
@@ -103,9 +103,9 @@ public class BufferTest {
         System.out.println("removeContainer");
         Container container = new Container();
         Buffer instance = new Buffer();
-        instance.containers[0][1][2]=container;
+        instance.containers[0][1][2] = container;
         instance.removeContainer(container);
-        int expResult =0;
+        int expResult = 0;
         assertEquals(expResult, instance.getContainerCount());
     }
 
@@ -115,15 +115,14 @@ public class BufferTest {
     @Test
     public void testReservePosition() {
         System.out.println("reservePosition");
-        Container container =new Container();
-        CustomVector3f vec= new CustomVector3f(0,0,0);
+        Container container = new Container();
+        CustomVector3f vec = new CustomVector3f(0, 0, 0);
         container.setBufferPosition(vec);
         Buffer instance = new Buffer();
         instance.reservePosition(container);
         assertEquals(true, instance.reservedSpace.containsKey(vec));
- 
-    }
 
+    }
 
     /**
      * Test of AGVAvailable method, of class Buffer.
@@ -132,7 +131,7 @@ public class BufferTest {
     public void testAGVAvailable() {
         System.out.println("AGVAvailable");
         Buffer instance = new Buffer();
-        AGV a =new AGV(new PathNode("BFA"),instance);
+        AGV a = new AGV(new PathNode("BFA"), instance);
         instance.ownedAGV.add(a);
         AGV expResult = a;
         AGV result = instance.AGVAvailable(true);

@@ -108,6 +108,15 @@ public final class CustomVector3f implements Cloneable, java.io.Serializable {
         this.z = z;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 19 * hash + Float.floatToIntBits(this.x);
+        hash = 19 * hash + Float.floatToIntBits(this.y);
+        hash = 19 * hash + Float.floatToIntBits(this.z);
+        return hash;
+    }
+
     /**
      * Constructor instantiates a new
      * <code>CustomVector3f</code> that is a copy of the provided vector

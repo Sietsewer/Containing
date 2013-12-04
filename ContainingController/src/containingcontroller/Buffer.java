@@ -8,6 +8,7 @@ import containing.xml.CustomVector3f;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -38,7 +39,7 @@ public class Buffer {
     /**
      * Hashmap for reserved spaces
      */
-    public HashMap<CustomVector3f, Container> reservedSpace;
+    public HashMap<Container, CustomVector3f> reservedSpace;
     /**
      * PathNode
      */
@@ -103,7 +104,7 @@ public class Buffer {
         for (int x = 0; x < 26; x++) {
             for (int z = 0; z < 6; z++) {
                 for (int y = 0; y < 6; y++) {
-                    if (containers[x][y][z] == null) {
+                    if (containers[x][y][z] == null && !checkSpaceReserved(x,y,z) ) {
                         if (y > 0 && containers[x][y - 1][z] != null) {
                             if (containers[x][y - 1][z].getDateDeparture().after(container.getDateDeparture())) {
                                 return new CustomVector3f(x, y, z);
@@ -118,15 +119,28 @@ public class Buffer {
         return null;
     }
 
+    public boolean checkSpaceReserved(float x, float y,float z)
+    {
+        for (Map.Entry<Container, CustomVector3f> e : reservedSpace.entrySet()) {
+            Container key = e.getKey();
+            CustomVector3f value = e.getValue();
+            if(value.x == x && value.y == y && value.z == z)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     /**
      * Adds a container to buffer
      *
      * @param container
      */
     public void addContainer(Container container) {
-        if (reservedSpace.get(container.getBufferPosition()) == container) {
+        if (reservedSpace.containsKey(container)) {
             containers[(int) container.getBufferPosition().x][(int) container.getBufferPosition().y][(int) container.getBufferPosition().z] = container;
-            reservedSpace.remove(container.getBufferPosition());
+            reservedSpace.remove(container);
         }
     }
 
@@ -153,9 +167,7 @@ public class Buffer {
      * @param container
      */
     public void reservePosition(Container container) {
-        if (containers[(int) container.getBufferPosition().x][(int) container.getBufferPosition().y][(int) container.getBufferPosition().z] == null) {
-            reservedSpace.put(container.getBufferPosition(), container);
-        }
+        reservedSpace.put(container, container.getBufferPosition());
     }
 
     @Override
@@ -165,10 +177,10 @@ public class Buffer {
 
     public AGV AGVAvailable(boolean up) {
         for (AGV a : ownedAGV) {
-            if (a.isIsHome() == true &&
-                    ((up && a.home.getId().toLowerCase().contains("BFA".toLowerCase())) 
+            if (a.isIsHome() == true
+                    && ((up && a.home.getId().toLowerCase().contains("BFA".toLowerCase()))
                     || (!up && a.home.getId().toLowerCase().contains("BFB".toLowerCase())))) {
-                
+
                 return a;
             }
         }

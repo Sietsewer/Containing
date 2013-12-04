@@ -173,6 +173,7 @@ public class Controller {
 
     void sendMessage(Message Message) {
         server.sendCommand(Message);
+        this.PrintMessage(Message.encodeMessage(Message));
         //    this.PrintMessage("Message send - " + Message.toString());
     }
 
@@ -312,7 +313,7 @@ public class Controller {
         Message message = new Message(Commands.GET_CONTAINER, new Object[]{agv.name, bufferCrane.id});
         bufferCrane.container = agv.container;
         agv.container = null;
-        this.PrintMessage(Message.encodeMessage(message));
+
         sendMessage(message);
     }
 
@@ -532,17 +533,18 @@ public class Controller {
         if (b.crane.container == null) {
             if (waitingForBufferCrane.containsValue(b.crane)) {
                 AGV agv = getWaitingAGV(b.crane);
-                getContainerBuffer(agv, b.crane);
-                this.PrintMessage("Buffer pickup new  - " + b.crane.id);
+                getContainerBuffer(agv, b.crane); 
             }
         } else {
+            this.PrintMessage("Put down - " + b.crane.id + "- " + b.crane.container.getBufferPosition());
             Message message = new Message(Commands.PUT_CONTAINER, new Object[]{b.crane.id, b.crane.container.getBufferPosition().x,
                 b.crane.container.getBufferPosition().y,
                 b.crane.container.getBufferPosition().z});
+            b.addContainer(b.crane.container);
             b.crane.container = null;
             b.crane.ready = false;
             this.sendMessage(message);
-            this.PrintMessage("Put down - " + b.crane.id);
+
         }
     }
 

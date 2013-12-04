@@ -36,6 +36,14 @@ public class LorryCrane extends Crane implements MotionPathListener {
         this.defPosBase = this.position.add(0,0,0.1f);
         this.defPosHook = this.hNode.getLocalTranslation().clone();
         this.defPosSlider = this.sNode.getWorldTranslation().clone();
+        
+        this.baseDur = 5.5f;
+        this.baseDurLoaded = 4.16f;
+        this.sliDur = 5f;
+        this.sliDurLoaded = 5f;
+        this.hookDur = 5f;
+        this.hookDurLoaded = 5f;
+        
     }
 
     @Override

@@ -15,10 +15,11 @@ import com.jme3.scene.Spatial;
 
 /**
  *
- * @author Ruben
+ * @author Len
  */
 public abstract class Crane extends Node implements MotionPathListener {
 
+   
     /**
      * Crane ID
      */
@@ -34,43 +35,132 @@ public abstract class Crane extends Node implements MotionPathListener {
      */
     protected int action = 0;
     
+    /**
+     * path of this node
+     */
     protected MotionPath basePath = new MotionPath();
+    /**
+     *path of hook-spatial
+     */
     protected MotionPath hookPath = new MotionPath();
+    /**
+     *path of slider-spatial
+     */
     protected MotionPath sliderPath = new MotionPath();
     
+    /**
+     *MotionEvent of basePath
+     */
     protected MotionEvent baseControl;
+    /**
+     *MotionEvent of hookPath
+     */
     protected MotionEvent hookControl;
+    /**
+     *
+     *MotionEvent of sliderPath
+     */
     protected MotionEvent sliderControl;
     
+    /**
+     *viewmodel of the base
+     */
     protected Spatial base;
+    /**
+     *viewmodel of the hook
+     */
     protected Spatial hook;
+    /**
+     *viewmodel of the slider
+     */
     protected Spatial slider;
     
+    /**
+     *node of slider (has hNode as childnode)
+     */
     protected Node sNode = new Node();
+    /**
+     *node of hook (has container as childnode when needed)
+     */
     protected Node hNode = new Node();
     
+    /**
+     *status of this crane
+     */
     protected boolean busy = false;
+    /**
+     *substatus of this crane
+     */
     protected boolean readyForL = false;
+    /**
+     *substatus of this crane
+     */
     protected boolean loadContainer = false;
     
-    protected static final float baseDur = 2f;
-    protected static final float hookDur = 2f;
-    protected static final float sliDur = 2f;
+    /**
+     * Duration of moving the base from a to b
+     */
+    protected float baseDur = 2f;
+    /**
+     *Duration of moving the hook from a to b
+     */
+    protected float hookDur = 2f;
+    /**
+     *Duration of moving the sldier from a to b
+     */
+    protected float sliDur = 2f;
     
+    protected float  sliDurLoaded = 1f;
+    
+    protected float hookDurLoaded = 1f;
+    
+    protected  float baseDurLoaded = 1f;
+    /**
+     *Next vector in simulator where the crane should go to
+     */
     protected Vector3f target = null;
+    /**
+     *Container that the crane needs to load/unload into/from a transporter or buffer
+     */
     protected Container cont = null;
+    /**
+     * Transporter object for communication, when necessary
+     */
     protected Transporter transporter = null;
-    protected Node transportNode= null;
+
+    /**
+     *
+     */
     protected AGV agv = null;
     
+    /**
+     *AGV object for communication, when necessary
+     */
     protected boolean pickupContainer;
     
+    /**
+     *default position of the hook at start, usefull for resetting the hook its position
+     */
     protected Vector3f defPosHook;
+    /**
+     *default position of the slider at start, usefull for resetting the slider its position
+     */
     protected Vector3f defPosSlider;
+    /**
+     *default position of the base at start, usefull for resetting the base its position
+     */
     protected Vector3f defPosBase;
 
+   
 
-
+    /**
+     *
+     * @param id
+     * @param pos
+     * @param base
+     * @param slider
+     * @param hook
+     */
     public Crane(String id, Vector3f pos, Spatial base, Spatial slider, Spatial hook) {
         super(id);
         this.id = id;
@@ -101,17 +191,27 @@ public abstract class Crane extends Node implements MotionPathListener {
         sliderPath.addListener(this);
     }
 
+    /**
+     *returns the ID
+     * @return 
+     */
     public String getId() {
         return this.id;
     }
 
+    /**
+     * returns the state of this crane
+     * @return
+     */
     public boolean isbusy() {
         return this.busy;
     }
 
+    /**
+     *resets all variables and sends end-messsage to Controller
+     */
     protected void resetAll()
     {
-        
          this.action = 0;
          this.busy = false;
          this.readyForL = false;
@@ -119,16 +219,26 @@ public abstract class Crane extends Node implements MotionPathListener {
          this.target = null;
          this.cont = null;
          this.transporter = null;
-         this.transportNode= null;
          sendMessage(this.id + " transfer finished");
     }
     
+    /**
+     *sends message to Controller
+     * prints message in console for debugging-info
+     * @param message
+     */
     protected void sendMessage(String message)
     {
         System.out.println(message);
           Main.sendReady(this.id);
     }
     
+    /**
+     * calls classmethod for playing a motionpath, based on which globalAction is given and if is reversed.
+     * @param globalAction
+     * @param reversed
+     * @return
+     */
     protected boolean doAction(int globalAction, boolean reversed)
     {
         switch(globalAction)
@@ -157,7 +267,14 @@ public abstract class Crane extends Node implements MotionPathListener {
         }
         return false;
     }
-    //from transport/buffer to agv
+
+    /**
+     * First method to be called from main for 
+     * picking up a container from a transporter or buffer.
+     * Initializes variables needed for starting this action
+     * @param cont
+     * @param trans
+     */
     public void pickupContainer(Container cont, Transporter trans)
     {
         if(!busy )
@@ -186,6 +303,8 @@ public abstract class Crane extends Node implements MotionPathListener {
               debugMessage(4,"pickupContainer");
         }
     }
+    
+    
     private void initializeStartUp()
     {
         this.target = cont.getWorldTranslation();
@@ -194,7 +313,10 @@ public abstract class Crane extends Node implements MotionPathListener {
     }
 
         
-    //From agv to transport/buffer
+    /**First method to be called from main for picking up a container from an AGV
+     *and transfering it to an transporter or buffer
+     * @param agv
+     */
     public void getContainer(AGV agv)
     {
         if(!busy)
@@ -225,20 +347,12 @@ public abstract class Crane extends Node implements MotionPathListener {
               debugMessage(4,"getContainer");
         }
     }
-        
-    /* public void loadContainer(Transporter trans) 
-     {
-         if(!loadContainer)
-         {
-        this.target = trans.getWorldTranslation();
-        loadContainer = true;
-         }
-         else
-         {
-              debugMessage(4,"loadContainer");
-         }
-     }*/
-     public void loadContainer(AGV agv)
+    
+     /**
+     *method to be called for loading a container from an agv
+     * @param agv
+     */
+    public void loadContainer(AGV agv)
      {
         if(!loadContainer)
         {
@@ -259,6 +373,7 @@ public abstract class Crane extends Node implements MotionPathListener {
          }
     }
      
+    
      private void debugMessage(int option, String message)
      {
          switch(option)
@@ -278,7 +393,12 @@ public abstract class Crane extends Node implements MotionPathListener {
          }
      }
     
-     public void putContainer(Vector3f nextPosition,Vector3f indexPosition)
+     /**
+     * Method to be called for putting a container on a transporter/buffer
+     * @param nextPosition
+     * @param indexPosition
+     */
+    public void putContainer(Vector3f nextPosition,Vector3f indexPosition)
      {
          
          if(cont !=null)
@@ -294,7 +414,10 @@ public abstract class Crane extends Node implements MotionPathListener {
          }
      }
      
-     protected void contOffHook()
+     /**
+     * Process of detaching the container from the hook
+     */
+    protected void contOffHook()
      {
          if(pickupContainer && this.agv!= null)
          {
@@ -308,6 +431,9 @@ public abstract class Crane extends Node implements MotionPathListener {
          }
      }
      
+    /**
+     *Process of attaching a container to the hook
+     */
     protected void contToHook() 
     {
         hNode.attachChild(cont);
@@ -329,7 +455,12 @@ public abstract class Crane extends Node implements MotionPathListener {
         cont.rotate(0, base.getWorldRotation().toAngles(null)[1], 0);
     }
     
-       protected void resetPos(int option)
+       /**
+     *
+     * Resets default position of chosen option
+     * @param option
+     */
+    protected void resetPos(int option)
        {
         switch(option)
         {
@@ -344,7 +475,12 @@ public abstract class Crane extends Node implements MotionPathListener {
         }
        }
      
-     protected boolean readyToLoad()
+     /**
+      * sets the crane ready for load if not done already, and sends a message to controller.
+     * returns true if the crane is ready and the controller has given permission to load
+     * @return
+     */
+    protected boolean readyToLoad()
      {
            if (!readyForL) 
             {
@@ -354,21 +490,51 @@ public abstract class Crane extends Node implements MotionPathListener {
             return (readyForL && loadContainer);
      }
      
-     public void moveToHome()
+     /**
+     * move the crane to its default position
+     */
+    public void moveToHome()
      {
          
         doAction(1,true);
      }
      
-     protected abstract void moveHook(boolean reversed);
-     protected abstract void moveBase(boolean reversed);
-     protected abstract void moveSlider(boolean reversed);
-     protected abstract void updateGet();
-     protected abstract void updatePickup();
+     /**
+     * initializes the motionpath of the hook and plays the animation
+     * @param reversed
+     */
+    protected abstract void moveHook(boolean reversed);
+     /**
+     *initializes the motionpath of the base and plays the animation
+     * @param reversed
+     */
+    protected abstract void moveBase(boolean reversed);
+     /**
+     *initializes the motionpath of the slider and plays the animation
+     * @param reversed
+     */
+    protected abstract void moveSlider(boolean reversed);
+     /**
+     *update the actions for getting a container from an AGV
+     */
+    protected abstract void updateGet();
+     /**
+     *update the actions for getting a container from a transporter/buffer
+     */
+    protected abstract void updatePickup();
      
-     public abstract ParkingSpot getParkingspot();
+     /**
+     * returns the parkingspot for an AGV from this crane
+     * @return
+     */
+    public abstract ParkingSpot getParkingspot();
      
-     public void update(float tpf)
+     /**
+     *  update method to be called from Main
+     * updates this cranes actions
+     * @param tpf
+     */
+    public void update(float tpf)
      {
          if(target!=null)
          {
@@ -385,15 +551,62 @@ public abstract class Crane extends Node implements MotionPathListener {
          }
 
      }
-     protected void updateSpeed() 
+     /**
+     *updates the current speed
+     */
+    protected void updateSpeed() 
      {
-        baseControl.setInitialDuration(baseDur / Main.globalSpeed);
-        sliderControl.setInitialDuration(sliDur / Main.globalSpeed);
-        hookControl.setInitialDuration(hookDur / Main.globalSpeed);
+       //path.getLength()/11.11f/Main.globalSpeed = 40kph
+         //5.55  m/s = 20 kph
+        
+        baseControl.setInitialDuration(basePath.getLength()/baseDur/Main.globalSpeed);
+        sliderControl.setInitialDuration(sliderPath.getLength()/sliDur/ Main.globalSpeed);
+        hookControl.setInitialDuration(hookPath.getLength()/hookDur / Main.globalSpeed);
      }
+    protected void changeDuration(MotionEvent mC,boolean loaded)
+    {
+        MotionPath path = mC.getPath();
+
+        if(loaded)
+        {
+            if(path.equals(basePath))
+            {
+            mC.setInitialDuration(mC.getPath().getLength()/baseDurLoaded/Main.globalSpeed);
+            }
+            else if(path.equals(sliderPath))
+            {
+            mC.setInitialDuration(mC.getPath().getLength()/sliDurLoaded/Main.globalSpeed);
+            }
+            else{
+            mC.setInitialDuration(mC.getPath().getLength()/hookDurLoaded/Main.globalSpeed);
+            }}    
+        else
+        {
+            if(path.equals(basePath))
+            {
+               mC.setInitialDuration(mC.getPath().getLength()/baseDur/Main.globalSpeed);
+            }
+            else if(path.equals(sliderPath))
+            {
+               mC.setInitialDuration(mC.getPath().getLength()/sliDur/Main.globalSpeed);
+            }
+            else
+            {
+               mC.setInitialDuration(mC.getPath().getLength()/hookDur/Main.globalSpeed);
+            }
+        }
+    }
+   
      
      
-     @Override
+     /**
+     * Keeping track of where the motionpath is
+     * every motionpath has 2 points. When index 1 is reached, the action
+     * is incremented with 1, which modifies the current action.
+     * @param motionControl
+     * @param wayPointIndex
+     */
+    @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
 
         action += wayPointIndex;

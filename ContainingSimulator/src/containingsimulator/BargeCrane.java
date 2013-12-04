@@ -30,6 +30,13 @@ public class BargeCrane extends Crane {
         defPosSlider = this.sNode.getWorldTranslation().clone();
         
         defPosBase = this.position.add(0,0,0.1f).clone();
+        
+        this.baseDur = 2.2f;
+        this.baseDurLoaded = 0.83f; 
+        this.sliDur = 5f;
+        this.sliDurLoaded = 5f;
+        this.hookDur = 5f;
+        this.hookDurLoaded = 5f;
     }
     
     

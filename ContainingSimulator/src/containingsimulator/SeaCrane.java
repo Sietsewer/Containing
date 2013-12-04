@@ -30,6 +30,14 @@ public class SeaCrane extends Crane {
         this.defPosBase =  this.position.add(0.1f,0,0);
         this.defPosHook = hNode.getWorldTranslation().clone();
         this.defPosSlider = sNode.getWorldTranslation().clone();
+        
+        
+        this.baseDur = 1.1f;
+        this.baseDurLoaded = this.baseDur;
+        this.sliDur = 1.8f;
+        this.sliDurLoaded = 1.8f;
+        this.hookDur = 1.8f;
+        this.hookDurLoaded = 1.8f;
     }
 
    @Override

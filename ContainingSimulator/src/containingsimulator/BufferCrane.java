@@ -16,6 +16,7 @@ public class BufferCrane extends Crane {
     
     Buffer buffer;
     
+    
     public BufferCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook, Buffer buffer)
     {
         super(id, basePos,base,slider, hook);
@@ -26,6 +27,13 @@ public class BufferCrane extends Crane {
         this.defPosBase = this.position.add(0.1f,0,0).clone();
         this.defPosHook = hNode.getWorldTranslation().add(0.1f,0,0).clone();
         this.defPosSlider = sNode.getWorldTranslation().add(0.1f,0,0).clone();
+        
+        this.baseDur = 3f;
+        this.baseDurLoaded = 2f;
+        this.sliDur = 2f;
+        this.sliDurLoaded = 2f;
+        this.hookDur = 2f;
+        this.hookDurLoaded = 2f;
     }
 
     private void commonSteps()

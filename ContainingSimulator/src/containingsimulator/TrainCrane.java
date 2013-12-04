@@ -29,6 +29,13 @@ public class TrainCrane extends Crane implements MotionPathListener{
         this.defPosBase = this.position.add(0.1f,0,0);//new Vector3f(this.getWorldTranslation().clone().z,this.getLocalTranslation().clone().y,this.getWorldTranslation().clone().x);
         this.defPosHook = this.hNode.getWorldTranslation().clone();
         this.defPosSlider = this.sNode.getWorldTranslation().clone();
+        
+         this.baseDur = 3f;
+        this.baseDurLoaded = 2f;
+        this.sliDur = 5f;
+        this.sliDurLoaded = 5f;
+        this.hookDur = 5f;
+        this.hookDurLoaded = 5f;
     }
 
     

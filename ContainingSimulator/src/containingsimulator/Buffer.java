@@ -8,7 +8,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 
 /**
- *
+ * Buffer row class for simulation, contains a spatial array of containers with
+ * helper functions for proper usage inside the simulator
  * @author Wessel
  */
 public class Buffer extends Node{

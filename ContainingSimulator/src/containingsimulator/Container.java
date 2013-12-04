@@ -17,7 +17,8 @@ import com.jme3.scene.shape.Box;
 import java.util.Random;
 
 /**
- *
+ * The container class for the simulation, only a visual representation with
+ * some helper functions to make its usage inside the simulator easier
  * @author Wessel
  */
 public class Container extends Node{

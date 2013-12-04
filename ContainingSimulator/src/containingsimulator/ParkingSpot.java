@@ -7,7 +7,7 @@ package containingsimulator;
 import com.jme3.math.Vector3f;
 
 /**
- *
+ * Represents a parking spot for an AGV inside the simulator
  * @author Sietse
  */
 public class ParkingSpot {

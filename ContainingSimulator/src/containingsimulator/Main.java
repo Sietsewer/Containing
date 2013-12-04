@@ -300,8 +300,11 @@ public class Main extends SimpleApplication {
                 Transporter trans = getTransporterByID((String) params[1]);
                 cont = getContainerByID((String) params[2]);
                 if (crane != null && trans != null && cont != null) {
+                    if (crane instanceof BufferCrane){
+                        //pak container van buffer ipv transport
+                    } else {
                         crane.pickupContainer(cont, trans);
-                    //do stuff, needs containers
+                    }
                 } else {
                     System.err.println("Error: No crane/container/transporter with this ID");
                 }

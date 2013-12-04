@@ -50,6 +50,7 @@ public class Controller {
     HashMap<Crane, AGV> waitingForCraneToPutToAgv;
     HashMap<Crane, Transporter> dockedTransporter;
     HashMap<AGV, Crane> waitingForBufferCrane;
+    HashMap<Crane, AGV> waitingForBuferCranePickup;
 
     /**
      *
@@ -58,7 +59,7 @@ public class Controller {
     public Controller(ControllerWindow window) {
 
         this.window = window;
-
+        waitingForBuferCranePickup = new HashMap<>();
         buffers = new ArrayList<>();
         agvs = new ArrayList<>();
         timeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -313,7 +314,7 @@ public class Controller {
         Message message = new Message(Commands.GET_CONTAINER, new Object[]{agv.name, bufferCrane.id});
         bufferCrane.container = agv.container;
         agv.container = null;
-
+        waitingForBuferCranePickup.put(bufferCrane, agv);
         sendMessage(message);
     }
 
@@ -535,9 +536,11 @@ public class Controller {
                 AGV agv = getWaitingAGV(b.crane);
                 getContainerBuffer(agv, b.crane);
                 waitingForBufferCrane.remove(agv);
+
             }
         } else {
-            this.PrintMessage("Put down - " + b.crane.id + "- " + b.crane.container.getBufferPosition());
+            waitingForBuferCranePickup.get(b.crane).setIsHome(true);
+            waitingForBuferCranePickup.remove(b.crane);
             Message message = new Message(Commands.PUT_CONTAINER, new Object[]{b.crane.id, b.crane.container.getBufferPosition().x,
                 b.crane.container.getBufferPosition().y,
                 b.crane.container.getBufferPosition().z});

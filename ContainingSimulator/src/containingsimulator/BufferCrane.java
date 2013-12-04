@@ -20,7 +20,6 @@ public class BufferCrane extends Crane {
     {
         super(id, basePos,base,slider, hook);
         this.buffer = buffer;
-        System.out.println(buffer.pSpots.length);
         hNode.setLocalTranslation(new Vector3f(0,18.5f,0));
         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         

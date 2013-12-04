@@ -15,30 +15,30 @@ import com.jme3.scene.Spatial;
 import java.util.ArrayList;
 
 /**
- *
+ * Class which represents the AGV in simulator.
  * @author Sietse
  */
 public class AGV extends Node implements MotionPathListener{
 
-    public Container container;
-    public String id;
-    public ParkingSpot pSpot;
-    boolean up;
+    public Container container;//The contianer that is mounted on the AGV.
+    public String id;//ID string of the AGV
+    public ParkingSpot pSpot;//Holds the current parking spot of the AGV.
+    boolean up;//holds (if the parking spot is in a buffer) if the parking spot is in the up, or down position.
     
-    private Crane targetCrane;
-    private MotionEvent motionEvent;
-    private float deltaX;
-    private float deltaY;
-    
-    MotionPath path = new MotionPath();
-    
-    
-    private Spatial viewModel;
+    private Crane targetCrane;//The crane at the end of the path.
+    private MotionEvent motionEvent;//Controls the motionpath that the AGV uses.
+    private MotionPath path;//Holds the path of the AGV.
+    private Spatial viewModel;//Model of the AGV.
 
+    /**
+     * Constructor. Inits all variable required.
+     * @param ID ID of the AGV.
+     * @param viewModel Model of the AGV.
+     */
     public AGV(String ID, Spatial viewModel) {
         this.id = ID;
- 
         this.viewModel = viewModel.clone();
+        path = new MotionPath();
         path.setCycle(false);
         path.setPathSplineType(Spline.SplineType.Linear);
         path.setCurveTension(1f);

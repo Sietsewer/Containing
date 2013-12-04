@@ -59,6 +59,7 @@ public class Controller {
      * list of all transporters that are arriving
      */
     public List<Transporter> allArivingTransporters; // this list holds all loaded transporters
+    public List<Transporter> allDepartingTransporters; //this list holds all departing transporters
 
     /**
      *
@@ -79,6 +80,7 @@ public class Controller {
         pathFinder.createMap();
         dockedTransporter = new HashMap<>();
         allArivingTransporters = new ArrayList<>();
+        allDepartingTransporters = new ArrayList<>();
         //Set time of simulator
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2004);
@@ -372,6 +374,7 @@ public class Controller {
     }
 
     private void createTransporters(List<Container> allContainers) {
+        List<Container> allDepContainers = new ArrayList<>(allContainers);
         Container previousContainer = null;
         Transporter currentTransporter = null;
         allArivingTransporters.clear();
@@ -397,6 +400,27 @@ public class Controller {
             i--;
         }
         allArivingTransporters.add(currentTransporter);
+        previousContainer = null;
+        
+        
+        allDepartingTransporters.clear();
+        for (int i = 0; i < allDepContainers.size(); i++) {
+            Container c = allDepContainers.get(i);
+            if (previousContainer == null) {
+                currentTransporter = new Transporter(c.getTransportTypeDeparture());
+            } else {
+                if (!(c.getDateArrival().getTime() == previousContainer.getDateArrival().getTime()
+                        && c.getTransportTypeArrival() == currentTransporter.getTransportType()
+                        && c.getTransportTypeArrival() != TransportTypes.LORREY)) {
+                    allDepartingTransporters.add(currentTransporter);
+                    currentTransporter = new Transporter(c.getTransportTypeArrival());
+                }
+            }
+            previousContainer = c;
+            allDepContainers.remove(i);
+            i--;
+        }
+        allDepartingTransporters.add(currentTransporter);
     }
 
     private AGV getValueFromHashmap(HashMap<AGV, Crane> collection, Crane c) {
@@ -733,7 +757,8 @@ public class Controller {
         Collections.sort(containers, new ContainerComparer());
         this.PrintMessage("Total containers - " + containers.size());
         createTransporters(containers);
-        this.PrintMessage("Total tranporters  - " + allArivingTransporters.size());
+        this.PrintMessage("Total arriving transporters  - " + allArivingTransporters.size());
+        this.PrintMessage("Total departing transporters  - " + allDepartingTransporters.size());
         if (allArivingTransporters.size() > 0) {
             simTime = allArivingTransporters.get(0).getContainers().get(0).getDateArrival();
         }

@@ -284,11 +284,11 @@ public class Controller {
             this.simTimer.cancel();
         }
     }
-    public void shutDown()
-    {//shutdowns client
-       Message m = new Message(Commands.SHUTDOWN, null);
-       m.setParameters(new Object[]{});
-       this.sendMessage(m);
+
+    public void shutDown() {//shutdowns client
+        Message m = new Message(Commands.SHUTDOWN, null);
+        m.setParameters(new Object[]{});
+        this.sendMessage(m);
     }
 
     /**
@@ -533,7 +533,8 @@ public class Controller {
         if (b.crane.container == null) {
             if (waitingForBufferCrane.containsValue(b.crane)) {
                 AGV agv = getWaitingAGV(b.crane);
-                getContainerBuffer(agv, b.crane); 
+                getContainerBuffer(agv, b.crane);
+                waitingForBufferCrane.remove(agv);
             }
         } else {
             this.PrintMessage("Put down - " + b.crane.id + "- " + b.crane.container.getBufferPosition());

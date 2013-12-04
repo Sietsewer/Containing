@@ -57,7 +57,7 @@ public class Buffer {
      */
     public Buffer(ArrayList<AGV> ownedAGV, Crane crane) {
         this.id = "BFR" + String.format("%03d", Buffer.ID++);
-        this.containers = new Container[6][6][26];
+        this.containers = new Container[26][6][6];
         this.ownedAGV = new ArrayList<>(ownedAGV);
         this.reservedSpace = new HashMap<>();
         this.crane = crane;
@@ -109,7 +109,9 @@ public class Buffer {
                             if (containers[x][y - 1][z].getDateDeparture().after(container.getDateDeparture())) {
                                 return new CustomVector3f(x, y, z);
                             }
-                        } else {
+                        } 
+                        else if(y==0)
+                        {
                             return new CustomVector3f(x, y, z);
                         }
                     }
@@ -122,7 +124,6 @@ public class Buffer {
     public boolean checkSpaceReserved(float x, float y,float z)
     {
         for (Map.Entry<Container, CustomVector3f> e : reservedSpace.entrySet()) {
-            Container key = e.getKey();
             CustomVector3f value = e.getValue();
             if(value.x == x && value.y == y && value.z == z)
             {

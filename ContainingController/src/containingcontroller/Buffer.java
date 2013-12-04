@@ -84,10 +84,11 @@ public class Buffer {
         for (Container[][] containerArray3 : containers) {
             for (Container[] containerArray2 : containerArray3) {
                 for (Container container : containerArray2) {
-                    if (container.getDateDeparture().after(date) || container.getDateDeparture().equals(date)) {
-                        departingContainers.add(container);
+                    if (container != null) {
+                        if (container.getDateDeparture().after(date) || container.getDateDeparture().equals(date)) {
+                            departingContainers.add(container);
+                        }
                     }
-
                 }
             }
         }
@@ -104,14 +105,12 @@ public class Buffer {
         for (int x = 0; x < 26; x++) {
             for (int z = 0; z < 6; z++) {
                 for (int y = 0; y < 6; y++) {
-                    if (containers[x][y][z] == null && !checkSpaceReserved(x,y,z) ) {
+                    if (containers[x][y][z] == null && !checkSpaceReserved(x, y, z)) {
                         if (y > 0 && containers[x][y - 1][z] != null) {
                             if (containers[x][y - 1][z].getDateDeparture().after(container.getDateDeparture())) {
                                 return new CustomVector3f(x, y, z);
                             }
-                        } 
-                        else if(y==0)
-                        {
+                        } else if (y == 0) {
                             return new CustomVector3f(x, y, z);
                         }
                     }
@@ -123,23 +122,22 @@ public class Buffer {
 
     /**
      * Check if space has been reserverd for other container
+     *
      * @param x
      * @param y
      * @param z
      * @return
      */
-    public boolean checkSpaceReserved(float x, float y,float z)
-    {
+    public boolean checkSpaceReserved(float x, float y, float z) {
         for (Map.Entry<Container, CustomVector3f> e : reservedSpace.entrySet()) {
             CustomVector3f value = e.getValue();
-            if(value.x == x && value.y == y && value.z == z)
-            {
+            if (value.x == x && value.y == y && value.z == z) {
                 return true;
             }
         }
         return false;
     }
-    
+
     /**
      * Adds a container to buffer
      *
@@ -185,6 +183,7 @@ public class Buffer {
 
     /**
      * Check if there is an AGV Abailable from up or down-side
+     *
      * @param up
      * @return
      */
@@ -202,6 +201,7 @@ public class Buffer {
 
     /**
      * get number of containers in buffer
+     *
      * @return
      */
     public int getContainerCount() {

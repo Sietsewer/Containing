@@ -92,22 +92,22 @@ public class Container extends Node{
      */
     private int getNeighbours(Container[][][] buffer){
         int neighbours = 0;
-        if(indexPosition.x + 1 < buffer.length && buffer[(int)indexPosition.x + 1][(int)indexPosition.y][(int)indexPosition.z] != null){
+        if(indexPosition.z + 1 < buffer.length && buffer[(int)indexPosition.z + 1][(int)indexPosition.y][(int)indexPosition.x] != null){
             neighbours++;
         }
-        if(indexPosition.x - 1 >= 0 && buffer[(int)indexPosition.x - 1][(int)indexPosition.y][(int)indexPosition.z] != null){
+        if(indexPosition.z - 1 >= 0 && buffer[(int)indexPosition.z - 1][(int)indexPosition.y][(int)indexPosition.x] != null){
             neighbours++;
         }
-        if(indexPosition.y + 1 < buffer[0].length && buffer[(int)indexPosition.x][(int)indexPosition.y + 1][(int)indexPosition.z] != null){
+        if(indexPosition.y + 1 < buffer[0].length && buffer[(int)indexPosition.z][(int)indexPosition.y + 1][(int)indexPosition.x] != null){
             neighbours++;
         }
-        if(indexPosition.y - 1 >= 0 && buffer[(int)indexPosition.x][(int)indexPosition.y - 1][(int)indexPosition.z] != null){
+        if(indexPosition.y - 1 >= 0 && buffer[(int)indexPosition.z][(int)indexPosition.y - 1][(int)indexPosition.x] != null){
             neighbours++;
         }
-        if(indexPosition.z + 1 < buffer[0][0].length && buffer[(int)indexPosition.x][(int)indexPosition.y][(int)indexPosition.z + 1] != null){
+        if(indexPosition.x + 1 < buffer[0][0].length && buffer[(int)indexPosition.z][(int)indexPosition.y][(int)indexPosition.x + 1] != null){
             neighbours++;
         }
-        if(indexPosition.z - 1 >= 0 && buffer[(int)indexPosition.x][(int)indexPosition.y][(int)indexPosition.z - 1] != null){
+        if(indexPosition.x - 1 >= 0 && buffer[(int)indexPosition.z][(int)indexPosition.y][(int)indexPosition.x - 1] != null){
             neighbours++;
         }
         return neighbours;

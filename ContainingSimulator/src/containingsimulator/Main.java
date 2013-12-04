@@ -154,6 +154,9 @@ public class Main extends SimpleApplication {
         //TODO: add render code
     }
 
+    /**
+     * Load all used assets
+     */
     void loadAssets() {
 
         Path.createPath();
@@ -264,6 +267,10 @@ public class Main extends SimpleApplication {
         dock.setLocalTranslation(0f, 0f, 600f);
     }
 
+    /**
+     * Send a message back to the controller
+     * @param Message the message which to send
+     */
     static void sendMessage(Message Message) {
         listener.sendMessage(Message);
     }
@@ -272,6 +279,10 @@ public class Main extends SimpleApplication {
         this.messagesTodo.add(decodedMessage);
     }
 
+    /**
+     * Process the incoming message
+     * @param decodedMessage the decoded message which to process
+     */
     private void messageRecieved(Message decodedMessage) {
         Object[] params = decodedMessage.getParameters();
         Container cont = null;
@@ -411,6 +422,12 @@ public class Main extends SimpleApplication {
         }
     }
 
+    /**
+     * Finds and returns a transporter by container ID
+     *
+     * @param id the id to search for
+     * @return reference to a transporter that matches the ID
+     */
     private Transporter getTransporterByID(String id) {
         for (Transporter trans : this.transporters) {
             if (trans.id.equalsIgnoreCase(id)) {
@@ -489,6 +506,12 @@ public class Main extends SimpleApplication {
         return c;
     }
 
+    /**
+     * Finds and returns an AGV by container ID
+     *
+     * @param id the id to search for
+     * @return reference to an AGV that matches the ID
+     */
     private AGV getAGVbyID(String id) {
 
         for (AGV a : agvs) {
@@ -499,6 +522,9 @@ public class Main extends SimpleApplication {
         return null;
     }
 
+    /**
+     * Initialize SeaCranes
+     */
     private void init_SeaCranes() {
         String cID = Path.getSeaID();
         for (int i = 1; i <= 10; i++) {
@@ -510,6 +536,9 @@ public class Main extends SimpleApplication {
         }
     }
 
+    /**
+     * Initialize BufferCranes
+     */
     private void init_BufferCranes() {
         String cID = Path.getBufferAID();
 
@@ -522,6 +551,9 @@ public class Main extends SimpleApplication {
         }
     }
 
+    /**
+     * Initialize LorryCranes
+     */
     private void init_LorryCranes() {
         String cID = Path.getLorryID();
 
@@ -535,6 +567,9 @@ public class Main extends SimpleApplication {
         }
     }
 
+    /**
+     * Initialize BargeCranes
+     */
     private void init_BargeCranes() {
         String cID = Path.getBargeID();
         for (int i = 1; i <= 8; i++) {
@@ -547,6 +582,9 @@ public class Main extends SimpleApplication {
         }
     }
 
+    /**
+     * Initialize TrainCranes
+     */
     private void init_TrainCranes() {
         String cID = Path.getTrainID();
         for (int i = 1; i <= 4; i++) {
@@ -558,6 +596,9 @@ public class Main extends SimpleApplication {
         }
     }
 
+    /**
+     * Initialize AGVs
+     */
     private void init_AGVs() {
         for (int i = 0; i < buffers.length * 4; i++) {
             String id = "AGV" + String.format("%03d", i + 1);
@@ -582,7 +623,7 @@ public class Main extends SimpleApplication {
     }
 
     /**
-     *
+     * Send a READY message back to the controller
      * @param id the ID of the object.
      */
     public static void sendReady(String id) {

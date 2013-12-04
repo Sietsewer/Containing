@@ -70,7 +70,10 @@ public class Buffer extends Node{
         }
     }
      
-     
+     /**
+      * Find best ParkingSpot at this buffer
+      * @return the most optimal ParkingSpot
+      */
     public ParkingSpot getBestParkingSpot()
      {
      for (int i = 0; i < pSpots.length; i++) {
@@ -81,6 +84,11 @@ public class Buffer extends Node{
         return null;
      }
     
+    /**
+     * Find the best ParkingSpot at this buffer
+     * @param up whether the AGV's home is at the top or bottom end of the buffer
+     * @return the most optimal parking spot
+     */
     public ParkingSpot getBestParkingSpot(boolean up){
         //up buffer or downside of the buffer
        int i = up ? 0 : pSpots.length/2;
@@ -107,6 +115,11 @@ public class Buffer extends Node{
         return null;
     }
     
+    /**
+     * Find the actual position of a container inside this simulation
+     * @param indexpos index of the container for which to find the position inside the simulation
+     * @return the position of the container with this index inside the simulation
+     */
     public Vector3f getRealContainerPosition(Vector3f indexpos){
         Vector3f csize = new Vector3f(1.22f, 1.22f, 6.705f);
         Vector3f pos = new Vector3f(indexpos.z * 2 * csize.x, indexpos.y * 2 *
@@ -133,7 +146,7 @@ public class Buffer extends Node{
     /**
      * Fetch a container from the buffer
      * @param index buffer of container to fetch
-     * @return 
+     * @return the container that has been removed from this buffer
      */
     public Container removeContainer(Vector3f index){
         Container c1 = bufferArray[(int)index.z][(int)index.y][(int)index.x];
@@ -159,6 +172,11 @@ public class Buffer extends Node{
         setRendering();
     }
     
+    /**
+     * Find a container with a certain ID
+     * @param id the container ID which to search for
+     * @return a reference to the container with a matching ID
+     */
     public Container getContainerByID(String id){
         Container tempCont = null;
         for(int i = 0; i < bufferArray.length; i++){

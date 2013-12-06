@@ -12,6 +12,9 @@ public class Commands {
     
 
     static public final int SHUTDOWN = 9;
+    
+    
+    static public final int PAUSE_PLAY = 10;
     /**
      *Device is ready
      */

@@ -78,6 +78,7 @@ public class Main extends SimpleApplication {
     private static Main app = null;
     public static float globalSpeed = 1f;
     private Collection<Message> messagesTodo;
+    private boolean isPaused = false;
 
     /**
      *
@@ -121,6 +122,12 @@ public class Main extends SimpleApplication {
      */
     @Override
     public void simpleUpdate(float tpf) {
+       
+        if(!isPaused)
+        {
+          
+        
+        
         sky_geo.setLocalTranslation(cam.getLocation());
         for (Crane c : seaCranes) {
             c.update(tpf);
@@ -136,6 +143,7 @@ public class Main extends SimpleApplication {
         }
         for (Crane c : trainCranes) {
             c.update(tpf);
+        }
         }
         Collection<Message> temp = Collections.synchronizedCollection(new ArrayList(messagesTodo));
         for (Message m : temp) {
@@ -296,6 +304,9 @@ public class Main extends SimpleApplication {
         AGV agv;
         switch (decodedMessage.getCommand()) {
             
+            case Commands.PAUSE_PLAY:
+                pausePlay();
+                break;
             case Commands.SHUTDOWN:
                 System.exit(1);
                 break;
@@ -686,7 +697,7 @@ public class Main extends SimpleApplication {
                     // The closest collision point is what was truly hit:
                     CollisionResult closest = results.getClosestCollision();
                     Vector3f hitPoint = closest.getContactPoint(); //where uve shot 
-                   barCranes[0].moveToHome();
+                 
                 }
 
             }
@@ -702,6 +713,33 @@ public class Main extends SimpleApplication {
             agv.globalSpeedChanged();
         }
         
+    }
+    
+    private void pausePlay()
+    {
+        
+        isPaused = !isPaused;
+        
+        for (Crane c : seaCranes) {
+            c.pausePlay(isPaused);
+        }
+        for (Crane c : lorCranes) {
+            
+            c.pausePlay(isPaused);
+        }
+        for (Crane c : bufCranes) {
+              c.pausePlay(isPaused);
+        }
+        for (Crane c : barCranes) {
+              c.pausePlay(isPaused);
+        }
+        for (Crane c : trainCranes) {
+              c.pausePlay(isPaused);
+        }
+        for(AGV agv : agvs)
+        {
+            agv.pausePlay(isPaused);
+        }
     }
 
     protected void init_CrossHairs() {

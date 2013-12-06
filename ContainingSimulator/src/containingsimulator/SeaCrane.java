@@ -131,6 +131,6 @@ public class SeaCrane extends Crane {
 
 
     public ParkingSpot getParkingspot() {
-        return new ParkingSpot(this.getWorldTranslation(), (float) Math.PI / 2f);
+        return new ParkingSpot(this.getWorldTranslation(), (float) Math.PI);
     }
 }

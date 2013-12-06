@@ -29,7 +29,7 @@ public class AGV extends Node implements MotionPathListener{
     private MotionEvent motionEvent;//Controls the motionpath that the AGV uses.
     private MotionPath path;//Holds the path of the AGV.
     private Spatial viewModel;//Model of the AGV.
-
+    private boolean pathWasPlaying = false;
     /**
      * Constructor. Inits all variable required.
      * @param ID ID of the AGV.
@@ -60,7 +60,7 @@ public class AGV extends Node implements MotionPathListener{
         this.targetCrane = targetCrane;
         motionEvent.setInitialDuration(path.getLength()/11.11f/Main.globalSpeed);
         this.motionEvent.play();
-        
+        pathWasPlaying = true;
         if(this.pSpot != null){
             this.pSpot.occupied = false;
         }
@@ -89,6 +89,22 @@ private void nextWaypoint(int wayPointIndex){
      */
     public void globalSpeedChanged(){
         motionEvent.setInitialDuration(path.getLength()/11.11f/Main.globalSpeed);
+    }
+    public void pausePlay(boolean pause)
+    {
+            if(pathWasPlaying)
+            { 
+                if(!pause)
+                {
+                    motionEvent.play();
+                }
+                else
+            {
+                motionEvent.pause();
+            }
+            }
+            
+            
     }
     public boolean setContainer(Container container){
         if(this.container == null){
@@ -142,6 +158,7 @@ private void nextWaypoint(int wayPointIndex){
             }else{
                  jumpToPark(targetCrane.getParkingspot());
             }
+            pathWasPlaying = false;
             Main.sendReady(id);
         } else {
             nextWaypoint(wayPointIndex);

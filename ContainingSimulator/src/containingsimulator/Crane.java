@@ -51,7 +51,7 @@ public abstract class Crane extends Node implements MotionPathListener {
     protected Container cont = null;
     protected Transporter transporter = null;
     protected AGV agv = null;
-    
+    private boolean[]pathWasPlaying = new boolean[3];
     
 
     /**
@@ -95,6 +95,10 @@ public abstract class Crane extends Node implements MotionPathListener {
         basePath.setPathSplineType(Spline.SplineType.Linear);
         sliderPath.setPathSplineType(Spline.SplineType.Linear);
         hookPath.setPathSplineType(Spline.SplineType.Linear);
+        for(int i = 0; i < pathWasPlaying.length;i++)
+        {
+            pathWasPlaying[i] = false;
+        }
     }
     
        
@@ -131,6 +135,7 @@ public abstract class Crane extends Node implements MotionPathListener {
     */
     public void update(float tpf)
      {
+         
          if(target!=null)
          {
          updateSpeed();
@@ -481,6 +486,10 @@ public abstract class Crane extends Node implements MotionPathListener {
         {
             action++;
         }
+        else
+        {
+            pathWasPlaying[0] = true;
+        }
     }
       //move the slide of the crane
       private void moveSlider(boolean toDefault)
@@ -507,6 +516,10 @@ public abstract class Crane extends Node implements MotionPathListener {
         {
             action++;
         }
+        else
+        {
+            pathWasPlaying[1] = true;
+        }
     }
     //move the hook of the crane
     private void moveHook(boolean toDefault)
@@ -526,6 +539,10 @@ public abstract class Crane extends Node implements MotionPathListener {
         {
             action++;
         }
+        else
+        {
+            pathWasPlaying[2] = true;
+        }
     }
     
    //update speed/duration of motionpaths/motionevents
@@ -535,10 +552,46 @@ public abstract class Crane extends Node implements MotionPathListener {
         setEventDuration(sliderControl,sliderPath,sliDur);
         setEventDuration(hookControl,hookPath,hookDur);
 
-        baseControl.setSpeed(loaded ? 0.5f : 1);
-        sliderControl.setSpeed(loaded ? 0.5f : 1);
-        hookControl.setSpeed(loaded ? 0.5f : 1);
+        baseControl.setSpeed(loaded ? 0.6f : 1);
+        sliderControl.setSpeed(loaded ? 0.6f : 1);
+        hookControl.setSpeed(loaded ? 0.6f : 1);
      }
+    public void pausePlay(boolean pause)
+    {
+        for(int i = 0; i <pathWasPlaying.length;i++)
+        {
+                if(pathWasPlaying[i])
+                {
+                switch(i)
+                {
+                    case 0:
+                        if(!pause){
+                        baseControl.play();}
+                        else
+                        {
+                            baseControl.pause();
+                        }
+                        break;
+                    case 1:
+                        if(!pause){
+                        sliderControl.play();}
+                        else
+                        {
+                            sliderControl.pause();
+                        }
+                        break;
+                    case 2:
+                        if(!pause){
+                        hookControl.play();}
+                        else
+                        {
+                            hookControl.pause();
+                        }
+                        break;   
+                }
+                }
+        }
+    }
     //set duration of motionevents
     private void setEventDuration(MotionEvent event, MotionPath path, float defDur)
     {
@@ -557,7 +610,23 @@ public abstract class Crane extends Node implements MotionPathListener {
     @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
 
-        action += wayPointIndex;
+        if(wayPointIndex == 1)
+        {
+            
+            if(motionControl.equals(baseControl))
+            {
+                pathWasPlaying[0] = false;
+            }
+            else if(motionControl.equals(hookControl))
+            {
+                pathWasPlaying[2] = false;
+            }
+            else if(motionControl.equals(sliderControl))
+            {
+                pathWasPlaying[1] = false;
+            }
+             action += wayPointIndex;
+        }
     }
     
 

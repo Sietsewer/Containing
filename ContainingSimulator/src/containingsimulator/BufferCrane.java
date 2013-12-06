@@ -26,9 +26,9 @@ public class BufferCrane extends Crane {
         this.defPosHook = hNode.getWorldTranslation().clone();
         this.defPosSlider = sNode.getWorldTranslation().clone();
         
-        this.baseDur = 8f;
-        this.sliDur = 8f;
-        this.hookDur = 8f;
+        this.baseDur = 15f;
+        this.sliDur = 15f;
+        this.hookDur = 15f;
     }
     public Buffer getBuffer()
     {

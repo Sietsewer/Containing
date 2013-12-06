@@ -81,30 +81,30 @@ public class Path {
   
   private static void createM()
   {
-      map.put("m1", new Vector3f(96,10,503));
-      map.put("m2",new Vector3f(90,10,534));
-      map.put("m3",new Vector3f(765,10,534));
-      map.put("m4",new Vector3f(765,10,504));
-      map.put("m5",new Vector3f(846,10,504));
-      map.put("m6",new Vector3f(1064,10,504));
-      map.put("m7",new Vector3f(1525,10,504));
-      map.put("m8",new Vector3f(1525,10,60));
-      map.put("m9",new Vector3f(1489,10,60));
-      map.put("m10",new Vector3f(1489,10,30));
-      map.put("m11",new Vector3f(123,10,30));
-      map.put("m12",new Vector3f(123,10,60));
-      map.put("m13",new Vector3f(97,10,60));
-      map.put("m14",new Vector3f(65,10,56));
-      map.put("m15",new Vector3f(65,10,476));
-      map.put("m16",new Vector3f(94,10,477));
+      map.put("m1", new Vector3f(95.5f,10,503.5f));
+      map.put("m2",new Vector3f(90,10,536));
+      map.put("m3",new Vector3f(765,10,536));
+      map.put("m4",new Vector3f(765,10,503.5f));
+      map.put("m5",new Vector3f(846,10,503.5f));
+      map.put("m6",new Vector3f(1064,10,503.5f));
+      map.put("m7",new Vector3f(1526.5f,10,503.5f));
+      map.put("m8",new Vector3f(1525,10,60.5f));
+      map.put("m9",new Vector3f(1488,10,60.5f));
+      map.put("m10",new Vector3f(1488,10,30));
+      map.put("m11",new Vector3f(127.5f,10,30.5f));
+      map.put("m12",new Vector3f(127.5f,10,60.5f));
+      map.put("m13",new Vector3f(95.5f,10,60.5f));
+      map.put("m14",new Vector3f(65,10,55));
+      map.put("m15",new Vector3f(65,10,475));
+      map.put("m16",new Vector3f(95.5f,10,472));
   }
   
   
   private static void createBF()
   {
       int dist = 22;
-      Vector3f vecBFA = new Vector3f(118,10,71);
-      Vector3f vecBFB= new Vector3f(118,10,495);
+      Vector3f vecBFA = new Vector3f(118,10,60.5f);
+      Vector3f vecBFB= new Vector3f(118,10,403.5f);
      
       String bfa = "bfa";
       String bfb = "bfb";

@@ -29,6 +29,7 @@ import java.util.logging.Logger;
  */
 public class Controller {
 
+    private int Speed =1;
     //pathfinde variable
     PathFinder pathFinder;
     //server variables
@@ -286,7 +287,7 @@ public class Controller {
 
         Calendar cal = Calendar.getInstance(); // creates calendar
         cal.setTime(simTime); // sets calendar time/date
-        cal.add(Calendar.SECOND, 1); // adds one minute
+        cal.add(Calendar.SECOND, Speed); // adds one minute
         simTime = cal.getTime(); // returns new date object, one hour in the future
     }
 
@@ -869,5 +870,13 @@ public class Controller {
         m.setParameters(new Object[]{containerCount, containerCountInTransporter, containerCountInBuffer, containerCraneCount, containerCountAGV});
         return Message.encodeMessage(m);
 
+    }
+
+    void setSpeed(int speedNumber) {
+    
+    this.PrintMessage("Change speed - " + speedNumber +"x");
+    this.Speed = speedNumber;
+    Message m = new Message(Commands.CHANGE_SPEEED, new Object[]{speedNumber});
+    this.sendMessage(m);
     }
 }

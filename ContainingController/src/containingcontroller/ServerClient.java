@@ -24,6 +24,7 @@ public class ServerClient {
     private PrintWriter output;//output stream from client
     private Server server;//server to relay message's
     private boolean sendOnly = false;
+    private boolean android = true;
 
     /**
      *
@@ -46,6 +47,14 @@ public class ServerClient {
      * @param message
      */
     public void sendMessage(String message) {
+        if (!android) {
+            System.out.println("message to ip:" + client.getRemoteSocketAddress());
+            //System.out.println(message);
+            output.println(message);
+        }
+    }
+
+    public void sendAndroidMessage(String message) {
         System.out.println("message to ip:" + client.getRemoteSocketAddress());
         //System.out.println(message);
         output.println(message);
@@ -71,17 +80,21 @@ public class ServerClient {
                         Message m = Message.decodeMessage(s);
                         if (((String) m.getParameters()[0]).equalsIgnoreCase("simulator")) {
                             server.controller.PrintMessage("Connected simulator - " + client.getRemoteSocketAddress());
+                            android = false;
                         } else {
-                            server.controller.PrintMessage("Connected Android - " + client.getRemoteSocketAddress());
-                            sendMessage(server.controller.getAndroidData());
+                            android = true;
+                            //server.controller.PrintMessage("Connected Android - " + client.getRemoteSocketAddress());
+
+                            sendAndroidMessage(server.controller.getAndroidData());
+
                             break;
                         }
-                        
+
                     } else {
                         if (!s.isEmpty()) {
                             server.MessageRecieved(s);
                             System.out.println("message from ip:" + client.getRemoteSocketAddress());
-                           // System.out.println(s);
+                            // System.out.println(s);
                         }
                     }
                 }

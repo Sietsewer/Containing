@@ -636,7 +636,7 @@ public class Controller {
         List<Crane> _cranes = new ArrayList<Crane>();
         _cranes.add(dockingpoint);
         if (t.getTransportType() == TransportTypes.SEASHIP) {
-            int range = (int) Math.ceil((float) t.getLenghtTransporter() / (float) 8);
+            int range = t.getLenghtTransporter() / 10;
             if (range < 2) {
                 range = 2;
             }
@@ -653,7 +653,7 @@ public class Controller {
             }
         } else if (t.getTransportType()
                 == TransportTypes.BARGE) {
-            int range = (int) Math.ceil((float) t.getLenghtTransporter() / (float) 8);
+            int range = t.getLenghtTransporter() / 8;
             if (range < 2) {
                 range = 2;
             }
@@ -670,7 +670,7 @@ public class Controller {
             }
         } else if (t.getTransportType()
                 == TransportTypes.TRAIN) {
-            int range = (int) Math.ceil((float) t.getLenghtTransporter() / (float) 4);
+            int range = t.getLenghtTransporter() / 4;
             if (range < 2) {
                 range = 2;
             }
@@ -746,8 +746,8 @@ public class Controller {
             endBuffer = 24;
             prefrence = PreferedAGV.DOWN;
         } else if (dockingpoint.type == Crane.TrainCrane) {
-            startBuffer = 45;
-            endBuffer = 63;
+            startBuffer = 6;
+            endBuffer = 13;
             prefrence = PreferedAGV.UP;
         }
         for (int i = startBuffer - 1; i < endBuffer - 1; i++) {

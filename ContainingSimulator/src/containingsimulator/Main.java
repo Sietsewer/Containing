@@ -421,6 +421,9 @@ public class Main extends SimpleApplication {
                 rootNode.detachChild(temp);
                 transporters.remove(temp);
                 break;
+            case Commands.CHANGE_SPEED:
+                changeGlobalSpeed((Float)params[0]);
+                break;
             default:
                 System.err.println("Error: Invalid command for simulator.");
         }

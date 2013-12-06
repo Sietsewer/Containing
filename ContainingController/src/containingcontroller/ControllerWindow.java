@@ -25,6 +25,7 @@ import javax.swing.JScrollBar;
 public class ControllerWindow extends javax.swing.JFrame {
 
     SimpleDateFormat timeFormat;
+        SimpleDateFormat datetimeFormat;
     Controller controller;
     final JFileChooser fc = new JFileChooser();
 
@@ -33,7 +34,9 @@ public class ControllerWindow extends javax.swing.JFrame {
      */
     public ControllerWindow() {
         initComponents();
+        jMenu3.setEnabled(false);
         timeFormat = new SimpleDateFormat("HH:mm:ss");
+        datetimeFormat= new SimpleDateFormat("MM-dd HH:mm:ss");
         controller = new Controller(this);
         controller.startServer();
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
@@ -41,44 +44,46 @@ public class ControllerWindow extends javax.swing.JFrame {
                 jMenuItem5ActionPerformed(evt);
             }
         });
-         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
             }
         });
-          jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
             }
         });
-           jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
             }
         });
-            jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
             }
         });
-             jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
             }
         });
-              jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
             }
         });
-               jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
             }
         });
-               
-       
-       
+
+    }
+
+    public void setTime(Date d) {
+        jMenu3.setText(datetimeFormat.format(d));
     }
 
     /**
@@ -106,6 +111,7 @@ public class ControllerWindow extends javax.swing.JFrame {
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
         jMenuItem11 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -185,13 +191,16 @@ public class ControllerWindow extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu2);
 
+        jMenu3.setText("klok");
+        jMenuBar1.add(jMenu3);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -234,10 +243,10 @@ public class ControllerWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
-      String str = ((JMenuItem)evt.getSource()).getText();
-     String speed = str.split("x")[0];
-     int speedNumber = Integer.parseInt(speed);
-     controller.setSpeed(speedNumber);
+        String str = ((JMenuItem) evt.getSource()).getText();
+        String speed = str.split("x")[0];
+        int speedNumber = Integer.parseInt(speed);
+        controller.setSpeed(speedNumber);
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
@@ -250,7 +259,7 @@ public class ControllerWindow extends javax.swing.JFrame {
      * @param message line
      */
     public void WriteLogLine(String message) {
-       
+
         logTxtArea.append(System.getProperty("line.separator") + "[" + timeFormat.format(new Date()) + "]" + message);
         JScrollBar vertical = jScrollPane1.getVerticalScrollBar();
         vertical.setValue(vertical.getMaximum());
@@ -260,28 +269,7 @@ public class ControllerWindow extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ControllerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ControllerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ControllerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ControllerWindow.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+     
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -293,6 +281,7 @@ public class ControllerWindow extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;

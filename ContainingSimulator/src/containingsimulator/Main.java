@@ -422,7 +422,8 @@ public class Main extends SimpleApplication {
                 transporters.remove(temp);
                 break;
             case Commands.CHANGE_SPEED:
-                changeGlobalSpeed((Float)params[0]);
+                float newspeed = (Integer) params[0];
+                changeGlobalSpeed(newspeed);
                 break;
             default:
                 System.err.println("Error: Invalid command for simulator.");

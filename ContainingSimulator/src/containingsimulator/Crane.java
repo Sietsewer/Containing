@@ -347,10 +347,10 @@ public abstract class Crane extends Node implements MotionPathListener {
      */
     protected void contOffHook()
      {
-         if(pickupContainer && this.agv!= null)
+         if(pickupContainer && this.agv != null)
          {
-          this.agv.setContainer(cont);
-          agv = null;
+              this.agv.setContainer(cont);
+              agv = null;
          }
          else if(!pickupContainer && this.transporter!= null)
          {
@@ -609,7 +609,8 @@ public abstract class Crane extends Node implements MotionPathListener {
      */
     @Override
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-
+ 
+        action += wayPointIndex;
         if(wayPointIndex == 1)
         {
             
@@ -625,7 +626,7 @@ public abstract class Crane extends Node implements MotionPathListener {
             {
                 pathWasPlaying[1] = false;
             }
-             action += wayPointIndex;
+            
         }
     }
     

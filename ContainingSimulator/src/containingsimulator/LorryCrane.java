@@ -116,7 +116,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
                  }
                 break;
             case 6:
-                 if (!doAction(3,true))
+                 if (doAction(3,true))
                     {  
                       contOffHook();
                     }

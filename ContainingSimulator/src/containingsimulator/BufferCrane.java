@@ -14,9 +14,8 @@ import com.jme3.scene.Spatial;
  */
 public class BufferCrane extends Crane {
     
-    Buffer buffer;
-    
-    
+    private Buffer buffer;
+
     public BufferCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook, Buffer buffer)
     {
         super(id, basePos,base,slider, hook);
@@ -24,13 +23,16 @@ public class BufferCrane extends Crane {
         hNode.setLocalTranslation(new Vector3f(0,18.5f,0));
         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         
-        this.defPosBase = this.position.add(0.1f,0,0).clone();
-        this.defPosHook = hNode.getWorldTranslation().add(0.1f,0,0).clone();
-        this.defPosSlider = sNode.getWorldTranslation().add(0.1f,0,0).clone();
+        this.defPosHook = hNode.getWorldTranslation().clone();
+        this.defPosSlider = sNode.getWorldTranslation().clone();
         
-        this.baseDur = 3f;
-        this.sliDur = 14f;
-        this.hookDur = 12f;
+        this.baseDur = 8f;
+        this.sliDur = 8f;
+        this.hookDur = 8f;
+    }
+    public Buffer getBuffer()
+    {
+        return this.buffer;
     }
 
     private void commonSteps()
@@ -68,7 +70,7 @@ public class BufferCrane extends Crane {
                   {
                     if (doAction(1,false))
                     {  
-                        resetPos(2);
+                        resetPos(3);
                     }
                   }
                 break;
@@ -88,7 +90,7 @@ public class BufferCrane extends Crane {
             case 9:
                 resetPos(2);
                 resetPos(3);
-             this.resetAll();
+                finishActions();
                 break;
          }
     }
@@ -118,80 +120,13 @@ public class BufferCrane extends Crane {
                  contOffHook();
                 break;
             case 9:
-                resetPos(1);
                 resetPos(2);
                 resetPos(3);
-             this.resetAll();
+                finishActions();
                 break;
         }
     }
-
-    @Override
-    protected void moveBase(boolean reversed)
-    {
-        basePath.clearWayPoints();
-        
-       Vector3f startPos = this.getLocalTranslation().add(0,0,0.1f);
-        if(reversed)
-        {
-        basePath.addWayPoint(startPos);    
-        basePath.addWayPoint(defPosBase);
-        }
-        else
-        {
-         basePath.addWayPoint(startPos);
-         basePath.addWayPoint(new Vector3f(startPos.x,startPos.y,target.z));    
-        }
-         baseControl.setInitialDuration(basePath.getLength()/baseDur/Main.globalSpeed);
-         baseControl.play();
-    }
     
-    @Override
-    protected void moveSlider(boolean reversed)
-    {
-         sliderPath.clearWayPoints();
-        Vector3f startPoint = sNode.getLocalTranslation();
-        
-        if(reversed)
-        {
-            sliderPath.addWayPoint(startPoint);
-            sliderPath.addWayPoint(defPosSlider);
-        }
-         else
-         {
-         sliderPath.addWayPoint(startPoint);
-         sliderPath.addWayPoint(new Vector3f(
-                 target.x-this.getWorldTranslation().add(0.1f,0,0).x
-                 ,startPoint.y,
-                 startPoint.z));    
-         }
-           sliderControl.setInitialDuration(sliderPath.getLength()/sliDur/Main.globalSpeed);
-         sliderControl.play();
-    }
-    
-    @Override
-     protected void moveHook(boolean reversed)
-    {
-          hookPath.clearWayPoints();
-        
-          Vector3f startPoint = this.hNode.getLocalTranslation();
-        
-        if(reversed)
-        {
-         hookPath.addWayPoint(startPoint);
-         hookPath.addWayPoint(defPosHook);
-        }
-          else
-          {
-              hookPath.addWayPoint(startPoint);
-              hookPath.addWayPoint(new Vector3f(target.x-sNode.getWorldTranslation().x,target.y-sNode.getWorldTranslation().y,sNode.getLocalTranslation().z));
-          }
-          hookControl.setInitialDuration(hookPath.getLength()/hookDur/Main.globalSpeed);
-      
-       
-        hookControl.play();
-    }
-
     @Override
     public ParkingSpot getParkingspot() {
         return buffer.getBestParkingSpot();

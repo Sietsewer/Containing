@@ -344,7 +344,7 @@ public class Main extends SimpleApplication {
                 Vector3f realPosition = null;
                 if(crane != null && crane instanceof BufferCrane)
                 {
-                    realPosition = ((BufferCrane)crane).buffer.getRealContainerPosition(indexPosition);
+                    realPosition = ((BufferCrane)crane).getBuffer().getRealContainerPosition(indexPosition);
                     crane.putContainer(realPosition,indexPosition);
                 }
                 else
@@ -371,7 +371,7 @@ public class Main extends SimpleApplication {
             case Commands.CREATE_TRANSPORTER:
                 transporterID = (String) params[0];
                 int transporterType = (Integer) params[1];
-                Vector3f dockingPoint = getCraneByID((String) params[2]).position;
+                Vector3f dockingPoint = getCraneByID((String) params[2]).getPos();
                 ArrayList<SimContainer> simContainers = new ArrayList<SimContainer>();
                 for (int i = 3; i < params.length; i++) {
                     simContainers.add((SimContainer) params[i]);
@@ -452,7 +452,7 @@ public class Main extends SimpleApplication {
         String crane = id.substring(0, 3);
         if (crane.equalsIgnoreCase(Path.getSeaID())) {
             for (int i = 0; i < seaCranes.length; i++) {
-                if (seaCranes[i].id.equalsIgnoreCase(id)) {
+                if (seaCranes[i].getID().equalsIgnoreCase(id)) {
                     return seaCranes[i];
                 }
             }
@@ -464,19 +464,19 @@ public class Main extends SimpleApplication {
             }
         } else if (crane.equalsIgnoreCase(Path.getLorryID())) {
             for (int i = 0; i < lorCranes.length; i++) {
-                if (lorCranes[i].id.equalsIgnoreCase(id)) {
+                if (lorCranes[i].getID().equalsIgnoreCase(id)) {
                     return lorCranes[i];
                 }
             }
         } else if (crane.equalsIgnoreCase(Path.getTrainID())) {
             for (int i = 0; i < trainCranes.length; i++) {
-                if (trainCranes[i].id.equalsIgnoreCase(id)) {
+                if (trainCranes[i].getID().equalsIgnoreCase(id)) {
                     return trainCranes[i];
                 }
             }
         } else if (crane.equalsIgnoreCase(Path.getBargeID())) {
             for (int i = 0; i < barCranes.length; i++) {
-                if (barCranes[i].id.equalsIgnoreCase(id)) {
+                if (barCranes[i].getID().equalsIgnoreCase(id)) {
                     return barCranes[i];
                 }
             }
@@ -672,6 +672,7 @@ public class Main extends SimpleApplication {
                     // The closest collision point is what was truly hit:
                     CollisionResult closest = results.getClosestCollision();
                     Vector3f hitPoint = closest.getContactPoint(); //where uve shot 
+                   barCranes[0].moveToHome();
                 }
 
             }

@@ -29,8 +29,6 @@ public class BargeCrane extends Crane {
         defPosHook = this.hNode.getWorldTranslation().clone();
         defPosSlider = this.sNode.getWorldTranslation().clone();
         
-        defPosBase = this.position.add(0,0,0.1f).clone();
-        
         this.baseDur = 2.2f;
         this.sliDur = 5f;
         this.hookDur = 5f;
@@ -68,7 +66,7 @@ public class BargeCrane extends Crane {
                 }
                 break;
             case 9:
-             this.resetAll();
+                finishActions();
                 break;
     }
     }
@@ -113,6 +111,7 @@ public class BargeCrane extends Crane {
             case 6:
                 if(readyToLoad())
                 {
+                   
                     if(doAction(3,false))
                     {
                     resetPos(2);
@@ -128,73 +127,9 @@ public class BargeCrane extends Crane {
             case 8:
                 resetPos(2);
                 resetPos(3);
-                   resetAll();
+                finishActions();
                 break;
         }
-    }
-
-    @Override
-    protected void moveBase(boolean reversed)
-    {
-        basePath.clearWayPoints();
-        
-        Vector3f startPos = this.getLocalTranslation().add(0.1f,0,0);
-        if(reversed)
-        {
-        basePath.addWayPoint(startPos);    
-        basePath.addWayPoint(defPosBase);
-        }
-        else
-        {
-         basePath.addWayPoint(startPos);
-         basePath.addWayPoint(new Vector3f(target.x,startPos.y,startPos.z));    
-        }
-         baseControl.setInitialDuration(basePath.getLength()/baseDur/Main.globalSpeed);
-         baseControl.play();
-    }
-    
-    @Override
-    protected void moveSlider(boolean reversed)
-    {
-       sliderPath.clearWayPoints();
-     
-        Vector3f startPoint = sNode.getLocalTranslation().add(0.1f,0,0);
-        if(reversed)
-        {
-            sliderPath.addWayPoint(startPoint);
-            sliderPath.addWayPoint(defPosSlider);
-        }
-        else
-        {
-      
-         sliderPath.addWayPoint(startPoint);
-         sliderPath.addWayPoint(new Vector3f(
-                 target.x-this.getWorldTranslation().x
-                 ,startPoint.y,
-                 target.z-sNode.getWorldTranslation().z));    
-        }
-          sliderControl.setInitialDuration(sliderPath.getLength()/sliDur/Main.globalSpeed);
-         sliderControl.play();
-    }
-    
-    @Override
-    protected void moveHook(boolean reversed)
-    {
-        hookPath.clearWayPoints();
-        Vector3f startPoint = hNode.getLocalTranslation();
-        
-        if(reversed)
-        {
-         hookPath.addWayPoint(startPoint);
-         hookPath.addWayPoint(defPosHook);
-        }
-        else
-        {
-        hookPath.addWayPoint(startPoint);
-        hookPath.addWayPoint(new Vector3f(startPoint.x,target.y-sNode.getWorldTranslation().y,target.z-sNode.getWorldTranslation().z));
-        }
-        hookControl.setInitialDuration(hookPath.getLength()/hookDur/Main.globalSpeed);
-        hookControl.play();
     }
 
     @Override

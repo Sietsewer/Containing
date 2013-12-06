@@ -138,7 +138,7 @@ private void nextWaypoint(int wayPointIndex){
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
         if(wayPointIndex+1 == path.getNbWayPoints()){
             if(targetCrane instanceof BufferCrane){
-                jumpToPark(((BufferCrane)targetCrane).buffer.getBestParkingSpot(up));
+                jumpToPark(((BufferCrane)targetCrane).getBuffer().getBestParkingSpot(up));
             }else{
                  jumpToPark(targetCrane.getParkingspot());
             }

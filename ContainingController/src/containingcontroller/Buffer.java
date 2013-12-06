@@ -101,17 +101,35 @@ public class Buffer {
      * @param container
      * @return Vector3f
      */
-    public CustomVector3f findBestBufferPlace(Container container) {
-        for (int x = 0; x < 26; x++) {
-            for (int z = 0; z < 6; z++) {
-                for (int y = 0; y < 6; y++) {
-                    if (containers[x][y][z] == null && !checkSpaceReserved(x, y, z)) {
-                        if (y > 0 && containers[x][y - 1][z] != null) {
-                            if (containers[x][y - 1][z].getDateDeparture().after(container.getDateDeparture())) {
+    public CustomVector3f findBestBufferPlace(Container container, boolean up) {
+        if (up) {
+            for (int x = 0; x < 26; x++) {
+                for (int z = 0; z < 6; z++) {
+                    for (int y = 0; y < 6; y++) {
+                        if (containers[x][y][z] == null && !checkSpaceReserved(x, y, z)) {
+                            if (y > 0 && containers[x][y - 1][z] != null) {
+                                if (containers[x][y - 1][z].getDateDeparture().after(container.getDateDeparture())) {
+                                    return new CustomVector3f(x, y, z);
+                                }
+                            } else if (y == 0) {
                                 return new CustomVector3f(x, y, z);
                             }
-                        } else if (y == 0) {
-                            return new CustomVector3f(x, y, z);
+                        }
+                    }
+                }
+            }
+        } else {
+            for (int x = 25; x >= 0; x--) {
+                for (int z = 0; z < 6; z++) {
+                    for (int y = 0; y < 6; y++) {
+                        if (containers[x][y][z] == null && !checkSpaceReserved(x, y, z)) {
+                            if (y > 0 && containers[x][y - 1][z] != null) {
+                                if (containers[x][y - 1][z].getDateDeparture().after(container.getDateDeparture())) {
+                                    return new CustomVector3f(x, y, z);
+                                }
+                            } else if (y == 0) {
+                                return new CustomVector3f(x, y, z);
+                            }
                         }
                     }
                 }

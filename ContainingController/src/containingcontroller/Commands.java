@@ -54,4 +54,9 @@ public class Commands {
      * change speed
      */
     static public int CHANGE_SPEEED = 8;
+        
+        /**
+     * change speed
+     */
+    static public int PAUSE_PLAY = 10;
 }

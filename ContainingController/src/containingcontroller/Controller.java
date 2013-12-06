@@ -29,7 +29,7 @@ import java.util.logging.Logger;
  */
 public class Controller {
 
-    private int Speed =1;
+    private int Speed = 1;
     //pathfinde variable
     PathFinder pathFinder;
     //server variables
@@ -61,6 +61,8 @@ public class Controller {
      */
     public List<Transporter> allArivingTransporters; // this list holds all loaded transporters
     public List<Transporter> allDepartingTransporters; //this list holds all departing transporters
+
+    public boolean playing = false;
 
     /**
      *
@@ -106,7 +108,6 @@ public class Controller {
         for (int i = 1; i <= 10; i++) {
             Crane c = new Crane("CSE" + String.format("%03d", i), Crane.SeaCrane);
 
-
             c.node = pathFinder.getMapCSE().get(i - 1);
             seaCranes.add(c);
             PrintMessage("SeaCrane Created - " + c.toString());
@@ -120,7 +121,6 @@ public class Controller {
             trainCranes.add(c);
             PrintMessage("Traincrane Created - " + c.toString());
         }
-
 
         lorreyCranes = new ArrayList<>();
         for (int i = 1; i <= 20; i++) {
@@ -154,11 +154,6 @@ public class Controller {
             PrintMessage("Buffer Created - " + b.toString());
             buffers.add(b);
 
-
-
-
-
-
         }
         PrintMessage("Total AGV - " + agvs.size());
         PrintMessage("Total Buffers - " + buffers.size());
@@ -174,6 +169,12 @@ public class Controller {
      * Start simulator with tick of 1 second is 1 second
      */
     public void Start() {
+        if (!playing) {
+            playing = true;
+        } else {
+            Message m = new Message(Commands.PAUSE_PLAY, new Object[0]);
+            this.sendMessage(m);
+        }
         this.simTimer = new Timer();
         this.simTimer.schedule(new TimerTask() {
             @Override
@@ -296,8 +297,11 @@ public class Controller {
      */
     public void pause() {
         if (this.simTimer != null) {
+            Message m = new Message(Commands.PAUSE_PLAY, new Object[0]);
+            this.sendMessage(m);
             this.simTimer.cancel();
         }
+
     }
 
     /**
@@ -360,7 +364,6 @@ public class Controller {
                 putContainer(agv, c);
                 waitingToBeReadyAtCrane.remove(agv);
 
-
             }
         } else if (agvLoadedMovingHome.contains(agv)) {
             Crane bufferCrane = agv.homeBuffer.crane;
@@ -402,8 +405,7 @@ public class Controller {
         }
         allArivingTransporters.add(currentTransporter);
         previousContainer = null;
-        
-        
+
         allDepartingTransporters.clear();
         for (int i = 0; i < allDepContainers.size(); i++) {
             Container c = allDepContainers.get(i);
@@ -435,16 +437,17 @@ public class Controller {
         return null;
     }
 
-    private AGV getWaitingAGV(Crane bufferCrane) {
+    private List<AGV> getWaitingAGV(Crane bufferCrane) {
+        ArrayList<AGV> _temp = new ArrayList();
         for (Map.Entry<AGV, Crane> e : waitingForBufferCrane.entrySet()) {
             AGV key = e.getKey();
             Crane value = e.getValue();
             if (bufferCrane.id.equalsIgnoreCase(value.id)) {
-                return key;
+                _temp.add(key);
             }
         }
 
-        return null;
+        return _temp;
     }
 
     private Crane getDockingPoint(Transporter t) {
@@ -490,8 +493,12 @@ public class Controller {
             }
         } else if (waitingForCraneToPickUpFromAgv.containsKey(c)) {
             AGV v = waitingForCraneToPickUpFromAgv.get(c);
-            v.moveToHome(c, this);
-            agvLoadedMovingHome.add(v);
+            if (v.container.getDateDeparture().before(simTime)) {
+
+            } else {
+                v.moveToHome(c, this);
+                agvLoadedMovingHome.add(v);
+            }
             waitingForCraneToPickUpFromAgv.remove(c);
 
         }//Kraan heeft container aan AGV gegeven
@@ -500,7 +507,6 @@ public class Controller {
 
             //AGV wordt naar huis gestuurd
             AGV v = waitingForCraneToPutToAgv.get(c);
-
 
             v.moveToHome(c, this);
             agvLoadedMovingHome.add(v);
@@ -578,14 +584,34 @@ public class Controller {
         b.crane.ready = true;
         if (b.crane.container == null) {
             if (waitingForBufferCrane.containsValue(b.crane)) {
-                AGV agv = getWaitingAGV(b.crane);
-                getContainerBuffer(agv, b.crane);
-                waitingForBufferCrane.remove(agv);
+                List<AGV> _temp = getWaitingAGV(b.crane);
+                if (_temp.size() > 1) {
+                    AGV _closest = _temp.get(0);
+                    for (AGV a : _temp) {
+                        if (b.crane.lastX < 13) {
+                            if (a.home.getId().toUpperCase().startsWith("BFA")) {
+                                _closest = a;
+                            }
+                        } else {
+                            if (a.home.getId().toUpperCase().startsWith("BFB")) {
+                                _closest = a;
+                            }
+                        }
+                    }
+                    getContainerBuffer(_closest, b.crane);
+                    waitingForBufferCrane.remove(_closest);
+
+                } else if (_temp.size() > 0) {
+                    getContainerBuffer(_temp.get(0), b.crane);
+                    waitingForBufferCrane.remove(_temp.get(0));
+                }
+                /**/
 
             }
         } else {
             waitingForBuferCranePickup.get(b.crane).setIsHome(true);
             waitingForBuferCranePickup.remove(b.crane);
+            b.crane.lastX = (int) b.crane.container.getBufferPosition().x;
             Message message = new Message(Commands.PUT_CONTAINER, new Object[]{b.crane.id, b.crane.container.getBufferPosition().x,
                 b.crane.container.getBufferPosition().y,
                 b.crane.container.getBufferPosition().z});
@@ -728,7 +754,7 @@ public class Controller {
 
     private boolean sendAGVToCrane(List<Buffer> selectedBuffer, Crane dockingpoint, Container toMove, PreferedAGV up) {
         for (Buffer b : selectedBuffer) {
-            CustomVector3f bestpos = b.findBestBufferPlace(toMove);
+
             AGV agv = null;
             if (up == PreferedAGV.UP) {
                 agv = b.AGVAvailable(true);
@@ -740,15 +766,22 @@ public class Controller {
                     agv = b.AGVAvailable(true);
                 }
             }
-
-            if (bestpos != null && agv != null) {
-                toMove.setBufferPosition(bestpos);
-                b.reservePosition(toMove);
-                agv.moveToCrane(dockingpoint, this);
-                waitingToBeReadyAtCrane.put(agv, dockingpoint);
-                agv.setIsHome(false);
-                agv.setReady(false);
-                return true;
+            if (agv != null) {
+                CustomVector3f bestpos = null;
+                if (agv.home.getId().toUpperCase().startsWith("BFA")) {
+                    bestpos = b.findBestBufferPlace(toMove, true);
+                } else {
+                    bestpos = b.findBestBufferPlace(toMove, false);
+                }
+                if (bestpos != null) {
+                    toMove.setBufferPosition(bestpos);
+                    b.reservePosition(toMove);
+                    agv.moveToCrane(dockingpoint, this);
+                    waitingToBeReadyAtCrane.put(agv, dockingpoint);
+                    agv.setIsHome(false);
+                    agv.setReady(false);
+                    return true;
+                }
             }
         }
         return false;
@@ -763,8 +796,6 @@ public class Controller {
         if (allArivingTransporters.size() > 0) {
             simTime = allArivingTransporters.get(0).getContainers().get(0).getDateArrival();
         }
-
-
 
     }
 
@@ -873,10 +904,10 @@ public class Controller {
     }
 
     void setSpeed(int speedNumber) {
-    
-    this.PrintMessage("Change speed - " + speedNumber +"x");
-    this.Speed = speedNumber;
-    Message m = new Message(Commands.CHANGE_SPEEED, new Object[]{speedNumber});
-    this.sendMessage(m);
+
+        this.PrintMessage("Change speed - " + speedNumber + "x");
+        this.Speed = speedNumber;
+        Message m = new Message(Commands.CHANGE_SPEEED, new Object[]{speedNumber});
+        this.sendMessage(m);
     }
 }

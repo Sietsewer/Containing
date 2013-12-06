@@ -10,6 +10,8 @@ package containingcontroller;
  */
 public class Crane {
 
+    public int lastX = 13;
+    
     /**
      * kind of crane
      */

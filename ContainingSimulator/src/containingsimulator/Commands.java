@@ -51,4 +51,9 @@ public class Commands {
      * Remove transporter from simulation
      */
     static public final int REMOVE_TRANSPORTER = 7;
+    
+    /**
+     * Change simulator speed
+     */
+    static public final int CHANGE_SPEED = 8;
 }

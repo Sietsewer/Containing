@@ -636,7 +636,7 @@ public class Controller {
         List<Crane> _cranes = new ArrayList<Crane>();
         _cranes.add(dockingpoint);
         if (t.getTransportType() == TransportTypes.SEASHIP) {
-            int range = (int) Math.ceil((float) t.getLenghtTransporter() / (float) 10);
+            int range = (int) Math.ceil((float) t.getLenghtTransporter() / (float) 8);
             if (range < 2) {
                 range = 2;
             }

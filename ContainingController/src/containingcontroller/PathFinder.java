@@ -145,7 +145,7 @@ public class PathFinder {
      * Creates PathNodes of all TrainCranes
      */
     private void createCTR() {
-        float cost = smallCost * 18;
+        float cost = smallCost * 10; //was 18
         int i = 2;
         PathNode previousNode = new PathNode(lblCTR + "001");
         getMapCTR().add(previousNode);
@@ -209,8 +209,8 @@ public class PathFinder {
         link(greenR[7], greenR[8], smallCost * 4);
         link(greenR[8], greenR[9], smallCost * 3);
         link(greenR[8], getMapBA().get(62), smallCost);
-        link(greenR[9], getMapCTR().get(3), smallCost * 30);
-        link(greenR[10], getMapCTR().get(0), smallCost * 4);
+        link(greenR[9], getMapCTR().get(3), smallCost * 28);
+        link(greenR[10], getMapCTR().get(0), smallCost * 68);
         link(greenR[10], greenR[11], smallCost * 3);
         this.insertNode(lblBA + "001", lblBA + "002", greenR[11], smallCost, smallCost);
         link(greenR[12], getMapBA().get(0), smallCost * 2); //

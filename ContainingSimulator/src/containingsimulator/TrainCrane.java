@@ -74,7 +74,7 @@ public class TrainCrane extends Crane implements MotionPathListener{
             case 6:
                   if(readyToLoad())
                   {
-                       target = agv.getWorldTranslation().add(0,cont.size.y*2,0); 
+                      target = agv.getWorldTranslation().add(0,cont.size.y*2,0); 
                       if (doAction(3,false))
                       { 
                         resetPos(2);
@@ -97,6 +97,6 @@ public class TrainCrane extends Crane implements MotionPathListener{
     
     @Override
     public ParkingSpot getParkingspot() {
-        return new ParkingSpot(this.getWorldTranslation(),(float)Math.PI/2f);
+        return new ParkingSpot(this.base.getWorldTranslation(),(float)Math.PI/2f);
     }
 }

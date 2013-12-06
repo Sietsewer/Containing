@@ -68,7 +68,7 @@ public class AGV {
         try {
             isHome= false;
             PathFinder finder = c.getPathFinder();
-            List<PathNode> path = finder.getShortestPath(home, destination.node,false);
+            List<PathNode> path = finder.getShortestPath(home, destination.node,true);
             Message moveMessage = new Message(Commands.MOVE, null);
             ArrayList<String> nodeIds = new ArrayList<>();
             for (PathNode node : path) {

@@ -617,15 +617,25 @@ public class Main extends SimpleApplication {
 
         int j = 0;
         for (int i = 0; i < buffers.length * 4; i += 4) {
-            agvs.get(i).jumpToPark(buffers[j].pSpots[1]);
-            agvs.get(i + 1).jumpToPark(buffers[j].pSpots[0]);
-            agvs.get(i + 2).jumpToPark(buffers[j].pSpots[6]);
-            agvs.get(i + 3).jumpToPark(buffers[j].pSpots[7]);
-            agvs.get(i).up = true;
-            agvs.get(i + 1).up = true;
-            agvs.get(i + 2).up = false;
-            agvs.get(i + 3).up = false;
-
+            if (j < 5){
+                agvs.get(i).jumpToPark(buffers[j].pSpots[3]);
+                agvs.get(i + 1).jumpToPark(buffers[j].pSpots[2]);
+                agvs.get(i + 2).jumpToPark(buffers[j].pSpots[1]);
+                agvs.get(i + 3).jumpToPark(buffers[j].pSpots[0]);
+                agvs.get(i).up = true;
+                agvs.get(i + 1).up = true;
+                agvs.get(i + 2).up = true;
+                agvs.get(i + 3).up = true;
+            } else {
+                agvs.get(i).jumpToPark(buffers[j].pSpots[1]);
+                agvs.get(i + 1).jumpToPark(buffers[j].pSpots[0]);
+                agvs.get(i + 2).jumpToPark(buffers[j].pSpots[6]);
+                agvs.get(i + 3).jumpToPark(buffers[j].pSpots[7]);
+                agvs.get(i).up = true;
+                agvs.get(i + 1).up = true;
+                agvs.get(i + 2).up = false;
+                agvs.get(i + 3).up = false;
+            }
             j++;
         }
     }

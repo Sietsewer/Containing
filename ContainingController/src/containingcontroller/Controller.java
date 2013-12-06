@@ -139,16 +139,24 @@ public class Controller {
             b.pathNodeUp = upperNode;
             b.pathNodeDown = downNode;
             for (int a = 0; a < 4; a++) {
-                if (a < 2) {
+
+                if (i <= 5) {
                     AGV agv = new AGV(upperNode, b);
                     b.ownedAGV.add(agv);
                     agvs.add(agv);
                     PrintMessage("AGV Created - " + agv.toString());
                 } else {
-                    AGV agv = new AGV(downNode, b);
-                    b.ownedAGV.add(agv);
-                    agvs.add(agv);
-                    PrintMessage("AGV Created - " + agv.toString());
+                    if (a < 2) {
+                        AGV agv = new AGV(upperNode, b);
+                        b.ownedAGV.add(agv);
+                        agvs.add(agv);
+                        PrintMessage("AGV Created - " + agv.toString());
+                    } else {
+                        AGV agv = new AGV(downNode, b);
+                        b.ownedAGV.add(agv);
+                        agvs.add(agv);
+                        PrintMessage("AGV Created - " + agv.toString());
+                    }
                 }
             }
             PrintMessage("Buffer Created - " + b.toString());
@@ -725,7 +733,7 @@ public class Controller {
     private void sendAGVTo(Crane dockingpoint, Container toMove) {
         dockingpoint.setIsReady(false);
         List<Buffer> preverdBuffers = new ArrayList<>();
-        PreferedAGV prefrence = PreferedAGV.BOTH;
+        PreferedAGV prefrence = PreferedAGV.UP;
         int startBuffer = 1;
         int endBuffer = 63;
         boolean up = true;

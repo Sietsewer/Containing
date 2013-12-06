@@ -713,6 +713,10 @@ public class Main extends SimpleApplication {
             agv.globalSpeedChanged();
         }
         
+        for(Transporter tran : transporters) {
+            tran.globalSpeedChanged();
+        }
+        
     }
     
     private void pausePlay()

@@ -159,10 +159,13 @@ public class Transporter extends Node implements MotionPathListener {
         path.setCycle(false);
         path.setPathSplineType(Spline.SplineType.Linear);
         path.addListener(this);
-        motionEvent = new MotionEvent(this,this.path);
-
         path.addWayPoint(first);
         path.addWayPoint(this.position);
+        
+        motionEvent = new MotionEvent(this,this.path);
+        motionEvent.setInitialDuration(path.getLength()/11.11f/Main.globalSpeed);
+
+        
 
 
         for (int z = 0; z < containers[0][0].length; z++) {
@@ -283,6 +286,10 @@ public class Transporter extends Node implements MotionPathListener {
                 }
             }
         }
+    }
+    
+    public void globalSpeedChanged(){
+        motionEvent.setInitialDuration(path.getLength()/11.11f/Main.globalSpeed);
     }
     
     /**

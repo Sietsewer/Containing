@@ -12,6 +12,7 @@ import java.util.TimerTask;
 import org.achartengine.ChartFactory;
 import org.achartengine.GraphicalView;
 import org.achartengine.chart.BarChart.Type;
+import org.achartengine.chart.PointStyle;
 import org.achartengine.model.CategorySeries;
 import org.achartengine.model.XYMultipleSeriesDataset;
 import org.achartengine.model.XYSeries;
@@ -20,15 +21,6 @@ import org.achartengine.renderer.SimpleSeriesRenderer;
 import org.achartengine.renderer.XYMultipleSeriesRenderer;
 import org.achartengine.renderer.XYSeriesRenderer;
 
-import com.jjoe64.graphview.BarGraphView;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphView.LegendAlign;
-import com.jjoe64.graphview.GraphViewDataInterface;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
-import com.jjoe64.graphview.ValueDependentColor;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -36,6 +28,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.Menu;
+import android.view.View;
 
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -49,16 +42,16 @@ public class MainActivity extends Activity {
 	static SharedPreferences settings;
 	private static int[] COLORS = new int[] { Color.GREEN, Color.BLUE,
 			Color.MAGENTA, Color.CYAN };
-
+	XYMultipleSeriesDataset barData = null;
 	private static double[] VALUES = new double[] { 10, 11, 12, 13 };
 
 	private static String[] NAME_LIST = new String[] { "Transport", "Buffer",
 			"Crane", "Agv" };
-
+	XYMultipleSeriesRenderer renderer;
 	private CategorySeries mSeries = new CategorySeries("");
 
 	private DefaultRenderer mRenderer = new DefaultRenderer();
-
+	private GraphicalView BarChartView;
 
 	private GraphicalView mChartView;
 
@@ -190,37 +183,95 @@ public class MainActivity extends Activity {
 					}
 
 				} else {
-
-					GraphView graphView = new BarGraphView(MainActivity.this // context
-							, "Aantal containers" // heading
-					);
-					
-					for (int i = 0; i < VALUES.length; i++) {
-						GraphViewSeriesStyle seriesStyle = new GraphViewSeriesStyle();  
-						seriesStyle.color=COLORS[i]; 
-						
-						
-						GraphViewData d = new GraphViewData(i, VALUES[i]);
-						GraphViewSeries exampleSeries = new GraphViewSeries(NAME_LIST[i],seriesStyle,new GraphViewData[]{d});
-						
-						graphView.addSeries(exampleSeries);
+			
+					if (BarChartView == null) {
+						renderer = getBarRenderer();
+						barData = getBarDataset();
+						setChartSettings(renderer);
+						barData = getBarDataset();
+						BarChartView = ChartFactory.getBarChartView(
+								MainActivity.this, barData, renderer,
+								Type.DEFAULT);
+						LinearLayout layout = (LinearLayout) findViewById(R.id.chart);
+						layout.addView(BarChartView, new LayoutParams(
+								LayoutParams.MATCH_PARENT,
+								LayoutParams.MATCH_PARENT));
+					} else {
+						BarChartView.repaint();
 					}
-					graphView.setHorizontalLabels(NAME_LIST);  
-					graphView.setShowLegend(true);
-					graphView.setLegendAlign(LegendAlign.BOTTOM);
-					graphView.setLegendWidth(200);
-					graphView.setScrollable(true);  
-					// optional - activate scaling / zooming  
-					graphView.setScalable(true); 
-					// data
-					LinearLayout layout = (LinearLayout) findViewById(R.id.chart);
-					layout.removeAllViews();
-					layout.addView(graphView);
+					/*
+					 * GraphView graphView = new BarGraphView(MainActivity.this
+					 * // context , "Aantal containers" // heading );
+					 * GraphViewSeriesStyle seriesStyle = new
+					 * GraphViewSeriesStyle(); seriesStyle.color=COLORS[0];
+					 * 
+					 * GraphViewData[] data = new GraphViewData[VALUES.length];
+					 * for (int i = 0; i < VALUES.length; i++) {
+					 * 
+					 * 
+					 * 
+					 * GraphViewData d = new GraphViewData(i, VALUES[i]);
+					 * data[i] = d; } GraphViewSeries exampleSeries = new
+					 * GraphViewSeries("Containers",seriesStyle,data);
+					 * 
+					 * graphView.addSeries(exampleSeries);
+					 * graphView.setHorizontalLabels(NAME_LIST);
+					 * graphView.setShowLegend(true);
+					 * graphView.setLegendAlign(LegendAlign.BOTTOM);
+					 * graphView.setLegendWidth(200);
+					 * graphView.setScrollable(true); // optional - activate
+					 * scaling / zooming graphView.setScalable(true); // data
+					 * LinearLayout layout = (LinearLayout)
+					 * findViewById(R.id.chart); layout.removeAllViews();
+					 * layout.addView(graphView);
+					 */
 				}
 
 			}
 
 		});
+	}
+
+	public XYMultipleSeriesRenderer getBarRenderer() {
+		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
+		renderer.setAxisTitleTextSize(16);
+		renderer.setChartTitleTextSize(20);
+		renderer.setLabelsTextSize(15);
+		renderer.setLegendTextSize(15);
+		renderer.setBarSpacing(1);
+		/*
+		 * private static String[] NAME_LIST = new String[] { "Transport",
+		 * "Buffer", "Crane", "Agv" };
+		 */
+		renderer.addXTextLabel(1, "Transport");
+		renderer.addXTextLabel(2, "Buffer");
+		renderer.addXTextLabel(3, "Crane");
+		renderer.addXTextLabel(4, "Agv");
+		renderer.setMargins(new int[] { 20, 30, 15, 0 });
+		SimpleSeriesRenderer r = new SimpleSeriesRenderer();
+		r.setColor(Color.RED);
+		renderer.addSeriesRenderer(r);
+		return renderer;
+	}
+
+	private void setChartSettings(XYMultipleSeriesRenderer renderer) {
+		renderer.setChartTitle("Containers");
+		renderer.setXTitle("Opslag plek");
+		renderer.setYTitle("Containers");
+		renderer.setXAxisMin(0);
+		renderer.setXAxisMax(4);
+		renderer.setYAxisMin(0);
+	}
+
+	private XYMultipleSeriesDataset getBarDataset() {
+		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
+		Random r = new Random();
+		CategorySeries series = new CategorySeries("container series");
+		for (int i = 0; i < VALUES.length; i++) {
+			series.add(VALUES[i]);
+		}
+		dataset.addSeries(series.toXYSeries());
+		return dataset;
 	}
 
 	private static double maxValue(double[] chars) {

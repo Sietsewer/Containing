@@ -271,22 +271,22 @@ public class Controller {
 
             }
             currentTransporter.add(t);
+            if (t.getDockingPoint() == null) {
+                PrintMessage("Arriving: " + t.toString());
 
-            PrintMessage("Arriving: " + t.toString());
+                Message m = new Message(Commands.CREATE_TRANSPORTER, null);
 
-            Message m = new Message(Commands.CREATE_TRANSPORTER, null);
+                Object[] objects = new Object[t.getContainerCount() + 3];
+                objects[0] = t.id;
+                objects[1] = t.getTransportType();
+                objects[2] = t.getDockingPoint().id;
 
-            Object[] objects = new Object[t.getContainerCount() + 3];
-            objects[0] = t.id;
-            objects[1] = t.getTransportType();
-            objects[2] = t.getDockingPoint().id;
-
-            for (int i = 0; i < t.getContainerCount(); i++) {
-                objects[i + 3] = new SimContainer(t.getContainer(i));
+                for (int i = 0; i < t.getContainerCount(); i++) {
+                    objects[i + 3] = new SimContainer(t.getContainer(i));
+                }
+                m.setParameters(objects);
+                server.sendCommand(m);
             }
-            m.setParameters(objects);
-            server.sendCommand(m);
-
         }
 
         ArrayList<Container> departingContainers = new ArrayList();
@@ -574,8 +574,8 @@ public class Controller {
                     Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{dockedTransporter.get(c).id});
                     this.sendMessage(m);
                     currentTransporter.remove(t);
+                    dockedTransporter.remove(c);
                 }
-                dockedTransporter.remove(c);
                 c.ready = true;
             }
         }

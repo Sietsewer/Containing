@@ -77,7 +77,6 @@ public class Main extends SimpleApplication {
     Buffer[] buffers;
     private static Main app = null;
     public static float globalSpeed = 1f;
-    private Collection<Message> messagesTodo;
     private boolean isPaused = false;
 
     /**
@@ -113,7 +112,7 @@ public class Main extends SimpleApplication {
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
         listener = new ServerListener(this);
-        messagesTodo = new ArrayList<Message>();
+
     }
 
     /**
@@ -145,10 +144,9 @@ public class Main extends SimpleApplication {
             c.update(tpf);
         }
         }
-        Collection<Message> temp = Collections.synchronizedCollection(new ArrayList(messagesTodo));
-        for (Message m : temp) {
+        for (String s  : listener.getMessages()) {
+            Message m = Message.decodeMessage(s);
             this.messageRecieved(m);
-            messagesTodo.remove(m);
         }
 
     }
@@ -283,13 +281,6 @@ public class Main extends SimpleApplication {
         listener.sendMessage(Message);
     }
 
-    /**
-     * Adds incoming message to todo list
-     * @param decodedMessage the message which to add
-     */
-    public void messageReceivedEvent(Message decodedMessage) {
-        this.messagesTodo.add(decodedMessage);
-    }
 
     /**
      * Process the incoming message

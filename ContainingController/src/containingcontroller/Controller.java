@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class Controller {
 
-    private int Speed = 1;
+    public static int Speed = 1;
     //pathfinde variable
     PathFinder pathFinder;
     //server variables
@@ -288,10 +288,10 @@ public class Controller {
                 server.sendCommand(m);
             }
         }
-     /*   ArrayList<Container> departingContainers = new ArrayList();
-        for (Buffer buf : buffers) {
-            departingContainers.addAll(buf.checkDepartingContainers(simTime));
-        }*/
+        /*   ArrayList<Container> departingContainers = new ArrayList();
+         for (Buffer buf : buffers) {
+         departingContainers.addAll(buf.checkDepartingContainers(simTime));
+         }*/
 
         Calendar cal = Calendar.getInstance(); // creates calendar
         cal.setTime(simTime); // sets calendar time/date
@@ -360,6 +360,7 @@ public class Controller {
      */
     public final void PrintMessage(String message) {
         window.WriteLogLine(message);
+
     }
 
     private void AGVReady(AGV agv) {
@@ -522,62 +523,68 @@ public class Controller {
 
             //kraan krijgt opdracht om nieuwe container te pakken
             Transporter t = dockedTransporter.get(c);
-
-            if (t.getContainerCount() > 0) {
-                CustomVector3f lastPosistion = v.container.getPosition();
-                Container toMove = null;
-                for (int x = c.startRange; x <= c.range + c.startRange && toMove == null; x++) {
-                    for (int z = 0; z <= 16 && toMove == null; z++) {
-                        for (int y = 6; y >= 0 && toMove == null; y--) {
-                            for (Container cont : t.getContainers()) {
-                                if (cont.getPosition().x == x
-                                        && cont.getPosition().z == z
-                                        && cont.getPosition().y == y) {
-                                    toMove = cont;
-                                    break;
+            if (t != null) {
+                if (t.getContainerCount() > 0) {
+                    CustomVector3f lastPosistion = v.container.getPosition();
+                    Container toMove = null;
+                    for (int x = c.startRange; x <= c.range + c.startRange && toMove == null; x++) {
+                        for (int z = 0; z <= 16 && toMove == null; z++) {
+                            for (int y = 6; y >= 0 && toMove == null; y--) {
+                                for (Container cont : t.getContainers()) {
+                                    if (cont.getPosition().x == x
+                                            && cont.getPosition().z == z
+                                            && cont.getPosition().y == y) {
+                                        toMove = cont;
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
-                }
 
-                if (toMove == null) {
-                    c.setIsReady(true);
-                    if (dockedTransporter.containsKey(c)) {
-                        dockedTransporter.remove(c);
+                    if (toMove == null) {
+                        c.setIsReady(true);
+                        System.out.println("no containers any more");
+                    } else {
+                        Message m = new Message(Commands.PICKUP_CONTAINER, null);
+                        ArrayList<Object> params = new ArrayList<>();
+                        params.add(c.id);
+
+                        params.add(t.id);
+
+                        params.add(toMove.getId());
+
+                        params.add(toMove.getPosition().x);
+
+                        params.add(toMove.getPosition().y);
+
+                        params.add(toMove.getPosition().z);
+
+                        m.setParameters(params.toArray());
+                        t.getContainers().remove(toMove);
+                        c.container = toMove;
+                        this.sendMessage(m);
+                        c.setIsReady(false);
+                        sendAGVTo(c, toMove);
                     }
-                    System.out.println("no containers any more");
                 } else {
-                    Message m = new Message(Commands.PICKUP_CONTAINER, null);
-                    ArrayList<Object> params = new ArrayList<>();
-                    params.add(c.id);
-
-                    params.add(t.id);
-
-                    params.add(toMove.getId());
-
-                    params.add(toMove.getPosition().x);
-
-                    params.add(toMove.getPosition().y);
-
-                    params.add(toMove.getPosition().z);
-
-                    m.setParameters(params.toArray());
-                    t.getContainers().remove(toMove);
-                    c.container = toMove;
-                    this.sendMessage(m);
-                    c.setIsReady(false);
-                    sendAGVTo(c, toMove);
+                    if (currentTransporter.contains(t)) {
+                        Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{dockedTransporter.get(c).id});
+                        this.sendMessage(m);
+                        currentTransporter.remove(t);
+                        Crane dock = getDockingPoint(t);
+                        while (dock != null) {
+                            dockedTransporter.remove(dock);
+                            dock = getDockingPoint(t);
+                        }
+                    }
+                    c.ready = true;
                 }
-            } else {
-                if (currentTransporter.contains(t)) {
-                    Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{dockedTransporter.get(c).id});
-                    this.sendMessage(m);
-                    currentTransporter.remove(t);
-                    dockedTransporter.remove(c);
-                }
-                c.ready = true;
             }
+        }
+        else
+        {
+            c.ready = true;
         }
 
     }

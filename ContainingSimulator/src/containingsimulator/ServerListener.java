@@ -13,6 +13,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,9 +30,10 @@ public class ServerListener {
     private Socket client;//client's socket connection
     private PrintWriter output;//output stream from client
     private Main main;//maingame to send message recieved
-
+    private List<String> recievedMessages;
     /**
      * Listener to server and sender to server
+     *
      * @param main
      */
     public ServerListener(Main main) {
@@ -38,6 +41,7 @@ public class ServerListener {
         serverName = "127.0.0.1";
         port = 6066;
         this.main = main;
+        recievedMessages = new ArrayList<String>();
         Thread listenerThread = new Thread(new Runnable() {
             public void run() {
                 ServerListener.this.run();
@@ -45,7 +49,12 @@ public class ServerListener {
         });
         listenerThread.start();
     }
-
+    public List<String> getMessages()
+    {
+        ArrayList temp = new ArrayList<String>(recievedMessages);
+        recievedMessages.clear();
+        return temp;
+    }
     /**
      * main methoded that is listining to server
      */
@@ -66,7 +75,7 @@ public class ServerListener {
         } catch (IOException ex) {
             Logger.getLogger(ServerListener.class.getName()).log(Level.SEVERE, null, ex);
         }
-         
+
         output.println(Message.encodeMessage(new Message(Commands.READY, new String[]{"simulator"})));
         while (true) {
             String s;
@@ -74,9 +83,8 @@ public class ServerListener {
                 if (input.ready()) {
                     s = input.readLine();
                     if (!s.isEmpty()) {
-                        System.out.println("message from ip:" + client.getRemoteSocketAddress() + s);
-                   //     System.out.println(s);
-                        main.messageReceivedEvent(Message.decodeMessage(s));
+                       recievedMessages.add(s);
+               //         main.messageReceivedEvent(Message.decodeMessage(s));
                     }
                 }
             } catch (IOException ex) {
@@ -89,6 +97,7 @@ public class ServerListener {
 
     /**
      * Send message to server
+     *
      * @param message the message you want to send
      */
     void sendMessage(Message message) {

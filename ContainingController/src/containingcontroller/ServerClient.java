@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * @author Hendrik
  */
 public class ServerClient {
-
+    
     private BufferedReader input;//input stream from client
     private Socket client;//client's socket connection
     private PrintWriter output;//output stream from client
@@ -35,7 +35,7 @@ public class ServerClient {
         this.client = client;
         server = s;
     }
-
+    
     ServerClient(Socket client, Server s, boolean b) {
         this(client, s);
         sendOnly = b;
@@ -48,12 +48,18 @@ public class ServerClient {
      */
     public void sendMessage(String message) {
         if (!android) {
-            System.out.println("message to ip:" + client.getRemoteSocketAddress());
+         //   System.out.println("message to ip:" + client.getRemoteSocketAddress());
             //System.out.println(message);
+            
             output.println(message);
+          /*  try {
+             //   Thread.sleep(10/Controller.Speed);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+            }*/
         }
     }
-
+    
     public void sendAndroidMessage(String message) {
         System.out.println("message to ip:" + client.getRemoteSocketAddress());
         //System.out.println(message);
@@ -86,10 +92,10 @@ public class ServerClient {
                             //server.controller.PrintMessage("Connected Android - " + client.getRemoteSocketAddress());
 
                             sendAndroidMessage(server.controller.getAndroidData());
-
+                            
                             break;
                         }
-
+                        
                     } else {
                         if (!s.isEmpty()) {
                             server.MessageRecieved(s);
@@ -102,7 +108,7 @@ public class ServerClient {
                 Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
                 return;
             }
-
+            
         }
     }
 }

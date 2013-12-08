@@ -394,7 +394,7 @@ public abstract class Crane extends Node implements MotionPathListener {
         }
         else if(this instanceof BufferCrane)
         {
-           // ((BufferCrane)this).getBuffer().removeContainer(cont.indexPosition);
+            ((BufferCrane)this).getBuffer().removeContainer(cont.indexPosition);
         }
         }
         else if(!pickupContainer && agv!= null)
@@ -402,10 +402,7 @@ public abstract class Crane extends Node implements MotionPathListener {
             agv.getContainer();//this.cont=
             agv = null;
         } 
-        else if(this instanceof BufferCrane)
-        {
-            ((BufferCrane)this).getBuffer().removeContainer(cont.indexPosition);
-        }
+      
         cont.rotate(0, base.getWorldRotation().toAngles(null)[1], 0);
         loaded = true;
     }

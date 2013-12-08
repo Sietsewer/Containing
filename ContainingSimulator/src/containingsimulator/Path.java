@@ -104,7 +104,7 @@ public class Path {
   {
       int dist = 22;
       Vector3f vecBFA = new Vector3f(118,10,60.5f);
-      Vector3f vecBFB= new Vector3f(118,10,403.5f);
+      Vector3f vecBFB= new Vector3f(118,10,503.5f);
      
       String bfa = "bfa";
       String bfb = "bfb";

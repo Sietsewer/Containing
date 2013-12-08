@@ -15,6 +15,7 @@ import com.jme3.scene.Spatial;
 public class BufferCrane extends Crane {
     
     private Buffer buffer;
+    private Vector3f tempTarget;
 
     public BufferCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook, Buffer buffer)
     {
@@ -35,27 +36,7 @@ public class BufferCrane extends Crane {
         return this.buffer;
     }
 
-    private void commonSteps()
-    {
-        switch(action)
-        {
-         case 1: 
-                doAction(1,false);
-                break;
-            case 2: 
-                doAction(2,false);
-                break;
-            case 3:
-                doAction(3,false);
-                break;
-            case 4:
-               if(doAction(3,true))
-               {
-                    contToHook();
-               }
-                break;
-         }
-     }
+
 
      @Override
     protected void updateGet()
@@ -63,7 +44,7 @@ public class BufferCrane extends Crane {
          switch(action)
         {
              default:
-                 commonSteps();
+                 commonActions();
                  break;
             case 5:
                   if(readyToLoad())
@@ -94,6 +75,11 @@ public class BufferCrane extends Crane {
                 break;
          }
     }
+     public void pickupContainer(Container cont, boolean up)
+     {
+         this.tempTarget = buffer.getSideVector3f(up);
+         this.pickupContainer(cont);
+     }
  
      
     @Override
@@ -102,13 +88,14 @@ public class BufferCrane extends Crane {
         switch(action)
         {
             default:
-                commonSteps();
+                commonActions();
                 break;
             case 5:
                 doAction(2,true);
                 break;
             case 6:
-                doAction(1,true);
+                target = tempTarget; //target is parkingSpot up or down
+                doAction(1,false);
                 break;
             case 7: //nog niet af vanaf hier
                   if(readyToLoad())
@@ -117,7 +104,10 @@ public class BufferCrane extends Crane {
                   }
                 break;
             case 8:
-                 contOffHook();
+                if(doAction(3,true))
+                {
+                contOffHook(); //container to agv
+                }
                 break;
             case 9:
                 resetPos(2);

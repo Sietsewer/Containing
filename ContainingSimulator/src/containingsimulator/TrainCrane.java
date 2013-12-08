@@ -42,28 +42,47 @@ public class TrainCrane extends Crane implements MotionPathListener{
     @Override
     protected void updateGet()
     {
-        
-        
+        switch (action) {
+             default:
+                 commonActions();
+                break;
+            case 5:
+                if(readyToLoad())
+                {
+                    if(doAction(2,false))
+                    {
+                       resetPos(3);
+
+                    }
+                }
+                break;
+            case 6:
+                doAction(3,false);
+                break;
+           case 7:
+                if(doAction(3,true))
+                {
+                   contOffHook();
+                }
+                break; 
+            case 8:
+                if(doAction(2,true)){
+                    resetPos(3);
+                }
+                break;
+            case 9:
+             this.finishActions();
+                break;
+         }
     }
-     
+
     @Override
     protected void updatePickup()
     {
         switch(action)
         {
-            case 1: 
-                doAction(1,false);
-                break;
-            case 2: 
-                doAction(2,false);
-                break;
-            case 3:
-                doAction(3,false);
-                break;
-            case 4:
-                 if(doAction(3,true)){
-                    contToHook();
-                 }
+            default: 
+              commonActions();
                 break;
             case 5:
                  if(doAction(2,true))

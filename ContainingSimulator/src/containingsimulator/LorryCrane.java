@@ -38,42 +38,60 @@ public class LorryCrane extends Crane implements MotionPathListener {
         this.hookDur = 5f;
         
     }
-
+    
+    private void commonSteps()
+    {
+        switch(action)
+        {
+            case 1:
+               doAction(1,false);;
+                break;
+            case 2:
+                   if (doAction(3,false))
+                    {
+                       resetPos(2);
+                    }
+                break;
+            case 3:
+                  if(doAction(3,true))
+                {
+                    contToHook();
+                    cont.setLocalTranslation(cont.getLocalTranslation().subtract(0,1.5f,0));
+                }
+                break;
+        }
+    }
     @Override
     protected void updateGet()
     {
         switch(action)
         {
-            case 1:
-                target = parkingSpot.translation;
-               doAction(1,false);;
-                break;
-            case 2:
-                if(readyToLoad())
-                 {
-                     if (doAction(3,false))
-                    {
-                       resetPos(2);
-                    }
-                 }
-                break;
-            case 3:
-                doAction(1,false);
+            default:
+               commonSteps();
                 break;
             case 4:
-                doAction(3,false);
-                break;
-            case 5:
-                if(doAction(3,true))
+                if(readyToLoad())
                 {
-                    contOffHook();
-                    //cont.setLocalTranslation(cont.getLocalTranslation().subtract(0,1.5f,0));
+                doAction(1,false);    
                 }
                 break;
+            case 5:
+                doAction(3,false);
+                    //cont.setLocalTranslation(cont.getLocalTranslation().subtract(0,1.5f,0));
+                break;
             case 6:
-                doAction(1,true);
+                 if(cont != null){ 
+                target =target.add(0,cont.size.y*4,0);}
+                if(doAction(3,true))
+                {
+                   contOffHook();
+                }
                 break;
             case 7:
+                doAction(1,true);
+                break;
+            case 8:
+                
                 resetPos(2);
                 resetPos(3);
                 finishActions();
@@ -87,18 +105,8 @@ public class LorryCrane extends Crane implements MotionPathListener {
     {
         switch(action)
         {
-            case 1: 
-                doAction(1,false);
-                break;
-            case 2:
-                doAction(3,false);
-                break;
-            case 3:
-                if(doAction(3,true))
-                {
-                    contToHook();
-                    cont.setLocalTranslation(cont.getLocalTranslation().subtract(0,1.5f,0));
-                }
+            default:
+                commonSteps();
                 break;
             case 4:
                 target = parkingSpot.translation;

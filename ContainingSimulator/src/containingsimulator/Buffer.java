@@ -95,7 +95,6 @@ public class Buffer extends Node{
        int i = up ? 0 : pSpots.length/2;
        int max = up ? pSpots.length/2 : pSpots.length;
        
-        
              while(i < max) 
              {
                  if(pSpots[i].occupied == false) 
@@ -104,8 +103,6 @@ public class Buffer extends Node{
                  }
                   i++;
              }
-             
-       
            
       /* Original
         for (int i = 0; i < pSpots.length; i++) {
@@ -114,6 +111,11 @@ public class Buffer extends Node{
             }
         }*/
         return null;
+    }
+    public Vector3f getSideVector3f(boolean up)
+    {
+       int i = up ? 0 : pSpots.length/2;
+       return pSpots[i].translation; //accuracy doesn't matter, just a spot up ur down the buffer matters
     }
     
     /**

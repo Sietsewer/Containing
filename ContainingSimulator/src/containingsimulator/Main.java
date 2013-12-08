@@ -25,6 +25,7 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
+import containing.xml.CustomVector3f;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -111,6 +112,10 @@ public class Main extends SimpleApplication {
         init_CrossHairs();
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
+        cam.setLocation(new Vector3f(-254,416,280));
+        cam.lookAt(new Vector3f(300,0,300),Vector3f.UNIT_Y);
+       
+ 
         listener = new ServerListener(this);
 
     }
@@ -121,13 +126,9 @@ public class Main extends SimpleApplication {
      */
     @Override
     public void simpleUpdate(float tpf) {
-       
+      
         if(!isPaused)
         {
-          
-        
-        
-        sky_geo.setLocalTranslation(cam.getLocation());
         for (Crane c : seaCranes) {
             c.update(tpf);
         }
@@ -144,6 +145,8 @@ public class Main extends SimpleApplication {
             c.update(tpf);
         }
         }
+        sky_geo.setLocalTranslation(cam.getLocation());
+         
         for (String s  : listener.getMessages()) {
             Message m = Message.decodeMessage(s);
             this.messageRecieved(m);
@@ -314,16 +317,30 @@ public class Main extends SimpleApplication {
                 break;
             case Commands.PICKUP_CONTAINER:
                 crane = getCraneByID((String) params[0]);
-                Transporter trans = getTransporterByID((String) params[1]);
                 cont = getContainerByID((String) params[2]);
-                if (crane != null && trans != null && cont != null) {
-                    if (crane instanceof BufferCrane){
-                        //pak container van buffer ipv transport
-                    } else {
-                        crane.pickupContainer(cont, trans);
-                    }
-                } else {
-                    System.err.println("Error: No crane/container/transporter with this ID");
+                if (crane == null || cont== null) 
+                {
+                 System.out.println("Error: crane is null OR container is null");
+                 break;
+                }
+                if(crane instanceof BufferCrane)
+                { //after picking up the container go to the up- or downside of the buffer
+                 boolean up = (Boolean)params[1];
+
+                 ((BufferCrane)crane).pickupContainer(cont, up);
+                }
+                else
+                {
+                Transporter trans = getTransporterByID((String) params[1]);
+                if(trans == null)
+                {
+                        System.out.println("Error: No transporter with this ID");
+                        break;
+                }
+                else
+                {
+                crane.pickupContainer(cont, trans);
+                }
                 }
                 break;
             case Commands.GIVE_CONTAINER:
@@ -349,8 +366,8 @@ public class Main extends SimpleApplication {
                     realPosition = ((BufferCrane)crane).getBuffer().getRealContainerPosition(indexPosition);
                     crane.putContainer(realPosition,indexPosition);
                 }
-                else
-                if (crane != null) {
+                else if (crane != null) 
+                {
                     {
                       realPosition = crane.transporter.getRealContainerPosition(indexPosition);
                       crane.putContainer(realPosition,indexPosition);
@@ -363,10 +380,10 @@ public class Main extends SimpleApplication {
             case Commands.GET_CONTAINER:
                 agv = getAGVbyID((String) params[0]);
                 crane = getCraneByID((String) params[1]);
-                if (crane != null ) {
+                if (crane != null && agv != null) {
                         crane.getContainer(agv);
                 } else {
-                    System.err.println("Error: No crane/container/transporter with this ID");
+                    System.err.println("Error: No crane/agv with this ID");
                 }
                 //TODO: take container from AGV
                 break;
@@ -679,7 +696,7 @@ public class Main extends SimpleApplication {
             if (name.equals("right-click")) {
                 changeGlobalSpeed(globalSpeed*1.5f); //fasten up
             }
-            if (name.equals("left-click") && !keyPressed) {
+           /* if (name.equals("left-click") && !keyPressed) {
                 CollisionResults results = new CollisionResults();
                 Ray ray = new Ray(cam.getLocation(), cam.getDirection().normalize());
                 rootNode.collideWith(ray, results);
@@ -688,10 +705,8 @@ public class Main extends SimpleApplication {
                     // The closest collision point is what was truly hit:
                     CollisionResult closest = results.getClosestCollision();
                     Vector3f hitPoint = closest.getContactPoint(); //where uve shot 
-                 
-                }
-
-            }
+                    
+            }*/
         }
     };
     private void changeGlobalSpeed(float acceleration)

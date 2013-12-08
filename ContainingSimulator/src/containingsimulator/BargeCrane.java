@@ -70,29 +70,6 @@ public class BargeCrane extends Crane {
                 break;
     }
     }
-    
-    private void commonActions()
-    {
-        switch(action)
-        {
-            case 1:
-                doAction(1,false);
-                break;
-            case 2:
-                 doAction(2,false);
-                break;
-            case 3:
-                 doAction(3,false);
-                break;
-            case 4:
-                if(doAction(3,true))
-                {
-                    this.contToHook();
-                }
-                break;
-        }
-    }
-    
 
     @Override
     protected void updatePickup()

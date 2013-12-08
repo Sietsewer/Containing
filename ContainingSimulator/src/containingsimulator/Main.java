@@ -736,7 +736,7 @@ public class Main extends SimpleApplication {
                     {
                     closestNode.attachChild(cam2Node);
                     cam2Node.setLocalTranslation(hitPoint.normalizeLocal().add(10,5,10));
-                    cam2Node.lookAt(closestNode.getWorldTranslation(), Vector3f.UNIT_Y);
+                    cam2Node.lookAt(closestNode.getLocalTranslation(), Vector3f.UNIT_Y);
                    
                     if( cam2Text==null){ 
                         cam2Text = new BitmapText(guiFont, false);

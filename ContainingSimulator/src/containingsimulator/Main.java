@@ -16,19 +16,23 @@ import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.CameraControl.ControlDirection;
 import com.jme3.scene.shape.Quad;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import containing.xml.CustomVector3f;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -79,7 +83,12 @@ public class Main extends SimpleApplication {
     private static Main app = null;
     public static float globalSpeed = 1f;
     private boolean isPaused = false;
-
+    
+    private CameraNode cam2Node = new CameraNode();
+    private Camera cam2;
+    BitmapText cam2Text;
+    ViewPort view2;
+    
     /**
      *
      * @param args
@@ -108,16 +117,32 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         setPauseOnLostFocus(false);
         loadAssets();
+        
         init_Input();
         init_CrossHairs();
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
         cam.setLocation(new Vector3f(-254,416,280));
         cam.lookAt(new Vector3f(300,0,300),Vector3f.UNIT_Y);
+        init_SecondCam();
        
  
         listener = new ServerListener(this);
 
+       
+       
+
+
+        
+    }
+    private void init_SecondCam()
+    {
+        cam2 = cam.clone();
+        cam2.setViewPort(.8f, 1f, .8f, 1f);
+        cam2.setLocation(new Vector3f(4.775564f, 1.4548365f, 0.11491505f));
+        cam2.setRotation(new Quaternion(0.02356979f, -0.74957186f, 0.026729556f, 0.66096294f));
+        cam2Node = new CameraNode("Camera",cam2);
+        cam2Node.setControlDir(ControlDirection.SpatialToCamera);
     }
 
     /**
@@ -146,7 +171,7 @@ public class Main extends SimpleApplication {
         }
         }
         sky_geo.setLocalTranslation(cam.getLocation());
-         
+       
         for (String s  : listener.getMessages()) {
             Message m = Message.decodeMessage(s);
             this.messageRecieved(m);
@@ -696,7 +721,7 @@ public class Main extends SimpleApplication {
             if (name.equals("right-click")) {
                 changeGlobalSpeed(globalSpeed*1.5f); //fasten up
             }
-           /* if (name.equals("left-click") && !keyPressed) {
+            if (name.equals("left-click") && !keyPressed) {
                 CollisionResults results = new CollisionResults();
                 Ray ray = new Ray(cam.getLocation(), cam.getDirection().normalize());
                 rootNode.collideWith(ray, results);
@@ -705,9 +730,41 @@ public class Main extends SimpleApplication {
                     // The closest collision point is what was truly hit:
                     CollisionResult closest = results.getClosestCollision();
                     Vector3f hitPoint = closest.getContactPoint(); //where uve shot 
+                    Node closestNode = closest.getGeometry().getParent();
                     
-            }*/
-        }
+                    if(closestNode != null && !closestNode.equals(rootNode))
+                    {
+                    closestNode.attachChild(cam2Node);
+                    cam2Node.setLocalTranslation(hitPoint.normalizeLocal().add(10,5,10));
+                    cam2Node.lookAt(closestNode.getWorldTranslation(), Vector3f.UNIT_Y);
+                   
+                    if( cam2Text==null){ 
+                        cam2Text = new BitmapText(guiFont, false);
+                    }
+                    else{
+                        guiNode.detachChild( cam2Text);
+                    }
+                    cam2Text.setColor(ColorRGBA.Red);
+                    cam2Text.setSize(guiFont.getCharSet().getRenderedSize());
+                    cam2Text.setText(closestNode.getName()); // crosshairs
+                    cam2Text.setLocalTranslation(settings.getWidth()-cam2Text.getLineWidth(),settings.getHeight()-cam2Text.getLineHeight()-50,0);
+                    guiNode.attachChildAt(cam2Text, 0);
+                    
+                    if(view2 == null){
+                    view2 = renderManager.createMainView("Top Right", cam2);
+                    view2.setClearFlags(true, true, true);
+                    view2.attachScene(rootNode);}
+                    }
+                    
+                    else
+                    {
+                       renderManager.removeMainView("Top Right");
+                       view2 = null;
+                       if( cam2Text!=null){
+                      guiNode.detachChild( cam2Text);
+                    }
+            }}
+        }}
     };
     private void changeGlobalSpeed(float acceleration)
     {

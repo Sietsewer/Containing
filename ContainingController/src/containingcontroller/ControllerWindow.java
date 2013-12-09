@@ -366,19 +366,13 @@ public class ControllerWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-    Calendar cal = Calendar.getInstance(); // creates calendar
-        cal.setTime( controller.simTime); // sets calendar time/date
-        cal.add(Calendar.HOUR, 1); // adds one minute
-         controller.simTime = cal.getTime(); // returns new date object, one hour in the future
+
        
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
       
-        Calendar cal = Calendar.getInstance(); // creates calendar
-        cal.setTime( controller.simTime); // sets calendar time/date
-        cal.add(Calendar.HOUR, 24); // adds one minute
-         controller.simTime = cal.getTime(); // returns new date object, one hour in the future
+
        
     }//GEN-LAST:event_jMenuItem12ActionPerformed
 

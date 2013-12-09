@@ -31,7 +31,7 @@ import javax.xml.bind.Unmarshaller;
  */
 public class Server {
 
-    private ServerSocket serverSocket;
+    private ServerSocket  serverSocket;
     Controller controller;
     ArrayList<ServerClient> clients;//list of connected clients
 

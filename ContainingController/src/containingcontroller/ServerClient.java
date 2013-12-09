@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +35,11 @@ public class ServerClient {
     public ServerClient(Socket client, Server s) {
         this.client = client;
         server = s;
+        try {
+            client.setTcpNoDelay(true);
+        } catch (SocketException ex) {
+            Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     ServerClient(Socket client, Server s, boolean b) {

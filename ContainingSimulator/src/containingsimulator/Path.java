@@ -69,6 +69,12 @@ public class Path {
       createCBA();
       createCLO();
   }
+    public static HashMap<String,Vector3f>getPath()
+    {
+
+         return map;
+        
+    }
     /**
      * returns vector3f for id
      * @param id

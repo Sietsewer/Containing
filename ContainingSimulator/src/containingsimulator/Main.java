@@ -29,10 +29,11 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.CameraControl.ControlDirection;
 import com.jme3.scene.shape.Quad;
+import com.jme3.scene.shape.Sphere;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
-import containing.xml.CustomVector3f;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -117,13 +118,14 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         setPauseOnLostFocus(false);
         loadAssets();
-        
+        showPathNodes(true); //set false for disabling view PathNodes 
         init_Input();
         init_CrossHairs();
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
         cam.setLocation(new Vector3f(-254,416,280));
         cam.lookAt(new Vector3f(300,0,300),Vector3f.UNIT_Y);
+       
         init_SecondCam();
        
  
@@ -572,6 +574,32 @@ public class Main extends SimpleApplication {
             }
         }
         return null;
+    }
+    
+    private void showPathNodes(boolean show)
+    {
+        if(!show)
+        {
+            return;
+        }
+        
+        Sphere sphere =  new Sphere(32,32, 2f);
+  
+        Geometry geometry = new Geometry("PathNode",sphere);
+        Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        HashMap<String,Vector3f>map = Path.getPath();
+        Node node = new Node("PathNode");
+       
+        for (String key : map.keySet()) {
+            Geometry geom = geometry.clone();
+            geom.setMaterial(mat);
+            geom.setName(key);
+            Node n = node.clone(false);
+            n.setName(key);
+            n.attachChild(geom);
+            rootNode.attachChild(n);
+            n.setLocalTranslation(map.get(key));
+        }
     }
 
     /**

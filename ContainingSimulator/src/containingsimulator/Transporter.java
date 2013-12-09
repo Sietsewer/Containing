@@ -116,7 +116,7 @@ public class Transporter extends Node implements MotionPathListener {
                 this.speed = 11;
                 break;
             case TransportTypes.TRAIN:
-                containers = new Container[29][1][1];
+                containers = new Container[30][1][1];
                 currentGeometry = TRAIN.clone();
                 size = new Vector3f(TRAINb.xExtent, TRAINb.yExtent, TRAINb.yExtent);
                 this.position.z -= 8f;

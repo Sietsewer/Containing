@@ -213,16 +213,6 @@ public class Controller {
             }
         }
         
-        for (int i = 0; i < allDepartingTransporters.size(); i++) {
-            if (allDepartingTransporters.get(i).getDateArrival().before(simTime)) {
-                arrivingTransporters.add(allDepartingTransporters.get(i));
-                allDepartingTransporters.remove(i);
-                i--;
-            } else {
-                break;
-            }
-        }
-        
         for (Transporter t : arrivingTransporters) {
 
             switch (t.getTransportType()) {
@@ -299,10 +289,82 @@ public class Controller {
                 server.sendCommand(m);
             }
         }
-        /*   ArrayList<Container> departingContainers = new ArrayList();
-         for (Buffer buf : buffers) {
-         departingContainers.addAll(buf.checkDepartingContainers(simTime));
-         }*/
+        
+        /*DEPARTURE STUFF STARTS HERE*/
+        
+        List<Transporter> departingTransporters = new ArrayList<>();
+        for (int i = 0; i < allDepartingTransporters.size(); i++) {
+            if (allDepartingTransporters.get(i).getDateArrival().before(simTime)) {
+                departingTransporters.add(allDepartingTransporters.get(i));
+                allDepartingTransporters.remove(i);
+                i--;
+            } else {
+                break;
+            }
+        }
+        
+        for (Transporter t : departingTransporters){
+            switch (t.getTransportType()) {
+                case TransportTypes.BARGE:
+                    for (int i = 0; i < 8; i += 2) {
+                        if (!dockedTransporter.containsKey(bargeCranes.get(i))) {
+                            Crane c = bargeCranes.get(i);
+                            t.setDockingPoint(c);
+                            dockedTransporter.put(c, t);
+                            break;
+                        }
+                    }
+                    break;
+                case TransportTypes.SEASHIP:
+                    for (int i = 0; i < 10; i += 2) {
+                        if (!dockedTransporter.containsKey(seaCranes.get(i))) {
+                            Crane c = seaCranes.get(i);
+                            t.setDockingPoint(c);
+                            dockedTransporter.put(c, t);
+                            break;
+                        }
+                    }
+                    break;
+                case TransportTypes.TRAIN:
+                    for (int i = 0; i < trainCranes.size(); i++) {
+                        if (!dockedTransporter.containsKey(trainCranes.get(i))) {
+                            Crane c = trainCranes.get(i);
+                            t.setDockingPoint(c);
+                            dockedTransporter.put(c, t);
+                            break;
+                        }
+                    }
+                    break;
+                case TransportTypes.LORREY:
+                    for (Crane crane : lorreyCranes) {
+                        if (!dockedTransporter.containsKey(crane)) {
+                            t.setDockingPoint(crane);
+                            dockedTransporter.put(crane, t);
+                            break;
+                        }
+                    }
+                    break;
+
+            }
+        }
+        
+        ArrayList<Container> departingContainers = new ArrayList();
+        for (Buffer buf : buffers) {
+            departingContainers.addAll(buf.checkDepartingContainers(simTime));
+        }
+        Collections.sort(departingContainers, new ContainerDepartureComparer());
+        
+        ArrayList<Container> expectedContainers = new ArrayList();
+        Container pivot = departingContainers.get(0);
+        for (Container dc : departingContainers){
+            if(pivot.getCargoCompanyDeparture().equalsIgnoreCase(dc.getCargoCompanyDeparture())
+                    && pivot.getDateDeparture().getTime() == dc.getDateDeparture().getTime()
+                    && pivot.getTransportTypeDeparture() == dc.getTransportTypeDeparture()){
+                expectedContainers.add(dc);
+            }
+        }
+        
+        /*DEPARTURE STUFF ENDS HERE*/
 
         Calendar cal = Calendar.getInstance(); // creates calendar
         cal.setTime(simTime); // sets calendar time/date

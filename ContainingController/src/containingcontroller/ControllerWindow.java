@@ -115,7 +115,9 @@ public class ControllerWindow extends javax.swing.JFrame {
         jMenuItem11 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
+        jMenuItem21 = new javax.swing.JMenuItem();
         jMenuItem12 = new javax.swing.JMenuItem();
+        jMenuItem20 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
         jMenuItem13 = new javax.swing.JMenuItem();
         jMenuItem14 = new javax.swing.JMenuItem();
@@ -208,6 +210,14 @@ public class ControllerWindow extends javax.swing.JFrame {
 
         jMenu4.setText("add Time");
 
+        jMenuItem21.setText("add Hour");
+        jMenuItem21.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem21ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem21);
+
         jMenuItem12.setText("add Day");
         jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -215,6 +225,14 @@ public class ControllerWindow extends javax.swing.JFrame {
             }
         });
         jMenu4.add(jMenuItem12);
+
+        jMenuItem20.setText("add Week");
+        jMenuItem20.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem20ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem20);
 
         jMenuBar1.add(jMenu4);
 
@@ -348,7 +366,11 @@ public class ControllerWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
-        // TODO add your handling code here:
+    Calendar cal = Calendar.getInstance(); // creates calendar
+        cal.setTime( controller.simTime); // sets calendar time/date
+        cal.add(Calendar.HOUR, 1); // adds one minute
+         controller.simTime = cal.getTime(); // returns new date object, one hour in the future
+       
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
@@ -390,6 +412,22 @@ openFile(System.getProperty("user.dir")+"\\XML\\xml6.xml");
     private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
 openFile(System.getProperty("user.dir")+"\\XML\\xml7.xml");   
     }//GEN-LAST:event_jMenuItem19ActionPerformed
+
+    private void jMenuItem21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem21ActionPerformed
+    Calendar cal = Calendar.getInstance(); // creates calendar
+        cal.setTime( controller.simTime); // sets calendar time/date
+        cal.add(Calendar.HOUR, 1); // adds one minute
+         controller.simTime = cal.getTime(); // returns new date object, one hour in the future
+       
+    }//GEN-LAST:event_jMenuItem21ActionPerformed
+
+    private void jMenuItem20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem20ActionPerformed
+    Calendar cal = Calendar.getInstance(); // creates calendar
+        cal.setTime( controller.simTime); // sets calendar time/date
+        cal.add(Calendar.HOUR, 168); // adds one minute
+         controller.simTime = cal.getTime(); // returns new date object, one hour in the future
+       
+    }//GEN-LAST:event_jMenuItem20ActionPerformed
 
     /**
      * write line to log window
@@ -435,6 +473,8 @@ openFile(System.getProperty("user.dir")+"\\XML\\xml7.xml");
     private javax.swing.JMenuItem jMenuItem18;
     private javax.swing.JMenuItem jMenuItem19;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem20;
+    private javax.swing.JMenuItem jMenuItem21;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;

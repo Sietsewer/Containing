@@ -204,7 +204,7 @@ public class Controller {
     public void timerTick() {
         List<Transporter> arrivingTransporters = new ArrayList<>();
         for (int i = 0; i < allArivingTransporters.size(); i++) {
-            if (allArivingTransporters.get(i).getDateArrival().before(simTime)) {
+            if (allArivingTransporters.get(i).getContainer(0).getDateArrival().before(simTime)) {
                 arrivingTransporters.add(allArivingTransporters.get(i));
                 allArivingTransporters.remove(i);
                 i--;

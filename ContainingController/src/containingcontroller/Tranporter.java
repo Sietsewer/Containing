@@ -95,20 +95,21 @@ class Transporter {
     public void loadContainer(Container container) {
         if (containers == null) {
             containers = new ArrayList<>();
-        }
-
-        boolean posistionTaken = false;
-        for (Container c : containers) {
-            if (c.getPosition().x == container.getPosition().x
-                    && c.getPosition().y == container.getPosition().y
-                    && c.getPosition().z == container.getPosition().z) {
-                posistionTaken = true;
-                break;
+        } else {
+            boolean posistionTaken = false;
+            for (Container c : containers) {
+                if (c.getPosition().x == container.getPosition().x
+                        && c.getPosition().y == container.getPosition().y
+                        && c.getPosition().z == container.getPosition().z) {
+                    posistionTaken = true;
+                    break;
+                }
             }
-        }
-        if (!posistionTaken) {
-            if (container.getDateArrival().before(container.getDateDeparture())) {
-                containers.add(container);
+
+            if (!posistionTaken) {
+                if (container.getDateArrival().before(container.getDateDeparture())) {
+                    containers.add(container);
+                }
             }
         }
     }

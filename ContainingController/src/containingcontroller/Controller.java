@@ -414,25 +414,28 @@ public class Controller {
         }
         allArivingTransporters.add(newTransporter);
         previousContainer = null;
+        newTransporter = null;
 
         allDepartingTransporters.clear();
         for (int i = 0; i < allDepContainers.size(); i++) {
             Container c = allDepContainers.get(i);
             if (previousContainer == null) {
                 newTransporter = new Transporter(c.getTransportTypeDeparture());
+                newTransporter.loadContainer(null);
+                allDepartingTransporters.add(newTransporter);
             } else {
-                if (!(c.getDateArrival().getTime() == previousContainer.getDateArrival().getTime()
-                        && c.getTransportTypeArrival() == newTransporter.getTransportType()
-                        && c.getTransportTypeArrival() != TransportTypes.LORREY)) {
+                if (!(c.getDateDeparture().getTime() == previousContainer.getDateDeparture().getTime()
+                        || c.getTransportTypeDeparture() == newTransporter.getTransportType())
+                        || c.getTransportTypeDeparture() == TransportTypes.LORREY) {
+                    newTransporter = new Transporter(c.getTransportTypeDeparture());
+                    newTransporter.loadContainer(null);
                     allDepartingTransporters.add(newTransporter);
-                    newTransporter = new Transporter(c.getTransportTypeArrival());
                 }
             }
             previousContainer = c;
             allDepContainers.remove(i);
             i--;
         }
-        allDepartingTransporters.add(newTransporter);
     }
 
     private AGV getValueFromHashmap(HashMap<AGV, Crane> collection, Crane c) {

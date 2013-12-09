@@ -44,6 +44,7 @@ public class Server {
     public Server(Controller c) throws IOException {
         serverSocket = new ServerSocket(6066);
         serverSocket.setSoTimeout(100000000);
+       
         controller = c;
         clients = new ArrayList<>();
     }

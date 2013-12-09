@@ -212,7 +212,7 @@ public class Controller {
                 break;
             }
         }
-        
+
         for (Transporter t : arrivingTransporters) {
 
             switch (t.getTransportType()) {
@@ -289,9 +289,8 @@ public class Controller {
                 server.sendCommand(m);
             }
         }
-        
+
         /*DEPARTURE STUFF STARTS HERE*/
-        
         List<Transporter> departingTransporters = new ArrayList<>();
         for (int i = 0; i < allDepartingTransporters.size(); i++) {
             if (allDepartingTransporters.get(i).getDateArrival().before(simTime)) {
@@ -302,8 +301,8 @@ public class Controller {
                 break;
             }
         }
-        
-        for (Transporter t : departingTransporters){
+
+        for (Transporter t : departingTransporters) {
             switch (t.getTransportType()) {
                 case TransportTypes.BARGE:
                     for (int i = 0; i < 8; i += 2) {
@@ -361,23 +360,23 @@ public class Controller {
                 server.sendCommand(m);
             }
         }
-        
+
         ArrayList<Container> departingContainers = new ArrayList();
         for (Buffer buf : buffers) {
             departingContainers.addAll(buf.checkDepartingContainers(simTime));
         }
         Collections.sort(departingContainers, new ContainerDepartureComparer());
         /*
-        ArrayList<Container> expectedContainers = new ArrayList();
-        Container pivot = departingContainers.get(0);
-        for (Container dc : departingContainers){
-            if(pivot.getCargoCompanyDeparture().equalsIgnoreCase(dc.getCargoCompanyDeparture())
-                    && pivot.getDateDeparture().getTime() == dc.getDateDeparture().getTime()
-                    && pivot.getTransportTypeDeparture() == dc.getTransportTypeDeparture()){
-                expectedContainers.add(dc);
-            }
-        }
-        */
+         ArrayList<Container> expectedContainers = new ArrayList();
+         Container pivot = departingContainers.get(0);
+         for (Container dc : departingContainers){
+         if(pivot.getCargoCompanyDeparture().equalsIgnoreCase(dc.getCargoCompanyDeparture())
+         && pivot.getDateDeparture().getTime() == dc.getDateDeparture().getTime()
+         && pivot.getTransportTypeDeparture() == dc.getTransportTypeDeparture()){
+         expectedContainers.add(dc);
+         }
+         }
+         */
         /*DEPARTURE STUFF ENDS HERE*/
 
         Calendar cal = Calendar.getInstance(); // creates calendar
@@ -508,14 +507,14 @@ public class Controller {
             Container c = allDepContainers.get(i);
             if (previousContainer == null) {
                 newTransporter = new Transporter(c.getTransportTypeDeparture(), c.getDateDeparture());
-    
+
                 allDepartingTransporters.add(newTransporter);
             } else {
                 if (!(c.getDateDeparture().getTime() == previousContainer.getDateDeparture().getTime()
                         || c.getTransportTypeDeparture() == newTransporter.getTransportType())
                         || c.getTransportTypeDeparture() == TransportTypes.LORREY) {
                     newTransporter = new Transporter(c.getTransportTypeDeparture(), c.getDateDeparture());
-              
+
                     allDepartingTransporters.add(newTransporter);
                 }
             }
@@ -671,9 +670,7 @@ public class Controller {
                     c.ready = true;
                 }
             }
-        }
-        else
-        {
+        } else {
             c.ready = true;
         }
 
@@ -730,40 +727,12 @@ public class Controller {
 
     private void transporterReady(Transporter t) {
         List<Crane> _cranes = new ArrayList<>();
-        float rangeFloat = t.getLenghtTransporter();
-        if (lorreyCranes.contains(t.getDockingPoint())) {
-            t.getDockingPoint().startRange = 0;
-            t.getDockingPoint().range = 2;
-            _cranes.add(t.getDockingPoint());
-        } else {
-            if (seaCranes.contains(t.getDockingPoint())) {
-                rangeFloat = rangeFloat / seaCranes.size();
 
-                _cranes = new ArrayList<>(seaCranes);
-            } else if (trainCranes.contains(t.getDockingPoint())) {
-                rangeFloat = rangeFloat / trainCranes.size();
+        t.getDockingPoint().startRange = 0;
+        t.getDockingPoint().range = Integer.MAX_VALUE;
+        _cranes.add(t.getDockingPoint());
 
-                _cranes = new ArrayList<>(trainCranes);
-            } else if (bargeCranes.contains(t.getDockingPoint())) {
-                rangeFloat = rangeFloat / bargeCranes.size();
-                _cranes = new ArrayList<>(bargeCranes);
-            }
-
-            int range = (int) Math.ceil(rangeFloat);
-            if (range < 2) {
-                range = 2;
-            }
-
-            for (int i = 0; i < _cranes.size(); i++) {
-                if (i * range < t.getLenghtTransporter()) {
-                    _cranes.get(i).startRange = i * range;
-                    _cranes.get(i).range = range;
-                } else {
-                    _cranes.remove(i);
-                    i--;
-                }
-            }
-        }
+        
         for (Crane crane : _cranes) {
             Container toMove = null;
             for (int x = crane.startRange; x >= crane.startRange && toMove == null; x--) {

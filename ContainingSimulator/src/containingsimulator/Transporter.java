@@ -76,6 +76,7 @@ public class Transporter extends Node implements MotionPathListener {
      */
     public static Box TRAINb;
     private MotionEvent motionEvent;
+    private float speed;
     MotionPath path = new MotionPath();
 
     /**
@@ -103,6 +104,7 @@ public class Transporter extends Node implements MotionPathListener {
                 size = new Vector3f(18.3f, 12.2f, 134.1f);
                 this.position.y -= 10f;
                 this.position.x -= 40f;
+                this.speed = 11;
                 break;
             case TransportTypes.BARGE:
                 containers = new Container[12][4][4];
@@ -111,6 +113,7 @@ public class Transporter extends Node implements MotionPathListener {
                 this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
                 //position.y -= 10f;
                 this.position.z += 20f;
+                this.speed = 11;
                 break;
             case TransportTypes.TRAIN:
                 containers = new Container[29][1][1];
@@ -118,13 +121,14 @@ public class Transporter extends Node implements MotionPathListener {
                 size = new Vector3f(TRAINb.xExtent, TRAINb.yExtent, TRAINb.yExtent);
                 this.position.z -= 8f;
                 this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-                 
+                 this.speed = 300;
                 break;
             default:
             case TransportTypes.LORRY:
                 containers = new Container[2][1][1];
                 currentSpatial = LORRY.clone();
                 size = new Vector3f(1.22f, 1.5f, 6.705f);
+                this.speed = 22;
                 break;
         }
         
@@ -160,10 +164,13 @@ public class Transporter extends Node implements MotionPathListener {
         path.setPathSplineType(Spline.SplineType.Linear);
         path.addListener(this);
         path.addWayPoint(first);
+        if(type == TransportTypes.TRAIN){
+        path.addWayPoint(first.subtract(this.position.x,0,0));}
         path.addWayPoint(this.position);
         
         motionEvent = new MotionEvent(this,this.path);
-        motionEvent.setInitialDuration(path.getLength()/11.11f/Main.globalSpeed);
+       
+        motionEvent.setInitialDuration(path.getLength()/speed/Main.globalSpeed);
 
         
 
@@ -191,6 +198,7 @@ public class Transporter extends Node implements MotionPathListener {
         } else  if(currentSpatial != null) {
             this.attachChild(currentSpatial);
         }
+      
         this.motionEvent.play();
     }
 
@@ -289,16 +297,18 @@ public class Transporter extends Node implements MotionPathListener {
     }
     
     public void globalSpeedChanged(){
-        motionEvent.setInitialDuration(path.getLength()/11.11f/Main.globalSpeed);
+        motionEvent.setInitialDuration(path.getLength()/speed/Main.globalSpeed);
     }
     
     /**
      * Move transporter to next waypoint and rotate it accordingly
      * @param wayPointIndex the index of the waypoint to move towards
      */
+   
     private void nextWaypoint(int wayPointIndex){
-        this.lookAt(path.getWayPoint(wayPointIndex),Vector3f.UNIT_Y);
-        this.motionEvent.setSpeed(.5f*Main.globalSpeed);
+       // this.lookAt(path.getWayPoint(wayPointIndex),Vector3f.UNIT_Y);
+       motionEvent.setSpeed(0.5f);
+        
         
     }
     

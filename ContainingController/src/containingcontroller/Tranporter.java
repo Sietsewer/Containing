@@ -128,8 +128,10 @@ class Transporter {
     public String toString() {
         String s = "Transporter{ ID=" + id + ",containers={";
 
-        for (Container c : containers) {
-            s += c.toString() + ",";
+        if (containers != null) {
+            for (Container c : containers) {
+                s += c.toString() + ",";
+            }
         }
         s = s.substring(0, s.length() - 1);
         s += "}, transportType=" + TransportTypes.getTransportType(transportType) + '}';

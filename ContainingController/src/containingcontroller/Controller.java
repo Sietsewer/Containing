@@ -349,7 +349,7 @@ public class Controller {
             if (t.getDockingPoint() != null) {
                 currentTransporter.add(t);
 
-                PrintMessage("Arriving: " + t.toString());
+                PrintMessage("Departing: " + t.toString());
 
                 Message m = new Message(Commands.CREATE_TRANSPORTER, null);
 

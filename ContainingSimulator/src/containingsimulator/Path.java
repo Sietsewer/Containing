@@ -134,8 +134,8 @@ public class Path {
   }
   private static void createCTR()
   {
-           int dist = 22*5; //was 22*18
-             Vector3f vecCTR = new Vector3f(850,10,25); //x was 167
+           int dist = 22*18; //was 22*18
+             Vector3f vecCTR = new Vector3f(167,10,25); //x was 167
              String ctr = "ctr";
              map.put(ctr+String.format("%03d", 1), vecCTR);
              for(int i =2; i <=4;i++)

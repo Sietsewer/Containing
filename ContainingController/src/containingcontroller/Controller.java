@@ -432,14 +432,14 @@ public class Controller {
             Container c = allDepContainers.get(i);
             if (previousContainer == null) {
                 newTransporter = new Transporter(c.getTransportTypeDeparture(), c.getDateDeparture());
-                newTransporter.loadContainer(null);
+    
                 allDepartingTransporters.add(newTransporter);
             } else {
                 if (!(c.getDateDeparture().getTime() == previousContainer.getDateDeparture().getTime()
                         || c.getTransportTypeDeparture() == newTransporter.getTransportType())
                         || c.getTransportTypeDeparture() == TransportTypes.LORREY) {
                     newTransporter = new Transporter(c.getTransportTypeDeparture(), c.getDateDeparture());
-                    newTransporter.loadContainer(null);
+              
                     allDepartingTransporters.add(newTransporter);
                 }
             }

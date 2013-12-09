@@ -97,23 +97,23 @@ class Transporter {
     public void loadContainer(Container container) {
         if (containers == null) {
             containers = new ArrayList<>();
-        } else {
-            boolean posistionTaken = false;
-            for (Container c : containers) {
-                if (c.getPosition().x == container.getPosition().x
-                        && c.getPosition().y == container.getPosition().y
-                        && c.getPosition().z == container.getPosition().z) {
-                    posistionTaken = true;
-                    break;
-                }
-            }
-
-            if (!posistionTaken) {
-                if (container.getDateArrival().before(container.getDateDeparture())) {
-                    containers.add(container);
-                }
+        }
+        boolean posistionTaken = false;
+        for (Container c : containers) {
+            if (c.getPosition().x == container.getPosition().x
+                    && c.getPosition().y == container.getPosition().y
+                    && c.getPosition().z == container.getPosition().z) {
+                posistionTaken = true;
+                break;
             }
         }
+
+        if (!posistionTaken) {
+            if (container.getDateArrival().before(container.getDateDeparture())) {
+                containers.add(container);
+            }
+        }
+
     }
 
     public int getContainerCount() {
@@ -176,8 +176,8 @@ class Transporter {
         }
         return maxX;
     }
-    
-    public Date getDateArrival(){
+
+    public Date getDateArrival() {
         return this.dateArrival;
     }
 }

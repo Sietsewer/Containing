@@ -346,6 +346,20 @@ public class Controller {
                     break;
 
             }
+            if (t.getDockingPoint() != null) {
+                currentTransporter.add(t);
+
+                PrintMessage("Arriving: " + t.toString());
+
+                Message m = new Message(Commands.CREATE_TRANSPORTER, null);
+
+                Object[] objects = new Object[3];
+                objects[0] = t.id;
+                objects[1] = t.getTransportType();
+                objects[2] = t.getDockingPoint().id;
+                m.setParameters(objects);
+                server.sendCommand(m);
+            }
         }
         
         ArrayList<Container> departingContainers = new ArrayList();
@@ -353,7 +367,7 @@ public class Controller {
             departingContainers.addAll(buf.checkDepartingContainers(simTime));
         }
         Collections.sort(departingContainers, new ContainerDepartureComparer());
-        
+        /*
         ArrayList<Container> expectedContainers = new ArrayList();
         Container pivot = departingContainers.get(0);
         for (Container dc : departingContainers){
@@ -363,7 +377,7 @@ public class Controller {
                 expectedContainers.add(dc);
             }
         }
-        
+        */
         /*DEPARTURE STUFF ENDS HERE*/
 
         Calendar cal = Calendar.getInstance(); // creates calendar

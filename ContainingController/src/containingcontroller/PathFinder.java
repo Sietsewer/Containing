@@ -145,7 +145,7 @@ public class PathFinder {
      * Creates PathNodes of all TrainCranes
      */
     private void createCTR() {
-        float cost = smallCost * 10; //was 18
+        float cost = smallCost * 18; //was 18
         int i = 2;
         PathNode previousNode = new PathNode(lblCTR + "001");
         getMapCTR().add(previousNode);

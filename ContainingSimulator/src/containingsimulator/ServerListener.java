@@ -63,6 +63,7 @@ public class ServerListener {
             System.out.println("Connecting to " + serverName
                     + " on port " + port);
             client = new Socket(serverName, port);
+            client.setTcpNoDelay(true);
             System.out.println("Just connected to "
                     + client.getRemoteSocketAddress());
             OutputStream outToServer = client.getOutputStream();

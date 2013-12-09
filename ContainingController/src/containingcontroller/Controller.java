@@ -204,7 +204,7 @@ public class Controller {
     public void timerTick() {
         List<Transporter> arrivingTransporters = new ArrayList<>();
         for (int i = 0; i < allArivingTransporters.size(); i++) {
-            if (allArivingTransporters.get(i).getContainer(0).getDateArrival().before(simTime)) {
+            if (allArivingTransporters.get(i).getDateArrival().before(simTime)) {
                 arrivingTransporters.add(allArivingTransporters.get(i));
                 allArivingTransporters.remove(i);
                 i--;
@@ -212,6 +212,17 @@ public class Controller {
                 break;
             }
         }
+        
+        for (int i = 0; i < allDepartingTransporters.size(); i++) {
+            if (allDepartingTransporters.get(i).getDateArrival().before(simTime)) {
+                arrivingTransporters.add(allDepartingTransporters.get(i));
+                allDepartingTransporters.remove(i);
+                i--;
+            } else {
+                break;
+            }
+        }
+        
         for (Transporter t : arrivingTransporters) {
 
             switch (t.getTransportType()) {
@@ -394,7 +405,7 @@ public class Controller {
         for (int i = 0; i < allContainers.size(); i++) {
             Container c = allContainers.get(i);
             if (previousContainer == null) {
-                newTransporter = new Transporter(c.getTransportTypeArrival());
+                newTransporter = new Transporter(c.getTransportTypeArrival(), c.getDateArrival());
                 newTransporter.loadContainer(c);
             } else {
                 if (c.getDateArrival().getTime() == previousContainer.getDateArrival().getTime()
@@ -403,7 +414,7 @@ public class Controller {
                     newTransporter.loadContainer(c);
                 } else {
                     allArivingTransporters.add(newTransporter);
-                    newTransporter = new Transporter(c.getTransportTypeArrival());
+                    newTransporter = new Transporter(c.getTransportTypeArrival(), c.getDateArrival());
                     newTransporter.loadContainer(c);
                 }
 
@@ -420,14 +431,14 @@ public class Controller {
         for (int i = 0; i < allDepContainers.size(); i++) {
             Container c = allDepContainers.get(i);
             if (previousContainer == null) {
-                newTransporter = new Transporter(c.getTransportTypeDeparture());
+                newTransporter = new Transporter(c.getTransportTypeDeparture(), c.getDateDeparture());
                 newTransporter.loadContainer(null);
                 allDepartingTransporters.add(newTransporter);
             } else {
                 if (!(c.getDateDeparture().getTime() == previousContainer.getDateDeparture().getTime()
                         || c.getTransportTypeDeparture() == newTransporter.getTransportType())
                         || c.getTransportTypeDeparture() == TransportTypes.LORREY) {
-                    newTransporter = new Transporter(c.getTransportTypeDeparture());
+                    newTransporter = new Transporter(c.getTransportTypeDeparture(), c.getDateDeparture());
                     newTransporter.loadContainer(null);
                     allDepartingTransporters.add(newTransporter);
                 }

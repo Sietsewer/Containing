@@ -6,6 +6,7 @@ package containingcontroller;
 
 import containing.xml.CustomVector3f;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,11 +20,12 @@ class Transporter {
     String id;
     static int tranporterID = 0;
     private Crane dockingPoint;
+    private Date dateArrival;
 
-    public Transporter(int transportType) {
+    public Transporter(int transportType, Date dateArrival) {
         this.transportType = transportType;
         this.id = "TRS" + String.format("%03d", tranporterID++);
-
+        this.dateArrival = dateArrival;
     }
 
     public int getTransportType() {
@@ -173,5 +175,9 @@ class Transporter {
             }
         }
         return maxX;
+    }
+    
+    public Date getDateArrival(){
+        return this.dateArrival;
     }
 }

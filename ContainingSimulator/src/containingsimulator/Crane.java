@@ -504,7 +504,12 @@ public abstract class Crane extends Node implements MotionPathListener {
         destPos = new Vector3f(startPos.x,startPos.y,target.z); 
         }
         }
-        if(!moveSpatial(baseControl,basePath,baseDur,startPos,destPos))
+        if(Main.globalSpeed >= 100)
+        {
+            this.setLocalTranslation(destPos);
+            action++;
+        }
+        else if(!moveSpatial(baseControl,basePath,baseDur,startPos,destPos))
         {
             action++;
         }
@@ -512,6 +517,7 @@ public abstract class Crane extends Node implements MotionPathListener {
         {
             pathWasPlaying[0] = true;
         }
+        
     }
       //move the slide of the crane
       private void moveSlider(boolean toDefault)
@@ -534,7 +540,12 @@ public abstract class Crane extends Node implements MotionPathListener {
                 destPos = new Vector3f(new Vector3f(target.x-sNode.getWorldTranslation().x ,startPos.y, startPos.z));
             }
         }
-        if(!moveSpatial(sliderControl,sliderPath,sliDur,startPos,destPos))
+        if(Main.globalSpeed>=100)
+        {
+            sNode.setLocalTranslation(destPos);
+            action++;
+        }
+        else if(!moveSpatial(sliderControl,sliderPath,sliDur,startPos,destPos))
         {
             action++;
         }
@@ -557,6 +568,12 @@ public abstract class Crane extends Node implements MotionPathListener {
         {
         destPos = new Vector3f(startPos.x, target.y - sNode.getWorldTranslation().y, startPos.z);
         }
+        if(Main.globalSpeed>=100)
+        {
+            hNode.setLocalTranslation(destPos);
+            action++;
+        }
+        else
         if(!moveSpatial(hookControl,hookPath,hookDur,startPos,destPos))
         {
             action++;

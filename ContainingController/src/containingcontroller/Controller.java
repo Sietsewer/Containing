@@ -705,17 +705,19 @@ public class Controller {
 
             }
         } else {
-            waitingForBuferCranePickup.get(b.crane).setIsHome(true);
-            waitingForBuferCranePickup.remove(b.crane);
-            b.crane.lastX = (int) b.crane.container.getBufferPosition().x;
-            Message message = new Message(Commands.PUT_CONTAINER, new Object[]{b.crane.id, b.crane.container.getBufferPosition().x,
-                b.crane.container.getBufferPosition().y,
-                b.crane.container.getBufferPosition().z});
-            b.addContainer(b.crane.container);
-            b.crane.container = null;
-            b.crane.ready = false;
-            this.sendMessage(message);
-
+            if (waitingForBuferCranePickup.get(b.crane) != null) {
+                waitingForBuferCranePickup.get(b.crane).setIsHome(true);
+                waitingForBuferCranePickup.remove(b.crane);
+                b.crane.lastX = (int) b.crane.container.getBufferPosition().x;
+                Message message = new Message(Commands.PUT_CONTAINER, new Object[]{b.crane.id, b.crane.container.getBufferPosition().x,
+                    b.crane.container.getBufferPosition().y,
+                    b.crane.container.getBufferPosition().z});
+                b.addContainer(b.crane.container);
+                b.crane.container = null;
+                b.crane.ready = false;
+                this.sendMessage(message);
+            }
+            /*TO DO: BUFFER TO TRANSPORTER*/
         }
     }
 
@@ -825,7 +827,11 @@ public class Controller {
                     ArrayList<Object> params = new ArrayList<>();
                     params.add(buf.crane.id);
 
-                    params.add(true);
+                    if (toMove.getTransportTypeDeparture() == TransportTypes.TRAIN || toMove.getTransportTypeDeparture() == TransportTypes.SEASHIP) {
+                        params.add(true);
+                    } else {
+                        params.add(false);
+                    }
 
                     params.add(toMove.getId());
 
@@ -942,12 +948,12 @@ public class Controller {
                                     craneReady(lorreyCranes.get(id - 1));
                                 } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("TR")) {
                                     craneReady(trainCranes.get(id - 1));
-                                } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("BF")) {
-                                    
-                                    /*
-                                    for(Buffer buf : buffers) {
-                                        if(buf.crane.id)
-                                        craneReady(buffers.get(id - 1).crane);
+                                } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("FA")) {
+/*
+                                    for (Buffer buf : buffers) {
+                                        if (buf.crane.id) {
+                                            craneReady(buffers.get(id - 1).crane);
+                                        }
                                     }*/
                                 }
                                 break;

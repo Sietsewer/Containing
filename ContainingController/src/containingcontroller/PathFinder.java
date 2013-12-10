@@ -125,7 +125,7 @@ public class PathFinder {
      * Creates PathNodes of all SeaCranes
      */
     private void createCSE() {
-        float cost = smallCost * 5;
+        float cost = smallCost * 4;
         int i = 2;
         PathNode previousNode = new PathNode(lblCSE + "001");
         getMapCSE().add(previousNode);
@@ -216,7 +216,7 @@ public class PathFinder {
         link(greenR[12], getMapBA().get(0), smallCost * 2); //
         link(greenR[12], greenR[15], smallCost * 38);
         link(greenR[12], greenR[13], smallCost * 3);
-        link(greenR[13], getMapCSE().get(0), smallCost * 4);
+        link(greenR[13], getMapCSE().get(0), smallCost * 4); 
         link(greenR[14], getMapCSE().get(9), smallCost * 4);
         link(greenR[14], greenR[15], smallCost * 3);
         link(greenR[15], greenR[0], smallCost * 3);

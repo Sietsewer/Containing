@@ -161,6 +161,12 @@ private void nextWaypoint(int wayPointIndex){
             }else if (targetCrane instanceof LorryCrane){
                 jumpToPark(targetCrane.getParkingspot());
             }
+            else
+            {
+                this.setLocalTranslation(path.getWayPoint(wayPointIndex));
+                this.setLocalRotation(targetCrane.getBaseRotation());
+            }
+          
             pathWasPlaying = false;
             Main.sendReady(id);
         } else {

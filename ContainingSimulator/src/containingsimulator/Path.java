@@ -99,6 +99,14 @@ public class Path {
       map.put("m15",new Vector3f(65,10,478));
       map.put("m16",new Vector3f(95.5f,10,478));
     }
+  public static void updatePath(String id, Vector3f vec)
+  { 
+      if(map.containsKey(id)){
+          
+      map.remove(id);
+      map.put(id, vec);
+      }
+  }
     
     private static void createBF() {
         int dist = 22;
@@ -131,8 +139,8 @@ public class Path {
     }
     
     private static void createCTR() {
-        int dist = 22 * 5; //was 22*18
-        Vector3f vecCTR = new Vector3f(850, 10, 30); //x was 167
+        int dist = 22 * 18; //was 22*18
+        Vector3f vecCTR = new Vector3f(167, 10, 30); //x was 167
         String ctr = "ctr";
         map.put(ctr + String.format("%03d", 1), vecCTR);
         for (int i = 2; i <= 4; i++) {

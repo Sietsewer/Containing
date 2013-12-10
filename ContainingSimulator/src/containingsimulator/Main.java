@@ -9,6 +9,7 @@ import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
@@ -87,6 +88,7 @@ public class Main extends SimpleApplication {
     
     private CameraNode cam2Node = new CameraNode();
     private Camera cam2;
+    private Node cam2EndNode = new Node();
     BitmapText cam2Text;
     ViewPort view2;
     
@@ -139,10 +141,9 @@ public class Main extends SimpleApplication {
     }
     private void init_SecondCam()
     {
+      
         cam2 = cam.clone();
         cam2.setViewPort(.8f, 1f, .8f, 1f);
-        cam2.setLocation(new Vector3f(4.775564f, 1.4548365f, 0.11491505f));
-        cam2.setRotation(new Quaternion(0.02356979f, -0.74957186f, 0.026729556f, 0.66096294f));
         cam2Node = new CameraNode("Camera",cam2);
         cam2Node.setControlDir(ControlDirection.SpatialToCamera);
     }
@@ -735,17 +736,58 @@ public class Main extends SimpleApplication {
                 new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
           inputManager.addMapping("esc-button",
                 new KeyTrigger(KeyInput.KEY_ESCAPE));
+           inputManager.addMapping("left-button",
+                new KeyTrigger(KeyInput.KEY_H));
+            inputManager.addMapping("right-button",
+                new KeyTrigger(KeyInput.KEY_K));
+             inputManager.addMapping("up-button",
+                new KeyTrigger(KeyInput.KEY_U));
+              inputManager.addMapping("down-button",
+                new KeyTrigger(KeyInput.KEY_J));
           
         inputManager.addListener(actionListener, "left-click");
         inputManager.addListener(actionListener, "right-click");
         inputManager.addListener(actionListener, "esc-button");
+        inputManager.addListener(analogListener, "left-button");
+        inputManager.addListener(analogListener, "right-button");
+        inputManager.addListener(analogListener, "up-button");
+        inputManager.addListener(analogListener, "down-button");
     }
+
+     private AnalogListener analogListener = new AnalogListener(){
+        public void onAnalog(String name, float value, float tpf) {
+            float y = 0;
+            float z = 0;
+            if (name.equals("left-button"))
+            {
+                  y = -0.1f;
+            }
+            else if (name.equals("right-button"))
+            {
+                 y = 0.1f;
+            }
+            else if (name.equals("up-button"))
+            {
+                z = -0.1f;
+            }
+            else if (name.equals("down-button"))
+            {
+                z = 0.1f;
+            }
+             cam2EndNode.rotate(0,y,0);
+             cam2.lookAt(cam2EndNode.getParent().getWorldTranslation(), Vector3f.UNIT_Y);
+             cam2EndNode.getChild(0).move(z,0,0);
+        }
+    };
+
+             
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if(name.equals("esc-button"))
             {
                 System.exit(1);
             }
+            else
             if (name.equals("right-click")) {
                 changeGlobalSpeed(globalSpeed*1.5f); //fasten up
             }
@@ -762,10 +804,12 @@ public class Main extends SimpleApplication {
                     
                     if(closestNode != null && !closestNode.equals(rootNode))
                     {
-                    closestNode.attachChild(cam2Node);
-                    cam2Node.setLocalTranslation(hitPoint.normalizeLocal().add(10,5,10));
-                    cam2Node.lookAt(closestNode.getLocalTranslation(), Vector3f.UNIT_Y);
-                   
+                        init_SecondCam();
+                        cam2EndNode.attachChild(cam2Node);
+                        cam2Node.setLocalTranslation(15,1,0);
+                        closestNode.attachChild(cam2EndNode);
+                        cam2Node.lookAt(closestNode.getWorldTranslation(), Vector3f.UNIT_Y);
+                  
                     if( cam2Text==null){ 
                         cam2Text = new BitmapText(guiFont, false);
                     }
@@ -794,6 +838,7 @@ public class Main extends SimpleApplication {
             }}
         }}
     };
+    
     private void changeGlobalSpeed(float acceleration)
     {
         

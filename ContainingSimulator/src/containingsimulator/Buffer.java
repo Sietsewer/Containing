@@ -166,7 +166,7 @@ public class Buffer extends Node{
      * @param sc1 the container you want to add to the buffer
      */
     public void addContainer(Vector3f index, Container c1){
-        Container c2 = (Container)c1.clone();
+        Container c2 = (Container)c1;
         bufferArray[(int)index.z][(int)index.y][(int)index.x] = c2;
         c2.setIndexPosition(new Vector3f(index.z, index.y, index.x));
         c2.setLocalTranslation(new Vector3f(index.z * 2 * c2.size.x,

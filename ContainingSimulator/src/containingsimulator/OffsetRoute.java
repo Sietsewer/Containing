@@ -31,15 +31,18 @@ public class OffsetRoute {
         for (int i = 0; i < ids.length; i++) {
             points.add(Path.getVector(ids[i]));
         }
-        for (int i = 0; i < points.size() - 1; i++) {
-            float angle = getAngle(points.get(i), points.get(i + 1));
-            returnList.add(getVectorAtLane(ids[i], ids[i + 1], angle, lane));
+        float angle = 0f;
+        for (int i = 0; i < points.size(); i++) {
+
+            if (i <= points.size() - 2) {
+                angle = getAngle(points.get(i), points.get(i + 1));
+            }
+            returnList.add(getVectorAtLane(ids[i], i < ids.length - 1 ? ids[i + 1] : "", i > 0 ? ids[i - 1] : "", angle, lane));
         }
-        returnList.add(getVectorAtLane(ids[ids.length - 1], "", getAngle(points.get(points.size() - 2), points.get(points.size() - 1)), lane));
         return returnList;
     }
 
-    public static Vector3f getVectorAtLane(String id, String idNext, float direction, int lane) {
+    public static Vector3f getVectorAtLane(String id, String idNext, String idLast, float direction, int lane) {
         Vector3f returnVector = new Vector3f();
         returnVector = Path.getVector(id).clone();
         if (id.charAt(0) == 'b') {
@@ -61,11 +64,36 @@ public class OffsetRoute {
                 } else {
                     returnVector.setZ(returnVector.z + 3f);
                 }
+            } else if (id.charAt(1) == 't') {
+                if ((direction > (FastMath.PI * .5f)) && (direction < (FastMath.PI * 1.5f))) {
+                    returnVector.setZ(returnVector.z - 3f);
+                } else {
+                    returnVector.setZ(returnVector.z + 3f);
+                }
+            } else if (id.charAt(1) == 'l') {
+                if ((direction > (FastMath.PI * .5f)) && (direction < (FastMath.PI * 1.5f))) {
+                    returnVector.setZ(returnVector.z - 3f);
+                } else {
+                    returnVector.setZ(returnVector.z + 3f);
+                }
             }
         } else if (id.charAt(0) == 'm') {
             if (id.length() == 2) {
                 switch (id.charAt(1)) {
                     case ('1'):
+                        if (idNext.equalsIgnoreCase("m16") || idNext.equalsIgnoreCase("m2")) {
+                            if (lane == 2) {
+                                returnVector = new Vector3f(86.5f, 10f, 512.5f);
+                            } else {
+                                returnVector = new Vector3f(92.5f, 10f, 506.5f);
+                            }
+                        } else {
+                            if (lane == 2) {
+                                returnVector = new Vector3f(104.5f, 10f, 494.5f);
+                            } else {
+                                returnVector = new Vector3f(98.5f, 10f, 500.5f);
+                            }
+                        }
                         break;
                     case ('2'):
                         break;
@@ -108,7 +136,7 @@ public class OffsetRoute {
                         }
                         break;
                     case ('3'):
-                        if (idNext.equalsIgnoreCase("m14") || idNext.equalsIgnoreCase("m16")) {
+                        if (idLast.equalsIgnoreCase("bfa001")) {
                             if (lane == 2) {//92.5, 57.5
                                 returnVector = new Vector3f(86.5f, 10f, 51.5f);
                             } else {//86.5, 51.5
@@ -130,8 +158,40 @@ public class OffsetRoute {
                         }
                         break;
                     case ('5'):
+                        if (idNext.equalsIgnoreCase("m16")) {
+                            returnVector = new Vector3f(61.5f, 10f, 579.5f);
+                        } else {
+                            returnVector = new Vector3f(68.5f, 10f, 472.5f);
+                        }
                         break;
                     case ('6'):
+                        if (idNext.equalsIgnoreCase("m13")) {
+                            if (lane == 2) {
+                                returnVector = new Vector3f(86.5f, 10f, 472.5f);
+                            } else {
+                                returnVector = new Vector3f(92.5f, 10f, 472.5f);
+                            }
+                        } else if (idNext.equalsIgnoreCase("m1")) {
+                            if (lane == 2) {
+                                returnVector = new Vector3f(98.5f, 10f, 479.5f);
+                            } else {
+                                returnVector = new Vector3f(104.5f, 10f, 479.5f);
+                            }
+                        } else {
+                            if (idLast.equalsIgnoreCase("m1")) {
+                                if (lane == 2) {
+                                    returnVector = new Vector3f(104.5f, 10f, 479.5f);
+                                } else {
+                                    returnVector = new Vector3f(98.5f, 10f, 479.5f);
+                                }
+                            } else {
+                                if (lane == 2) {
+                                    returnVector = new Vector3f(86.5f, 10f, 472.5f);
+                                } else {
+                                    returnVector = new Vector3f(92.5f, 10f, 472.5f);
+                                }
+                            }
+                        }
                         break;
                 }
             }

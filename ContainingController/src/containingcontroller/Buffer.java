@@ -85,7 +85,7 @@ public class Buffer {
             for (Container[] containerArray2 : containerArray3) {
                 for (Container container : containerArray2) {
                     if (container != null) {
-                        if (container.getDateDeparture().after(date) || container.getDateDeparture().equals(date)) {
+                        if (container.getDateDeparture().before(date) || container.getDateDeparture().equals(date)) {
                             departingContainers.add(container);
                         }
                     }
@@ -177,8 +177,10 @@ public class Buffer {
         for (int x = 0; x < 26; x++) {
             for (int z = 0; z < 6; z++) {
                 for (int y = 0; y < 6; y++) {
-                    if (containers[x][y][z].getId().equals(container.getId())) {
-                        containers[x][y][z] = null;
+                    if (containers[x][y][z] != null) {
+                        if (containers[x][y][z].getId().equals(container.getId())) {
+                            containers[x][y][z] = null;
+                        }
                     }
                 }
             }

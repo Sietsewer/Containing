@@ -119,10 +119,11 @@ public class Container extends Node{
      * @param buffer buffer array in which to search for neighbours
      */
     public void updateRendering(Container[][][] buffer){
-        if(getNeighbours(buffer) < 6){
-            this.setCullHint(Spatial.CullHint.Dynamic);
-        }else{
+        int neighbours = getNeighbours(buffer);
+        if(neighbours == 6 || (neighbours == 5 && indexPosition.y == 0)){
             this.setCullHint(Spatial.CullHint.Always);
+        }else{
+            this.setCullHint(Spatial.CullHint.Dynamic);
             //System.out.println("Cull at " + this.indexPosition.toString()); //debug
         }
     }

@@ -126,6 +126,10 @@ public abstract class Crane extends Node implements MotionPathListener {
     {
          goToHome = true;
     }
+    public Quaternion getBaseRotation()
+    {
+        return this.base.getLocalRotation();
+    }
     
      /**
      * returns the parkingspot for an AGV from this crane
@@ -204,9 +208,11 @@ public abstract class Crane extends Node implements MotionPathListener {
            debugMessage(4,"pickupContainer");
            return false;
          }
+         
           pickupContainer = true;
           this.cont = cont;
           initializeStartUp();
+          
           return true;
          
     }
@@ -314,7 +320,7 @@ public abstract class Crane extends Node implements MotionPathListener {
         {
             case 1: //move base
                  if(!baseControl.isEnabled())
-                {
+                { 
                    moveBase(toDefault);
                    return true;
                 }
@@ -342,6 +348,7 @@ public abstract class Crane extends Node implements MotionPathListener {
         switch(action)
         {
             case 1:
+                
                 doAction(1,false);
                 break;
             case 2:
@@ -445,6 +452,20 @@ public abstract class Crane extends Node implements MotionPathListener {
         this.target = cont.getWorldTranslation();
         action = 1;
         busy = true;
+        
+        if(!((this instanceof BufferCrane)||(this instanceof LorryCrane)))
+        {
+        Vector3f temp;
+        if(this instanceof TrainCrane || this instanceof BargeCrane)
+        {
+        temp = new Vector3f(target.x,this.getLocalTranslation().y,this.getLocalTranslation().z);
+        }
+        else
+        {
+        temp= new Vector3f(this.getLocalTranslation().x,this.getLocalTranslation().y,target.z); 
+        }
+        Path.updatePath(this.id, temp);
+        }
     }
 
      private void debugMessage(int option, String message)
@@ -504,6 +525,11 @@ public abstract class Crane extends Node implements MotionPathListener {
         destPos = new Vector3f(startPos.x,startPos.y,target.z); 
         }
         }
+        if(!((this instanceof BufferCrane)||(this instanceof LorryCrane)))
+        {
+      //  Path.updatePath(this.id, destPos);
+        }
+        
         if(Main.globalSpeed >= 100)
         {
             this.setLocalTranslation(destPos);
@@ -512,6 +538,7 @@ public abstract class Crane extends Node implements MotionPathListener {
         else if(!moveSpatial(baseControl,basePath,baseDur,startPos,destPos))
         {
             action++;
+            
         }
         else
         {

@@ -7,6 +7,7 @@ package containingsimulator;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Spline;
 import com.jme3.math.Vector3f;
@@ -53,9 +54,10 @@ public class AGV extends Node implements MotionPathListener{
      */
  public void addWaypoints(String[] waypoints,Crane targetCrane){
         this.path.clearWayPoints();
-        
-        for (int i = 0; i < waypoints.length; i++) {
-            path.addWayPoint(Path.getVector(waypoints[i]));
+        ArrayList<Vector3f> points = new ArrayList();
+        points = OffsetRoute.applyOffset(waypoints, this.container == null);
+        for (int i = 0; i < points.size(); i++) {
+            this.path.addWayPoint(points.get(i));
         }
         this.targetCrane = targetCrane;
         motionEvent.setInitialDuration(path.getLength()/11.11f/Main.globalSpeed);
@@ -64,6 +66,7 @@ public class AGV extends Node implements MotionPathListener{
         if(this.pSpot != null){
             this.pSpot.occupied = false;
         }
+        this.setLocalRotation(Quaternion.ZERO.fromAngles(0f, OffsetRoute.getAngle(points.get(0), points.get(1))+(FastMath.PI*0.5f), 0f));
     }
     /**
      * Removes the current waypoint, the one reached, and makes the AGV snap towards the next waypoint on the list.
@@ -155,9 +158,15 @@ private void nextWaypoint(int wayPointIndex){
         if(wayPointIndex+1 == path.getNbWayPoints()){
             if(targetCrane instanceof BufferCrane){
                 jumpToPark(((BufferCrane)targetCrane).getBuffer().getBestParkingSpot(up));
-            }else{
-                 jumpToPark(targetCrane.getParkingspot());
+            }else if (targetCrane instanceof LorryCrane){
+                jumpToPark(targetCrane.getParkingspot());
             }
+            else
+            {
+                this.setLocalTranslation(path.getWayPoint(wayPointIndex));
+                this.setLocalRotation(targetCrane.getBaseRotation());
+            }
+          
             pathWasPlaying = false;
             Main.sendReady(id);
         } else {

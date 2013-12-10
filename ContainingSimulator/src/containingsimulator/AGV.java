@@ -158,8 +158,8 @@ private void nextWaypoint(int wayPointIndex){
         if(wayPointIndex+1 == path.getNbWayPoints()){
             if(targetCrane instanceof BufferCrane){
                 jumpToPark(((BufferCrane)targetCrane).getBuffer().getBestParkingSpot(up));
-            }else{
-                 jumpToPark(targetCrane.getParkingspot());
+            }else if (targetCrane instanceof LorryCrane){
+                jumpToPark(targetCrane.getParkingspot());
             }
             pathWasPlaying = false;
             Main.sendReady(id);

@@ -16,6 +16,8 @@ public class SimContainer {
 
     @Attribute
     private String id;
+    @Attribute
+    private String bedrijf;
     @Element
     private CustomVector3f indexPosition;
 
@@ -61,5 +63,13 @@ public class SimContainer {
      */
     public void setIndexPosition(CustomVector3f indexPosition) {
         this.indexPosition = indexPosition;
+    }
+
+    public String getBedrijf() {
+        return bedrijf;
+    }
+
+    public void setBedrijf(String bedrijf) {
+        this.bedrijf = bedrijf;
     }
 }

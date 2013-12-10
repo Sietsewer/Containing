@@ -827,10 +827,21 @@ public class Controller {
                     ArrayList<Object> params = new ArrayList<>();
                     params.add(buf.crane.id);
 
+                    AGV toReserve;
                     if (toMove.getTransportTypeDeparture() == TransportTypes.TRAIN || toMove.getTransportTypeDeparture() == TransportTypes.SEASHIP) {
-                        params.add(true);
+                        toReserve = buf.AGVAvailable(true);
+                        if (toReserve != null){
+                            toReserve.setReady(false);
+                            //todo: link agv and container and add to list
+                            params.add(true);
+                        }
                     } else {
-                        params.add(false);
+                        toReserve = buf.AGVAvailable(false);
+                        if (toReserve != null){
+                            toReserve.setReady(false);
+                            //todo: see above
+                            params.add(false);
+                        }
                     }
 
                     params.add(toMove.getId());

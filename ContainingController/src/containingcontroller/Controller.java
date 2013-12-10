@@ -848,7 +848,9 @@ public class Controller {
 
                     m.setParameters(params.toArray());
 
-                    this.sendMessage(m);
+                    if (toReserve != null){
+                        this.sendMessage(m);
+                    }
                     buf.removeContainer(toMove);
                     buf.crane.container = toMove;
                 }

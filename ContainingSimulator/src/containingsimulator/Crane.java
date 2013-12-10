@@ -126,6 +126,10 @@ public abstract class Crane extends Node implements MotionPathListener {
     {
          goToHome = true;
     }
+    public Quaternion getBaseRotation()
+    {
+        return this.base.getLocalRotation();
+    }
     
      /**
      * returns the parkingspot for an AGV from this crane

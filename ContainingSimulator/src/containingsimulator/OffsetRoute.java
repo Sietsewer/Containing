@@ -159,36 +159,36 @@ public class OffsetRoute {
                         break;
                     case ('5'):
                         if (idNext.equalsIgnoreCase("m16")) {
-                            returnVector = new Vector3f(61.5f, 10f, 579.5f);
+                            returnVector = returnVector.add(-4f,0f,3f);
                         } else {
-                            returnVector = new Vector3f(68.5f, 10f, 472.5f);
+                            returnVector = returnVector.add(3f,0f,-4f);
                         }
                         break;
                     case ('6'):
                         if (idNext.equalsIgnoreCase("m13")) {
                             if (lane == 2) {
-                                returnVector = new Vector3f(86.5f, 10f, 472.5f);
+                                returnVector = returnVector.add(4f,0f,9f);
                             } else {
-                                returnVector = new Vector3f(92.5f, 10f, 472.5f);
+                                returnVector = returnVector.add(4f,0f,3f);
                             }
                         } else if (idNext.equalsIgnoreCase("m1")) {
                             if (lane == 2) {
-                                returnVector = new Vector3f(98.5f, 10f, 479.5f);
+                                returnVector = returnVector.add(4f,0f,9f);
                             } else {
-                                returnVector = new Vector3f(104.5f, 10f, 479.5f);
+                                returnVector = returnVector.add(4f,0f,3f);
                             }
                         } else {
                             if (idLast.equalsIgnoreCase("m1")) {
                                 if (lane == 2) {
-                                    returnVector = new Vector3f(104.5f, 10f, 479.5f);
+                                    returnVector = returnVector.add(-4f,0f,3f);
                                 } else {
-                                    returnVector = new Vector3f(98.5f, 10f, 479.5f);
+                                    returnVector = returnVector.add(-4f,0f,9f);
                                 }
                             } else {
                                 if (lane == 2) {
-                                    returnVector = new Vector3f(86.5f, 10f, 472.5f);
+                                    returnVector = returnVector.add(-4f,0f,-3f);
                                 } else {
-                                    returnVector = new Vector3f(92.5f, 10f, 472.5f);
+                                    returnVector = returnVector.add(-4f,0f,-9f);
                                 }
                             }
                         }
@@ -216,4 +216,7 @@ public class OffsetRoute {
       map.put("m14",new Vector3f(65,10,55));
       map.put("m15",new Vector3f(65,10,475));
       map.put("m16",new Vector3f(95.5f,10,472));
+      * 
+      * 
+      * -4, 3 | 3, -4
  */

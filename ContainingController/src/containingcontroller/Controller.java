@@ -836,9 +836,30 @@ public class Controller {
             endBuffer = 24;
             prefrence = PreferedAGV.DOWN;
         } else if (dockingpoint.type == Crane.TrainCrane) {
-            startBuffer = 50;
-            endBuffer = 60;
+            if (dockingpoint.id.contains("1") || dockingpoint.id.contains("2")) {
+                startBuffer = 1;
+                endBuffer = 25;
+            } else {
+                startBuffer = 53;
+                endBuffer = 63;
+            }
             prefrence = PreferedAGV.UP;
+        }
+        else
+        {
+             if (dockingpoint.id.contains("1") || dockingpoint.id.contains("2")
+                      || dockingpoint.id.contains("3")
+                      || dockingpoint.id.contains("4")
+                      ) {
+                startBuffer = 1;
+                endBuffer = 5;
+                  prefrence = PreferedAGV.UP;
+            } else {
+                startBuffer = 5;
+                endBuffer =20;
+                  prefrence = PreferedAGV.DOWN;
+            }
+          
         }
         for (int i = startBuffer - 1; i < endBuffer - 1; i++) {
             preverdBuffers.add(buffers.get(i));

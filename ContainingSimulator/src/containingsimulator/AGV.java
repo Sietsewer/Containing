@@ -7,6 +7,7 @@ package containingsimulator;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Spline;
 import com.jme3.math.Vector3f;
@@ -65,6 +66,7 @@ public class AGV extends Node implements MotionPathListener{
         if(this.pSpot != null){
             this.pSpot.occupied = false;
         }
+        this.setLocalRotation(Quaternion.ZERO.fromAngles(0f, OffsetRoute.getAngle(points.get(0), points.get(1))+(FastMath.PI*0.5f), 0f));
     }
     /**
      * Removes the current waypoint, the one reached, and makes the AGV snap towards the next waypoint on the list.

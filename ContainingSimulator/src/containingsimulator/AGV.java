@@ -163,6 +163,7 @@ private void nextWaypoint(int wayPointIndex){
             }
             else
             {
+                jumpToPark(targetCrane.getParkingspot());
                 this.setLocalTranslation(path.getWayPoint(wayPointIndex));
                 this.setLocalRotation(targetCrane.getBaseRotation());
             }

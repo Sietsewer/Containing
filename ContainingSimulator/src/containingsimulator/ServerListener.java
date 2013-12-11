@@ -85,6 +85,7 @@ public class ServerListener {
                     s = input.readLine();
                     if (!s.isEmpty()) {
                        recievedMessages.add(s);
+                          //     System.out.println(s);
                //         main.messageReceivedEvent(Message.decodeMessage(s));
                     }
                 }
@@ -102,7 +103,9 @@ public class ServerListener {
      * @param message the message you want to send
      */
     void sendMessage(Message message) {
-        System.out.println("message to ip:" + client.getRemoteSocketAddress());
+       /* System.out.println("message to ip:" + message
+                );*/
         output.println(Message.encodeMessage(message));
+        output.flush();
     }
 }

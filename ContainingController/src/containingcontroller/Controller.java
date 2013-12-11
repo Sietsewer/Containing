@@ -56,6 +56,7 @@ public class Controller {
     HashMap<Crane, Transporter> dockedTransporter;
     HashMap<AGV, Crane> waitingForBufferCrane;
     HashMap<Crane, AGV> waitingForBuferCranePickup;
+    List<String> messageLog;
     //list from xml load
     /**
      * list of all transporters that are arriving
@@ -96,7 +97,7 @@ public class Controller {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         simTime = cal.getTime();
-
+        messageLog = Collections.synchronizedList(new ArrayList<String>());
         bargeCranes = new ArrayList<>();
         for (int i = 1; i <= 8; i++) {
             Crane c = new Crane("CBA" + String.format("%03d", i), Crane.BargeCrane);
@@ -126,7 +127,7 @@ public class Controller {
             Crane c = new Crane("CLO" + String.format("%03d", i), Crane.LorryCrane);
             c.node = pathFinder.getMapCLO().get(i - 1);
             c.startRange = 0;
-            c.range = Integer.MAX_VALUE;
+            c.range = 1000;
             lorreyCranes.add(c);
             PrintMessage("Lorreystop Created - " + c.toString());
         }
@@ -172,6 +173,7 @@ public class Controller {
         PrintMessage("Total trainCrane - " + trainCranes.size());
         waitingForBufferCrane = new HashMap<>();
         agvLoadedMovingHome = new ArrayList<>();
+
     }
 
     /**
@@ -203,6 +205,12 @@ public class Controller {
      * tick in simulator to give commands
      */
     public void timerTick() {
+        ArrayList<String> _temp = new ArrayList<>(messageLog);
+        messageLog.clear();
+        for (String s : _temp) {
+            window.WriteLogLine(s);
+        }
+
         List<Transporter> arrivingTransporters = new ArrayList<>();
         for (int i = 0; i < allArivingTransporters.size(); i++) {
             if (allArivingTransporters.get(i).getContainer(0).getDateArrival().before(simTime)) {
@@ -439,9 +447,12 @@ public class Controller {
      *
      * @param message
      */
-    public final void PrintMessage(String message) {
-        window.WriteLogLine(message);
-
+    public final void PrintMessage(final String message) {
+        if (Speed < 5) {
+            window.WriteLogLine(message);
+        } else {
+            messageLog.add(message);
+        }
     }
 
     private void AGVReady(AGV agv) {
@@ -768,7 +779,7 @@ public class Controller {
                 Crane crane = usingCranes.get(i);
                 crane.startRange = i * range;
                 if (i == usingCranes.size() - 1) {
-                    crane.range = 200000;
+                    crane.range = 40;
                 } else {
                     crane.range = range;
                 }
@@ -830,14 +841,14 @@ public class Controller {
                     AGV toReserve;
                     if (toMove.getTransportTypeDeparture() == TransportTypes.TRAIN || toMove.getTransportTypeDeparture() == TransportTypes.SEASHIP) {
                         toReserve = buf.AGVAvailable(true);
-                        if (toReserve != null){
+                        if (toReserve != null) {
                             toReserve.setReady(false);
                             //todo: link agv and container and add to list
                             params.add(true);
                         }
                     } else {
                         toReserve = buf.AGVAvailable(false);
-                        if (toReserve != null){
+                        if (toReserve != null) {
                             toReserve.setReady(false);
                             //todo: see above
                             params.add(false);
@@ -848,7 +859,7 @@ public class Controller {
 
                     m.setParameters(params.toArray());
 
-                    if (toReserve != null){
+                    if (toReserve != null) {
                         this.sendMessage(m);
                     }
                     buf.removeContainer(toMove);
@@ -884,22 +895,19 @@ public class Controller {
                 endBuffer = 63;
             }
             prefrence = PreferedAGV.UP;
-        }
-        else
-        {
-             if (dockingpoint.id.contains("1") || dockingpoint.id.contains("2")
-                      || dockingpoint.id.contains("3")
-                      || dockingpoint.id.contains("4")
-                      ) {
+        } else {
+            if (dockingpoint.id.contains("1") || dockingpoint.id.contains("2")
+                    || dockingpoint.id.contains("3")
+                    || dockingpoint.id.contains("4")) {
                 startBuffer = 1;
                 endBuffer = 5;
-                  prefrence = PreferedAGV.UP;
+                prefrence = PreferedAGV.UP;
             } else {
                 startBuffer = 5;
-                endBuffer =20;
-                  prefrence = PreferedAGV.DOWN;
+                endBuffer = 20;
+                prefrence = PreferedAGV.DOWN;
             }
-          
+
         }
         for (int i = startBuffer - 1; i < endBuffer - 1; i++) {
             preverdBuffers.add(buffers.get(i));

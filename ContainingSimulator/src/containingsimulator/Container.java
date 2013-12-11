@@ -184,6 +184,85 @@ public class Container extends Node {
                 "Textures/Container/post.png"));
         companyTextures.put("PostBank", am.loadTexture(
                 "Textures/Container/postbank.png"));
+        companyTextures.put("Airfrance", am.loadTexture(
+                "Textures/Container/airfrance.png"));
+
+        companyTextures.put("BallastNedam", am.loadTexture(
+                "Textures/Container/ballastnedam.png"));
+        companyTextures.put("Manpower", am.loadTexture(
+                "Textures/Container/manpower.png"));
+
+        companyTextures.put("Lufthansa", am.loadTexture(
+                "Textures/Container/lufthansa.png"));
+        companyTextures.put("Bayer", am.loadTexture(
+                "Textures/Container/bayer.png"));
+
+
+        companyTextures.put("Danone", am.loadTexture(
+                "Textures/Container/danone.png"));
+        companyTextures.put("Ericsson", am.loadTexture(
+                "Textures/Container/ericsson.png"));
+
+        companyTextures.put("Danone", am.loadTexture(
+                "Textures/Container/danone.png"));
+        companyTextures.put("Ericsson", am.loadTexture(
+                "Textures/Container/ericsson.png"));
+
+
+        companyTextures.put("OCE", am.loadTexture(
+                "Textures/Container/oce.png"));
+        companyTextures.put("BeterBed", am.loadTexture(
+                "Textures/Container/beterbed.png"));
+
+        companyTextures.put("TenCate", am.loadTexture(
+                "Textures/Container/tencate.png"));
+
+        companyTextures.put("FederalExpress", am.loadTexture(
+                "Textures/Container/fedex.png"));
+        companyTextures.put("IBM", am.loadTexture(
+                "Textures/Container/IBM.png"));
+        companyTextures.put("KraftFoods", am.loadTexture(
+                "Textures/Container/kraft.png"));
+        companyTextures.put("Hanjin", am.loadTexture(
+                "Textures/Container/hanjin.png"));
+        companyTextures.put("CargoTrans", am.loadTexture(
+                "Textures/Container/cargotrans.png"));
+
+
+        companyTextures.put("Metro", am.loadTexture(
+                "Textures/Container/metro.png"));
+        companyTextures.put("Carrefour", am.loadTexture(
+                "Textures/Container/carefour.png"));
+        companyTextures.put("Amstel", am.loadTexture(
+                "Textures/Container/amstel.png"));
+        companyTextures.put("TransNL", am.loadTexture(
+                "Textures/Container/transnl.png"));
+        companyTextures.put("Gilette", am.loadTexture(
+                "Textures/Container/gillete.png"));
+
+
+        companyTextures.put("WalMart", am.loadTexture(
+                "Textures/Container/walmart.png"));
+        companyTextures.put("Delhaize", am.loadTexture(
+                "Textures/Container/delhaize.png"));
+        companyTextures.put("BASF", am.loadTexture(
+                "Textures/Container/basf.png"));
+        companyTextures.put("SeaTrans", am.loadTexture(
+                "Textures/Container/seatrans.png"));
+        companyTextures.put("DowChemical", am.loadTexture(
+                "Textures/Container/dow.png"));
+
+        companyTextures.put("AXA", am.loadTexture(
+                "Textures/Container/axe.png"));
+        companyTextures.put("LLyod", am.loadTexture(
+                "Textures/Container/lloyd.png"));
+
+
+
+
+
+
+
         mat.setTexture("ColorMap", Tex);
         r = new Random();
 

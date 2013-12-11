@@ -3,6 +3,7 @@ package containingsimulator;
 import containing.xml.SimContainer;
 import containing.xml.Message;
 import com.jme3.app.SimpleApplication;
+import com.jme3.asset.AssetManager;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
@@ -15,6 +16,7 @@ import com.jme3.input.controls.MouseButtonTrigger;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
@@ -35,6 +37,7 @@ import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,13 +88,13 @@ public class Main extends SimpleApplication {
     private static Main app = null;
     public static float globalSpeed = 1f;
     private boolean isPaused = false;
-    
     private CameraNode cam2Node = new CameraNode();
     private Camera cam2;
     private Node cam2EndNode = new Node();
     BitmapText cam2Text;
     ViewPort view2;
-    
+    public static Material alpha;
+
     /**
      *
      * @param args
@@ -99,19 +102,18 @@ public class Main extends SimpleApplication {
     public static void main(String[] args) {
         Logger.getLogger("com.jme3").setLevel(Level.SEVERE);
         app = new Main();
-        
+
         app.setDisplayFps(true);
         app.setDisplayStatView(true);
-        
+
         AppSettings settings = new AppSettings(true);
         settings.put("Title", "Project Containing - by Sjaal");
-         //Anti-Aliasing
+        //Anti-Aliasing
         settings.put("Samples", 0);
-        app.setSettings(settings);  
-        
+        app.setSettings(settings);
+
         app.start();
     }
-    
 
     /**
      * Simulator initialization
@@ -125,61 +127,85 @@ public class Main extends SimpleApplication {
         init_CrossHairs();
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
-        cam.setLocation(new Vector3f(-254,416,280));
-        cam.lookAt(new Vector3f(300,0,300),Vector3f.UNIT_Y);
-       
+        cam.setLocation(new Vector3f(-254, 416, 280));
+        cam.lookAt(new Vector3f(300, 0, 300), Vector3f.UNIT_Y);
+
         init_SecondCam();
-       
- 
+
+
         listener = new ServerListener(this);
 
-       
-       
 
 
-        
+
+
+
     }
-    private void init_SecondCam()
-    {
-      
+
+    private void init_SecondCam() {
+
         cam2 = cam.clone();
         cam2.setViewPort(.8f, 1f, .8f, 1f);
-        cam2Node = new CameraNode("Camera",cam2);
+        cam2Node = new CameraNode("Camera", cam2);
         cam2Node.setControlDir(ControlDirection.SpatialToCamera);
     }
 
     /**
      * Update function
+     *
      * @param tpf
      */
     @Override
     public void simpleUpdate(float tpf) {
-      
-        if(!isPaused)
-        {
-        for (Crane c : seaCranes) {
-            c.update(tpf);
+
+        if (!isPaused) {
+            ArrayList<AGV> gehad = new ArrayList<AGV>();
+            for (AGV a : agvs) {
+                if (a.pathWasPlaying && !gehad.contains(a)) {
+                    boolean collision = false;
+                    for (AGV collidingWith : agvs) {
+                        if (collidingWith.pathWasPlaying && collidingWith != a) {
+                            if (a.boundingGeom.getWorldBound().intersects(collidingWith.getWorldBound())) {
+
+                                a.motionEvent.pause();
+                                gehad.add(collidingWith);
+                                collision = true;
+                            }
+                        }
+                    }
+                    if (collision == false) {
+                        a.motionEvent.play();
+                    }
+                } else if (gehad.contains(a)) {
+                    a.motionEvent.play();
+                }
+            }
+
+
+            for (Crane c : seaCranes) {
+                c.update(tpf);
+            }
+            for (Crane c : lorCranes) {
+                c.update(tpf);
+            }
+            for (Crane c : bufCranes) {
+                c.update(tpf);
+            }
+            for (Crane c : barCranes) {
+                c.update(tpf);
+            }
+            for (Crane c : trainCranes) {
+                c.update(tpf);
+            }
         }
-        for (Crane c : lorCranes) {
-            c.update(tpf);
-        }
-        for (Crane c : bufCranes) {
-            c.update(tpf);
-        }
-        for (Crane c : barCranes) {
-            c.update(tpf);
-        }
-        for (Crane c : trainCranes) {
-            c.update(tpf);
-        }
-        }
+
         sky_geo.setLocalTranslation(cam.getLocation());
-       
-        for (String s  : listener.getMessages()) {
+
+        for (String s
+                : listener.getMessages()) {
             Message m = Message.decodeMessage(s);
             this.messageRecieved(m);
         }
-
     }
 
     /**
@@ -226,6 +252,10 @@ public class Main extends SimpleApplication {
         scSModel.setMaterial(scMat);
         scHModel.setMaterial(scMat);
 
+        Material m =new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        m.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+         m.setColor("Color", new ColorRGBA(0,0,0,100));
+        alpha = m;
         //Init of the BufferCrane viewmodel
         bcModel = assetManager.loadModel("Models/buffercrane/buffercrane.j3o");
         bcSModel = assetManager.loadModel("Models/buffercrane/buffercrane_slider.j3o");
@@ -306,15 +336,16 @@ public class Main extends SimpleApplication {
 
     /**
      * Send a message back to the controller
+     *
      * @param Message the message which to send
      */
     static void sendMessage(Message Message) {
         listener.sendMessage(Message);
     }
 
-
     /**
      * Process the incoming message
+     *
      * @param decodedMessage the decoded message which to process
      */
     private void messageRecieved(Message decodedMessage) {
@@ -325,7 +356,7 @@ public class Main extends SimpleApplication {
         String transporterID;
         AGV agv;
         switch (decodedMessage.getCommand()) {
-            
+
             case Commands.PAUSE_PLAY:
                 pausePlay();
                 break;
@@ -346,41 +377,31 @@ public class Main extends SimpleApplication {
             case Commands.PICKUP_CONTAINER:
                 crane = getCraneByID((String) params[0]);
                 cont = getContainerByID((String) params[2]);
-                if (crane == null || cont== null) 
-                {
-                 System.out.println("Error: crane is null OR container is null");
-                 break;
+                if (crane == null || cont == null) {
+                    System.out.println("Error: crane is null OR container is null");
+                    break;
                 }
-                if(crane instanceof BufferCrane)
-                { //after picking up the container go to the up- or downside of the buffer
-                 boolean up = (Boolean)params[1];
+                if (crane instanceof BufferCrane) { //after picking up the container go to the up- or downside of the buffer
+                    boolean up = (Boolean) params[1];
 
-                 ((BufferCrane)crane).pickupContainer(cont, up);
-                }
-                else
-                {
-                Transporter trans = getTransporterByID((String) params[1]);
-                if(trans == null)
-                {
+                    ((BufferCrane) crane).pickupContainer(cont, up);
+                } else {
+                    Transporter trans = getTransporterByID((String) params[1]);
+                    if (trans == null) {
                         System.out.println("Error: No transporter with this ID");
                         break;
-                }
-                else
-                {
-                crane.pickupContainer(cont, trans);
-                }
+                    } else {
+                        crane.pickupContainer(cont, trans);
+                    }
                 }
                 break;
             case Commands.GIVE_CONTAINER:
                 crane = getCraneByID((String) params[0]);
                 agv = getAGVbyID((String) params[1]);
-                if(agv!=null)
-                {
-                crane.loadContainer(agv);
-                }
-                else
-                {
-                 System.err.println("Error: agv is null");
+                if (agv != null) {
+                    crane.loadContainer(agv);
+                } else {
+                    System.err.println("Error: agv is null");
                 }
 
                 //TODO: put container on Transporter/Buffer
@@ -389,19 +410,15 @@ public class Main extends SimpleApplication {
                 crane = getCraneByID((String) params[0]);
                 Vector3f indexPosition = new Vector3f((Float) params[1], (Float) params[2], (Float) params[3]);
                 Vector3f realPosition = null;
-                if(crane != null && crane instanceof BufferCrane)
-                {
-                    realPosition = ((BufferCrane)crane).getBuffer().getRealContainerPosition(indexPosition);
-                    crane.putContainer(realPosition,indexPosition);
-                }
-                else if (crane != null) 
-                {
+                if (crane != null && crane instanceof BufferCrane) {
+                    realPosition = ((BufferCrane) crane).getBuffer().getRealContainerPosition(indexPosition);
+                    crane.putContainer(realPosition, indexPosition);
+                } else if (crane != null) {
                     {
-                      realPosition = crane.transporter.getRealContainerPosition(indexPosition);
-                      crane.putContainer(realPosition,indexPosition);
+                        realPosition = crane.transporter.getRealContainerPosition(indexPosition);
+                        crane.putContainer(realPosition, indexPosition);
                     }
-                } 
-                else {
+                } else {
                     System.err.println("Error: No crane/container with this ID");
                 }
                 break;
@@ -409,7 +426,7 @@ public class Main extends SimpleApplication {
                 agv = getAGVbyID((String) params[0]);
                 crane = getCraneByID((String) params[1]);
                 if (crane != null && agv != null) {
-                        crane.getContainer(agv);
+                    crane.getContainer(agv);
                 } else {
                     System.err.println("Error: No crane/agv with this ID");
                 }
@@ -429,7 +446,7 @@ public class Main extends SimpleApplication {
                 break;
             case Commands.REMOVE_TRANSPORTER:
                 transporterID = (String) params[0];
-                
+
                 Transporter temp = null;
                 for (Transporter transp : transporters) {
                     if (transp.id.equalsIgnoreCase(transporterID)) {
@@ -437,29 +454,24 @@ public class Main extends SimpleApplication {
                         break;
                     }
                 }
-                switch(temp.type)
-                {
+                switch (temp.type) {
                     case TransportTypes.BARGE:
-                        for(Crane cr : barCranes)
-                        {
+                        for (Crane cr : barCranes) {
                             cr.moveToHome();
                         }
                         break;
                     case TransportTypes.LORRY:
-                        for(Crane cr : lorCranes)
-                        {
+                        for (Crane cr : lorCranes) {
                             cr.moveToHome();
                         }
                         break;
                     case TransportTypes.SEASHIP:
-                        for(Crane cr : seaCranes)
-                        {
+                        for (Crane cr : seaCranes) {
                             cr.moveToHome();
                         }
                         break;
                     case TransportTypes.TRAIN:
-                        for(Crane cr : trainCranes)
-                        {
+                        for (Crane cr : trainCranes) {
                             cr.moveToHome();
                         }
                         break;
@@ -576,21 +588,19 @@ public class Main extends SimpleApplication {
         }
         return null;
     }
-    
-    private void showPathNodes(boolean show)
-    {
-        if(!show)
-        {
+
+    private void showPathNodes(boolean show) {
+        if (!show) {
             return;
         }
-        
-        Sphere sphere =  new Sphere(32,32, 2f);
-  
-        Geometry geometry = new Geometry("PathNode",sphere);
+
+        Sphere sphere = new Sphere(32, 32, 2f);
+
+        Geometry geometry = new Geometry("PathNode", sphere);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        HashMap<String,Vector3f>map = Path.getPath();
+        HashMap<String, Vector3f> map = Path.getPath();
         Node node = new Node("PathNode");
-       
+
         for (String key : map.keySet()) {
             Geometry geom = geometry.clone();
             geom.setMaterial(mat);
@@ -625,10 +635,10 @@ public class Main extends SimpleApplication {
 
         for (int i = 1; i <= 63; i++) {
             String id = cID + String.format("%03d", i);
-            Crane c = new BufferCrane(id, Path.getVector(id).add(0,0,200), bcModel, bcSModel, bcHModel, buffers[i - 1]);
+            Crane c = new BufferCrane(id, Path.getVector(id).add(0, 0, 200), bcModel, bcSModel, bcHModel, buffers[i - 1]);
             bufCranes[i - 1] = c;
             rootNode.attachChild(c);
-            c.setLocalTranslation(Path.getVector(id).add(0,0,200));
+            c.setLocalTranslation(Path.getVector(id).add(0, 0, 200));
         }
     }
 
@@ -690,7 +700,7 @@ public class Main extends SimpleApplication {
 
         int j = 0;
         for (int i = 0; i < buffers.length * 4; i += 4) {
-            if (j < 5){
+            if (j < 5) {
                 agvs.get(i).jumpToPark(buffers[j].pSpots[3]);
                 agvs.get(i + 1).jumpToPark(buffers[j].pSpots[2]);
                 agvs.get(i + 2).jumpToPark(buffers[j].pSpots[1]);
@@ -715,6 +725,7 @@ public class Main extends SimpleApplication {
 
     /**
      * Send a READY message back to the controller
+     *
      * @param id the ID of the object.
      */
     public static void sendReady(String id) {
@@ -734,17 +745,17 @@ public class Main extends SimpleApplication {
                 new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         inputManager.addMapping("right-click",
                 new MouseButtonTrigger(MouseInput.BUTTON_RIGHT));
-          inputManager.addMapping("esc-button",
+        inputManager.addMapping("esc-button",
                 new KeyTrigger(KeyInput.KEY_ESCAPE));
-           inputManager.addMapping("left-button",
+        inputManager.addMapping("left-button",
                 new KeyTrigger(KeyInput.KEY_H));
-            inputManager.addMapping("right-button",
+        inputManager.addMapping("right-button",
                 new KeyTrigger(KeyInput.KEY_K));
-             inputManager.addMapping("up-button",
+        inputManager.addMapping("up-button",
                 new KeyTrigger(KeyInput.KEY_U));
-              inputManager.addMapping("down-button",
+        inputManager.addMapping("down-button",
                 new KeyTrigger(KeyInput.KEY_J));
-          
+
         inputManager.addListener(actionListener, "left-click");
         inputManager.addListener(actionListener, "right-click");
         inputManager.addListener(actionListener, "esc-button");
@@ -753,43 +764,30 @@ public class Main extends SimpleApplication {
         inputManager.addListener(analogListener, "up-button");
         inputManager.addListener(analogListener, "down-button");
     }
-
-     private AnalogListener analogListener = new AnalogListener(){
+    private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String name, float value, float tpf) {
             float y = 0;
             float z = 0;
-            if (name.equals("left-button"))
-            {
-                  y = -0.1f;
-            }
-            else if (name.equals("right-button"))
-            {
-                 y = 0.1f;
-            }
-            else if (name.equals("up-button"))
-            {
+            if (name.equals("left-button")) {
+                y = -0.1f;
+            } else if (name.equals("right-button")) {
+                y = 0.1f;
+            } else if (name.equals("up-button")) {
                 z = -0.1f;
-            }
-            else if (name.equals("down-button"))
-            {
+            } else if (name.equals("down-button")) {
                 z = 0.1f;
             }
-             cam2EndNode.rotate(0,y,0);
-             cam2.lookAt(cam2EndNode.getParent().getWorldTranslation(), Vector3f.UNIT_Y);
-             cam2EndNode.getChild(0).move(z,0,0);
+            cam2EndNode.rotate(0, y, 0);
+            cam2.lookAt(cam2EndNode.getParent().getWorldTranslation(), Vector3f.UNIT_Y);
+            cam2EndNode.getChild(0).move(z, 0, 0);
         }
     };
-
-             
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
-            if(name.equals("esc-button"))
-            {
+            if (name.equals("esc-button")) {
                 System.exit(1);
-            }
-            else
-            if (name.equals("right-click")) {
-                changeGlobalSpeed(globalSpeed*1.5f); //fasten up
+            } else if (name.equals("right-click")) {
+                changeGlobalSpeed(globalSpeed * 1.5f); //fasten up
             }
             if (name.equals("left-click") && !keyPressed) {
                 CollisionResults results = new CollisionResults();
@@ -801,83 +799,77 @@ public class Main extends SimpleApplication {
                     CollisionResult closest = results.getClosestCollision();
                     Vector3f hitPoint = closest.getContactPoint(); //where uve shot 
                     Node closestNode = closest.getGeometry().getParent();
-                    
-                    if(closestNode != null && !closestNode.equals(rootNode))
-                    {
+
+                    if (closestNode != null && !closestNode.equals(rootNode)) {
                         init_SecondCam();
                         cam2EndNode.attachChild(cam2Node);
-                        cam2Node.setLocalTranslation(15,1,0);
+                        cam2Node.setLocalTranslation(15, 1, 0);
                         closestNode.attachChild(cam2EndNode);
                         cam2Node.lookAt(closestNode.getWorldTranslation(), Vector3f.UNIT_Y);
-                  
-                    if( cam2Text==null){ 
-                        cam2Text = new BitmapText(guiFont, false);
+
+                        if (cam2Text == null) {
+                            cam2Text = new BitmapText(guiFont, false);
+                        } else {
+                            guiNode.detachChild(cam2Text);
+                        }
+                        cam2Text.setColor(ColorRGBA.Red);
+                        cam2Text.setSize(guiFont.getCharSet().getRenderedSize());
+                        cam2Text.setText(closestNode.getName()); // crosshairs
+                        cam2Text.setLocalTranslation(settings.getWidth() - cam2Text.getLineWidth(), settings.getHeight() - cam2Text.getLineHeight() - 50, 0);
+                        guiNode.attachChildAt(cam2Text, 0);
+
+                        if (view2 == null) {
+                            view2 = renderManager.createMainView("Top Right", cam2);
+                            view2.setClearFlags(true, true, true);
+                            view2.attachScene(rootNode);
+                        }
+                    } else {
+                        renderManager.removeMainView("Top Right");
+                        view2 = null;
+                        if (cam2Text != null) {
+                            guiNode.detachChild(cam2Text);
+                        }
                     }
-                    else{
-                        guiNode.detachChild( cam2Text);
-                    }
-                    cam2Text.setColor(ColorRGBA.Red);
-                    cam2Text.setSize(guiFont.getCharSet().getRenderedSize());
-                    cam2Text.setText(closestNode.getName()); // crosshairs
-                    cam2Text.setLocalTranslation(settings.getWidth()-cam2Text.getLineWidth(),settings.getHeight()-cam2Text.getLineHeight()-50,0);
-                    guiNode.attachChildAt(cam2Text, 0);
-                    
-                    if(view2 == null){
-                    view2 = renderManager.createMainView("Top Right", cam2);
-                    view2.setClearFlags(true, true, true);
-                    view2.attachScene(rootNode);}
-                    }
-                    
-                    else
-                    {
-                       renderManager.removeMainView("Top Right");
-                       view2 = null;
-                       if( cam2Text!=null){
-                      guiNode.detachChild( cam2Text);
-                    }
-            }}
-        }}
+                }
+            }
+        }
     };
-    
-    private void changeGlobalSpeed(float acceleration)
-    {
-        
+
+    private void changeGlobalSpeed(float acceleration) {
+
         globalSpeed = acceleration;
-        
-        for(AGV agv: agvs)
-        {
+
+        for (AGV agv : agvs) {
             agv.globalSpeedChanged();
         }
-        
-        for(Transporter tran : transporters) {
+
+        for (Transporter tran : transporters) {
             tran.globalSpeedChanged();
         }
-        
+
     }
-    
-    private void pausePlay()
-    {
-        
+
+    private void pausePlay() {
+
         isPaused = !isPaused;
-        
+
         for (Crane c : seaCranes) {
             c.pausePlay(isPaused);
         }
         for (Crane c : lorCranes) {
-            
+
             c.pausePlay(isPaused);
         }
         for (Crane c : bufCranes) {
-              c.pausePlay(isPaused);
+            c.pausePlay(isPaused);
         }
         for (Crane c : barCranes) {
-              c.pausePlay(isPaused);
+            c.pausePlay(isPaused);
         }
         for (Crane c : trainCranes) {
-              c.pausePlay(isPaused);
+            c.pausePlay(isPaused);
         }
-        for(AGV agv : agvs)
-        {
+        for (AGV agv : agvs) {
             agv.pausePlay(isPaused);
         }
     }

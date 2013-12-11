@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * @author Hendrik
  */
 public class ServerClient {
-    
+
     private BufferedReader input;//input stream from client
     private Socket client;//client's socket connection
     private PrintWriter output;//output stream from client
@@ -41,7 +41,7 @@ public class ServerClient {
             Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     ServerClient(Socket client, Server s, boolean b) {
         this(client, s);
         sendOnly = b;
@@ -54,23 +54,26 @@ public class ServerClient {
      */
     public void sendMessage(String message) {
         if (!android) {
-         //   System.out.println("message to ip:" + client.getRemoteSocketAddress());
+            //   System.out.println("message to ip:" + client.getRemoteSocketAddress());
             //System.out.println(message);
-            
+
             output.println(message);
-          /*  try {
+            output.flush();
+            /*  try {
              //   Thread.sleep(10/Controller.Speed);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
+             } catch (InterruptedException ex) {
+             Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
+             }*/
         }
     }
-    
+
     public void sendAndroidMessage(String message) {
-        System.out.println("message to ip:" + client.getRemoteSocketAddress());
+     //  System.out .println("message to ip:" + client.getRemoteSocketAddress());
         //System.out.println(message);
         output.println(message);
+
     }
+  //  String last = "";
 
     /**
      * main function that listens to client
@@ -85,8 +88,12 @@ public class ServerClient {
         }
         while (true) {
             try {
+             //   System.out.println("lisining" +last);
                 if (input.ready()) {
+
                     String s = input.readLine();
+                        //    System.out.println("heard" +s);
+                   // last = s;
                     if (firstMessage) {
                         firstMessage = false;
                         Message m = Message.decodeMessage(s);
@@ -98,14 +105,14 @@ public class ServerClient {
                             //server.controller.PrintMessage("Connected Android - " + client.getRemoteSocketAddress());
 
                             sendAndroidMessage(server.controller.getAndroidData());
-                            
+
                             break;
                         }
-                        
+
                     } else {
                         if (!s.isEmpty()) {
                             server.MessageRecieved(s);
-                            System.out.println("message from ip:" + client.getRemoteSocketAddress());
+                          //  System.out.println("message from ip:" + client.getRemoteSocketAddress());
                             // System.out.println(s);
                         }
                     }
@@ -114,7 +121,7 @@ public class ServerClient {
                 Logger.getLogger(ServerClient.class.getName()).log(Level.SEVERE, null, ex);
                 return;
             }
-            
+
         }
     }
 }

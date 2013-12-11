@@ -56,6 +56,7 @@ public class Controller {
     HashMap<Crane, Transporter> dockedTransporter;
     HashMap<AGV, Crane> waitingForBufferCrane;
     HashMap<Crane, AGV> waitingForBuferCranePickup;
+    List<String> messageLog;
     //list from xml load
     /**
      * list of all transporters that are arriving
@@ -96,7 +97,7 @@ public class Controller {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         simTime = cal.getTime();
-
+        messageLog = Collections.synchronizedList(new ArrayList<String>());
         bargeCranes = new ArrayList<>();
         for (int i = 1; i <= 8; i++) {
             Crane c = new Crane("CBA" + String.format("%03d", i), Crane.BargeCrane);
@@ -172,6 +173,7 @@ public class Controller {
         PrintMessage("Total trainCrane - " + trainCranes.size());
         waitingForBufferCrane = new HashMap<>();
         agvLoadedMovingHome = new ArrayList<>();
+
     }
 
     /**
@@ -203,6 +205,12 @@ public class Controller {
      * tick in simulator to give commands
      */
     public void timerTick() {
+        ArrayList<String> _temp = new ArrayList<>(messageLog);
+        messageLog.clear();
+        for (String s : _temp) {
+            window.WriteLogLine(s);
+        }
+
         List<Transporter> arrivingTransporters = new ArrayList<>();
         for (int i = 0; i < allArivingTransporters.size(); i++) {
             if (allArivingTransporters.get(i).getContainer(0).getDateArrival().before(simTime)) {
@@ -439,11 +447,12 @@ public class Controller {
      *
      * @param message
      */
-    public final void PrintMessage(String message) {
-        if (Speed < 4) {
+    public final void PrintMessage(final String message) {
+        if (Speed < 5) {
             window.WriteLogLine(message);
+        } else {
+            messageLog.add(message);
         }
-
     }
 
     private void AGVReady(AGV agv) {

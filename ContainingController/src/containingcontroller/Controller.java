@@ -56,6 +56,7 @@ public class Controller {
     HashMap<Crane, Transporter> dockedTransporter;
     HashMap<AGV, Crane> waitingForBufferCrane;
     HashMap<Crane, AGV> waitingForBuferCranePickup;
+    HashMap<Crane, AGV> waitingForBufferCraneGive;
     List<String> messageLog;
     //list from xml load
     /**
@@ -81,6 +82,7 @@ public class Controller {
         waitingToBeReadyAtCrane = new HashMap<>();
         waitingForCraneToPickUpFromAgv = new HashMap<>();
         waitingForCraneToPutToAgv = new HashMap<>();
+        waitingForBufferCraneGive = new HashMap<>();
         pathFinder = new PathFinder();
         pathFinder.createMap();
         dockedTransporter = new HashMap<>();
@@ -715,20 +717,67 @@ public class Controller {
                 /**/
 
             }
-        } else {
-            if (waitingForBuferCranePickup.get(b.crane) != null) {
-                waitingForBuferCranePickup.get(b.crane).setIsHome(true);
-                waitingForBuferCranePickup.remove(b.crane);
-                b.crane.lastX = (int) b.crane.container.getBufferPosition().x;
-                Message message = new Message(Commands.PUT_CONTAINER, new Object[]{b.crane.id, b.crane.container.getBufferPosition().x,
-                    b.crane.container.getBufferPosition().y,
-                    b.crane.container.getBufferPosition().z});
-                b.addContainer(b.crane.container);
-                b.crane.container = null;
-                b.crane.ready = false;
-                this.sendMessage(message);
+        } else if (waitingForBuferCranePickup.get(b.crane) != null) {
+            waitingForBuferCranePickup.get(b.crane).setIsHome(true);
+            waitingForBuferCranePickup.remove(b.crane);
+            b.crane.lastX = (int) b.crane.container.getBufferPosition().x;
+            Message message = new Message(Commands.PUT_CONTAINER, new Object[]{b.crane.id, b.crane.container.getBufferPosition().x,
+                b.crane.container.getBufferPosition().y,
+                b.crane.container.getBufferPosition().z});
+            b.addContainer(b.crane.container);
+            b.crane.container = null;
+            b.crane.ready = false;
+            this.sendMessage(message);
+        } else if (waitingForBufferCraneGive.containsKey(b.crane)) {
+            AGV agv = waitingForBufferCraneGive.get(b.crane);
+            waitingForBufferCraneGive.remove(b.crane);
+            if (agv != null) {
+                putContainer(agv, b.crane);
             }
-            /*TO DO: BUFFER TO TRANSPORTER*/
+        } else {
+            b.crane.container = null;
+            AGV agv = waitingForCraneToPutToAgv.get(b.crane);
+            Container con = agv.container;
+            int transportType = con.getTransportTypeDeparture();
+            Crane cra = null;
+            switch (transportType) {
+                case TransportTypes.LORREY:
+                    for (Crane crane : lorreyCranes) {
+                        if (crane.getReady()) {
+                            cra = crane;
+                            break;
+                        }
+                    }
+                    break;
+                case TransportTypes.BARGE:
+                    for (Crane crane : bargeCranes) {
+                        if (crane.getReady()) {
+                            cra = crane;
+                            break;
+                        }
+                    }
+                    break;
+                case TransportTypes.SEASHIP:
+                    for (Crane crane : seaCranes) {
+                        if (crane.getReady()) {
+                            cra = crane;
+                            break;
+                        }
+                    }
+                    break;
+                case TransportTypes.TRAIN:
+                    for (Crane crane : trainCranes) {
+                        if (crane.getReady()) {
+                            cra = crane;
+                            break;
+                        }
+                    }
+                    break;
+
+            }
+            if (cra != null) {
+                agv.moveToCrane(cra, this);
+            }
         }
     }
 
@@ -860,6 +909,7 @@ public class Controller {
                     m.setParameters(params.toArray());
 
                     if (toReserve != null) {
+                        waitingForBufferCraneGive.put(buf.crane, toReserve);
                         this.sendMessage(m);
                     }
                     buf.removeContainer(toMove);

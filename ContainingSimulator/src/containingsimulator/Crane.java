@@ -47,11 +47,20 @@ public abstract class Crane extends Node implements MotionPathListener {
     protected float baseDur = 2f;
     protected float hookDur = 2f;
     protected float sliDur = 2f;
+    protected float attachDur = 30f;
+    protected float detachDur = 10f;
+    protected float baseLP = 1f;
+    protected float sliderLP = 1f;
+    protected float hookLP = 1f;
     protected Vector3f target = null;
     protected Container cont = null;
     protected Transporter transporter = null;
     protected AGV agv = null;
+    protected float timeTarget = 0;
+    protected float timeCount = 0;
     private boolean[]pathWasPlaying = new boolean[3];
+    protected boolean waitingOnTimer = false;
+    
     
 
     /**
@@ -99,6 +108,7 @@ public abstract class Crane extends Node implements MotionPathListener {
         {
             pathWasPlaying[i] = false;
         }
+      
     }
     
        
@@ -142,13 +152,28 @@ public abstract class Crane extends Node implements MotionPathListener {
      * updates this cranes actions
      * @param tpf
     */
+
+    
+    
+    
     public void update(float tpf)
      {
-         
          if(target!=null)
          {
          updateSpeed();
-
+         
+         if(waitingOnTimer)
+         {
+          timeCount+= tpf*Main.globalSpeed;
+          if(timeCount>=timeTarget)
+         {
+            timeTarget = 0;            
+            waitingOnTimer = false;
+            action++;
+         }
+          else{return;}
+         }
+         
          if(pickupContainer)
          {
           updatePickup();
@@ -358,12 +383,23 @@ public abstract class Crane extends Node implements MotionPathListener {
                  doAction(3,false);
                 break;
             case 4:
+                if(!waitingOnTimer){
+                 setTimer(attachDur);}   
+              
+                break;
+            case 5:
                 if(doAction(3,true))
                 {
                     this.contToHook();
                 }
-                break;
+                break;              
         }
+    }
+    protected void setTimer(float maxTime)
+    {
+        timeTarget = maxTime;
+        timeCount = 0;
+        waitingOnTimer = true;
     }
     
          /**
@@ -449,7 +485,7 @@ public abstract class Crane extends Node implements MotionPathListener {
 
     private void initializeStartUp()
     {
-        this.target = cont.getWorldTranslation();
+        this.target = cont.getWorldTranslation().subtract(new Vector3f(0,cont.size.y,0));
         action = 1;
         busy = true;
         
@@ -525,20 +561,10 @@ public abstract class Crane extends Node implements MotionPathListener {
         destPos = new Vector3f(startPos.x,startPos.y,target.z); 
         }
         }
-        if(!((this instanceof BufferCrane)||(this instanceof LorryCrane)))
-        {
-      //  Path.updatePath(this.id, destPos);
-        }
-        
-        if(Main.globalSpeed >= 100)
-        {
-            this.setLocalTranslation(destPos);
-            action++;
-        }
-        else if(!moveSpatial(baseControl,basePath,baseDur,startPos,destPos))
+
+         if(!moveSpatial(baseControl,basePath,baseDur,startPos,destPos))
         {
             action++;
-            
         }
         else
         {
@@ -567,12 +593,7 @@ public abstract class Crane extends Node implements MotionPathListener {
                 destPos = new Vector3f(new Vector3f(target.x-sNode.getWorldTranslation().x ,startPos.y, startPos.z));
             }
         }
-        if(Main.globalSpeed>=100)
-        {
-            sNode.setLocalTranslation(destPos);
-            action++;
-        }
-        else if(!moveSpatial(sliderControl,sliderPath,sliDur,startPos,destPos))
+        if(!moveSpatial(sliderControl,sliderPath,sliDur,startPos,destPos))
         {
             action++;
         }
@@ -595,15 +616,9 @@ public abstract class Crane extends Node implements MotionPathListener {
         {
         destPos = new Vector3f(startPos.x, target.y - sNode.getWorldTranslation().y, startPos.z);
         }
-        if(Main.globalSpeed>=100)
-        {
-            hNode.setLocalTranslation(destPos);
-            action++;
-        }
-        else
         if(!moveSpatial(hookControl,hookPath,hookDur,startPos,destPos))
         {
-            action++;
+           action++;
         }
         else
         {
@@ -618,9 +633,9 @@ public abstract class Crane extends Node implements MotionPathListener {
         setEventDuration(sliderControl,sliderPath,sliDur);
         setEventDuration(hookControl,hookPath,hookDur);
 
-        baseControl.setSpeed(loaded ? 0.6f : 1);
-        sliderControl.setSpeed(loaded ? 0.6f : 1);
-        hookControl.setSpeed(loaded ? 0.6f : 1);
+        baseControl.setSpeed(loaded ? baseLP : 1);
+        sliderControl.setSpeed(loaded ? sliderLP : 1);
+        hookControl.setSpeed(loaded ? hookLP : 1);
      }
     public void pausePlay(boolean pause)
     {
@@ -663,7 +678,7 @@ public abstract class Crane extends Node implements MotionPathListener {
     {
         if(path.getNbWayPoints()>1)
         {
-            event.setInitialDuration(path.getLength()/defDur/Main.globalSpeed);
+            event.setInitialDuration(path.getLength()/(defDur*Main.globalSpeed));
         }
     }
      /**

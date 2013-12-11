@@ -27,9 +27,10 @@ public class BufferCrane extends Crane {
         this.defPosHook = hNode.getWorldTranslation().clone();
         this.defPosSlider = sNode.getWorldTranslation().clone();
         
-        this.baseDur = 15f;
-        this.sliDur = 15f;
-        this.hookDur = 15f;
+        this.baseDur = 3f;
+        this.sliDur = 5f;
+        this.hookDur = 3f;
+        this.baseLP = 0.66f; 
     }
     public Buffer getBuffer()
     {
@@ -46,7 +47,7 @@ public class BufferCrane extends Crane {
              default:
                  commonActions();
                  break;
-            case 5:
+            case 6:
                   if(readyToLoad())
                   {
                     if (doAction(1,false))
@@ -55,20 +56,20 @@ public class BufferCrane extends Crane {
                     }
                   }
                 break;
-            case 6:
+            case 7:
                 doAction(2,false);
                 break;
-            case 7:
+            case 8:
                 doAction(3,false);
                 break;
-            case 8:
+            case 9:
                 if(doAction(3,true))
                 {
                    this.buffer.addContainer(cont.indexPosition, cont);
                    this.hNode.detachChild(cont);
                 }
                 break; 
-            case 9:
+            case 10:
                 resetPos(2);
                 resetPos(3);
                 finishActions();
@@ -90,26 +91,32 @@ public class BufferCrane extends Crane {
             default:
                 commonActions();
                 break;
-            case 5:
+            case 6:
                 doAction(2,true);
                 break;
-            case 6:
+            case 7:
                 target = tempTarget; //target is parkingSpot up or down
                 doAction(1,false);
                 break;
-            case 7: //nog niet af vanaf hier
+            case 8: //nog niet af vanaf hier
                   if(readyToLoad())
                   {
                     doAction(3,false);
                   }
                 break;
-            case 8:
+            case 9:
+                if(!waitingOnTimer)
+                {
+                    setTimer(detachDur);
+                }
+                break;
+            case 10:
                 if(doAction(3,true))
                 {
                 contOffHook(); //container to agv
                 }
                 break;
-            case 9:
+            case 11:
                 resetPos(2);
                 resetPos(3);
                 finishActions();

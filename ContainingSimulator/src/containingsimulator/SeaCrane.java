@@ -31,8 +31,14 @@ public class SeaCrane extends Crane {
         this.defPosSlider = sNode.getWorldTranslation().clone();
         
         this.baseDur = 1.1f;
-        this.sliDur = 12f;
-        this.hookDur = 8f;
+        this.sliDur = 1.1f;
+        this.hookDur = 3f;
+        
+        //50 percent of default speed
+      
+        
+        
+        
     }
 
    @Override
@@ -42,7 +48,7 @@ public class SeaCrane extends Crane {
              default:
                  commonActions();
                 break;
-            case 5:
+            case 6:
                 if(readyToLoad())
                 {
                     if(doAction(2,false))
@@ -52,21 +58,27 @@ public class SeaCrane extends Crane {
                     }
                 }
                 break;
-            case 6:
+            case 7:
                 doAction(3,false);
                 break;
-           case 7:
+            case 8:
+                if(!waitingOnTimer)
+                {
+                    setTimer(detachDur);
+                }
+                break;
+           case 9:
                 if(doAction(3,true))
                 {
                    contOffHook();
                 }
                 break; 
-            case 8:
+            case 10:
                 if(doAction(2,true)){
                     resetPos(3);
                 }
                 break;
-            case 9:
+            case 11:
              this.finishActions();
                 break;
          }
@@ -79,13 +91,13 @@ public class SeaCrane extends Crane {
             default:
                commonActions();
                 break;
-            case 5:
+            case 6:
                 if (!doAction(2,true))
                 {
                     resetPos(3);
                 }
                 break;
-            case 6:
+            case 7:
                 if(readyToLoad())
                 {
                     if (doAction(3,false))
@@ -94,14 +106,19 @@ public class SeaCrane extends Crane {
                     }
                 }
                 break;
-            case 7:
+            case 8:
+                if(!waitingOnTimer)
+                {
+                    setTimer(detachDur);
+                }
+                break;
+            case 9:
                 if(doAction(3,true))
                 {
                     contOffHook();
-                   
                 }
                 break;
-            case 8:
+            case 10:
                  resetPos(2);
                  resetPos(3);
                  finishActions();

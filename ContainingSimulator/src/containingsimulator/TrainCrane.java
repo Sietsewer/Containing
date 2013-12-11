@@ -30,12 +30,10 @@ public class TrainCrane extends Crane implements MotionPathListener{
         this.defPosHook = this.hNode.getWorldTranslation().clone();
         this.defPosSlider = this.sNode.getWorldTranslation().clone();
         
-         this.baseDur = 12f;
-       // this.baseDurLoaded = 2f;
-        this.sliDur = 6f;
-       // this.sliDurLoaded = 5f;
-        this.hookDur = 6f;
-       // this.hookDurLoaded = 5f;
+         this.baseDur = 3f;
+        this.sliDur = 5f;
+        this.hookDur = 5f;
+        this.baseLP = 0.66f; 
     }
 
     
@@ -46,7 +44,7 @@ public class TrainCrane extends Crane implements MotionPathListener{
              default:
                  commonActions();
                 break;
-            case 5:
+            case 6:
                 if(readyToLoad())
                 {
                     if(doAction(2,false))
@@ -56,21 +54,27 @@ public class TrainCrane extends Crane implements MotionPathListener{
                     }
                 }
                 break;
-            case 6:
+            case 7:
                 doAction(3,false);
                 break;
-           case 7:
+            case 8:
+                if(!waitingOnTimer)
+                {
+                    setTimer(detachDur);
+                }
+                break;
+           case 9:
                 if(doAction(3,true))
                 {
                    contOffHook();
                 }
                 break; 
-            case 8:
+            case 10:
                 if(doAction(2,true)){
                     resetPos(3);
                 }
                 break;
-            case 9:
+            case 11:
              this.finishActions();
                 break;
          }
@@ -84,13 +88,13 @@ public class TrainCrane extends Crane implements MotionPathListener{
             default: 
               commonActions();
                 break;
-            case 5:
+            case 6:
                  if(doAction(2,true))
                  {
                     resetPos(3);
                  }
                 break;
-            case 6:
+            case 7:
                   if(readyToLoad())
                   {
                       target = agv.getWorldTranslation().add(0,cont.size.y*2,0); 
@@ -100,13 +104,19 @@ public class TrainCrane extends Crane implements MotionPathListener{
                       }
                   }
                  break;
-            case 7:
+            case 8:
+                if(!waitingOnTimer)
+                {
+                    setTimer(detachDur);
+                }
+                break;
+            case 9:
                   if(doAction(3,true))
                   {
                       contOffHook();
                   }
                 break;
-            case 8:
+            case 10:
                 resetPos(2);
                 resetPos(3);
                 finishActions();

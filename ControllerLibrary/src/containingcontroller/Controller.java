@@ -491,15 +491,18 @@ public class Controller {
             Container c = allContainers.get(i);
             if (previousContainer == null) {
                 newTransporter = new Transporter(c.getTransportTypeArrival(), c.getDateArrival());
+                newTransporter.reservePosition(c);
                 newTransporter.loadContainer(c);
             } else {
                 if (c.getDateArrival().getTime() == previousContainer.getDateArrival().getTime()
                         && c.getTransportTypeArrival() == newTransporter.getTransportType()
                         && c.getTransportTypeArrival() != TransportTypes.LORREY) {
+                    newTransporter.reservePosition(c);
                     newTransporter.loadContainer(c);
                 } else {
                     allArivingTransporters.add(newTransporter);
                     newTransporter = new Transporter(c.getTransportTypeArrival(), c.getDateArrival());
+                    newTransporter.reservePosition(c);
                     newTransporter.loadContainer(c);
                 }
 

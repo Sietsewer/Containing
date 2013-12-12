@@ -195,7 +195,8 @@ public class PathFinder {
         link(greenR[0], getMapBB().get(0), smallCost * 2);
         this.insertNode(lblBB + "030", lblBB + "031", greenR[3], smallCost, smallCost);
         this.insertNode(lblBB + "034", lblBB + "035", greenR[4], smallCost, smallCost);
-        this.insertNode(lblBB + "044", lblBB + "045", greenR[5], smallCost, smallCost);
+       // this.insertNode(lblBB + "044", lblBB + "045", greenR[5], smallCost, smallCost);
+      
         link(greenR[6], getMapBB().get(62), smallCost * 6);
 
         //connect green dots counter clockwise
@@ -204,7 +205,8 @@ public class PathFinder {
         link(greenR[2], getMapCBA().get(7), smallCost * 6);// n
         link(greenR[2], greenR[3], smallCost * 3);
         link(greenR[4], getMapCLO().get(0), smallCost * 2);
-        link(greenR[5], getMapCLO().get(19), smallCost * 2);
+        link(getMapCLO().get(19),getMapBB().get(43), smallCost);
+        //link(greenR[5], getMapCLO().get(19), smallCost * 2);
         link(greenR[6], greenR[7], smallCost * 40);
         link(greenR[7], greenR[8], smallCost * 4);
         link(greenR[8], greenR[9], smallCost * 3);

@@ -87,7 +87,7 @@ public class Path {
       map.put("m3",new Vector3f(765,10,536));
       map.put("m4",new Vector3f(765,10,505.5f));
       map.put("m5",new Vector3f(846,10,505.5f));
-      map.put("m6",new Vector3f(1064,10,505.5f));
+      //map.put("m6",new Vector3f(1064,10,505.5f));
       map.put("m7",new Vector3f(1527.5f,10,505.5f));
       map.put("m8",new Vector3f(1527.5f,10,60.5f));
       map.put("m9",new Vector3f(1488,10,60.5f));

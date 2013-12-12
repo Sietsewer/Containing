@@ -357,7 +357,7 @@ public class Main extends SimpleApplication {
         Object[] params = decodedMessage.getParameters();
         Container cont = null;
         Crane crane;
-            System.out.println((String)params[0]);
+           
         String transporterID;
         AGV agv;
         switch (decodedMessage.getCommand()) {

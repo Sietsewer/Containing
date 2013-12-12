@@ -535,6 +535,7 @@ public class Controller {
             allDepContainers.remove(i);
             i--;
         }
+        Collections.sort(allDepartingTransporters, new TransporterComparer());
     }
 
     private AGV getValueFromHashmap(HashMap<AGV, Crane> collection, Crane c) {

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.soap.Node;
 
 /**
  *
@@ -72,7 +71,7 @@ public class AGV {
             PathFinder finder = c.getPathFinder();
             List<PathNode> path = finder.getShortestPath(home, destination.node, true);
             Message moveMessage = new Message(Commands.MOVE, null);
-            ArrayList<String> nodeIds = new ArrayList<>();
+            ArrayList<String> nodeIds = new ArrayList<String>();
             for (PathNode node : path) {
                 nodeIds.add(node.getId());
             }
@@ -95,7 +94,7 @@ public class AGV {
             PathFinder finder = c.getPathFinder();
             List<PathNode> path = finder.getShortestPath(source.node, this.home, false);
             Message moveMessage = new Message(Commands.MOVE, null);
-            ArrayList<String> parameters = new ArrayList<>();
+            ArrayList<String> parameters = new ArrayList<String>();
             parameters.add(this.name);
             for (PathNode node : path) {
                 parameters.add(node.getId());

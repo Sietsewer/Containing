@@ -1,7 +1,9 @@
 package com.hendrik.androidcontrolller;
 
+import java.util.Date;
+
 import containingcontroller.Controller;
-import containingcontroller.XMLParser;
+import containingcontroller.IWindow;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.res.Resources;
@@ -17,7 +19,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements IWindow {
 	Spinner	areaspinner;
 	Controller c;
 	TextView textArea;
@@ -137,7 +139,7 @@ public class MainActivity extends Activity {
 			}
 		});
 	    textArea = (TextView) findViewById(R.id.editText1);
-	    c=new Controller(this);
+	    c=new Controller((IWindow) this);
 	    c.startServer();
 	    ((TextView)findViewById(R.id.textView2)).setText(Utils.getIPAddress(true));
 	    
@@ -163,6 +165,12 @@ public class MainActivity extends Activity {
 			
 		});
 	
+		
+	}
+
+	@Override
+	public void setTime(Date arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 

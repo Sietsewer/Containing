@@ -58,8 +58,8 @@ public class Buffer {
     public Buffer(ArrayList<AGV> ownedAGV, Crane crane) {
         this.id = "BFR" + String.format("%03d", Buffer.ID++);
         this.containers = new Container[26][6][6];
-        this.ownedAGV = new ArrayList<>(ownedAGV);
-        this.reservedSpace = new HashMap<>();
+        this.ownedAGV = new ArrayList<AGV>(ownedAGV);
+        this.reservedSpace = new HashMap<Container, CustomVector3f>();
         this.crane = crane;
     }
 
@@ -68,8 +68,8 @@ public class Buffer {
      */
     public Buffer() {
         this.id = "BFR" + String.format("%03d", Buffer.ID++);
-        this.ownedAGV = new ArrayList<>();
-        this.reservedSpace = new HashMap<>();
+        this.ownedAGV = new ArrayList<AGV>();
+        this.reservedSpace = new HashMap<Container, CustomVector3f>();
         this.containers = new Container[26][6][6];
     }
 
@@ -80,7 +80,7 @@ public class Buffer {
      * @return ArrayList<Container>
      */
     public ArrayList<Container> checkDepartingContainers(Date date) {
-        ArrayList<Container> departingContainers = new ArrayList<>();
+        ArrayList<Container> departingContainers = new ArrayList<Container>();
         for (Container[][] containerArray3 : containers) {
             for (Container[] containerArray2 : containerArray3) {
                 for (Container container : containerArray2) {

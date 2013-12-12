@@ -5,13 +5,10 @@
 package containingcontroller;
 
 import containing.xml.CustomVector3f;
-import java.awt.Dimension;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlSeeAlso;
 
 /**
  *

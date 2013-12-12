@@ -16,7 +16,7 @@ import javax.xml.soap.Node;
  * @author Ruben
  */
 public class AGV {
-    
+
     private boolean ready = false;
     static private int id = 1;
     /**
@@ -51,11 +51,13 @@ public class AGV {
         this.home = home;
         this.name = name;
         this.homeBuffer = homeBuffer;
+        this.ready = true;
     }
-    
+
     AGV(PathNode upperNode, Buffer b) {
         this(upperNode, b, "AGV" + String.format("%03d", id++));
-       this.isHome=true;
+        this.isHome = true;
+        this.ready = true;
     }
 
     /**
@@ -66,13 +68,13 @@ public class AGV {
      */
     public void moveToCrane(Crane destination, Controller c) {
         try {
-            isHome= false;
+            isHome = false;
             PathFinder finder = c.getPathFinder();
-            List<PathNode> path = finder.getShortestPath(home, destination.node,true);
+            List<PathNode> path = finder.getShortestPath(home, destination.node, true);
             Message moveMessage = new Message(Commands.MOVE, null);
             ArrayList<String> nodeIds = new ArrayList<>();
             for (PathNode node : path) {
-            nodeIds.add(node.getId());
+                nodeIds.add(node.getId());
             }
             nodeIds.add(0, this.name);
             moveMessage.setParameters(nodeIds.toArray());
@@ -104,7 +106,7 @@ public class AGV {
             Logger.getLogger(AGV.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     boolean getIsReady() {
         return ready;
     }
@@ -112,14 +114,15 @@ public class AGV {
     void setIsReady(boolean newValue) {
         ready = newValue;
     }
-    
+
     @Override
     public String toString() {
-        return "AGV{" + "name=" + name + ", isHome=" + isHome + ", container=" + container + ", home=" + home  + ", homeBuffer=" + homeBuffer.id + '}';
+        return "AGV{" + "name=" + name + ", isHome=" + isHome + ", container=" + container + ", home=" + home + ", homeBuffer=" + homeBuffer.id + '}';
     }
 
     /**
      * check if agv is ready
+     *
      * @return
      */
     public boolean isReady() {
@@ -128,6 +131,7 @@ public class AGV {
 
     /**
      * set if agv is ready
+     *
      * @param ready
      */
     public void setReady(boolean ready) {
@@ -136,6 +140,7 @@ public class AGV {
 
     /**
      * check if agv is gome
+     *
      * @return
      */
     public boolean isIsHome() {
@@ -143,7 +148,8 @@ public class AGV {
     }
 
     /**
-     *  set if agv is home
+     * set if agv is home
+     *
      * @param isHome
      */
     public void setIsHome(boolean isHome) {

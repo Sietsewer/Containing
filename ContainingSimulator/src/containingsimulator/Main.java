@@ -18,6 +18,7 @@ import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
@@ -357,7 +358,6 @@ public class Main extends SimpleApplication {
         Object[] params = decodedMessage.getParameters();
         Container cont = null;
         Crane crane;
-           
         String transporterID;
         AGV agv;
         switch (decodedMessage.getCommand()) {
@@ -794,13 +794,19 @@ public class Main extends SimpleApplication {
         inputManager.addMapping("esc-button",
                 new KeyTrigger(KeyInput.KEY_ESCAPE));
         inputManager.addMapping("left-button",
-                new KeyTrigger(KeyInput.KEY_H));
-        inputManager.addMapping("right-button",
-                new KeyTrigger(KeyInput.KEY_K));
-        inputManager.addMapping("up-button",
-                new KeyTrigger(KeyInput.KEY_U));
-        inputManager.addMapping("down-button",
                 new KeyTrigger(KeyInput.KEY_J));
+        inputManager.addMapping("right-button",
+                new KeyTrigger(KeyInput.KEY_L));
+        inputManager.addMapping("up-button",
+                new KeyTrigger(KeyInput.KEY_I));
+        inputManager.addMapping("down-button",
+                new KeyTrigger(KeyInput.KEY_K));
+        inputManager.addMapping("rotateFor-button",
+                new KeyTrigger(KeyInput.KEY_O));
+        inputManager.addMapping("rotateBac-button",
+                new KeyTrigger(KeyInput.KEY_U));
+         inputManager.addMapping("resetRot-button",
+                new KeyTrigger(KeyInput.KEY_P));
 
         inputManager.addListener(actionListener, "left-click");
         inputManager.addListener(actionListener, "right-click");
@@ -809,6 +815,9 @@ public class Main extends SimpleApplication {
         inputManager.addListener(analogListener, "right-button");
         inputManager.addListener(analogListener, "up-button");
         inputManager.addListener(analogListener, "down-button");
+        inputManager.addListener(analogListener, "rotateFor-button");
+        inputManager.addListener(analogListener, "rotateBac-button");
+        inputManager.addListener(actionListener, "resetRot-button");
     }
    private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String name, float value, float tpf) {
@@ -816,18 +825,28 @@ public class Main extends SimpleApplication {
             {
             return;
             }
-            float y = 0;
+            float rY = 0;
             float z = 0;
+            float rZ = 0;
             if (name.equals("left-button")) {
-                y = -0.1f;
+                rY = -0.1f;
             } else if (name.equals("right-button")) {
-                y = 0.1f;
+                rY = 0.1f;
             } else if (name.equals("up-button")) {
                 z = -0.1f;
             } else if (name.equals("down-button")) {
                 z = 0.1f;
             }
-            cam2EndNode.rotate(0, y, 0);
+            else if(name.equals("rotateFor-button"))
+            {
+               rZ = 0.1f;
+            }
+            else if(name.equals("rotateBac-button"))
+            {
+                rZ= - 0.1f;
+            }
+           
+            cam2EndNode.rotate(0, rY, rZ);
             cam2.lookAt(cam2EndNode.getParent().getWorldTranslation(), Vector3f.UNIT_Y);
             cam2EndNode.getChild(0).move(z, 0, 0);
             
@@ -838,6 +857,11 @@ public class Main extends SimpleApplication {
             if (name.equals("esc-button")) {
                 System.exit(1);
             } 
+            else
+                if(name.equals("resetRot-button"))
+                {
+                    cam2EndNode.setLocalRotation(new Quaternion(0,0,0,1));
+                }
             else
             if (name.equals("left-click") && !keyPressed) {
                 CollisionResults results = new CollisionResults();
@@ -850,14 +874,12 @@ public class Main extends SimpleApplication {
                     Node closestNode = closest.getGeometry().getParent();
                     if (closestNode != null && !closestNode.equals(rootNode)) {
                         init_SecondCam();
+                        cam2EndNode.setLocalRotation(new Quaternion(0,0,0,1));
                         cam2EndNode.attachChild(cam2Node);
                         cam2Node.setLocalTranslation(15, 1, 0);
                         closestNode.attachChild(cam2EndNode);
                         cam2Node.lookAt(closestNode.getWorldTranslation(), Vector3f.UNIT_Y);
-                        if(app.settings.getWidth()!=screenWidth+200){
-                        setResolution(app.settings.getWidth()+200,app.settings.getHeight());
-                        updateCHPos();}
-                        
+
                        if(closestNode instanceof Container || closestNode instanceof Crane 
                                || closestNode instanceof AGV || closestNode instanceof Transporter){
                              Message m = new Message(Commands.RETREIVE_INFO, null);
@@ -878,12 +900,11 @@ public class Main extends SimpleApplication {
                        }
                        view2.setClearFlags(true, true, true);}
                       else {
-                        if(app.settings.getWidth()!=screenWidth){
-                        setResolution(screenWidth,screenHeight);
-                        }
+                        
                         if(view2!= null){
                           view2.clearScenes();
-                          view2.setClearFlags(false, false, false);
+                          view2.setClearFlags(false, false,false);
+
                         }
                         if (cam2Text != null) {
                             guiNode.detachChild(cam2Text);
@@ -891,7 +912,6 @@ public class Main extends SimpleApplication {
                         if(hud2 != null){
                             guiNode.detachChild(hud2);
                         }
-                        updateCHPos();
                     }
                 }
             }
@@ -933,11 +953,7 @@ public class Main extends SimpleApplication {
         cam2Node.setControlDir(ControlDirection.SpatialToCamera);
 
     }
-   private void setResolution(int width, int height)
-   {
-        app.settings.setResolution(width,height);
-        app.restart();
-   }
+
    
     private void changeGlobalSpeed(float acceleration) {
 

@@ -18,7 +18,7 @@ import java.util.Map;
 class Transporter {
 
     public HashMap<Container, CustomVector3f> reservedSpace;
-    
+
     private List<Container> containers;
     private int transportType;
     String id;
@@ -36,7 +36,7 @@ class Transporter {
     public int getTransportType() {
         return transportType;
     }
-    
+
     public CustomVector3f getFreeLocation(int start, int range) {
         if (transportType == TransportTypes.SEASHIP) {
             for (int z = start; z < start + range; z++) {
@@ -98,7 +98,7 @@ class Transporter {
         }
         return null;
     }
-    
+
     public boolean checkSpaceReserved(float x, float y, float z) {
         for (Map.Entry<Container, CustomVector3f> e : reservedSpace.entrySet()) {
             CustomVector3f value = e.getValue();
@@ -114,22 +114,22 @@ class Transporter {
             containers = new ArrayList<Container>();
         }
         /*
-        boolean posistionTaken = false;
-        for (Container c : containers) {
-            if (c.getPosition().x == container.getPosition().x
-                    && c.getPosition().y == container.getPosition().y
-                    && c.getPosition().z == container.getPosition().z) {
-                posistionTaken = true;
-                break;
-            }
-        }
-        */
+         boolean posistionTaken = false;
+         for (Container c : containers) {
+         if (c.getPosition().x == container.getPosition().x
+         && c.getPosition().y == container.getPosition().y
+         && c.getPosition().z == container.getPosition().z) {
+         posistionTaken = true;
+         break;
+         }
+         }
+         */
 
         if (reservedSpace.containsKey(container)) {
-            if (container.getDateArrival().before(container.getDateDeparture())) {
-                containers.add(container);
-                reservedSpace.remove(container);
-            }
+
+            containers.add(container);
+            reservedSpace.remove(container);
+
         }
 
     }
@@ -196,9 +196,34 @@ class Transporter {
         }
         return maxX;
     }
-    
-    public void reservePosition(Container container) {
-        reservedSpace.put(container, container.getBufferPosition());
+
+    public boolean reservePosition(Container container) {
+        if (container.getDateArrival().before(container.getDateDeparture())) {
+           if(containers==null)
+           {
+               containers= new ArrayList<Container>();
+           }
+            boolean posistionTaken = false;
+            for (Container c : containers) {
+                if (c.getPosition().x == container.getPosition().x
+                        && c.getPosition().y == container.getPosition().y
+                        && c.getPosition().z == container.getPosition().z) {
+                    posistionTaken = true;
+                    break;
+                }
+            }
+            if (!posistionTaken) {
+                reservedSpace.put(container, container.getBufferPosition());
+                return true;
+            } else {
+                return false;
+            }
+
+        }
+        else
+        {
+         return false;   
+        }
     }
 
     public Date getDateArrival() {

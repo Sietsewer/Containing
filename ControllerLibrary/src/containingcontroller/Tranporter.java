@@ -7,7 +7,9 @@ package containingcontroller;
 import containing.xml.CustomVector3f;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -15,6 +17,8 @@ import java.util.List;
  */
 class Transporter {
 
+    public HashMap<Container, CustomVector3f> reservedSpace;
+    
     private List<Container> containers;
     private int transportType;
     String id;
@@ -26,6 +30,7 @@ class Transporter {
         this.transportType = transportType;
         this.id = "TRS" + String.format("%03d", tranporterID++);
         this.dateArrival = dateArrival;
+        this.reservedSpace = new HashMap<>();
     }
 
     public int getTransportType() {
@@ -93,11 +98,22 @@ class Transporter {
         }
         return null;
     }
+    
+    public boolean checkSpaceReserved(float x, float y, float z) {
+        for (Map.Entry<Container, CustomVector3f> e : reservedSpace.entrySet()) {
+            CustomVector3f value = e.getValue();
+            if (value.x == x && value.y == y && value.z == z) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public void loadContainer(Container container) {
         if (containers == null) {
             containers = new ArrayList<>();
         }
+        /*
         boolean posistionTaken = false;
         for (Container c : containers) {
             if (c.getPosition().x == container.getPosition().x
@@ -107,10 +123,12 @@ class Transporter {
                 break;
             }
         }
+        */
 
-        if (!posistionTaken) {
+        if (reservedSpace.containsKey(container)) {
             if (container.getDateArrival().before(container.getDateDeparture())) {
                 containers.add(container);
+                reservedSpace.remove(container);
             }
         }
 
@@ -177,6 +195,10 @@ class Transporter {
             }
         }
         return maxX;
+    }
+    
+    public void reservePosition(Container container) {
+        reservedSpace.put(container, container.getBufferPosition());
     }
 
     public Date getDateArrival() {

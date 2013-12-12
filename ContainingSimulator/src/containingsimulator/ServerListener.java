@@ -38,7 +38,7 @@ public class ServerListener {
      */
     public ServerListener(Main main) {
 
-        serverName = "127.0.0.1";
+        serverName = "192.168.1.117";
         port = 6066;
         this.main = main;
         recievedMessages = new ArrayList<String>();

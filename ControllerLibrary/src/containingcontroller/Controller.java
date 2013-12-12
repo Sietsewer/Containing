@@ -309,8 +309,6 @@ public class Controller {
                 departingTransporters.add(allDepartingTransporters.get(i));
                 allDepartingTransporters.remove(i);
                 i--;
-            } else {
-                break;
             }
         }
 
@@ -893,20 +891,30 @@ public class Controller {
                     ArrayList<Object> params = new ArrayList<Object>();
                     params.add(buf.crane.id);
 
-                    AGV toReserve;
+                    AGV toReserve = null;
                     if (toMove.getTransportTypeDeparture() == TransportTypes.TRAIN || toMove.getTransportTypeDeparture() == TransportTypes.SEASHIP) {
-                        toReserve = buf.AGVAvailable(true);
-                        if (toReserve != null) {
+                        boolean up = true;
+                        toReserve = buf.AGVAvailable(up);
+                        if(toReserve == null) {
+                            up = false;
+                            toReserve = buf.AGVAvailable(up);
+                        } 
+                        if(toReserve != null) {
                             toReserve.setReady(false);
                             //todo: link agv and container and add to list
-                            params.add(true);
+                            params.add(up);
                         }
                     } else {
-                        toReserve = buf.AGVAvailable(false);
-                        if (toReserve != null) {
+                        boolean up = false;
+                        toReserve = buf.AGVAvailable(up);
+                        if(toReserve == null) {
+                            up = true;
+                            toReserve = buf.AGVAvailable(up);
+                        } 
+                        if(toReserve != null) {
                             toReserve.setReady(false);
                             //todo: see above
-                            params.add(false);
+                            params.add(up);
                         }
                     }
 

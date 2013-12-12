@@ -24,7 +24,7 @@ import javax.swing.JScrollBar;
  *
  * @author Hendrik
  */
-public class ControllerWindow extends javax.swing.JFrame {
+public class ControllerWindow extends javax.swing.JFrame implements IWindow {
 
     SimpleDateFormat timeFormat;
         SimpleDateFormat datetimeFormat;
@@ -39,7 +39,7 @@ public class ControllerWindow extends javax.swing.JFrame {
         jMenu3.setEnabled(false);
         timeFormat = new SimpleDateFormat("HH:mm:ss");
         datetimeFormat= new SimpleDateFormat("MM-dd HH:mm:ss");
-        controller = new Controller(this);
+        controller = new Controller((IWindow)this);
         controller.startServer();
         jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

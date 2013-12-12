@@ -35,7 +35,7 @@ public class Controller {
     PathFinder pathFinder;
     //server variables
     private Server server;//Server for communication between applications
-    private ControllerWindow window;//Mainwindow to print log
+    private IWindow window;//Mainwindow to print log
     //timer variables
     Timer simTimer;//timer that progresses time in controller
     Date simTime; // time in the simulation
@@ -72,7 +72,7 @@ public class Controller {
      *
      * @param window mainwindow needed to write to textarea
      */
-    public Controller(ControllerWindow window) {
+    public Controller(IWindow window) {
 
         this.window = window;
         waitingForBuferCranePickup = new HashMap<>();

@@ -37,3 +37,5 @@ proguard/
 *.dylib
 *.jnilib
 /ContainingSimulator/dist/
+/ControllerLibrary/nbproject/private/
+/ControllerLibrary/dist/

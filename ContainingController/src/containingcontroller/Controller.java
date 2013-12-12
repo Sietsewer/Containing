@@ -691,7 +691,7 @@ public class Controller {
     public void bufferCraneReady(Buffer b) {
         this.PrintMessage("Buffer ready - " + b.crane.id);
         b.crane.ready = true;
-        if (b.crane.container == null) {
+        if (b.crane.container == null && !waitingForCraneToPutToAgv.containsKey(b.crane)) {
             if (waitingForBufferCrane.containsValue(b.crane)) {
                 List<AGV> _temp = getWaitingAGV(b.crane);
                 if (_temp.size() > 1) {

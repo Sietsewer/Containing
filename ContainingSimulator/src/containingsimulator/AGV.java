@@ -45,6 +45,7 @@ public class AGV extends Node implements MotionPathListener {
      * @param viewModel Model of the AGV.
      */
     public AGV(String ID, Spatial viewModel) {
+        super(ID);
         this.id = ID;
         this.viewModel = viewModel.clone();
         path = new MotionPath();

@@ -3,7 +3,6 @@ package containingsimulator;
 import containing.xml.SimContainer;
 import containing.xml.Message;
 import com.jme3.app.SimpleApplication;
-import com.jme3.asset.AssetManager;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapText;
@@ -19,7 +18,6 @@ import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.Camera;
@@ -35,9 +33,9 @@ import com.jme3.scene.shape.Quad;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
+import com.jme3.ui.Picture;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -92,7 +90,12 @@ public class Main extends SimpleApplication {
     private Camera cam2;
     private Node cam2EndNode = new Node();
     BitmapText cam2Text;
+    BitmapText crossHair;
     ViewPort view2;
+    Picture hud2;
+    private int screenWidth;
+    private int screenHeight;
+    
     public static Material alpha;
 
     /**
@@ -120,6 +123,9 @@ public class Main extends SimpleApplication {
      */
     @Override
     public void simpleInitApp() {
+        screenWidth = app.settings.getWidth();
+        screenHeight = app.settings.getHeight();
+        
         setPauseOnLostFocus(false);
         loadAssets();
         showPathNodes(true); //set false for disabling view PathNodes 
@@ -140,14 +146,6 @@ public class Main extends SimpleApplication {
 
 
 
-    }
-
-    private void init_SecondCam() {
-
-        cam2 = cam.clone();
-        cam2.setViewPort(.8f, 1f, .8f, 1f);
-        cam2Node = new CameraNode("Camera", cam2);
-        cam2Node.setControlDir(ControlDirection.SpatialToCamera);
     }
 
     /**
@@ -342,7 +340,12 @@ public class Main extends SimpleApplication {
      * @param Message the message which to send
      */
     static void sendMessage(Message Message) {
-        listener.sendMessage(Message);
+        try{
+        listener.sendMessage(Message);}
+        catch(Exception ex)
+        {
+            System.out.println(ex);
+        }
     }
 
     /**
@@ -354,11 +357,51 @@ public class Main extends SimpleApplication {
         Object[] params = decodedMessage.getParameters();
         Container cont = null;
         Crane crane;
-
+            System.out.println((String)params[0]);
         String transporterID;
         AGV agv;
         switch (decodedMessage.getCommand()) {
-
+           case Commands.RETREIVE_INFO:
+           
+                StringBuilder sB = new StringBuilder();
+                switch(((String)params[0]).toLowerCase().charAt(0))
+                {
+                    case 'i':
+                    sB.append("container: " + params[0]+"\n");
+                    sB.append("owner: " + params[1]+"\n");
+                    sB.append("arr. date: " + params[2]+"\n");
+                    sB.append("arr. trans.: " + TransportTypes.getTransportType((Integer)params[3])+"\n");
+                    sB.append("arr. cargo comp.: " + params[4]+"\n");
+                    sB.append("dep. date: " + params[5]+"\n");
+                    sB.append("dep. trans.: " + TransportTypes.getTransportType((Integer)params[6])+"\n");
+                    sB.append("dep. cargo comp.: " + params[7]+"\n");
+                    sB.append("contents: " + params[8]+"\n");
+                    sB.append("content type: " + params[9]+"\n");
+                    sB.append("content danger: " + params[10]+"\n");
+                        break;
+                    case 't':
+                    sB.append("transporter: " + params[0]+"\n");
+                    sB.append("carrying: " + params[1]+" containers\n");
+                    sB.append("length: " + params[4]+"\n");
+                    sB.append("arr. date: " + params[2]+"\n");
+                    sB.append("docking point: " + params[3]+"\n");
+                    sB.append("type: " + TransportTypes.getTransportType((Integer)params[5])+"\n");
+                        break;
+                    case 'b':
+                    case 'c':
+                    sB.append("crane: " + params[0]+"\n");
+                    sB.append("status: " + (((Boolean)params[2]) ? "idle\n" : "busy\n"));
+                    sB.append((params[1]!= null) ? "container: " + (params[1]) +"\n " : "\n");
+                        break;
+                    case 'a':
+                    sB.append("agv: " + params[0]+"\n");
+                    sB.append("status: " + (((Boolean)params[2]) ? "idle\n" : "busy\n"));
+                    sB.append("buffer: " + params[1] + "\n");
+                        break;
+                   
+                }
+                  printSecondViewText(sB.toString());
+                break;
             case Commands.PAUSE_PLAY:
                 pausePlay();
                 break;
@@ -490,6 +533,7 @@ public class Main extends SimpleApplication {
                 System.err.println("Error: Invalid command for simulator.");
         }
     }
+    
 
     /**
      * Finds and returns a transporter by container ID
@@ -766,8 +810,12 @@ public class Main extends SimpleApplication {
         inputManager.addListener(analogListener, "up-button");
         inputManager.addListener(analogListener, "down-button");
     }
-    private AnalogListener analogListener = new AnalogListener() {
+   private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String name, float value, float tpf) {
+            if(cam2EndNode.getParent()== null)
+            {
+            return;
+            }
             float y = 0;
             float z = 0;
             if (name.equals("left-button")) {
@@ -782,15 +830,15 @@ public class Main extends SimpleApplication {
             cam2EndNode.rotate(0, y, 0);
             cam2.lookAt(cam2EndNode.getParent().getWorldTranslation(), Vector3f.UNIT_Y);
             cam2EndNode.getChild(0).move(z, 0, 0);
+            
         }
     };
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("esc-button")) {
                 System.exit(1);
-            } else if (name.equals("right-click")) {
-                changeGlobalSpeed(globalSpeed * 1.5f); //fasten up
-            }
+            } 
+            else
             if (name.equals("left-click") && !keyPressed) {
                 CollisionResults results = new CollisionResults();
                 Ray ray = new Ray(cam.getLocation(), cam.getDirection().normalize());
@@ -799,44 +847,98 @@ public class Main extends SimpleApplication {
                 if (results.size() > 0) {
                     // The closest collision point is what was truly hit:
                     CollisionResult closest = results.getClosestCollision();
-                    Vector3f hitPoint = closest.getContactPoint(); //where uve shot 
                     Node closestNode = closest.getGeometry().getParent();
-
                     if (closestNode != null && !closestNode.equals(rootNode)) {
                         init_SecondCam();
                         cam2EndNode.attachChild(cam2Node);
                         cam2Node.setLocalTranslation(15, 1, 0);
                         closestNode.attachChild(cam2EndNode);
                         cam2Node.lookAt(closestNode.getWorldTranslation(), Vector3f.UNIT_Y);
-
-                        if (cam2Text == null) {
-                            cam2Text = new BitmapText(guiFont, false);
-                        } else {
-                            guiNode.detachChild(cam2Text);
+                        if(app.settings.getWidth()!=screenWidth+200){
+                        setResolution(app.settings.getWidth()+200,app.settings.getHeight());
+                        updateCHPos();}
+                        
+                       if(closestNode instanceof Container || closestNode instanceof Crane 
+                               || closestNode instanceof AGV || closestNode instanceof Transporter){
+                             Message m = new Message(Commands.RETREIVE_INFO, null);
+                             ArrayList<Object> params = new ArrayList();
+                             params.add(closestNode.getName());
+                             m.setParameters(params.toArray());
+                             sendMessage(m);
+                       }
+                        else
+                        {
+                            printSecondViewText(closestNode.getName());
                         }
-                        cam2Text.setColor(ColorRGBA.Red);
-                        cam2Text.setSize(guiFont.getCharSet().getRenderedSize());
-                        cam2Text.setText(closestNode.getName()); // crosshairs
-                        cam2Text.setLocalTranslation(settings.getWidth() - cam2Text.getLineWidth(), settings.getHeight() - cam2Text.getLineHeight() - 50, 0);
-                        guiNode.attachChildAt(cam2Text, 0);
-
-                        if (view2 == null) {
-                            view2 = renderManager.createMainView("Top Right", cam2);
-                            view2.setClearFlags(true, true, true);
-                            view2.attachScene(rootNode);
+                       if(view2==null){
+                           view2 = renderManager.createMainView("Top Right", cam2);
+                       }
+                       if(view2.getScenes().size()<1){
+                           view2.attachScene(rootNode);
+                       }
+                       view2.setClearFlags(true, true, true);}
+                      else {
+                        if(app.settings.getWidth()!=screenWidth){
+                        setResolution(screenWidth,screenHeight);
                         }
-                    } else {
-                        renderManager.removeMainView("Top Right");
-                        view2 = null;
+                        if(view2!= null){
+                          view2.clearScenes();
+                          view2.setClearFlags(false, false, false);
+                        }
                         if (cam2Text != null) {
                             guiNode.detachChild(cam2Text);
                         }
+                        if(hud2 != null){
+                            guiNode.detachChild(hud2);
+                        }
+                        updateCHPos();
                     }
                 }
             }
         }
     };
 
+    
+    private void printSecondViewText(String text)
+    {
+        if (cam2Text == null) 
+        {
+            cam2Text = new BitmapText(guiFont, false);
+            cam2Text.setColor(ColorRGBA.Yellow);
+            cam2Text.setSize((settings.getWidth()+settings.getHeight())/80);
+            cam2Text.setLocalTranslation(0, settings.getHeight()/2, 0);
+        } else {
+            guiNode.detachChild(cam2Text);
+        }
+        if(hud2 == null){
+        hud2 = new Picture("HUD Picture");
+        hud2.setImage(assetManager, "Textures/HUD/hud2.jpg", true);
+        hud2.setWidth(settings.getWidth()/2.5f);
+        hud2.setHeight(settings.getHeight()/2.0f);
+        hud2.setPosition(0, 0);
+        }
+
+        cam2Text.setText(text); // crosshairs
+        guiNode.attachChildAt(cam2Text, 1);
+        guiNode.attachChildAt(hud2,0);
+
+    }
+    
+   private void init_SecondCam() {
+
+        cam2 = cam.clone();
+        cam2.setViewPort(0f, .4f, .3f, 1f);
+       
+        cam2Node = new CameraNode("Camera", cam2);
+        cam2Node.setControlDir(ControlDirection.SpatialToCamera);
+
+    }
+   private void setResolution(int width, int height)
+   {
+        app.settings.setResolution(width,height);
+        app.restart();
+   }
+   
     private void changeGlobalSpeed(float acceleration) {
 
         globalSpeed = acceleration;
@@ -878,12 +980,16 @@ public class Main extends SimpleApplication {
 
     protected void init_CrossHairs() {
         setDisplayStatView(false);
-        BitmapText ch = new BitmapText(guiFont, false);
+        crossHair = new BitmapText(guiFont, false);
 
-        ch.setSize(guiFont.getCharSet().getRenderedSize() * 2);
-        ch.setText("+"); // crosshairs
-        ch.setLocalTranslation( // center
-                settings.getWidth() / 2 - ch.getLineWidth() / 2, settings.getHeight() / 2 + ch.getLineHeight() / 2, 0);
-        guiNode.attachChildAt(ch, 0);
+         crossHair.setSize(guiFont.getCharSet().getRenderedSize() * 2);
+         crossHair.setText("+"); // crosshairs
+         updateCHPos();
+        guiNode.attachChild( crossHair);
+    }
+    private void updateCHPos()
+    {
+         crossHair.setLocalTranslation( // center
+                settings.getWidth() / 2 -  crossHair.getLineWidth() / 2, settings.getHeight() / 2 +  crossHair.getLineHeight() / 2, 0);
     }
 }

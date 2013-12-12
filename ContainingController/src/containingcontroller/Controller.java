@@ -47,6 +47,7 @@ public class Controller {
     List<Crane> seaCranes;//list of all seaCranes
     List<Crane> bargeCranes;//list of all bargeCranes
     List<Crane> trainCranes;//list of all trainCranes
+    List<Container> containers; //list of all containers
     //run time lists
     List<Transporter> currentTransporter;//list of current transporters on the map
     List<AGV> agvLoadedMovingHome;//
@@ -481,6 +482,7 @@ public class Controller {
     }
 
     private void createTransporters(List<Container> allContainers) {
+       
         List<Container> allDepContainers = new ArrayList<>(allContainers);
         Container previousContainer = null;
         Transporter newTransporter = null;
@@ -1005,6 +1007,7 @@ public class Controller {
     }
 
     void setContainers(List<Container> containers) {
+        this.containers =  new ArrayList(containers);
         Collections.sort(containers, new ContainerComparer());
         this.PrintMessage("Total containers - " + containers.size());
         createTransporters(containers);
@@ -1015,17 +1018,20 @@ public class Controller {
         }
     }
 
-    /**
-     * message has been recieved from simulator
-     *
-     * @param message the message object that has been recieved
-     */
     public void recievedMessage(String message) {
         //   PrintMessage(message);
         Message m = Message.decodeMessage(message);
+      
         if (!((String) m.getParameters()[0]).equalsIgnoreCase("simulator")) {
-            int id = Integer.parseInt(((String) m.getParameters()[0]).substring(3, 6));
-            if (((String) m.getParameters()[0]).toLowerCase().startsWith("BFA".toLowerCase())) {
+
+            System.out.println(m.getCommand());
+            int id = 0;
+            if (((String) m.getParameters()[0]).length() >= 6) {
+                id = Integer.parseInt(((String) m.getParameters()[0]).substring(3, 6));
+            }
+            if(m.getCommand() == Commands.RETREIVE_INFO){
+                        sendContainerInfo((String) m.getParameters()[0]);}
+            else if (((String) m.getParameters()[0]).toLowerCase().startsWith("BFA".toLowerCase())) {
                 bufferCraneReady(buffers.get(id - 1));
             } else {
                 switch (m.getCommand()) {
@@ -1040,6 +1046,7 @@ public class Controller {
                                     craneReady(lorreyCranes.get(id - 1));
                                 } else if (((String) m.getParameters()[0]).substring(1, 3).equalsIgnoreCase("TR")) {
                                     craneReady(trainCranes.get(id - 1));
+
                                 }
                                 break;
                             case 't':
@@ -1052,13 +1059,98 @@ public class Controller {
                                 break;
                             case 'a':
                                 AGVReady(agvs.get(Integer.parseInt(((String) m.getParameters()[0]).substring(3, 6)) - 1));
+
                                 break;
                         }
 
                         break;
+                  
+
                 }
             }
         }
+    }
+    
+    
+    private void sendContainerInfo(String id) {
+     Message m = new Message(Commands.RETREIVE_INFO, null);
+     ArrayList<Object> params = new ArrayList<>();
+     int idInt = 0;
+     if(id.length()>=6){
+     idInt = Integer.parseInt(id.substring(3, 6));}
+     System.out.println(id);
+     
+     if (id.toLowerCase().startsWith("bfa")) 
+     {
+                Crane cr = buffers.get(idInt - 1).crane;
+                params.add(cr.id);
+                params.add(cr.container == null ? "-" : cr.container.getId());
+                params.add(cr.ready);
+     }
+     else
+     {
+                
+        switch (id.toLowerCase().charAt(0)) {
+            case 't':
+                for (Transporter t : currentTransporter) {
+                    if (t.id.equalsIgnoreCase(id)) {
+                        transporterReady(t);
+                        params.add(t.id);
+                        params.add(t.getContainerCount());
+                        params.add(t.getDateArrival());
+                        params.add(t.getDockingPoint());
+                        params.add(t.getLenghtTransporter());
+                        params.add(t.getTransportType());
+                        break;
+                    }
+                }
+                break;
+            case 'a':
+                AGV agv = agvs.get(Integer.parseInt(id.substring(3, 6)) - 1);
+                params.add(agv.name);
+                params.add(agv.homeBuffer.id);
+                params.add(agv.isReady());
+                break;
+
+            case 'c':
+                
+                Crane c = null;
+                if (id.substring(1, 3).equalsIgnoreCase("SE")) {
+                    c = seaCranes.get(idInt - 1);
+                } else if (id.substring(1, 3).equalsIgnoreCase("BA")) {
+                    c = (bargeCranes.get(idInt - 1));
+                } else if (id.substring(1, 3).equalsIgnoreCase("LO")) {
+                    c = (lorreyCranes.get(idInt - 1));
+                } else if (id.substring(1, 3).equalsIgnoreCase("TR")) {
+                    c = (trainCranes.get(idInt - 1));
+                }
+                params.add(c.id != null ? c.id : "JOHN DOE");
+                params.add(c.container == null ? "-" : c.container.getId());
+                params.add(c.ready);
+                break;
+            case 'i':
+                for (Container con : this.containers) {
+                    if (con.getId().equals(id)) {
+                        params.add(con.getId());
+                        params.add(con.getOwner());
+                        params.add(con.getDateArrival());
+                        params.add(con.getTransportTypeArrival());
+                        params.add(con.getCargoCompanyArrival());
+                        params.add(con.getDateDeparture());
+                        params.add(con.getTransportTypeDeparture());
+                        params.add(con.getCargoCompanyDeparture());
+                        params.add(con.getContents());
+                        params.add(con.getContentType());
+                        params.add(con.getContentDanger());
+                        System.out.println("yes");
+                        break;
+                    }
+                }
+                break;
+        }
+     }
+        m.setParameters(params.toArray());
+        this.sendMessage(m);
     }
 
     /**

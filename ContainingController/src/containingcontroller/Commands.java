@@ -14,6 +14,10 @@ public class Commands {
      * Device is ready
      */
     final static public int READY = 0;
+    /*
+     Get extra info
+     */
+    final static public int RETREIVE_INFO = 11;
     
     /**
      * Shutdown simulator

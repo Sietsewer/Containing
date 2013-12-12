@@ -30,7 +30,7 @@ class Transporter {
         this.transportType = transportType;
         this.id = "TRS" + String.format("%03d", tranporterID++);
         this.dateArrival = dateArrival;
-        this.reservedSpace = new HashMap<>();
+        this.reservedSpace = new HashMap<Container, CustomVector3f>();
     }
 
     public int getTransportType() {

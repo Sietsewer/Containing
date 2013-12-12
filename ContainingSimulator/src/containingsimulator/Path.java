@@ -98,6 +98,7 @@ public class Path {
       map.put("m14",new Vector3f(65,10,55));
       map.put("m15",new Vector3f(65,10,478));
       map.put("m16",new Vector3f(95.5f,10,478));
+      OffsetRoute.init();
     }
   public static void updatePath(String id, Vector3f vec)
   { 

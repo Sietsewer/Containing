@@ -31,10 +31,10 @@ class Transporter {
     public int getTransportType() {
         return transportType;
     }
-
-    public CustomVector3f getFreeLocation() {
+    
+    public CustomVector3f getFreeLocation(int start, int range) {
         if (transportType == TransportTypes.SEASHIP) {
-            for (int z = 0; z < Integer.MAX_VALUE; z++) {
+            for (int z = start; z < start + range; z++) {
                 for (int x = 0; x < 20; x++) {
                     for (int y = 0; y < 8; y++) {
                         CustomVector3f currentposition = new CustomVector3f(x, y, z);
@@ -54,7 +54,7 @@ class Transporter {
                 }
             }
         } else if (transportType == TransportTypes.BARGE) {
-            for (int z = 0; z < Integer.MAX_VALUE; z++) {
+            for (int z = start; z < start + range; z++) {
                 for (int x = 0; x < 4; x++) {
                     for (int y = 0; y < 4; y++) {
                         CustomVector3f currentposition = new CustomVector3f(x, y, z);
@@ -75,7 +75,7 @@ class Transporter {
             }
 
         } else if (transportType == TransportTypes.TRAIN) {
-            for (int z = 0; z < Integer.MAX_VALUE; z++) {
+            for (int z = start; z < start + range; z++) {
                 for (Container c : containers) {
                     if (c.getPosition().z != z) {
                         return new CustomVector3f(0, 0, z);

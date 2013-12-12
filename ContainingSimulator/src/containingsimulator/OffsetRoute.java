@@ -22,58 +22,83 @@ public class OffsetRoute {
         OffsetPoint temp;
         temp = buildWay("m1");
         
-        
+        temp.addWay("m16", "m2", new Vector3f(3f,0f,-3f),new Vector3f(9f,0f,-9f));
+        temp.addWay("m16", "bfb001", new Vector3f(3f,0f,-3f),new Vector3f(9f,0f,-9f));
+        temp.addWay("m2", "m16", new Vector3f(-3f,0f,3f),new Vector3f(-9f,0f,9f));
+        temp.addWay("m2", "bfb001", new Vector3f(3f,0f,-3f),new Vector3f(9f,0f,-9f));
+        temp.addWay("bfb001", "m2", new Vector3f(-3f,0f,3f),new Vector3f(-9f,0f,9f));
+        temp.addWay("bfb001", "m16", new Vector3f(-3f,0f,3f),new Vector3f(-9f,0f,9f));
         
         
         temp = buildWay("m2");
         
-        
+        temp.addWay("cba001", "m1", new Vector3f(-4f,0f,3f));
+        temp.addWay("m1", "cba001", new Vector3f(3f,0f,-4f));
         
         
         temp = buildWay("m3");
         
-        
+        temp.addWay("cba008", "m4", new Vector3f(3f,0f,-4f));
+        temp.addWay("m4", "cba008", new Vector3f(+4f,0f,3f));
         
         
         temp = buildWay("m4");
         
-        
+        temp.addWay("m3", "bfb031", new Vector3f(-4f,0f,-3f), new Vector3f(-4f,0f,-9f));
+        temp.addWay("m3", "bfb030", new Vector3f(-4f,0f,3f), new Vector3f(-4f,0f,9f));
+        temp.addWay("bfb031", "m3", new Vector3f(4f,0f,-3f), new Vector3f(4f,0f,-9f));
+        temp.addWay("bfb031", "bfb030", new Vector3f(-4f,0f,3f), new Vector3f(-4f,0f,9f));
+        temp.addWay("bfb030", "m3", new Vector3f(4f,0f,3f), new Vector3f(4f,0f,9f));
+        temp.addWay("bfb030", "bfb031", new Vector3f(-4f,0f,-3f), new Vector3f(-4f,0f,-9f));
         
         
         temp = buildWay("m5");
         
-        
+        temp.addWay("bfb034", "clo001", new Vector3f(0f,0f,-3f), new Vector3f(0f,0f,-9f));
+        temp.addWay("bfb034", "bfb035", new Vector3f(0f,0f,-3f), new Vector3f(0f,0f,-9f));
+        temp.addWay("bfb035", "clo001", new Vector3f(0f,0f,3f), new Vector3f(0f,0f,9f));
+        temp.addWay("bfb035", "bfb034", new Vector3f(0f,0f,3f), new Vector3f(0f,0f,9f));
+        temp.addWay("clo001", "bfb035", new Vector3f(0f,0f,-3f), new Vector3f(0f,0f,-9f));
+        temp.addWay("clo001", "bfb034", new Vector3f(0f,0f,3f), new Vector3f(0f,0f,9f));
         
         
         temp = buildWay("m6");
         
-        
+        //NOT IMPLEMENTED
         
         
         temp = buildWay("m7");
         
+        temp.addWay("m8", "bfb063", new Vector3f(3f,0f,3f), new Vector3f(9f,0f,9f));
+        temp.addWay("bfb063", "m8", new Vector3f(-3f,0f,-3f), new Vector3f(-9f,0f,-9f));
         
-        
-        
+       
         temp = buildWay("m8");
         
-        
+        temp.addWay("m9", "m7", new Vector3f(3f,0f,-3f), new Vector3f(9f,0f,-9f));
+        temp.addWay("m7", "m9", new Vector3f(-3f,0f,3f), new Vector3f(-9f,0f,9f));
         
         
         temp = buildWay("m9");
         
-        
+        temp.addWay("m10", "bfa063", new Vector3f(4f,0f,-3f), new Vector3f(4f,0f,-9f));
+        temp.addWay("m10", "m8", new Vector3f(4f,0f,3f), new Vector3f(4f,0f,9f));
+        temp.addWay("bfa063", "m10", new Vector3f(-4f,0f,-3f), new Vector3f(-4f,0f,-9f));
+        temp.addWay("bfa063", "m8", new Vector3f(-4f,0f,-3f), new Vector3f(4f,0f,-9f));
+        temp.addWay("m8", "m10", new Vector3f(-4f,0f,3f), new Vector3f(-4f,0f,9f));
+        temp.addWay("m8", "bfa063", new Vector3f(4f,0f,3f), new Vector3f(4f,0f,9f));
         
         
         temp = buildWay("m10");
         
-        
+        temp.addWay("m12", "ctr001", new Vector3f(-3f,0f,-3f));
+        temp.addWay("ctr001", "m12", new Vector3f(3f,0f,3f));
         
         
         temp = buildWay("m11");
         
-        temp.addWay("m12", "ctr001", new Vector3f(-4f,0f,-3f));
-        temp.addWay("ctr001", "m12", new Vector3f(3f,0f,4f));
+        temp.addWay("crt004", "m9", new Vector3f(3f,0f,-3f));
+        temp.addWay("m9", "crt004", new Vector3f(3f,0f,-3f));
         
         
         temp = buildWay("m12");
@@ -88,34 +113,34 @@ public class OffsetRoute {
         
         temp = buildWay("m13");
         
-        temp.addWay(null, "bfa001", new Vector3f(-3f,0f,3f),new Vector3f(-3f,0f,9f));
-        temp.addWay(null, "bfa001", new Vector3f(-3f,0f,3f),new Vector3f(-3f,0f,9f));
-        temp.addWay(null, null, new Vector3f(3f,0f,-3f),new Vector3f(3f,0f,-9f));
-        temp.addWay(null, null, new Vector3f(3f,0f,-3f),new Vector3f(3f,0f,-9f));
-        temp.addWay(null, null, new Vector3f(3f,0f,-3f),new Vector3f(3f,0f,-9f));
-        temp.addWay(null, null, new Vector3f(3f,0f,-3f),new Vector3f(3f,0f,-9f));
+        temp.addWay("m16", "bfa001", new Vector3f(-3f,0f,-3f),new Vector3f(-9f,0f,-9f));
+        temp.addWay("m14", "bfa001", new Vector3f(-3f,0f,-3f),new Vector3f(-9f,0f,-9f));
+        temp.addWay("bfa001", "m16", new Vector3f(3f,0f,3f),new Vector3f(9f,0f,9f));
+        temp.addWay("m14", "m16", new Vector3f(3f,0f,3f),new Vector3f(9f,0f,9f));
+        temp.addWay("bfa001", "m14", new Vector3f(3f,0f,3f),new Vector3f(9f,0f,9f));
+        temp.addWay("m16", "m14", new Vector3f(3f,0f,3f),new Vector3f(9f,0f,9f));
         
         
         temp = buildWay("m14");
         
-        temp.addWay("m15", "m13", new Vector3f(-4f,0f,-3f));
-        temp.addWay("m13", "m15", new Vector3f(3f,0f,4f));
+        temp.addWay("m15", "m13", new Vector3f(-3f,0f,-3f));
+        temp.addWay("m13", "m15", new Vector3f(3f,0f,3f));
         
         
         temp = buildWay("m15");
         
-        temp.addWay("m16", "cse010", new Vector3f(-4f,0f,3f));
-        temp.addWay("cse010", "m16", new Vector3f(3f,0f,-4f));
+        temp.addWay("m16", "cse010", new Vector3f(-3f,0f,3f));
+        temp.addWay("cse010", "m16", new Vector3f(3f,0f,-3f));
         
         
         temp = buildWay("m16");
 
-        temp.addWay("m15", "m1", new Vector3f(-3f,0f,4f), new Vector3f(-9f,0f,4f));
-        temp.addWay("m15", "m13", new Vector3f(3f,0f,4f), new Vector3f(9f,0f,4f));
-        temp.addWay("m13", "m1", new Vector3f(-3f,0f,-4f), new Vector3f(-9f,0f,-4f));
-        temp.addWay("m13", "m15", new Vector3f(-3f,0f,-4f), new Vector3f(-9f,0f,-4f));
-        temp.addWay("m1", "m13", new Vector3f(3f,0f,4f), new Vector3f(9f,0f,4f));
-        temp.addWay("m1", "m15", new Vector3f(3f,0f,-4f), new Vector3f(9f,0f,-4f));
+        temp.addWay("m15", "m1", new Vector3f(-3f,0f,-4f), new Vector3f(-9f,0f,-4f));
+        temp.addWay("m15", "m13", new Vector3f(3f,0f,-4f), new Vector3f(9f,0f,-4f));
+        temp.addWay("m13", "m1", new Vector3f(-3f,0f,4f), new Vector3f(-9f,0f,4f));
+        temp.addWay("m13", "m15", new Vector3f(-3f,0f,4f), new Vector3f(-9f,0f,4f));
+        temp.addWay("m1", "m13", new Vector3f(3f,0f,-4f), new Vector3f(9f,0f,-4f));
+        temp.addWay("m1", "m15", new Vector3f(3f,0f,4f), new Vector3f(9f,0f,4f));
 
         
     }

@@ -75,21 +75,21 @@ public class Controller {
     public Controller(IWindow window) {
 
         this.window = window;
-        waitingForBuferCranePickup = new HashMap<>();
-        buffers = new ArrayList<>();
-        agvs = new ArrayList<>();
+        waitingForBuferCranePickup = new HashMap<Crane, AGV>();
+        buffers = new ArrayList<Buffer>();
+        agvs = new ArrayList<AGV>();
         timeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-        currentTransporter = new ArrayList<>();
-        waitingToBeReadyAtCrane = new HashMap<>();
-        waitingForCraneToPickUpFromAgv = new HashMap<>();
-        waitingForCraneToPutToAgv = new HashMap<>();
-        waitingForBufferCraneGive = new HashMap<>();
+        currentTransporter = new ArrayList<Transporter>();
+        waitingToBeReadyAtCrane = new HashMap<AGV, Crane>();
+        waitingForCraneToPickUpFromAgv = new HashMap<Crane, AGV>();
+        waitingForCraneToPutToAgv = new HashMap<Crane, AGV>();
+        waitingForBufferCraneGive = new HashMap<Crane, AGV>();
         pathFinder = new PathFinder();
         pathFinder.createMap();
-        dockedTransporter = new HashMap<>();
-        allArivingTransporters = new ArrayList<>();
-        allDepartingTransporters = new ArrayList<>();
-        allDepartingContainers = new ArrayList<>();
+        dockedTransporter = new HashMap<Crane, Transporter>();
+        allArivingTransporters = new ArrayList<Transporter>();
+        allDepartingTransporters = new ArrayList<Transporter>();
+        allDepartingContainers = new ArrayList<Container>();
         //Set time of simulator
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2004);
@@ -101,7 +101,7 @@ public class Controller {
         cal.set(Calendar.MILLISECOND, 0);
         simTime = cal.getTime();
         messageLog = Collections.synchronizedList(new ArrayList<String>());
-        bargeCranes = new ArrayList<>();
+        bargeCranes = new ArrayList<Crane>();
         for (int i = 1; i <= 8; i++) {
             Crane c = new Crane("CBA" + String.format("%03d", i), Crane.BargeCrane);
             c.node = pathFinder.getMapCBA().get(i - 1);
@@ -109,7 +109,7 @@ public class Controller {
             PrintMessage("Bargecrane Created - " + c.toString());
         }
 
-        seaCranes = new ArrayList<>();
+        seaCranes = new ArrayList<Crane>();
         for (int i = 1; i <= 10; i++) {
             Crane c = new Crane("CSE" + String.format("%03d", i), Crane.SeaCrane);
             c.node = pathFinder.getMapCSE().get(i - 1);
@@ -117,7 +117,7 @@ public class Controller {
             PrintMessage("SeaCrane Created - " + c.toString());
         }
 
-        trainCranes = new ArrayList<>();
+        trainCranes = new ArrayList<Crane>();
         for (int i = 1; i <= 4; i++) {
             Crane c = new Crane("CTR" + String.format("%03d", i), Crane.TrainCrane);
             c.node = pathFinder.getMapCTR().get(i - 1);
@@ -125,7 +125,7 @@ public class Controller {
             PrintMessage("Traincrane Created - " + c.toString());
         }
 
-        lorreyCranes = new ArrayList<>();
+        lorreyCranes = new ArrayList<Crane>();
         for (int i = 1; i <= 20; i++) {
             Crane c = new Crane("CLO" + String.format("%03d", i), Crane.LorryCrane);
             c.node = pathFinder.getMapCLO().get(i - 1);
@@ -174,8 +174,8 @@ public class Controller {
         PrintMessage("Total Seacranes - " + seaCranes.size());
         PrintMessage("Total Bargecranes - " + bargeCranes.size());
         PrintMessage("Total trainCrane - " + trainCranes.size());
-        waitingForBufferCrane = new HashMap<>();
-        agvLoadedMovingHome = new ArrayList<>();
+        waitingForBufferCrane = new HashMap<AGV, Crane>();
+        agvLoadedMovingHome = new ArrayList<AGV>();
 
     }
 
@@ -208,13 +208,13 @@ public class Controller {
      * tick in simulator to give commands
      */
     public void timerTick() {
-        ArrayList<String> _temp = new ArrayList<>(messageLog);
+        ArrayList<String> _temp = new ArrayList<String>(messageLog);
         messageLog.clear();
         for (String s : _temp) {
             window.WriteLogLine(s);
         }
 
-        List<Transporter> arrivingTransporters = new ArrayList<>();
+        List<Transporter> arrivingTransporters = new ArrayList<Transporter>();
         for (int i = 0; i < allArivingTransporters.size(); i++) {
             if (allArivingTransporters.get(i).getContainer(0).getDateArrival().before(simTime)) {
                 arrivingTransporters.add(allArivingTransporters.get(i));
@@ -303,7 +303,7 @@ public class Controller {
         }
 
         /*DEPARTURE STUFF STARTS HERE*/
-        List<Transporter> departingTransporters = new ArrayList<>();
+        List<Transporter> departingTransporters = new ArrayList<Transporter>();
         for (int i = 0; i < allDepartingTransporters.size(); i++) {
             if (allDepartingTransporters.get(i).getDateArrival().before(simTime)) {
                 departingTransporters.add(allDepartingTransporters.get(i));
@@ -483,7 +483,7 @@ public class Controller {
 
     private void createTransporters(List<Container> allContainers) {
        
-        List<Container> allDepContainers = new ArrayList<>(allContainers);
+        List<Container> allDepContainers = new ArrayList<Container>(allContainers);
         Container previousContainer = null;
         Transporter newTransporter = null;
         allArivingTransporters.clear();
@@ -645,7 +645,7 @@ public class Controller {
                         System.out.println("no containers any more");
                     } else {
                         Message m = new Message(Commands.PICKUP_CONTAINER, null);
-                        ArrayList<Object> params = new ArrayList<>();
+                        ArrayList<Object> params = new ArrayList<Object>();
                         params.add(c.id);
 
                         params.add(t.id);
@@ -787,27 +787,27 @@ public class Controller {
         if (t.getContainers() != null || t.getContainerCount() > 0) { //full transporter
             int maxCranes = 0;
             int minRange = 0;
-            List<Crane> _cranes = new ArrayList<>();
+            List<Crane> _cranes = new ArrayList<Crane>();
             switch (t.getTransportType()) {
                 case TransportTypes.LORREY:
                     maxCranes = 1;
                     minRange = 2;
-                    _cranes = new ArrayList<>(lorreyCranes);
+                    _cranes = new ArrayList<Crane>(lorreyCranes);
                     break;
                 case TransportTypes.SEASHIP:
                     maxCranes = 10;
                     minRange = 2;
-                    _cranes = new ArrayList<>(seaCranes);
+                    _cranes = new ArrayList<Crane>(seaCranes);
                     break;
                 case TransportTypes.BARGE:
                     maxCranes = 2;
                     minRange = 3;
-                    _cranes = new ArrayList<>(bargeCranes);
+                    _cranes = new ArrayList<Crane>(bargeCranes);
                     break;
                 case TransportTypes.TRAIN:
                     maxCranes = 1;
                     minRange = 30;
-                    _cranes = new ArrayList<>(trainCranes);
+                    _cranes = new ArrayList<Crane>(trainCranes);
                     break;
             }
             ArrayList<Crane> usingCranes = new ArrayList();
@@ -855,7 +855,7 @@ public class Controller {
                 }
 
                 Message m = new Message(Commands.PICKUP_CONTAINER, null);
-                ArrayList<Object> params = new ArrayList<>();
+                ArrayList<Object> params = new ArrayList<Object>();
                 params.add(crane.id);
 
                 params.add(t.id);
@@ -879,14 +879,14 @@ public class Controller {
             /*DEPARTURE STUFF STARTS HERE*/
 
             for (Buffer buf : buffers) {
-                ArrayList<Container> depContainers = new ArrayList<>();
+                ArrayList<Container> depContainers = new ArrayList<Container>();
                 depContainers.addAll(buf.checkDepartingContainers(simTime));
                 Collections.sort(depContainers, new ContainerDepartureComparer());
 
                 if (depContainers.size() > 0) {
                     Container toMove = depContainers.get(0);
                     Message m = new Message(Commands.PICKUP_CONTAINER, null);
-                    ArrayList<Object> params = new ArrayList<>();
+                    ArrayList<Object> params = new ArrayList<Object>();
                     params.add(buf.crane.id);
 
                     AGV toReserve;
@@ -925,7 +925,7 @@ public class Controller {
 
     private void sendAGVTo(Crane dockingpoint, Container toMove) {
         dockingpoint.setIsReady(false);
-        List<Buffer> preverdBuffers = new ArrayList<>();
+        List<Buffer> preverdBuffers = new ArrayList<Buffer>();
         PreferedAGV prefrence = PreferedAGV.UP;
         int startBuffer = 1;
         int endBuffer = 63;
@@ -1006,7 +1006,7 @@ public class Controller {
         return false;
     }
 
-    void setContainers(List<Container> containers) {
+  public  void setContainers(List<Container> containers) {
         this.containers =  new ArrayList(containers);
         Collections.sort(containers, new ContainerComparer());
         this.PrintMessage("Total containers - " + containers.size());
@@ -1074,7 +1074,7 @@ public class Controller {
     
     private void sendContainerInfo(String id) {
      Message m = new Message(Commands.RETREIVE_INFO, null);
-     ArrayList<Object> params = new ArrayList<>();
+     ArrayList<Object> params = new ArrayList<Object>();
      int idInt = 0;
      if(id.length()>=6){
      idInt = Integer.parseInt(id.substring(3, 6));}
@@ -1184,7 +1184,7 @@ public class Controller {
         }
         containerCount += containerCountInBuffer;
 
-        List<Crane> cranes = new ArrayList<>();
+        List<Crane> cranes = new ArrayList<Crane>();
         cranes.addAll(bargeCranes);
         cranes.addAll(lorreyCranes);
         cranes.addAll(seaCranes);
@@ -1211,7 +1211,7 @@ public class Controller {
 
     }
 
-    void setSpeed(int speedNumber) {
+    public void setSpeed(int speedNumber) {
 
         this.PrintMessage("Change speed - " + speedNumber + "x");
         this.Speed = speedNumber;

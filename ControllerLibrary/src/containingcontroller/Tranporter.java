@@ -111,7 +111,7 @@ class Transporter {
 
     public void loadContainer(Container container) {
         if (containers == null) {
-            containers = new ArrayList<>();
+            containers = new ArrayList<Container>();
         }
         /*
         boolean posistionTaken = false;

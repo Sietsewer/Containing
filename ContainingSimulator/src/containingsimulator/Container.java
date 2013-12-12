@@ -256,6 +256,14 @@ public class Container extends Node {
                 "Textures/Container/axe.png"));
         companyTextures.put("LLyod", am.loadTexture(
                 "Textures/Container/lloyd.png"));
+        
+        
+            companyTextures.put("GJMW", am.loadTexture(
+                "Textures/Container/GJMW.png"));
+        companyTextures.put("WoodNorge", am.loadTexture(
+                "Textures/Container/woodnorge.png"));
+        companyTextures.put("FlowersNL", am.loadTexture(
+                "Textures/Container/flowersnl.png"));
 
 
 

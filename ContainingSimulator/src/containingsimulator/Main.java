@@ -828,27 +828,28 @@ public class Main extends SimpleApplication {
             float rY = 0;
             float z = 0;
             float rZ = 0;
+            
             if (name.equals("left-button")) {
-                rY = -0.1f;
+                rY = -1f;
             } else if (name.equals("right-button")) {
-                rY = 0.1f;
+                rY = 1f;
             } else if (name.equals("up-button")) {
-                z = -0.1f;
+                z = -1f;
             } else if (name.equals("down-button")) {
-                z = 0.1f;
+                z = 1f;
             }
             else if(name.equals("rotateFor-button"))
             {
-               rZ = 0.1f;
+               rZ = 1f;
             }
             else if(name.equals("rotateBac-button"))
             {
-                rZ= - 0.1f;
+                rZ= - 1f;
             }
            
-            cam2EndNode.rotate(0, rY, rZ);
+            cam2EndNode.rotate(0, rY*5*tpf, rZ*5*tpf);
             cam2.lookAt(cam2EndNode.getParent().getWorldTranslation(), Vector3f.UNIT_Y);
-            cam2EndNode.getChild(0).move(z, 0, 0);
+            cam2EndNode.getChild(0).move(z*tpf*10, 0, 0);
             
         }
     };

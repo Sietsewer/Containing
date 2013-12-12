@@ -53,7 +53,7 @@ public class AGV extends Node implements MotionPathListener {
         path.setCurveTension(1f);
         this.path.addListener(this);
         motionEvent = new MotionEvent(this, this.path);
-        Line l = new Line(new Vector3f(0, 2.5f, 0), new Vector3f(0, 2.5f, 15f));
+        Line l = new Line(new Vector3f(0, 2.5f, 5f), new Vector3f(0, 2.5f, 15f));
         l.setLineWidth(5f);
         
         boundingGeom = new Geometry("collisionLine", l);

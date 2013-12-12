@@ -170,6 +170,7 @@ public class Main extends SimpleApplication {
                                 a.motionEvent.pause();
                                 gehad.add(collidingWith);
                                 collision = true;
+                                break;
                             }
                         }
                     }
@@ -254,7 +255,8 @@ public class Main extends SimpleApplication {
 
         Material m =new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         m.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-         m.setColor("Color", new ColorRGBA(0,0,0,100));
+        // m.setColor("Color", new ColorRGBA(0,0,0,100));
+        m.setColor("Color", ColorRGBA.Orange);
         alpha = m;
         //Init of the BufferCrane viewmodel
         bcModel = assetManager.loadModel("Models/buffercrane/buffercrane.j3o");

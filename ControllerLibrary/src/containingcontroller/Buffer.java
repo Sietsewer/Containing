@@ -209,7 +209,7 @@ public class Buffer {
      */
     public AGV AGVAvailable(boolean up) {
         for (AGV a : ownedAGV) {
-            if (a.isIsHome()
+            if (a.isIsHome() && a.isReady()
                     && ((up && a.home.getId().toLowerCase().contains("BFA".toLowerCase()))
                     || (!up && a.home.getId().toLowerCase().contains("BFB".toLowerCase())))) {
 

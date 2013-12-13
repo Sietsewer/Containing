@@ -460,6 +460,7 @@ public class Controller {
                             AGV toReserve = null;
                             if (toMove.getTransportTypeDeparture() == TransportTypes.TRAIN || toMove.getTransportTypeDeparture() == TransportTypes.SEASHIP) {
                                 boolean up = true;
+
                                 toReserve = buf.AGVAvailable(up);
                                 if (toReserve == null) {
                                     up = false;
@@ -742,8 +743,8 @@ public class Controller {
 
             Transporter t = dockedTransporter.get(c);
             t.loadContainer(c.container);
-
-            puttingToTransporter.clear();
+            
+            puttingToTransporter.remove(c);
         } else if (waitingForCraneToPickUpFromAgv.containsKey(c)) {
             AGV v = waitingForCraneToPickUpFromAgv.get(c);
             if (v.container.getDateDeparture().before(simTime)) {
@@ -889,10 +890,12 @@ public class Controller {
             cra = containerToCrane.get(con);
             if (cra != null) {
                 agv.moveToCrane(cra, this);
+                agv.setIsHome(false);
+                movingToLoad.put(agv, cra);
             }
         }
     }
-    
+
     private void transporterReady(Transporter t) {
         if (t.getContainers() != null && t.getContainerCount() > 0) { //full transporter
             int maxCranes = 0;
@@ -1158,7 +1161,7 @@ public class Controller {
                             params.add(t.id);
                             params.add(t.getContainerCount());
                             params.add(t.getDateArrival());
-                            params.add(t.getDockingPoint());
+                            params.add(t.getDockingPoint().id);
                             params.add(t.getLenghtTransporter());
                             params.add(t.getTransportType());
                             break;

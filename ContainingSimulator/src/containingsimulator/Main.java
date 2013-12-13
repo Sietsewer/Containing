@@ -457,8 +457,8 @@ public class Main extends SimpleApplication {
                     crane.putContainer(realPosition, indexPosition);
                 } else if (crane != null) {
                     {
-                       
-                        realPosition =  getTransporterByID((String) params[4]).getRealContainerPosition(indexPosition);
+                        crane.transporter = getTransporterByID((String) params[4]);
+                        realPosition = crane.transporter.getRealContainerPosition(indexPosition);
                         crane.putContainer(realPosition, indexPosition);
                     }
                 } else {

@@ -32,14 +32,14 @@ public class OffsetRoute {
         
         temp = buildWay("m2");
         
-        temp.addWay("cba001", "m1", new Vector3f(-4f,0f,3f));
-        temp.addWay("m1", "cba001", new Vector3f(3f,0f,-4f));
+        temp.addWay("cba001", "m1", new Vector3f(-3.5f,0f,3.5f));
+        temp.addWay("m1", "cba001", new Vector3f(3.5f,0f,-3.5f));
         
         
         temp = buildWay("m3");
         
-        temp.addWay("cba008", "m4", new Vector3f(3f,0f,-4f));
-        temp.addWay("m4", "cba008", new Vector3f(+4f,0f,3f));
+        temp.addWay("cba008", "m4", new Vector3f(3.5f,0f,-3.5f));
+        temp.addWay("m4", "cba008", new Vector3f(3.5f,0f,3.5f));
         
         
         temp = buildWay("m4");
@@ -91,8 +91,8 @@ public class OffsetRoute {
         
         temp = buildWay("m10");
         
-        temp.addWay("m12", "ctr001", new Vector3f(-3f,0f,-3f));
-        temp.addWay("ctr001", "m12", new Vector3f(3f,0f,3f));
+        temp.addWay("m12", "ctr001", new Vector3f(-3.5f,0f,-3.5f));
+        temp.addWay("ctr001", "m12", new Vector3f(3.5f,0f,3.5f));
         
         
         temp = buildWay("m11");
@@ -123,14 +123,14 @@ public class OffsetRoute {
         
         temp = buildWay("m14");
         
-        temp.addWay("m15", "m13", new Vector3f(-3f,0f,-3f));
-        temp.addWay("m13", "m15", new Vector3f(3f,0f,3f));
+        temp.addWay("cse001", "m13", new Vector3f(-3.5f,0f,-3.5f));
+        temp.addWay("m13", "cse001", new Vector3f(3.5f,0f,3.5f));
         
         
         temp = buildWay("m15");
         
-        temp.addWay("m16", "cse010", new Vector3f(-3f,0f,3f));
-        temp.addWay("cse010", "m16", new Vector3f(3f,0f,-3f));
+        temp.addWay("m16", "cse010", new Vector3f(-3.5f,0f,3.5f));
+        temp.addWay("cse010", "m16", new Vector3f(3.5f,0f,-3.5f));
         
         
         temp = buildWay("m16");

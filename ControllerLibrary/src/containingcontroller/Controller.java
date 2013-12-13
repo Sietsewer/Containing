@@ -1146,8 +1146,6 @@ public class Controller {
         Message m = Message.decodeMessage(message);
 
         if (!((String) m.getParameters()[0]).equalsIgnoreCase("simulator")) {
-
-            System.out.println(m.getCommand());
             int id = 0;
             if (((String) m.getParameters()[0]).length() >= 6) {
                 id = Integer.parseInt(((String) m.getParameters()[0]).substring(3, 6));
@@ -1200,7 +1198,6 @@ public class Controller {
         if (id.length() >= 6) {
             idInt = Integer.parseInt(id.substring(3, 6));
         }
-        System.out.println(id);
 
         if (id.toLowerCase().startsWith("bfa")) {
             Crane cr = buffers.get(idInt - 1).crane;
@@ -1260,7 +1257,6 @@ public class Controller {
                             params.add(con.getContents());
                             params.add(con.getContentType());
                             params.add(con.getContentDanger());
-                            System.out.println("yes");
                             break;
                         }
                     }

@@ -91,14 +91,14 @@ public class OffsetRoute {
         
         temp = buildWay("m10");
         
-        temp.addWay("m12", "ctr001", new Vector3f(-3.5f,0f,-3.5f));
-        temp.addWay("ctr001", "m12", new Vector3f(3.5f,0f,3.5f));
+        temp.addWay("crt001", "m9", new Vector3f(3f,0f,-3f));
+        temp.addWay("m9", "crt001", new Vector3f(3f,0f,-3f));
         
         
         temp = buildWay("m11");
         
-        temp.addWay("crt004", "m9", new Vector3f(3f,0f,-3f));
-        temp.addWay("m9", "crt004", new Vector3f(3f,0f,-3f));
+        temp.addWay("m12", "ctr001", new Vector3f(-3.5f,0f,-3.5f));
+        temp.addWay("ctr001", "m12", new Vector3f(3.5f,0f,3.5f));
         
         
         temp = buildWay("m12");

@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Hendrik
+ * @author Wessel
  */
 public class PathFinderTest {
     
@@ -38,7 +38,28 @@ public class PathFinderTest {
     public void tearDown() {
     }
 
-    
+    /**
+     * Test of getShortestPath method, of class PathFinder.
+     */
+    @Test
+    public void testGetShortestPath_PathNode_PathNode() throws Exception {
+        System.out.println("getShortestPath");
+        
+        PathFinder instance = new PathFinder();
+        List<PathNode> map = instance.getMapCSE();
+        PathNode srce = map.get(0);
+        PathNode dest = map.get(1);
+        
+        List<PathNode> res = new ArrayList();
+        res.add(srce);
+        res.add(dest);
+        
+        List expResult = res;
+        List result = instance.getShortestPath(srce, dest);
+        assertEquals(expResult, result);
+        
+        fail("The test case is a prototype.");
+    }
 
     /**
      * Test of getShortestPath method, of class PathFinder.
@@ -46,17 +67,21 @@ public class PathFinderTest {
     @Test
     public void testGetShortestPath_3args() throws Exception {
         System.out.println("getShortestPath");
-        boolean optimize = false;
+        
         PathFinder instance = new PathFinder();
-        instance.createMap();
-        PathNode srce = instance.getMap().get(1);
-        PathNode dest = instance.getMap().get(3);
-        List<PathNode> expResult =new ArrayList();
-        expResult.add(srce);
-        expResult.add(instance.getMap().get(2));
-        expResult.add(dest);
-        List<PathNode> result = instance.getShortestPath(srce, dest, optimize);
+        List<PathNode> map = instance.getMapCSE();
+        PathNode srce = map.get(0);
+        PathNode dest = map.get(1);
+        boolean optimize = true;
+        
+        List<PathNode> res = new ArrayList();
+        res.add(srce);
+        res.add(dest);
+        
+        List expResult = res;
+        List result = instance.getShortestPath(srce, dest, optimize);
         assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
     }
-
 }

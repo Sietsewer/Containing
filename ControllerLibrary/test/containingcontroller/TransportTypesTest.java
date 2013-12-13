@@ -63,7 +63,7 @@ public class TransportTypesTest {
         assertEquals(expResult4, result4);
         assertEquals(expResult5, result5);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -94,6 +94,6 @@ public class TransportTypesTest {
         assertEquals(expResult4, result4);
         assertEquals(expResult5, result5);
         
-        fail("The test case is a prototype.");
+        
     }
 }

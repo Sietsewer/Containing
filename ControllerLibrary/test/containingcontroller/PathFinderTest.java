@@ -58,7 +58,7 @@ public class PathFinderTest {
         List result = instance.getShortestPath(srce, dest);
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -82,6 +82,6 @@ public class PathFinderTest {
         List result = instance.getShortestPath(srce, dest, optimize);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 }

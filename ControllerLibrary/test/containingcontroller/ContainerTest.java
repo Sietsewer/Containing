@@ -51,7 +51,7 @@ public class ContainerTest {
         String result = instance.getId();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -78,7 +78,7 @@ public class ContainerTest {
         Date result = instance.getDateArrival();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -105,7 +105,7 @@ public class ContainerTest {
         Date result = instance.getDateDeparture();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -120,7 +120,7 @@ public class ContainerTest {
         int result = instance.getTransportTypeArrival();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -135,7 +135,7 @@ public class ContainerTest {
         int result = instance.getTransportTypeDeparture();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -150,7 +150,7 @@ public class ContainerTest {
         String result = instance.getCargoCompanyArrival();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -165,7 +165,7 @@ public class ContainerTest {
         String result = instance.getCargoCompanyDeparture();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -180,7 +180,7 @@ public class ContainerTest {
         CustomVector3f result = instance.getPosition();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -195,7 +195,7 @@ public class ContainerTest {
         CustomVector3f result = instance.getBufferPosition();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -210,7 +210,7 @@ public class ContainerTest {
         String result = instance.getOwner();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -225,7 +225,7 @@ public class ContainerTest {
         int result = instance.getContainerNumber();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -240,7 +240,7 @@ public class ContainerTest {
         String result = instance.getHeight();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -255,7 +255,7 @@ public class ContainerTest {
         String result = instance.getWidth();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -270,7 +270,7 @@ public class ContainerTest {
         String result = instance.getLenght();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -285,7 +285,7 @@ public class ContainerTest {
         int result = instance.getWeightEmpty();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -300,7 +300,7 @@ public class ContainerTest {
         int result = instance.getWeightLoaded();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -315,7 +315,7 @@ public class ContainerTest {
         String result = instance.getContents();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -330,7 +330,7 @@ public class ContainerTest {
         String result = instance.getContentType();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -345,7 +345,7 @@ public class ContainerTest {
         String result = instance.getContentDanger();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -360,7 +360,7 @@ public class ContainerTest {
         String result = instance.getIso();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -377,6 +377,6 @@ public class ContainerTest {
         boolean result = instance.equals(obj);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 }

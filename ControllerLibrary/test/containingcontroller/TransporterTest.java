@@ -64,7 +64,7 @@ public class TransporterTest {
         int result = instance.getTransportType();
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -86,7 +86,7 @@ public class TransporterTest {
         CustomVector3f result = instance.getFreeLocation(start, range);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -108,7 +108,7 @@ public class TransporterTest {
         boolean result = instance.checkSpaceReserved(x, y, z);
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -131,7 +131,7 @@ public class TransporterTest {
         int result = instance.getContainerCount();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -155,7 +155,7 @@ public class TransporterTest {
         List result = instance.getContainers();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -179,7 +179,7 @@ public class TransporterTest {
         Container result = instance.getContainer(i);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -195,7 +195,7 @@ public class TransporterTest {
         Crane result = instance.getDockingPoint();
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -218,7 +218,7 @@ public class TransporterTest {
         int result = instance.getLenghtTransporter();
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -235,7 +235,7 @@ public class TransporterTest {
         boolean result = instance.reservePosition(container);
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -249,6 +249,6 @@ public class TransporterTest {
         Date result = instance.getDateArrival();
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 }

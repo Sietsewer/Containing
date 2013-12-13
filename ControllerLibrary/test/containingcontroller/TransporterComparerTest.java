@@ -63,6 +63,6 @@ public class TransporterComparerTest {
         int result = instance.compare(o1, o2);
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 }

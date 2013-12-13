@@ -49,7 +49,7 @@ public class PathNodeTest {
         String result = instance.getId();
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -65,7 +65,7 @@ public class PathNodeTest {
         float result = instance.getCost();
         assertEquals(expResult, result, 0.0);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -84,7 +84,7 @@ public class PathNodeTest {
         float result = instance.getCostNeighb(neighbour);
         assertEquals(expResult, result, 0.0);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -111,6 +111,6 @@ public class PathNodeTest {
         List result = instance.getNeighbours();
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 }

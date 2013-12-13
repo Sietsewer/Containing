@@ -44,12 +44,12 @@ public class ControllerTest {
     public void testGetPathFinder() {
         System.out.println("getPathFinder");
         Controller instance = new Controller(new WindowTest());
-        PathFinder expResult = new PathFinder();
+        PathFinder expResult = instance.pathFinder;
         expResult.createMap();
         PathFinder result = instance.getPathFinder();
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
     
     public class WindowTest implements IWindow

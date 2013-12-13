@@ -48,7 +48,7 @@ public class AGVTest {
         assertEquals(expResult, result);
         assertEquals(expResult, result2);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -63,7 +63,7 @@ public class AGVTest {
         String result = instance.toString();
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -78,7 +78,7 @@ public class AGVTest {
         boolean result = instance.isReady();
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -93,6 +93,6 @@ public class AGVTest {
         boolean result = instance.isIsHome();
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 }

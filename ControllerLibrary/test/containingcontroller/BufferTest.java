@@ -69,7 +69,7 @@ public class BufferTest {
         ArrayList result = instance.checkDepartingContainers(date);
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -99,7 +99,7 @@ public class BufferTest {
         CustomVector3f result = instance.findBestBufferPlace(container, up);
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -121,7 +121,7 @@ public class BufferTest {
         boolean result = instance.checkSpaceReserved(x, y, z);
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -135,7 +135,7 @@ public class BufferTest {
         String result = instance.toString();
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -156,7 +156,7 @@ public class BufferTest {
         assertEquals(expResult, result);
         assertEquals(expResult2, result2);
         
-        fail("The test case is a prototype.");
+        
     }
 
     /**
@@ -180,6 +180,6 @@ public class BufferTest {
         int result = instance.getContainerCount();
         assertEquals(expResult, result);
         
-        fail("The test case is a prototype.");
+        
     }
 }

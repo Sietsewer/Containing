@@ -615,7 +615,52 @@ public class Main extends SimpleApplication {
                 }
             }
         }
-        return c;
+        if(c==null)
+        {
+            for(AGV a : agvs)
+            {
+                if(a.container !=null && a.container.id.equalsIgnoreCase(id))
+                {
+                    return a.container;
+                }
+            }
+            for(Crane d : trainCranes)
+            {
+                if(d.cont !=null && d.cont.id.equalsIgnoreCase(id))
+                {
+                    return d.cont;
+                }
+            }
+            for(Crane d : bufCranes)
+            {
+                if(d.cont !=null && d.cont.id.equalsIgnoreCase(id))
+                {
+                    return d.cont;
+                }
+            }
+            for(Crane d :barCranes)
+            {
+                if(d.cont !=null && d.cont.id.equalsIgnoreCase(id))
+                {
+                    return d.cont;
+                }
+            }
+            for(Crane d :lorCranes)
+            {
+                if(d.cont !=null && d.cont.id.equalsIgnoreCase(id))
+                {
+                    return d.cont;
+                }
+            }
+            for(Crane d :seaCranes)
+            {
+                if(d.cont !=null && d.cont.id.equalsIgnoreCase(id))
+                {
+                    return d.cont;
+                }
+            }
+        }
+       return c;
     }
 
     /**

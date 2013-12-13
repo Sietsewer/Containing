@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -298,7 +299,7 @@ public class Controller {
                 currentTransporter.add(t);
 
                 PrintMessage("Arriving: " + t.toString());
-               
+
                 Message m = new Message(Commands.CREATE_TRANSPORTER, null);
 
                 Object[] objects = new Object[t.getContainerCount() + 3];
@@ -581,35 +582,52 @@ public class Controller {
 
     }
 
-    private void createTransporters(List<Container> allContainers) {
+    private boolean containsString(List<String> myList, String contains) {
+        for (String str : myList) {
+            if (str.trim().contains(contains)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    private void createTransporters(List<Container> allContainers) {
+        List<String> id = new ArrayList<String>();
         List<Container> allDepContainers = new ArrayList<Container>(allContainers);
         Container previousContainer = null;
         Transporter newTransporter = null;
         allArivingTransporters.clear();
+
         for (int i = 0; i < allContainers.size(); i++) {
             Container c = allContainers.get(i);
-            if (previousContainer == null) {
-                newTransporter = new Transporter(c.getTransportTypeArrival(), c.getDateArrival());
-                newTransporter.reservePosition(c);
-                newTransporter.loadContainer(c);
-            } else {
-                if (c.getDateArrival().getTime() == previousContainer.getDateArrival().getTime()
-                        && c.getTransportTypeArrival() == newTransporter.getTransportType()
-                        && c.getTransportTypeArrival() != TransportTypes.LORREY) {
-                    newTransporter.reservePosition(c);
-                    newTransporter.loadContainer(c);
-                } else {
-                    allArivingTransporters.add(newTransporter);
+            if (!containsString(id, c.getId())) {
+                id.add(c.getId());
+
+                if (previousContainer == null) {
                     newTransporter = new Transporter(c.getTransportTypeArrival(), c.getDateArrival());
                     newTransporter.reservePosition(c);
                     newTransporter.loadContainer(c);
-                }
+                } else {
+                    if (c.getDateArrival().getTime() == previousContainer.getDateArrival().getTime()
+                            && c.getTransportTypeArrival() == newTransporter.getTransportType()
+                            && c.getTransportTypeArrival() != TransportTypes.LORREY) {
+                        newTransporter.reservePosition(c);
+                        newTransporter.loadContainer(c);
+                    } else {
+                        allArivingTransporters.add(newTransporter);
+                        newTransporter = new Transporter(c.getTransportTypeArrival(), c.getDateArrival());
+                        newTransporter.reservePosition(c);
+                        newTransporter.loadContainer(c);
+                    }
 
+                }
+                previousContainer = c;
+                allContainers.remove(i);
+                i--;
+            } else {
+                allContainers.remove(i);
+                i--;
             }
-            previousContainer = c;
-            allContainers.remove(i);
-            i--;
         }
         allArivingTransporters.add(newTransporter);
         previousContainer = null;
@@ -960,7 +978,7 @@ public class Controller {
                 sendAGVTo(crane, toMove);
             }
         } else if (t.getContainers() != null && t.getContainerCount() == 0) {
-             availbleForLoad.add(t);
+            availbleForLoad.add(t);
             int maxCranes = 0;
             int minRange = 0;
             int maxLenght = 0;
@@ -1321,6 +1339,13 @@ public class Controller {
                 temp.add(key);
             }
         }
+        Collections.sort(temp, new Comparator<Crane>() {
+
+            @Override
+            public int compare(Crane o1, Crane o2) {
+                return o1.id.compareTo(o2.id);
+            }
+        });
         return temp;
     }
 }

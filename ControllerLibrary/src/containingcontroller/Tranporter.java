@@ -31,6 +31,7 @@ class Transporter {
         this.id = "TRS" + String.format("%03d", tranporterID++);
         this.dateArrival = dateArrival;
         this.reservedSpace = new HashMap<Container, CustomVector3f>();
+        this.containers = new ArrayList<Container>();
     }
 
     public int getTransportType() {

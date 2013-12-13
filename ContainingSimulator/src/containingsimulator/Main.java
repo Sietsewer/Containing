@@ -419,7 +419,7 @@ public class Main extends SimpleApplication {
                 break;
             case Commands.PICKUP_CONTAINER:
                 crane = getCraneByID((String) params[0]);
-                cont = getContainerByID((String) params[2]);
+cont = getContainerByID((String) params[2]);
                 if (crane == null || cont == null) {
                     System.out.println("Error: crane is null OR container is null");
                     break;

@@ -135,6 +135,17 @@ class Transporter {
 
     }
 
+    public void RemoveContainer(Container c)
+    {
+        for(int i =0;i< containers.size(); i++)
+        {
+            if(containers.get(i).getId().trim().equalsIgnoreCase(c.getId().trim()))
+            {
+                containers.remove(i);
+                i--;
+            }
+        }
+    }
     public int getContainerCount() {
         if (containers != null) {
             return containers.size();

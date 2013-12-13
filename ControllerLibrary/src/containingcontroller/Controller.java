@@ -630,6 +630,8 @@ public class Controller {
             }
         }
         allArivingTransporters.add(newTransporter);
+        List<String> gehad = new ArrayList<String>();
+        
         previousContainer = null;
         newTransporter = null;
 
@@ -801,7 +803,7 @@ public class Controller {
                         params.add(toMove.getPosition().z);
 
                         m.setParameters(params.toArray());
-                        t.getContainers().remove(toMove);
+                        t.RemoveContainer(toMove);
                         c.container = toMove;
                         this.sendMessage(m);
                         c.setIsReady(false);
@@ -980,7 +982,7 @@ public class Controller {
                 m.setParameters(params.toArray());
 
                 this.sendMessage(m);
-                t.getContainers().remove(toMove);
+                     t.RemoveContainer(toMove);
                 crane.container = toMove;
                 sendAGVTo(crane, toMove);
             }
@@ -1139,6 +1141,8 @@ public class Controller {
         if (allArivingTransporters.size() > 0) {
             simTime = allArivingTransporters.get(0).getContainers().get(0).getDateArrival();
         }
+        
+
     }
 
     public void recievedMessage(String message) {

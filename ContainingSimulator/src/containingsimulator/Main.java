@@ -96,7 +96,6 @@ public class Main extends SimpleApplication {
     Picture hud2;
     private int screenWidth;
     private int screenHeight;
-    
     public static Material alpha;
 
     /**
@@ -126,7 +125,7 @@ public class Main extends SimpleApplication {
     public void simpleInitApp() {
         screenWidth = app.settings.getWidth();
         screenHeight = app.settings.getHeight();
-        
+
         setPauseOnLostFocus(false);
         loadAssets();
         showPathNodes(true); //set false for disabling view PathNodes 
@@ -252,7 +251,7 @@ public class Main extends SimpleApplication {
         scSModel.setMaterial(scMat);
         scHModel.setMaterial(scMat);
 
-        Material m =new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Material m = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         m.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         // m.setColor("Color", new ColorRGBA(0,0,0,100));
         m.setColor("Color", ColorRGBA.Orange);
@@ -341,10 +340,9 @@ public class Main extends SimpleApplication {
      * @param Message the message which to send
      */
     static void sendMessage(Message Message) {
-        try{
-        listener.sendMessage(Message);}
-        catch(Exception ex)
-        {
+        try {
+            listener.sendMessage(Message);
+        } catch (Exception ex) {
             System.out.println(ex);
         }
     }
@@ -361,46 +359,45 @@ public class Main extends SimpleApplication {
         String transporterID;
         AGV agv;
         switch (decodedMessage.getCommand()) {
-           case Commands.RETREIVE_INFO:
-           
+            case Commands.RETREIVE_INFO:
+
                 StringBuilder sB = new StringBuilder();
-                switch(((String)params[0]).toLowerCase().charAt(0))
-                {
+                switch (((String) params[0]).toLowerCase().charAt(0)) {
                     case 'i':
-                    sB.append("container: " + params[0]+"\n");
-                    sB.append("owner: " + params[1]+"\n");
-                    sB.append("arr. date: " + params[2]+"\n");
-                    sB.append("arr. trans.: " + TransportTypes.getTransportType((Integer)params[3])+"\n");
-                    sB.append("arr. cargo comp.: " + params[4]+"\n");
-                    sB.append("dep. date: " + params[5]+"\n");
-                    sB.append("dep. trans.: " + TransportTypes.getTransportType((Integer)params[6])+"\n");
-                    sB.append("dep. cargo comp.: " + params[7]+"\n");
-                    sB.append("contents: " + params[8]+"\n");
-                    sB.append("content type: " + params[9]+"\n");
-                    sB.append("content danger: " + params[10]+"\n");
+                        sB.append("container: " + params[0] + "\n");
+                        sB.append("owner: " + params[1] + "\n");
+                        sB.append("arr. date: " + params[2] + "\n");
+                        sB.append("arr. trans.: " + TransportTypes.getTransportType((Integer) params[3]) + "\n");
+                        sB.append("arr. cargo comp.: " + params[4] + "\n");
+                        sB.append("dep. date: " + params[5] + "\n");
+                        sB.append("dep. trans.: " + TransportTypes.getTransportType((Integer) params[6]) + "\n");
+                        sB.append("dep. cargo comp.: " + params[7] + "\n");
+                        sB.append("contents: " + params[8] + "\n");
+                        sB.append("content type: " + params[9] + "\n");
+                        sB.append("content danger: " + params[10] + "\n");
                         break;
                     case 't':
-                    sB.append("transporter: " + params[0]+"\n");
-                    sB.append("carrying: " + params[1]+" containers\n");
-                    sB.append("length: " + params[4]+"\n");
-                    sB.append("arr. date: " + params[2]+"\n");
-                    sB.append("docking point: " + params[3]+"\n");
-                    sB.append("type: " + TransportTypes.getTransportType((Integer)params[5])+"\n");
+                        sB.append("transporter: " + params[0] + "\n");
+                        sB.append("carrying: " + params[1] + " containers\n");
+                        sB.append("length: " + params[4] + "\n");
+                        sB.append("arr. date: " + params[2] + "\n");
+                        sB.append("docking point: " + params[3] + "\n");
+                        sB.append("type: " + TransportTypes.getTransportType((Integer) params[5]) + "\n");
                         break;
                     case 'b':
                     case 'c':
-                    sB.append("crane: " + params[0]+"\n");
-                    sB.append("status: " + (((Boolean)params[2]) ? "idle\n" : "busy\n"));
-                    sB.append((params[1]!= null) ? "container: " + (params[1]) +"\n " : "\n");
+                        sB.append("crane: " + params[0] + "\n");
+                        sB.append("status: " + (((Boolean) params[2]) ? "idle\n" : "busy\n"));
+                        sB.append((params[1] != null) ? "container: " + (params[1]) + "\n " : "\n");
                         break;
                     case 'a':
-                    sB.append("agv: " + params[0]+"\n");
-                    sB.append("status: " + (((Boolean)params[2]) ? "idle\n" : "busy\n"));
-                    sB.append("buffer: " + params[1] + "\n");
+                        sB.append("agv: " + params[0] + "\n");
+                        sB.append("status: " + (((Boolean) params[2]) ? "idle\n" : "busy\n"));
+                        sB.append("buffer: " + params[1] + "\n");
                         break;
-                   
+
                 }
-                  printSecondViewText(sB.toString());
+                printSecondViewText(sB.toString());
                 break;
             case Commands.PAUSE_PLAY:
                 pausePlay();
@@ -460,7 +457,8 @@ public class Main extends SimpleApplication {
                     crane.putContainer(realPosition, indexPosition);
                 } else if (crane != null) {
                     {
-                        realPosition = crane.transporter.getRealContainerPosition(indexPosition);
+                       
+                        realPosition =  getTransporterByID((String) params[4]).getRealContainerPosition(indexPosition);
                         crane.putContainer(realPosition, indexPosition);
                     }
                 } else {
@@ -481,6 +479,7 @@ public class Main extends SimpleApplication {
                 transporterID = (String) params[0];
                 int transporterType = (Integer) params[1];
                 Vector3f dockingPoint = getCraneByID((String) params[2]).getPos();
+
                 ArrayList<SimContainer> simContainers = new ArrayList<SimContainer>();
                 for (int i = 3; i < params.length; i++) {
                     simContainers.add((SimContainer) params[i]);
@@ -533,7 +532,6 @@ public class Main extends SimpleApplication {
                 System.err.println("Error: Invalid command for simulator.");
         }
     }
-    
 
     /**
      * Finds and returns a transporter by container ID
@@ -805,7 +803,7 @@ public class Main extends SimpleApplication {
                 new KeyTrigger(KeyInput.KEY_O));
         inputManager.addMapping("rotateBac-button",
                 new KeyTrigger(KeyInput.KEY_U));
-         inputManager.addMapping("resetRot-button",
+        inputManager.addMapping("resetRot-button",
                 new KeyTrigger(KeyInput.KEY_P));
 
         inputManager.addListener(actionListener, "left-click");
@@ -819,16 +817,15 @@ public class Main extends SimpleApplication {
         inputManager.addListener(analogListener, "rotateBac-button");
         inputManager.addListener(actionListener, "resetRot-button");
     }
-   private AnalogListener analogListener = new AnalogListener() {
+    private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String name, float value, float tpf) {
-            if(cam2EndNode.getParent()== null)
-            {
-            return;
+            if (cam2EndNode.getParent() == null) {
+                return;
             }
             float rY = 0;
             float z = 0;
             float rZ = 0;
-            
+
             if (name.equals("left-button")) {
                 rY = -1f;
             } else if (name.equals("right-button")) {
@@ -837,34 +834,25 @@ public class Main extends SimpleApplication {
                 z = -1f;
             } else if (name.equals("down-button")) {
                 z = 1f;
+            } else if (name.equals("rotateFor-button")) {
+                rZ = 1f;
+            } else if (name.equals("rotateBac-button")) {
+                rZ = -1f;
             }
-            else if(name.equals("rotateFor-button"))
-            {
-               rZ = 1f;
-            }
-            else if(name.equals("rotateBac-button"))
-            {
-                rZ= - 1f;
-            }
-           
-            cam2EndNode.rotate(0, rY*5*tpf, rZ*5*tpf);
+
+            cam2EndNode.rotate(0, rY * 5 * tpf, rZ * 5 * tpf);
             cam2.lookAt(cam2EndNode.getParent().getWorldTranslation(), Vector3f.UNIT_Y);
-            cam2EndNode.getChild(0).move(z*tpf*10, 0, 0);
-            
+            cam2EndNode.getChild(0).move(z * tpf * 10, 0, 0);
+
         }
     };
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("esc-button")) {
                 System.exit(1);
-            } 
-            else
-                if(name.equals("resetRot-button"))
-                {
-                    cam2EndNode.setLocalRotation(new Quaternion(0,0,0,1));
-                }
-            else
-            if (name.equals("left-click") && !keyPressed) {
+            } else if (name.equals("resetRot-button")) {
+                cam2EndNode.setLocalRotation(new Quaternion(0, 0, 0, 1));
+            } else if (name.equals("left-click") && !keyPressed) {
                 CollisionResults results = new CollisionResults();
                 Ray ray = new Ray(cam.getLocation(), cam.getDirection().normalize());
                 rootNode.collideWith(ray, results);
@@ -875,42 +863,40 @@ public class Main extends SimpleApplication {
                     Node closestNode = closest.getGeometry().getParent();
                     if (closestNode != null && !closestNode.equals(rootNode)) {
                         init_SecondCam();
-                        cam2EndNode.setLocalRotation(new Quaternion(0,0,0,1));
+                        cam2EndNode.setLocalRotation(new Quaternion(0, 0, 0, 1));
                         cam2EndNode.attachChild(cam2Node);
                         cam2Node.setLocalTranslation(15, 1, 0);
                         closestNode.attachChild(cam2EndNode);
                         cam2Node.lookAt(closestNode.getWorldTranslation(), Vector3f.UNIT_Y);
 
-                       if(closestNode instanceof Container || closestNode instanceof Crane 
-                               || closestNode instanceof AGV || closestNode instanceof Transporter){
-                             Message m = new Message(Commands.RETREIVE_INFO, null);
-                             ArrayList<Object> params = new ArrayList();
-                             params.add(closestNode.getName());
-                             m.setParameters(params.toArray());
-                             sendMessage(m);
-                       }
-                        else
-                        {
+                        if (closestNode instanceof Container || closestNode instanceof Crane
+                                || closestNode instanceof AGV || closestNode instanceof Transporter) {
+                            Message m = new Message(Commands.RETREIVE_INFO, null);
+                            ArrayList<Object> params = new ArrayList();
+                            params.add(closestNode.getName());
+                            m.setParameters(params.toArray());
+                            sendMessage(m);
+                        } else {
                             printSecondViewText(closestNode.getName());
                         }
-                       if(view2==null){
-                           view2 = renderManager.createMainView("Top Right", cam2);
-                       }
-                       if(view2.getScenes().size()<1){
-                           view2.attachScene(rootNode);
-                       }
-                       view2.setClearFlags(true, true, true);}
-                      else {
-                        
-                        if(view2!= null){
-                          view2.clearScenes();
-                          view2.setClearFlags(false, false,false);
+                        if (view2 == null) {
+                            view2 = renderManager.createMainView("Top Right", cam2);
+                        }
+                        if (view2.getScenes().size() < 1) {
+                            view2.attachScene(rootNode);
+                        }
+                        view2.setClearFlags(true, true, true);
+                    } else {
+
+                        if (view2 != null) {
+                            view2.clearScenes();
+                            view2.setClearFlags(false, false, false);
 
                         }
                         if (cam2Text != null) {
                             guiNode.detachChild(cam2Text);
                         }
-                        if(hud2 != null){
+                        if (hud2 != null) {
                             guiNode.detachChild(hud2);
                         }
                     }
@@ -919,43 +905,39 @@ public class Main extends SimpleApplication {
         }
     };
 
-    
-    private void printSecondViewText(String text)
-    {
-        if (cam2Text == null) 
-        {
+    private void printSecondViewText(String text) {
+        if (cam2Text == null) {
             cam2Text = new BitmapText(guiFont, false);
             cam2Text.setColor(ColorRGBA.Yellow);
-            cam2Text.setSize((settings.getWidth()+settings.getHeight())/80);
-            cam2Text.setLocalTranslation(0, settings.getHeight()/2, 0);
+            cam2Text.setSize((settings.getWidth() + settings.getHeight()) / 80);
+            cam2Text.setLocalTranslation(0, settings.getHeight() / 2, 0);
         } else {
             guiNode.detachChild(cam2Text);
         }
-        if(hud2 == null){
-        hud2 = new Picture("HUD Picture");
-        hud2.setImage(assetManager, "Textures/HUD/hud2.jpg", true);
-        hud2.setWidth(settings.getWidth()/2.5f);
-        hud2.setHeight(settings.getHeight()/2.0f);
-        hud2.setPosition(0, 0);
+        if (hud2 == null) {
+            hud2 = new Picture("HUD Picture");
+            hud2.setImage(assetManager, "Textures/HUD/hud2.jpg", true);
+            hud2.setWidth(settings.getWidth() / 2.5f);
+            hud2.setHeight(settings.getHeight() / 2.0f);
+            hud2.setPosition(0, 0);
         }
 
         cam2Text.setText(text); // crosshairs
         guiNode.attachChildAt(cam2Text, 1);
-        guiNode.attachChildAt(hud2,0);
+        guiNode.attachChildAt(hud2, 0);
 
     }
-    
-   private void init_SecondCam() {
+
+    private void init_SecondCam() {
 
         cam2 = cam.clone();
         cam2.setViewPort(0f, .4f, .3f, 1f);
-       
+
         cam2Node = new CameraNode("Camera", cam2);
         cam2Node.setControlDir(ControlDirection.SpatialToCamera);
 
     }
 
-   
     private void changeGlobalSpeed(float acceleration) {
 
         globalSpeed = acceleration;
@@ -999,14 +981,14 @@ public class Main extends SimpleApplication {
         setDisplayStatView(false);
         crossHair = new BitmapText(guiFont, false);
 
-         crossHair.setSize(guiFont.getCharSet().getRenderedSize() * 2);
-         crossHair.setText("+"); // crosshairs
-         updateCHPos();
-        guiNode.attachChild( crossHair);
+        crossHair.setSize(guiFont.getCharSet().getRenderedSize() * 2);
+        crossHair.setText("+"); // crosshairs
+        updateCHPos();
+        guiNode.attachChild(crossHair);
     }
-    private void updateCHPos()
-    {
-         crossHair.setLocalTranslation( // center
-                settings.getWidth() / 2 -  crossHair.getLineWidth() / 2, settings.getHeight() / 2 +  crossHair.getLineHeight() / 2, 0);
+
+    private void updateCHPos() {
+        crossHair.setLocalTranslation( // center
+                settings.getWidth() / 2 - crossHair.getLineWidth() / 2, settings.getHeight() / 2 + crossHair.getLineHeight() / 2, 0);
     }
 }

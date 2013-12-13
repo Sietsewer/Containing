@@ -60,8 +60,8 @@ class Transporter {
                 }
             }
         } else if (transportType == TransportTypes.BARGE) {
-            for (int z = start; z < start + range; z++) {
-                for (int x = 0; x < 4; x++) {
+            for (int x = start; x < start + range; x++) {
+                for (int z = 0; z < 4; z++) {
                     for (int y = 0; y < 4; y++) {
                         CustomVector3f currentposition = new CustomVector3f(x, y, z);
                         boolean posistionTaken = false;
@@ -81,10 +81,10 @@ class Transporter {
             }
 
         } else if (transportType == TransportTypes.TRAIN) {
-            for (int z = start; z < start + range; z++) {
+            for (int x = start; x < start + range; x++) {
                 for (Container c : containers) {
-                    if (c.getPosition().z != z) {
-                        return new CustomVector3f(0, 0, z);
+                    if (c.getPosition().x != x) {
+                        return new CustomVector3f(x, 0, 0);
                     }
                 }
             }

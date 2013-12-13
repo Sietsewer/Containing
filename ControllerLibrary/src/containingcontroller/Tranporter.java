@@ -42,7 +42,7 @@ class Transporter {
         if (transportType == TransportTypes.SEASHIP) {
             for (int z = start; z < start + range; z++) {
                 for (int x = 0; x < 20; x++) {
-                    for (int y = 0; y < 8; y++) {
+                    for (int y = 0; y < 6; y++) {
                         CustomVector3f currentposition = new CustomVector3f(x, y, z);
                         boolean posistionTaken = false;
                         for (Container c : containers) {

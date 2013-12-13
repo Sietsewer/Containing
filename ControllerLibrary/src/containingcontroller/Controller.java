@@ -616,16 +616,23 @@ public class Controller {
         newTransporter = null;
 
         allDepartingTransporters.clear();
+        Collections.sort(allDepContainers, new ContainerDepartureComparer());
         for (int i = 0; i < allDepContainers.size(); i++) {
             Container c = allDepContainers.get(i);
+
             if (previousContainer == null) {
                 newTransporter = new Transporter(c.getTransportTypeDeparture(), c.getDateDeparture());
 
                 allDepartingTransporters.add(newTransporter);
             } else {
-                if ((c.getTransportTypeDeparture() == previousContainer.getTransportTypeDeparture() && c.getDateDeparture() != newTransporter.getDateArrival())) {
+                if(c.getTransportTypeDeparture() == TransportTypes.BARGE) {
+                        System.out.println("");
+                    }
+                if ( c.getTransportTypeDeparture() != previousContainer.getTransportTypeDeparture()
+                        || !c.getDateDeparture().equals( previousContainer.getDateDeparture())
+                        || c.getTransportTypeDeparture() == TransportTypes.LORREY) {
                     newTransporter = new Transporter(c.getTransportTypeDeparture(), c.getDateDeparture());
-
+                    
                     allDepartingTransporters.add(newTransporter);
                 }
             }

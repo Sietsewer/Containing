@@ -17,25 +17,25 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Hendrik
+ * @author Wessel
  */
 public class BufferTest {
-
+    
     public BufferTest() {
     }
-
+    
     @BeforeClass
     public static void setUpClass() {
     }
-
+    
     @AfterClass
     public static void tearDownClass() {
     }
-
+    
     @Before
     public void setUp() {
     }
-
+    
     @After
     public void tearDown() {
     }
@@ -46,23 +46,30 @@ public class BufferTest {
     @Test
     public void testCheckDepartingContainers() {
         System.out.println("checkDepartingContainers");
+        
+        Date date = new Date();
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2004);
         cal.set(Calendar.MONTH, Calendar.DECEMBER);
-        cal.set(Calendar.DAY_OF_MONTH, 4);
+        cal.set(Calendar.DAY_OF_MONTH, 22);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        Date date = cal.getTime();
-        Buffer instance = new Buffer();
+        date.setTime(cal.getTimeInMillis());
+        
         Container c = new Container();
         c.setDateDeparture(date);
-        instance.containers[0][0][0] = c;
-        ArrayList<Container> expResult = new ArrayList<>();
-        expResult.add(c);
-        ArrayList<Container> result = instance.checkDepartingContainers(date);
+        Buffer instance = new Buffer();
+        instance.addContainer(c);
+        ArrayList<Container> clist = new ArrayList<Container>();
+        clist.add(c);
+        
+        ArrayList expResult = (ArrayList)clist.clone();
+        ArrayList result = instance.checkDepartingContainers(date);
         assertEquals(expResult, result);
+        
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -71,57 +78,64 @@ public class BufferTest {
     @Test
     public void testFindBestBufferPlace() {
         System.out.println("findBestBufferPlace");
-        Container container = null;
+        
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2004);
+        cal.set(Calendar.MONTH, Calendar.DECEMBER);
+        cal.set(Calendar.DAY_OF_MONTH, 22);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        date.setTime(cal.getTimeInMillis());
+        
+        Container container = new Container();
+        container.setDateDeparture(date);
+        
+        boolean up = true;
         Buffer instance = new Buffer();
         CustomVector3f expResult = new CustomVector3f(0, 0, 0);
-        CustomVector3f result = instance.findBestBufferPlace(container);
+        CustomVector3f result = instance.findBestBufferPlace(container, up);
         assertEquals(expResult, result);
+        
+        fail("The test case is a prototype.");
     }
 
     /**
-     * Test of addContainer method, of class Buffer.
+     * Test of checkSpaceReserved method, of class Buffer.
      */
     @Test
-    public void testAddContainer() {
-        System.out.println("addContainer");
-        Container container = new Container();
-        CustomVector3f vec = new CustomVector3f(0, 0, 0);
-        container.setBufferPosition(vec);
+    public void testCheckSpaceReserved() {
+        System.out.println("checkSpaceReserved");
+        float x = 0.0f;
+        float y = 0.0f;
+        float z = 0.0f;
         Buffer instance = new Buffer();
-        instance.reservedSpace.put(container, vec);
-        instance.addContainer(container);
-        int expResult = 1;
-        assertEquals(expResult, instance.getContainerCount());
-
+        Container c = new Container();
+        c.setBufferPosition(new CustomVector3f(0, 0, 0));
+        instance.addContainer(c);
+        
+        instance.checkSpaceReserved(x, y, z);
+        boolean expResult = false;
+        boolean result = instance.checkSpaceReserved(x, y, z);
+        assertEquals(expResult, result);
+        
+        fail("The test case is a prototype.");
     }
 
     /**
-     * Test of removeContainer method, of class Buffer.
+     * Test of toString method, of class Buffer.
      */
     @Test
-    public void testRemoveContainer() {
-        System.out.println("removeContainer");
-        Container container = new Container();
+    public void testToString() {
+        System.out.println("toString");
         Buffer instance = new Buffer();
-        instance.containers[0][1][2] = container;
-        instance.removeContainer(container);
-        int expResult = 0;
-        assertEquals(expResult, instance.getContainerCount());
-    }
-
-    /**
-     * Test of reservePosition method, of class Buffer.
-     */
-    @Test
-    public void testReservePosition() {
-        System.out.println("reservePosition");
-        Container container = new Container();
-        CustomVector3f vec = new CustomVector3f(0, 0, 0);
-        container.setBufferPosition(vec);
-        Buffer instance = new Buffer();
-        instance.reservePosition(container);
-        assertEquals(true, instance.reservedSpace.containsKey(vec));
-
+        String expResult = "Buffer{" + "id=" + instance.id + ", containers=" + instance.containers + ", crane=" + instance.crane.id + ", reservedSpace=" + instance.reservedSpace + ", pathNodeUp=" + instance.pathNodeUp.getId() + ", pathNodeDown=" + instance.pathNodeDown.getId() + '}';
+        String result = instance.toString();
+        assertEquals(expResult, result);
+        
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -130,11 +144,42 @@ public class BufferTest {
     @Test
     public void testAGVAvailable() {
         System.out.println("AGVAvailable");
+        boolean up = true;
         Buffer instance = new Buffer();
-        AGV a = new AGV(new PathNode("BFA"), instance);
-        instance.ownedAGV.add(a);
-        AGV expResult = a;
-        AGV result = instance.AGVAvailable(true);
+        AGV agv = new AGV(instance.pathNodeUp, instance);
+        instance.ownedAGV.add(agv);
+        
+        AGV expResult = agv;
+        AGV expResult2 = null;
+        AGV result = instance.AGVAvailable(up);
+        AGV result2 = instance.AGVAvailable(!up);
         assertEquals(expResult, result);
+        assertEquals(expResult2, result2);
+        
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getContainerCount method, of class Buffer.
+     */
+    @Test
+    public void testGetContainerCount() {
+        System.out.println("getContainerCount");
+        Buffer instance = new Buffer();
+        
+        int count = 10;
+        
+        for (int i = 0; i < count; i++){
+            Container cont = new Container();
+            cont.setBufferPosition(new CustomVector3f(i, 0, 0));
+            instance.reservePosition(cont);
+            instance.addContainer(cont);
+        }
+        
+        int expResult = count;
+        int result = instance.getContainerCount();
+        assertEquals(expResult, result);
+        
+        fail("The test case is a prototype.");
     }
 }

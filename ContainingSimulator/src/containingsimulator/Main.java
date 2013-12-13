@@ -225,7 +225,8 @@ public class Main extends SimpleApplication {
         //Init of the AGV viewmodel.
         agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
         Material avgMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        avgMat.setColor("Color", ColorRGBA.Orange);
+        Texture agv_text = assetManager.loadTexture("Textures/AGV/AGV.png");
+        avgMat.setTexture("ColorMap", agv_text);
         agvModel.setMaterial(avgMat);
 
         //Init of skybox geometry, material, and texture.

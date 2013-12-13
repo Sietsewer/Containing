@@ -434,9 +434,9 @@ public class Container {
             return false;
         }
         final Container other = (Container) obj;
-        if (!Objects.equals(this.id, other.id)) {
+       /* if (!Objects.equals(this.id, other.id)) {
             return false;
-        }
+        }*/
         if (this.containerNumber != other.containerNumber) {
             return false;
         }

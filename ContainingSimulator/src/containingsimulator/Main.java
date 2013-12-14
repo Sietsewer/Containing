@@ -55,8 +55,6 @@ import java.util.logging.Logger;
 public class Main extends SimpleApplication implements ScreenController {
 
     public void bind(Nifty nifty, Screen screen) {
-        this.nifty = nifty;
-        this.screen = screen;
     }
 
     public void onStartScreen() {
@@ -112,12 +110,8 @@ public class Main extends SimpleApplication implements ScreenController {
     BitmapText cam2Text;
     BitmapText crossHair;
     ViewPort view2;
-    Picture hud2;
-    private int screenWidth;
-    private int screenHeight;
     public static Material alpha;
     Nifty nifty;
-    Screen screen;
     private boolean gameIsStarted = false;
 
     /**
@@ -150,8 +144,9 @@ public class Main extends SimpleApplication implements ScreenController {
     public void simpleInitApp() {
 
         setPauseOnLostFocus(false);
+        loadGame();
         inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
-        inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_ESCAPE), new KeyTrigger(KeyInput.KEY_P), new KeyTrigger(KeyInput.KEY_PAUSE));
+        inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_ESCAPE), new KeyTrigger(KeyInput.KEY_PAUSE));
         inputManager.addListener(actionListener, "Pause");
         listener = new ServerListener(this);
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
@@ -161,33 +156,23 @@ public class Main extends SimpleApplication implements ScreenController {
         flyCam.setDragToRotate(true);
         Logger.getLogger("de.lessvoid.nifty").setLevel(Level.SEVERE);
         Logger.getLogger("NiftyInputEventHandlingLog").setLevel(Level.SEVERE);
-
-        //nifty.loadStyleFile("nifty-default-styles.xml");
-        // nifty.loadControlFile("nifty-default-controls.xml");
         Screen_Start startController = new Screen_Start(this);
-        startController.initialize(stateManager, app);
-        startController.bind(nifty, screen);
         nifty.registerScreenController(this);
         nifty.registerScreenController(startController);
         nifty.fromXml("Interface/screen.xml", "start", startController);
-
         DropDownControl dropDown1 = nifty.getScreen("start").findControl("dropDownRes", DropDownControl.class);
         DisplayMode[] modes = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayModes();
         DropDownControl dropDown2 = nifty.getScreen("start").findControl("dropDownBPP", DropDownControl.class);
-
         for (DisplayMode mode : modes) {
             String res = mode.getWidth() + "x" + mode.getHeight();
             if (!dropDown1.getItems().contains(res)) {
                 dropDown1.addItem(res);
             }
-
         }
-
         dropDown2.addItem("32");
         dropDown2.addItem("24");
         dropDown2.addItem("16");
         dropDown2.addItem("8");
-
         dropDown2.selectItem(3);
         nifty.gotoScreen("start"); // start the screen
     }
@@ -196,21 +181,19 @@ public class Main extends SimpleApplication implements ScreenController {
         loadAssets();
         showPathNodes(true); //set false for disabling view PathNodes 
         init_Input();
-        setCrossHairs(true);
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
         cam.setLocation(new Vector3f(-254, 416, 280));
         cam.lookAt(new Vector3f(300, 0, 300), Vector3f.UNIT_Y);
         init_SecondCam();
-
         flyCam.setDragToRotate(false);
     }
 
     private boolean setConnection(String ip, int port) {
         try {
-            if(!listener.running){
-            listener.changeConnection(ip, port);
-            return true;
+            if (!listener.running) {
+                listener.changeConnection(ip, port);
+                return true;
             }
         } catch (Exception ex) {
 
@@ -221,7 +204,6 @@ public class Main extends SimpleApplication implements ScreenController {
 
     public void startGame(String ip, int port, int width, int height, int bbp, boolean vSync, boolean showFps, boolean showStats) {
 
-        
         app.settings.setWidth(width);
         app.settings.setHeight(height);
         app.settings.setBitsPerPixel(bbp);
@@ -230,13 +212,14 @@ public class Main extends SimpleApplication implements ScreenController {
         app.setDisplayStatView(showStats);
         setConnection(ip, port);
         app.restart();
-        
+
         if (!gameIsStarted) { //only once! 
             gameIsStarted = true;
-            loadGame();
+
+            setCrossHairs(true);
         }
         updateCHPos();
-         nifty.gotoScreen("hud");
+        nifty.gotoScreen("hud");
     }
 
     /**
@@ -317,13 +300,8 @@ public class Main extends SimpleApplication implements ScreenController {
 
         Path.createPath();
         //Init of the AGV viewmodel.
-        try {
-            agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
-        } catch (Exception ex) {
-            if (assetManager == null) {
-                System.out.println("asdasd");
-            }
-        }
+        agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
+
         Material avgMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         Texture agv_text = assetManager.loadTexture("Textures/AGV/AGV.png");
         avgMat.setTexture("ColorMap", agv_text);
@@ -403,8 +381,6 @@ public class Main extends SimpleApplication implements ScreenController {
         //Init Transporters
         Transporter.makeGeometry(assetManager);
         transporters = new ArrayList<Transporter>();
-
-
 
         //Init AGVs
         agvs = new ArrayList<AGV>();
@@ -1044,9 +1020,6 @@ public class Main extends SimpleApplication implements ScreenController {
         if (cam2Text != null) {
             guiNode.detachChild(cam2Text);
         }
-        if (hud2 != null) {
-            guiNode.detachChild(hud2);
-        }
     }
 
     private void printSecondViewText(String text) {
@@ -1066,7 +1039,6 @@ public class Main extends SimpleApplication implements ScreenController {
 
         cam2 = cam.clone();
         cam2.setViewPort(0f, .4f, .3f, 1f);
-
         cam2Node = new CameraNode("Camera", cam2);
         cam2Node.setControlDir(ControlDirection.SpatialToCamera);
 

@@ -31,6 +31,7 @@ public class ServerListener {
     private PrintWriter output;//output stream from client
     private Main main;//maingame to send message recieved
     private List<String> recievedMessages;
+    public boolean running = false;
     /**
      * Listener to server and sender to server
      *
@@ -38,17 +39,30 @@ public class ServerListener {
      */
     public ServerListener(Main main) {
 
-        serverName = "127.0.0.1";
-        port = 6066;
+        //127.0.0.1 on port 6066 by default
         this.main = main;
         recievedMessages = new ArrayList<String>();
-        Thread listenerThread = new Thread(new Runnable() {
+       
+    }
+
+    private void startThread()
+    {
+         Thread listenerThread = new Thread(new Runnable() {
             public void run() {
                 ServerListener.this.run();
             }
         });
         listenerThread.start();
     }
+    
+    
+    public void changeConnection(String ip, int port)
+    {
+        this.serverName = ip;
+        this.port = port;
+        startThread();
+    }
+    
     public List<String> getMessages()
     {
         ArrayList temp = new ArrayList<String>(recievedMessages);
@@ -69,6 +83,7 @@ public class ServerListener {
             OutputStream outToServer = client.getOutputStream();
             output =
                     new PrintWriter(outToServer, true);
+            running = true;
 
             input = new BufferedReader(new InputStreamReader(client.getInputStream()));
         } catch (UnknownHostException ex) {

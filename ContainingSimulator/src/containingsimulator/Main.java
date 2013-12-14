@@ -21,6 +21,7 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.jme3.niftygui.NiftyJmeDisplay;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -35,6 +36,12 @@ import com.jme3.scene.shape.Sphere;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
 import com.jme3.ui.Picture;
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.controls.dropdown.DropDownControl;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
+import java.awt.DisplayMode;
+import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -45,8 +52,20 @@ import java.util.logging.Logger;
  *
  * @author normenhansen
  */
-public class Main extends SimpleApplication {
+public class Main extends SimpleApplication implements ScreenController {
 
+    public void bind(Nifty nifty, Screen screen) {
+        this.nifty = nifty;
+        this.screen = screen;
+    }
+
+    public void onStartScreen() {
+        app.getFlyByCamera().setDragToRotate(false);
+        setCrossHairs(true);
+    }
+
+    public void onEndScreen() {
+    }
     static ServerListener listener;
     Spatial sky_geo;
     Spatial agvModel;
@@ -97,6 +116,9 @@ public class Main extends SimpleApplication {
     private int screenWidth;
     private int screenHeight;
     public static Material alpha;
+    Nifty nifty;
+    Screen screen;
+    private boolean gameIsStarted = false;
 
     /**
      *
@@ -106,13 +128,16 @@ public class Main extends SimpleApplication {
         Logger.getLogger("com.jme3").setLevel(Level.SEVERE);
         app = new Main();
 
-        app.setDisplayFps(true);
-        app.setDisplayStatView(true);
+        app.setDisplayFps(false);
+        app.setDisplayStatView(false);
+        app.setShowSettings(false);
 
         AppSettings settings = new AppSettings(true);
         settings.put("Title", "Project Containing - by Sjaal");
         //Anti-Aliasing
         settings.put("Samples", 0);
+        settings.put("VSync", true);
+
         app.setSettings(settings);
 
         app.start();
@@ -123,29 +148,95 @@ public class Main extends SimpleApplication {
      */
     @Override
     public void simpleInitApp() {
-        screenWidth = app.settings.getWidth();
-        screenHeight = app.settings.getHeight();
 
         setPauseOnLostFocus(false);
+        inputManager.deleteMapping(SimpleApplication.INPUT_MAPPING_EXIT);
+        inputManager.addMapping("Pause", new KeyTrigger(KeyInput.KEY_ESCAPE), new KeyTrigger(KeyInput.KEY_P), new KeyTrigger(KeyInput.KEY_PAUSE));
+        inputManager.addListener(actionListener, "Pause");
+        listener = new ServerListener(this);
+        NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(
+                app.assetManager, app.inputManager, app.audioRenderer, app.guiViewPort);
+        nifty = niftyDisplay.getNifty();
+        guiViewPort.addProcessor(niftyDisplay);
+        flyCam.setDragToRotate(true);
+        Logger.getLogger("de.lessvoid.nifty").setLevel(Level.SEVERE);
+        Logger.getLogger("NiftyInputEventHandlingLog").setLevel(Level.SEVERE);
+
+        //nifty.loadStyleFile("nifty-default-styles.xml");
+        // nifty.loadControlFile("nifty-default-controls.xml");
+        Screen_Start startController = new Screen_Start(this);
+        startController.initialize(stateManager, app);
+        startController.bind(nifty, screen);
+        nifty.registerScreenController(this);
+        nifty.registerScreenController(startController);
+        nifty.fromXml("Interface/screen.xml", "start", startController);
+
+        DropDownControl dropDown1 = nifty.getScreen("start").findControl("dropDownRes", DropDownControl.class);
+        DisplayMode[] modes = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayModes();
+        DropDownControl dropDown2 = nifty.getScreen("start").findControl("dropDownBPP", DropDownControl.class);
+
+        for (DisplayMode mode : modes) {
+            String res = mode.getWidth() + "x" + mode.getHeight();
+            if (!dropDown1.getItems().contains(res)) {
+                dropDown1.addItem(res);
+            }
+
+        }
+
+        dropDown2.addItem("32");
+        dropDown2.addItem("24");
+        dropDown2.addItem("16");
+        dropDown2.addItem("8");
+
+        dropDown2.selectItem(3);
+        nifty.gotoScreen("start"); // start the screen
+    }
+
+    public void loadGame() {
         loadAssets();
         showPathNodes(true); //set false for disabling view PathNodes 
         init_Input();
-        init_CrossHairs();
+        setCrossHairs(true);
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
         cam.setLocation(new Vector3f(-254, 416, 280));
         cam.lookAt(new Vector3f(300, 0, 300), Vector3f.UNIT_Y);
-
         init_SecondCam();
 
+        flyCam.setDragToRotate(false);
+    }
 
-        listener = new ServerListener(this);
+    private boolean setConnection(String ip, int port) {
+        try {
+            if(!listener.running){
+            listener.changeConnection(ip, port);
+            return true;
+            }
+        } catch (Exception ex) {
 
+            return false;
+        }
+        return false;
+    }
 
+    public void startGame(String ip, int port, int width, int height, int bbp, boolean vSync, boolean showFps, boolean showStats) {
 
-
-
-
+        
+        app.settings.setWidth(width);
+        app.settings.setHeight(height);
+        app.settings.setBitsPerPixel(bbp);
+        app.settings.put("VSync", vSync);
+        app.setDisplayFps(showFps);
+        app.setDisplayStatView(showStats);
+        setConnection(ip, port);
+        app.restart();
+        
+        if (!gameIsStarted) { //only once! 
+            gameIsStarted = true;
+            loadGame();
+        }
+        updateCHPos();
+         nifty.gotoScreen("hud");
     }
 
     /**
@@ -156,6 +247,9 @@ public class Main extends SimpleApplication {
     @Override
     public void simpleUpdate(float tpf) {
 
+        if (!gameIsStarted) {
+            return;
+        }
         if (!isPaused) {
             ArrayList<AGV> gehad = new ArrayList<AGV>();
             for (AGV a : agvs) {
@@ -223,7 +317,13 @@ public class Main extends SimpleApplication {
 
         Path.createPath();
         //Init of the AGV viewmodel.
-        agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
+        try {
+            agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
+        } catch (Exception ex) {
+            if (assetManager == null) {
+                System.out.println("asdasd");
+            }
+        }
         Material avgMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         Texture agv_text = assetManager.loadTexture("Textures/AGV/AGV.png");
         avgMat.setTexture("ColorMap", agv_text);
@@ -419,7 +519,7 @@ public class Main extends SimpleApplication {
                 break;
             case Commands.PICKUP_CONTAINER:
                 crane = getCraneByID((String) params[0]);
-cont = getContainerByID((String) params[2]);
+                cont = getContainerByID((String) params[2]);
                 if (crane == null || cont == null) {
                     System.out.println("Error: crane is null OR container is null");
                     break;
@@ -615,52 +715,39 @@ cont = getContainerByID((String) params[2]);
                 }
             }
         }
-        if(c==null)
-        {
-            for(AGV a : agvs)
-            {
-                if(a.container !=null && a.container.id.equalsIgnoreCase(id))
-                {
+        if (c == null) {
+            for (AGV a : agvs) {
+                if (a.container != null && a.container.id.equalsIgnoreCase(id)) {
                     return a.container;
                 }
             }
-            for(Crane d : trainCranes)
-            {
-                if(d.cont !=null && d.cont.id.equalsIgnoreCase(id))
-                {
+            for (Crane d : trainCranes) {
+                if (d.cont != null && d.cont.id.equalsIgnoreCase(id)) {
                     return d.cont;
                 }
             }
-            for(Crane d : bufCranes)
-            {
-                if(d.cont !=null && d.cont.id.equalsIgnoreCase(id))
-                {
+            for (Crane d : bufCranes) {
+                if (d.cont != null && d.cont.id.equalsIgnoreCase(id)) {
                     return d.cont;
                 }
             }
-            for(Crane d :barCranes)
-            {
-                if(d.cont !=null && d.cont.id.equalsIgnoreCase(id))
-                {
+            for (Crane d : barCranes) {
+                if (d.cont != null && d.cont.id.equalsIgnoreCase(id)) {
                     return d.cont;
                 }
             }
-            for(Crane d :lorCranes)
-            {
-                if(d.cont !=null && d.cont.id.equalsIgnoreCase(id))
-                {
+            for (Crane d : lorCranes) {
+                if (d.cont != null && d.cont.id.equalsIgnoreCase(id)) {
                     return d.cont;
                 }
             }
-            for(Crane d :seaCranes)
-            {
-                if(d.cont !=null && d.cont.id.equalsIgnoreCase(id))
-                {
+            for (Crane d : seaCranes) {
+                if (d.cont != null && d.cont.id.equalsIgnoreCase(id)) {
                     return d.cont;
                 }
             }
         }
-       return c;
+        return c;
     }
 
     /**
@@ -854,7 +941,6 @@ cont = getContainerByID((String) params[2]);
 
         inputManager.addListener(actionListener, "left-click");
         inputManager.addListener(actionListener, "right-click");
-        inputManager.addListener(actionListener, "esc-button");
         inputManager.addListener(analogListener, "left-button");
         inputManager.addListener(analogListener, "right-button");
         inputManager.addListener(analogListener, "up-button");
@@ -894,8 +980,14 @@ cont = getContainerByID((String) params[2]);
     };
     private ActionListener actionListener = new ActionListener() {
         public void onAction(String name, boolean keyPressed, float tpf) {
-            if (name.equals("esc-button")) {
-                System.exit(1);
+            if (nifty.getCurrentScreen().equals(nifty.getScreen("start"))) {
+                return;
+            }
+            if (name.equals("Pause")) {
+                app.flyCam.setDragToRotate(true);
+                setCrossHairs(false);
+                remScreen2();
+                nifty.gotoScreen("start");
             } else if (name.equals("resetRot-button")) {
                 cam2EndNode.setLocalRotation(new Quaternion(0, 0, 0, 1));
             } else if (name.equals("left-click") && !keyPressed) {
@@ -908,6 +1000,7 @@ cont = getContainerByID((String) params[2]);
                     CollisionResult closest = results.getClosestCollision();
                     Node closestNode = closest.getGeometry().getParent();
                     if (closestNode != null && !closestNode.equals(rootNode)) {
+                        nifty.gotoScreen("hud2");
                         init_SecondCam();
                         cam2EndNode.setLocalRotation(new Quaternion(0, 0, 0, 1));
                         cam2EndNode.attachChild(cam2Node);
@@ -933,23 +1026,28 @@ cont = getContainerByID((String) params[2]);
                         }
                         view2.setClearFlags(true, true, true);
                     } else {
-
-                        if (view2 != null) {
-                            view2.clearScenes();
-                            view2.setClearFlags(false, false, false);
-
-                        }
-                        if (cam2Text != null) {
-                            guiNode.detachChild(cam2Text);
-                        }
-                        if (hud2 != null) {
-                            guiNode.detachChild(hud2);
-                        }
+                        remScreen2();
+                        nifty.gotoScreen("hud");
                     }
                 }
             }
         }
     };
+
+    private void remScreen2() {
+
+        if (view2 != null) {
+            view2.clearScenes();
+            view2.setClearFlags(false, false, false);
+
+        }
+        if (cam2Text != null) {
+            guiNode.detachChild(cam2Text);
+        }
+        if (hud2 != null) {
+            guiNode.detachChild(hud2);
+        }
+    }
 
     private void printSecondViewText(String text) {
         if (cam2Text == null) {
@@ -960,18 +1058,8 @@ cont = getContainerByID((String) params[2]);
         } else {
             guiNode.detachChild(cam2Text);
         }
-        if (hud2 == null) {
-            hud2 = new Picture("HUD Picture");
-            hud2.setImage(assetManager, "Textures/HUD/hud2.jpg", true);
-            hud2.setWidth(settings.getWidth() / 2.5f);
-            hud2.setHeight(settings.getHeight() / 2.0f);
-            hud2.setPosition(0, 0);
-        }
-
         cam2Text.setText(text); // crosshairs
         guiNode.attachChildAt(cam2Text, 1);
-        guiNode.attachChildAt(hud2, 0);
-
     }
 
     private void init_SecondCam() {
@@ -1023,14 +1111,21 @@ cont = getContainerByID((String) params[2]);
         }
     }
 
-    protected void init_CrossHairs() {
-        setDisplayStatView(false);
-        crossHair = new BitmapText(guiFont, false);
+    private void setCrossHairs(boolean enabled) {
+        if (enabled) {
+            if (crossHair == null) {
+                crossHair = new BitmapText(guiFont, false);
+                crossHair.setSize(guiFont.getCharSet().getRenderedSize() * 2);
+                crossHair.setText("+"); // crosshairs
+                updateCHPos();
+            }
+            guiNode.attachChild(crossHair);
 
-        crossHair.setSize(guiFont.getCharSet().getRenderedSize() * 2);
-        crossHair.setText("+"); // crosshairs
-        updateCHPos();
-        guiNode.attachChild(crossHair);
+        } else {
+            if (crossHair != null) {
+                guiNode.detachChild(crossHair);
+            }
+        }
     }
 
     private void updateCHPos() {

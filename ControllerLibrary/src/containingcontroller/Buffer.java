@@ -178,7 +178,7 @@ public class Buffer {
             for (int z = 0; z < 6; z++) {
                 for (int y = 0; y < 6; y++) {
                     if (containers[x][y][z] != null) {
-                        if (containers[x][y][z].getId().equals(container.getId())) {
+                        if (containers[x][y][z].getId().equalsIgnoreCase(container.getId())) {
                             containers[x][y][z] = null;
                         }
                     }

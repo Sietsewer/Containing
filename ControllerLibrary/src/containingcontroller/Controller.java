@@ -60,7 +60,6 @@ public class Controller {
     HashMap<AGV, Crane> waitingForBufferCrane;
     HashMap<Crane, AGV> waitingForBuferCranePickup;
     HashMap<Crane, AGV> waitingForBufferCraneGive;
-
     List<Transporter> availbleForLoad;
 
     List<Crane> puttingToTransporter;
@@ -68,6 +67,10 @@ public class Controller {
     HashMap<AGV, Crane> movingToLoad;
     HashMap<Container, Crane> containerToCrane;
     List<String> messageLog;
+
+    HashMap<Crane, AGV> waitingForContainerFromBuffer;
+
+    HashMap<AGV, Crane> goingToCrane;
     //list from xml load
     /**
      * list of all transporters that are arriving
@@ -84,6 +87,8 @@ public class Controller {
     public Controller(IWindow window) {
 
         this.window = window;
+        waitingForContainerFromBuffer = new HashMap<Crane, AGV>();
+        goingToCrane = new HashMap< AGV, Crane>();
         waitingForBuferCranePickup = new HashMap<Crane, AGV>();
         buffers = new ArrayList<Buffer>();
         agvs = new ArrayList<AGV>();
@@ -398,85 +403,151 @@ public class Controller {
          */
         /*DEPARTURE STUFF ENDS HERE*/
         for (Buffer buf : buffers) {
-            ArrayList<Container> depContainers = new ArrayList<Container>();
-            depContainers.addAll(buf.checkDepartingContainers(simTime));
-            Collections.sort(depContainers, new ContainerDepartureComparer());
+            List<Container> departing = buf.checkDepartingContainers(simTime);
+            if (departing.size() > 0 && buf.crane.ready) {
+                Collections.sort(departing, new ContainerDepartureComparer());
 
-            if (depContainers.size() > 0 && buf.crane.getReady()) {
-                Container toMove = depContainers.get(0);
-                for (Transporter transporter : availbleForLoad) {
-                    int transportType = transporter.getTransportType();
-                    if (transportType == toMove.getTransportTypeDeparture()) {
-                        boolean ready = false;
-                        CustomVector3f position = null;
-                        Crane finalCrane = null;
+                Container departingContainer = departing.get(0);
+                AGV agvToMove = null;
+                if (departingContainer.getTransportTypeDeparture() == TransportTypes.TRAIN) {
+                    agvToMove = buf.AGVAvailable(true);
+                    if(agvToMove == null)
+                    {
+                        agvToMove  = buf.AGVAvailable(false);
+                    }
+                } else {
+                    agvToMove = buf.AGVAvailable(false);
+                     if(agvToMove == null)
+                    {
+                        agvToMove  = buf.AGVAvailable(true);
+                    }
+                }
 
-                        for (Crane crane : getCranesTransporter(transporter)) {
-                            if (crane.getReady()) {
-                                position = transporter.getFreeLocation(crane.startRange, crane.range);
-                                if (position != null) {
-                                    ready = true;
-                                    finalCrane = crane;
-                                    break;
+                if (agvToMove != null) {
+                    Transporter toWantTransporter = null;
+                    Crane wantedCrane = null;
+                    CustomVector3f reserverdPosition = null;
+                    for (Transporter transporter : availbleForLoad) {
+                        if (transporter.getTransportType() == departingContainer.getTransportTypeDeparture()) {
+                            for (Crane crane : getCranesTransporter(transporter)) {
+                                if (crane.ready) {
+
+                                    reserverdPosition = transporter.getFreeLocation(crane.startRange, crane.range);
+                                    if (reserverdPosition != null) {
+                                        toWantTransporter = transporter;
+                                        wantedCrane = crane;
+                                        break;
+                                    }
+
                                 }
                             }
+                            if (toWantTransporter != null) {
+                                break;
+                            }
+
                         }
-                        if (ready && position != null && finalCrane != null) {
-                            toMove.setPosition(position);
-                            transporter.reservePosition(toMove);
-                            finalCrane.setIsReady(false);
-                            containerToCrane.put(toMove, finalCrane);
-
-                            Message m = new Message(Commands.PICKUP_CONTAINER, null);
-                            ArrayList<Object> params = new ArrayList<Object>();
-                            params.add(buf.crane.id);
-
-                            AGV toReserve = null;
-                            if (toMove.getTransportTypeDeparture() == TransportTypes.TRAIN || toMove.getTransportTypeDeparture() == TransportTypes.SEASHIP) {
-                                boolean up = true;
-
-                                toReserve = buf.AGVAvailable(up);
-                                if (toReserve == null) {
-                                    up = false;
-                                    toReserve = buf.AGVAvailable(up);
-                                }
-                                if (toReserve != null) {
-                                    toReserve.setReady(false);
-                                    //todo: link agv and container and add to list
-                                    params.add(up);
-                                }
-                            } else {
-                                boolean up = false;
-                                toReserve = buf.AGVAvailable(up);
-                                if (toReserve == null) {
-                                    up = true;
-                                    toReserve = buf.AGVAvailable(up);
-                                }
-                                if (toReserve != null) {
-                                    toReserve.setReady(false);
-                                    //todo: see above
-                                    params.add(up);
-                                }
-                            }
-
-                            params.add(toMove.getId());
-
-                            m.setParameters(params.toArray());
-
-                            if (toReserve != null) {
-                                waitingForBufferCraneGive.put(buf.crane, toReserve);
-                                this.sendMessage(m);
-                            }
-                            buf.crane.ready = false;
-                            buf.removeContainer(toMove);
-                            buf.crane.container = toMove;
-                            break;
+                    }
+                    if (toWantTransporter != null) {
+                        departingContainer.setPosition(reserverdPosition);
+                        wantedCrane.setIsReady(false);
+                        toWantTransporter.reservePosition(departingContainer);
+                        agvToMove.setIsReady(false);
+                        waitingForContainerFromBuffer.put(buf.crane, agvToMove);
+                        goingToCrane.put(agvToMove, wantedCrane);
+                        buf.crane.ready = false;
+                        buf.removeContainer(departingContainer);
+                        if (agvToMove.home.getId().startsWith("bfa")) {
+                            Message m = new Message(Commands.PICKUP_CONTAINER, new Object[]{buf.crane.id, true, departingContainer.getId()});
+                            this.sendMessage(m);
+                        } else {
+                            Message m = new Message(Commands.PICKUP_CONTAINER, new Object[]{buf.crane.id, false, departingContainer.getId()});
+                            this.sendMessage(m);
                         }
                     }
                 }
             }
         }
 
+        /*   for (Buffer buf : buffers) {
+         ArrayList<Container> depContainers = new ArrayList<Container>();
+         depContainers.addAll(buf.checkDepartingContainers(simTime));
+         Collections.sort(depContainers, new ContainerDepartureComparer());
+
+         if (depContainers.size() > 0 && buf.crane.getReady()) {
+         Container toMove = depContainers.get(0);
+         for (Transporter transporter : availbleForLoad) {
+         int transportType = transporter.getTransportType();
+         if (transportType == toMove.getTransportTypeDeparture()) {
+         boolean ready = false;
+         CustomVector3f position = null;
+         Crane finalCrane = null;
+
+         for (Crane crane : getCranesTransporter(transporter)) {
+         if (crane.getReady()) {
+         position = transporter.getFreeLocation(crane.startRange, crane.range);
+         if (position != null) {
+         ready = true;
+         finalCrane = crane;
+         break;
+         }
+         }
+         }
+         if (ready && position != null && finalCrane != null) {
+         toMove.setPosition(position);
+         transporter.reservePosition(toMove);
+         finalCrane.setIsReady(false);
+         containerToCrane.put(toMove, finalCrane);
+
+         Message m = new Message(Commands.PICKUP_CONTAINER, null);
+         ArrayList<Object> params = new ArrayList<Object>();
+         params.add(buf.crane.id);
+
+         AGV toReserve = null;
+         if (toMove.getTransportTypeDeparture() == TransportTypes.TRAIN || toMove.getTransportTypeDeparture() == TransportTypes.SEASHIP) {
+         boolean up = true;
+
+         toReserve = buf.AGVAvailable(up);
+         if (toReserve == null) {
+         up = false;
+         toReserve = buf.AGVAvailable(up);
+         }
+         if (toReserve != null) {
+         toReserve.setReady(false);
+         //todo: link agv and container and add to list
+         params.add(up);
+         }
+         } else {
+         boolean up = false;
+         toReserve = buf.AGVAvailable(up);
+         if (toReserve == null) {
+         up = true;
+         toReserve = buf.AGVAvailable(up);
+         }
+         if (toReserve != null) {
+         toReserve.setReady(false);
+         //todo: see above
+         params.add(up);
+         }
+         }
+
+         params.add(toMove.getId());
+
+         m.setParameters(params.toArray());
+
+         if (toReserve != null) {
+         waitingForBufferCraneGive.put(buf.crane, toReserve);
+         this.sendMessage(m);
+         }
+         buf.crane.ready = false;
+         buf.removeContainer(toMove);
+         buf.crane.container = toMove;
+         break;
+         }
+         }
+         }
+         }
+         }
+         */
         Calendar cal = Calendar.getInstance(); // creates calendar
         cal.setTime(simTime); // sets calendar time/date
         cal.add(Calendar.SECOND, Speed); // adds one minute
@@ -543,12 +614,13 @@ public class Controller {
      * @param message
      */
     public final void PrintMessage(final String message) {
-    if((message.contains("BFA") || message.contains("bfa")) &&!message.contains("1"))
-        if (Speed < 5) {
-            
-            window.WriteLogLine(message);
-        } else {
-            messageLog.add(message);
+        if ((message.contains("BFA") || message.contains("bfa")) && !message.contains("1")) {
+            if (Speed < 5) {
+
+                window.WriteLogLine(message);
+            } else {
+                messageLog.add(message);
+            }
         }
     }
 
@@ -563,6 +635,7 @@ public class Controller {
                 waitingToBeReadyAtCrane.remove(agv);
 
             }
+
         } else if (agvLoadedMovingHome.contains(agv)) {
             Crane bufferCrane = agv.homeBuffer.crane;
             if (bufferCrane.ready) {
@@ -571,16 +644,9 @@ public class Controller {
                 waitingForBufferCrane.put(agv, bufferCrane);
             }
             agvLoadedMovingHome.remove(agv);
-        } else if (movingToLoad.containsKey(agv)) {
-            Crane crane = movingToLoad.get(agv);
-            movingToLoad.remove(agv);
-            pickingupToLoad.put(crane, agv);
-            crane.container = agv.container;
-            agv.container = null;
-            Message m = new Message(Commands.GET_CONTAINER, new Object[]{agv.name, crane.id});
-            this.sendMessage(m);
-
         }
+    
+        
 
     }
 
@@ -738,7 +804,7 @@ public class Controller {
             pickingupToLoad.remove(c);
             a.moveToHome(c, this);
             puttingToTransporter.add(c);
-            c.ready=false;
+            c.ready = false;
             this.sendMessage(m);
         } else if (puttingToTransporter.contains(c)) {
 
@@ -749,8 +815,8 @@ public class Controller {
         } else if (waitingForCraneToPickUpFromAgv.containsKey(c)) {
             AGV v = waitingForCraneToPickUpFromAgv.get(c);
 
-                v.moveToHome(c, this);
-                agvLoadedMovingHome.add(v);
+            v.moveToHome(c, this);
+            agvLoadedMovingHome.add(v);
             waitingForCraneToPickUpFromAgv.remove(c);
 
         }//Kraan heeft container aan AGV gegeven
@@ -855,15 +921,15 @@ public class Controller {
         }
 
     }
-List<Crane> puttingContainerInBuffer =new ArrayList<Crane>();
+    List<Crane> puttingContainerInBuffer = new ArrayList<Crane>();
+    HashMap<Crane, AGV> puttingContainerOnAGVBuffer = new HashMap<Crane, AGV>();
     /**
      * Crane from buffer is ready
      *
      * @param b
      */
     public void bufferCraneReady(Buffer b) {
-      //  this.PrintMessage("Buffer ready - " + b.crane.id);
-        b.crane.ready = true;
+        //  this.PrintMessage("Buffer ready - " + b.crane.id)
         if (waitingForBuferCranePickup.containsKey(b.crane)) {
             waitingForBuferCranePickup.get(b.crane).setIsHome(true);
             waitingForBuferCranePickup.remove(b.crane);
@@ -875,33 +941,52 @@ List<Crane> puttingContainerInBuffer =new ArrayList<Crane>();
             b.crane.ready = false;
             puttingContainerInBuffer.add(b.crane);
             this.sendMessage(message);
-        }else if(puttingContainerInBuffer.contains(b.crane))
-        {
+        } else if (puttingContainerInBuffer.contains(b.crane)) {
             b.addContainer(b.crane.container);
-            b.crane.container=null;
-            puttingContainerInBuffer.remove(b.crane);
-        }
-        else if (waitingForBufferCraneGive.containsKey(b.crane)) {
-            AGV agv = waitingForBufferCraneGive.get(b.crane);
-            waitingForBufferCraneGive.remove(b.crane);
-
-            if (agv != null) {
-                putContainer(agv, b.crane);
-            }
-        } else if (waitingForCraneToPutToAgv.containsKey(b.crane)) {
             b.crane.container = null;
-            AGV agv = waitingForCraneToPutToAgv.get(b.crane);
-            Container con = agv.container;
-            Crane cra = null;
-            cra = containerToCrane.get(con);
-            waitingForCraneToPutToAgv.remove(b.crane);
-            if (cra != null) {
-                agv.moveToCrane(cra, this);
-                agv.setIsHome(false);
-                movingToLoad.put(agv, cra);
-            }
+            puttingContainerInBuffer.remove(b.crane);
+            b.crane.ready = true;
+        }else if(waitingForContainerFromBuffer.containsKey(b.crane))
+        {
+           AGV targetAGV = waitingForContainerFromBuffer.get(b.crane);
+           waitingForContainerFromBuffer.remove(b.crane);
+           puttingContainerOnAGVBuffer.put(b.crane, targetAGV);
+           Message m = new Message(Commands.GIVE_CONTAINER, new Object[]{b.crane.id, targetAGV.name});
+           this.sendMessage(m);
         }
+        else if(puttingContainerOnAGVBuffer.containsKey(b.crane))
+        {
+            b.crane.setIsReady(true);
+            AGV targetAGV =puttingContainerOnAGVBuffer.get(b.crane);
+            puttingContainerOnAGVBuffer.remove(b.crane);
+            
+           targetAGV.moveToCrane(goingToCrane.get(targetAGV), this);
+           goingToCrane.remove(targetAGV);
 
+        }
+            /*                   waitingForContainerFromBuffer.put(buf.crane, agvToMove);
+                        goingToCrane.put(agvToMove, wantedCrane);*/
+
+//        else if (waitingForBufferCraneGive.containsKey(b.crane)) {
+//            AGV agv = waitingForBufferCraneGive.get(b.crane);
+//            waitingForBufferCraneGive.remove(b.crane);
+//
+//            if (agv != null) {
+//                putContainer(agv, b.crane);
+//            }
+//        } else if (waitingForCraneToPutToAgv.containsKey(b.crane)) {
+//            b.crane.container = null;
+//            AGV agv = waitingForCraneToPutToAgv.get(b.crane);
+//            Container con = agv.container;
+//            Crane cra = null;
+//            cra = containerToCrane.get(con);
+//            waitingForCraneToPutToAgv.remove(b.crane);
+//            if (cra != null) {
+//                agv.moveToCrane(cra, this);
+//                agv.setIsHome(false);
+//                movingToLoad.put(agv, cra);
+//            }
+//        }
         if (b.crane.ready) {
             if (waitingForBufferCrane.containsValue(b.crane)) {
                 List<AGV> _temp = getWaitingAGV(b.crane);
@@ -1182,7 +1267,7 @@ List<Crane> puttingContainerInBuffer =new ArrayList<Crane>();
     }
 
     public void recievedMessage(String message) {
-          PrintMessage(message);
+        PrintMessage(message);
         Message m = Message.decodeMessage(message);
 
         if (!((String) m.getParameters()[0]).equalsIgnoreCase("simulator")) {

@@ -153,6 +153,10 @@ public class Buffer extends Node{
      */
     public Container removeContainer(Vector3f index){
         Container c1 = bufferArray[(int)index.x][(int)index.y][(int)index.z];
+        if(c1 == null)
+        {
+            int a =0;
+        }
         Container c2 = (Container)c1.clone();
         bufferNode.detachChild(c1);
         bufferArray[(int)index.x][(int)index.y][(int)index.z] = null;

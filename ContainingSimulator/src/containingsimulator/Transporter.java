@@ -12,6 +12,7 @@ import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Spline;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Geometry;
@@ -211,13 +212,17 @@ public class Transporter extends Node implements MotionPathListener {
      * container.
      */
     public boolean setContainer(Container container) {
+
         Vector3f pos = new Vector3f(container.indexPosition.x, container.indexPosition.y, container.indexPosition.z);
         if (containers[(int) pos.x][(int) pos.y][(int) pos.z] == null) {
             containers[(int) pos.x][(int) pos.y][(int) pos.z] = container;
             this.attachChild(container);
             Vector3f vec = container.getLocalTranslation();
             vec.y += 1.5f + size.y;
-            vec.x -= size.x - 1.22f;
+            vec.x -= size.x - 1.22f;        
+            if(this.type == TransportTypes.BARGE){
+                container.setLocalRotation(new Quaternion().fromAngles(0f, 0f, 0f));
+            }
             setRendering();
             return true;
         } else {

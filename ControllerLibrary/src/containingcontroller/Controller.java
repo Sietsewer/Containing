@@ -218,7 +218,7 @@ public class Controller {
 
     void sendMessage(Message Message) {
         server.sendCommand(Message);
-        this.PrintMessage(Message.encodeMessage(Message));
+        //    this.PrintMessage(Message.encodeMessage(Message));
         //    this.PrintMessage("Message send - " + Message.toString());
     }
 
@@ -411,15 +411,13 @@ public class Controller {
                 AGV agvToMove = null;
                 if (departingContainer.getTransportTypeDeparture() == TransportTypes.TRAIN) {
                     agvToMove = buf.AGVAvailable(true);
-                    if(agvToMove == null)
-                    {
-                        agvToMove  = buf.AGVAvailable(false);
+                    if (agvToMove == null) {
+                        agvToMove = buf.AGVAvailable(false);
                     }
                 } else {
                     agvToMove = buf.AGVAvailable(false);
-                     if(agvToMove == null)
-                    {
-                        agvToMove  = buf.AGVAvailable(true);
+                    if (agvToMove == null) {
+                        agvToMove = buf.AGVAvailable(true);
                     }
                 }
 
@@ -455,6 +453,7 @@ public class Controller {
                         waitingForContainerFromBuffer.put(buf.crane, agvToMove);
                         goingToCrane.put(agvToMove, wantedCrane);
                         buf.crane.ready = false;
+                        buf.crane.container = departingContainer;
                         buf.removeContainer(departingContainer);
                         if (agvToMove.home.getId().startsWith("bfa")) {
                             Message m = new Message(Commands.PICKUP_CONTAINER, new Object[]{buf.crane.id, true, departingContainer.getId()});
@@ -614,15 +613,17 @@ public class Controller {
      * @param message
      */
     public final void PrintMessage(final String message) {
-        if ((message.contains("BFA") || message.contains("bfa")) && !message.contains("1")) {
-            if (Speed < 5) {
 
-                window.WriteLogLine(message);
-            } else {
-                messageLog.add(message);
-            }
+        if (Speed < 5) {
+
+            window.WriteLogLine(message);
+        } else {
+            messageLog.add(message);
         }
+
     }
+
+    HashMap<Crane, AGV> loadingContainer = new HashMap<Crane, AGV>();
 
     private void AGVReady(AGV agv) {
         this.PrintMessage("AGV ready - " + agv.name);
@@ -644,9 +645,15 @@ public class Controller {
                 waitingForBufferCrane.put(agv, bufferCrane);
             }
             agvLoadedMovingHome.remove(agv);
+        } else if (goingToDepartingTransporter.containsKey(agv)) {
+            Crane targetCrane = goingToDepartingTransporter.get(agv);
+            targetCrane.container = agv.container;
+            agv.container = null;
+            loadingContainer.put(targetCrane, agv);
+            goingToDepartingTransporter.remove(agv);
+            Message m = new Message(Commands.GET_CONTAINER, new Object[]{agv.name, targetCrane.id});
+            this.sendMessage(m);
         }
-    
-        
 
     }
 
@@ -783,6 +790,7 @@ public class Controller {
         crane.setIsReady(false);
         waitingForCraneToPutToAgv.put(crane, agv);
     }
+    List<Crane> putContainer = new ArrayList<Crane>();
 
     private void craneReady(Crane c) {
         this.PrintMessage("Crane ready - " + c.id);
@@ -796,23 +804,31 @@ public class Controller {
                 waitingToBeReadyAtCrane.remove(agv);
 
             }
-        } else if (pickingupToLoad.containsKey(c)) {
-
-            Message m = new Message(Commands.PUT_CONTAINER, new Object[]{c.id, c.container.getPosition().x, c.container.getPosition().y, c.container.getPosition().z, dockedTransporter.get(c).id});
-
-            AGV a = pickingupToLoad.get(c);
-            pickingupToLoad.remove(c);
+        } else if (loadingContainer.containsKey(c)) {
+            AGV a = loadingContainer.get(c);
+            loadingContainer.remove(c);
             a.moveToHome(c, this);
-            puttingToTransporter.add(c);
-            c.ready = false;
+            c.setIsReady(false);
+            putContainer.add(c);
+            Message m = new Message(Commands.PUT_CONTAINER, new Object[]{c.id, c.container.getPosition().x, c.container.getPosition().y, c.container.getPosition().z, dockedTransporter.get(c).id});
             this.sendMessage(m);
-        } else if (puttingToTransporter.contains(c)) {
-
+        } else if (putContainer.contains(c)) {
+            putContainer.remove(c);
             Transporter t = dockedTransporter.get(c);
             t.loadContainer(c.container);
+            c.container = null;
+            if (dockedTransporter.get(c).getTransportType() == TransportTypes.LORREY) {
 
-            puttingToTransporter.remove(c);
+                Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{t.id});
+                this.sendMessage(m);
+                dockedTransporter.remove(c);
+                currentTransporter.remove(t);
+
+            }
+            c.ready = true;
+
         } else if (waitingForCraneToPickUpFromAgv.containsKey(c)) {
+
             AGV v = waitingForCraneToPickUpFromAgv.get(c);
 
             v.moveToHome(c, this);
@@ -917,12 +933,14 @@ public class Controller {
                 }
             }
         } else {
-            c.ready = true;
+            c.ready = false;
         }
 
     }
     List<Crane> puttingContainerInBuffer = new ArrayList<Crane>();
     HashMap<Crane, AGV> puttingContainerOnAGVBuffer = new HashMap<Crane, AGV>();
+    HashMap<AGV, Crane> goingToDepartingTransporter = new HashMap<AGV, Crane>();
+
     /**
      * Crane from buffer is ready
      *
@@ -946,26 +964,27 @@ public class Controller {
             b.crane.container = null;
             puttingContainerInBuffer.remove(b.crane);
             b.crane.ready = true;
-        }else if(waitingForContainerFromBuffer.containsKey(b.crane))
-        {
-           AGV targetAGV = waitingForContainerFromBuffer.get(b.crane);
-           waitingForContainerFromBuffer.remove(b.crane);
-           puttingContainerOnAGVBuffer.put(b.crane, targetAGV);
-           Message m = new Message(Commands.GIVE_CONTAINER, new Object[]{b.crane.id, targetAGV.name});
-           this.sendMessage(m);
-        }
-        else if(puttingContainerOnAGVBuffer.containsKey(b.crane))
-        {
+        } else if (waitingForContainerFromBuffer.containsKey(b.crane)) {
+            AGV targetAGV = waitingForContainerFromBuffer.get(b.crane);
+            waitingForContainerFromBuffer.remove(b.crane);
+            puttingContainerOnAGVBuffer.put(b.crane, targetAGV);
+            Message m = new Message(Commands.GIVE_CONTAINER, new Object[]{b.crane.id, targetAGV.name});
+            this.sendMessage(m);
+        } else if (puttingContainerOnAGVBuffer.containsKey(b.crane)) {
+
+            AGV targetAGV = puttingContainerOnAGVBuffer.get(b.crane);
+            targetAGV.container = b.crane.container;
+            b.crane.container = null;
             b.crane.setIsReady(true);
-            AGV targetAGV =puttingContainerOnAGVBuffer.get(b.crane);
             puttingContainerOnAGVBuffer.remove(b.crane);
-            
-           targetAGV.moveToCrane(goingToCrane.get(targetAGV), this);
-           goingToCrane.remove(targetAGV);
+
+            targetAGV.moveToCrane(goingToCrane.get(targetAGV), this);
+            goingToDepartingTransporter.put(targetAGV, goingToCrane.get(targetAGV));
+            goingToCrane.remove(targetAGV);
 
         }
-            /*                   waitingForContainerFromBuffer.put(buf.crane, agvToMove);
-                        goingToCrane.put(agvToMove, wantedCrane);*/
+        /*                   waitingForContainerFromBuffer.put(buf.crane, agvToMove);
+         goingToCrane.put(agvToMove, wantedCrane);*/
 
 //        else if (waitingForBufferCraneGive.containsKey(b.crane)) {
 //            AGV agv = waitingForBufferCraneGive.get(b.crane);
@@ -1267,7 +1286,7 @@ public class Controller {
     }
 
     public void recievedMessage(String message) {
-        PrintMessage(message);
+        // PrintMessage(message);
         Message m = Message.decodeMessage(message);
 
         if (!((String) m.getParameters()[0]).equalsIgnoreCase("simulator")) {

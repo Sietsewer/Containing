@@ -114,4 +114,84 @@ public class PathNodeTest {
         
         
     }
+
+    /**
+     * Test of printWithNeighbours method, of class PathNode.
+     */
+    @Test
+    public void testPrintWithNeighbours() {
+        System.out.println("printWithNeighbours");
+        PathNode instance = new PathNode("test");
+        instance.printWithNeighbours();
+        // TODO review the generated test code and remove the default call to fail.
+        assertEquals(0,0);
+        
+        
+    }
+
+    /**
+     * Test of setCost method, of class PathNode.
+     */
+    @Test
+    public void testSetCost() {
+        System.out.println("setCost");
+        float cost = 12.0F;
+        PathNode parent = new PathNode("test");
+        PathNode instance =new PathNode("test2");
+        instance.setCost(cost, parent);
+        assertEquals(12.0f,cost,12.0f);
+        
+        // TODO review the generated test code and remove the default call to fail.
+
+    }
+
+    /**
+     * Test of getRoute method, of class PathNode.
+     */
+    @Test
+    public void testGetRoute() {
+        System.out.println("getRoute");
+        List<PathNode> route = new ArrayList();
+        PathNode instance = new PathNode("test");
+        instance.getRoute(route);
+        PathNode parent = null;
+          if (parent != null) {
+            route.add(parent);
+            parent.getRoute(route);
+        }
+        assertEquals(parent,null);
+        
+        // TODO review the generated test code and remove the default call to fail.
+       // fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of addNeighbour method, of class PathNode.
+     */
+    @Test
+    public void testAddNeighbour() {
+        System.out.println("addNeighbour");
+        PathNode neighbour = new PathNode("test1");
+        float cost = 0.0F;
+        PathNode instance = new PathNode("test2");
+        instance.addNeighbour(neighbour, cost);
+        assertEquals(instance.getNeighbours().contains(neighbour), true);
+        // TODO review the generated test code and remove the default call to fail.
+        //fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of removeNeighbour method, of class PathNode.
+     */
+    @Test
+    public void testRemoveNeighbour() {
+        System.out.println("removeNeighbour");
+        PathNode neighbour = new PathNode("test1");
+        float cost = 0.0F;
+        PathNode instance = new PathNode("test2");
+        instance.addNeighbour(neighbour, cost);
+        instance.removeNeighbour(neighbour);
+        assertEquals(instance.getNeighbours().contains(neighbour), false);
+        // TODO review the generated test code and remove the default call to fail.
+    }
 }

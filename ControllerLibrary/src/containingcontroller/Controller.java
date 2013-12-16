@@ -357,6 +357,8 @@ public class Controller {
                     for (int i = 0; i < trainCranes.size(); i++) {
                         if (!dockedTransporter.containsKey(trainCranes.get(i))) {
                             Crane c = trainCranes.get(i);
+                            c.startRange=0;
+                            c.range=30;
                             t.setDockingPoint(c);
                             dockedTransporter.put(c, t);
                             break;
@@ -367,6 +369,8 @@ public class Controller {
                     for (Crane crane : lorreyCranes) {
                         if (!dockedTransporter.containsKey(crane)) {
                             t.setDockingPoint(crane);
+                            crane.startRange=0;
+                            crane.range=2;
                             dockedTransporter.put(crane, t);
                             break;
                         }
@@ -614,13 +618,14 @@ public class Controller {
      */
     public final void PrintMessage(final String message) {
 
-        if (Speed < 5) {
+        if (Speed <= 100) {
+            if (Speed < 5) {
 
-            window.WriteLogLine(message);
-        } else {
-            messageLog.add(message);
+                window.WriteLogLine(message);
+            } else {
+                messageLog.add(message);
+            }
         }
-
     }
 
     HashMap<Crane, AGV> loadingContainer = new HashMap<Crane, AGV>();
@@ -821,6 +826,7 @@ public class Controller {
 
                 Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{t.id});
                 this.sendMessage(m);
+                availbleForLoad.remove(t);
                 dockedTransporter.remove(c);
                 currentTransporter.remove(t);
 

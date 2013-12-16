@@ -117,14 +117,19 @@
 			<locationURI>PARENT-1-PROJECT_LOC/ControllerLibrary/src/containingcontroller/ServerClient.java</locationURI>
 		</link>
 		<link>
-			<name>src/containingcontroller/Tranporter.java</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/ControllerLibrary/src/containingcontroller/Tranporter.java</locationURI>
-		</link>
-		<link>
 			<name>src/containingcontroller/TransportTypes.java</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/ControllerLibrary/src/containingcontroller/TransportTypes.java</locationURI>
+		</link>
+		<link>
+			<name>src/containingcontroller/Transporter.java</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/ControllerLibrary/src/containingcontroller/Transporter.java</locationURI>
+		</link>
+		<link>
+			<name>src/containingcontroller/TransporterComparer.java</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/ControllerLibrary/src/containingcontroller/TransporterComparer.java</locationURI>
 		</link>
 		<link>
 			<name>src/containingcontroller/Waypoint.java</name>

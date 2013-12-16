@@ -82,10 +82,19 @@ class Transporter {
 
         } else if (transportType == TransportTypes.TRAIN) {
             for (int x = start; x < start + range; x++) {
+                 boolean posistionTaken = false;
                 for (Container c : containers) {
                     if (c.getPosition().x != x) {
-                        return new CustomVector3f(x, 0, 0);
+                       posistionTaken=true;
                     }
+                }
+                if(posistionTaken)
+                {
+                    return null;
+                }
+                else
+                {
+                    return new CustomVector3f(x,0,0);
                 }
             }
         } else if (transportType == TransportTypes.LORREY) {

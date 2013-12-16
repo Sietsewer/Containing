@@ -321,76 +321,80 @@ public class Controller {
         }
 
         /*DEPARTURE STUFF STARTS HERE*/
-        List<Transporter> departingTransporters = new ArrayList<Transporter>();
-        for (int i = 0; i < allDepartingTransporters.size(); i++) {
-            if (allDepartingTransporters.get(i).getDateArrival().before(simTime)) {
-                departingTransporters.add(allDepartingTransporters.get(i));
+        /*     List<Transporter> departingTransporters = new ArrayList<Transporter>();
+         for (int i = 0; i < allDepartingTransporters.size(); i++) {
+         if (allDepartingTransporters.get(i).getDateArrival().before(simTime)) {
+         departingTransporters.add(allDepartingTransporters.get(i));
 
-                allDepartingTransporters.remove(i);
-                i--;
-            }
-        }
+         allDepartingTransporters.remove(i);
+         i--;
+         }
+         else 
+         {
+         break;
+         }
+         }
 
-        for (Transporter t : departingTransporters) {
-            switch (t.getTransportType()) {
-                case TransportTypes.BARGE:
-                    for (int i = 0; i < 8; i += 2) {
-                        if (!dockedTransporter.containsKey(bargeCranes.get(i))) {
-                            Crane c = bargeCranes.get(i);
-                            t.setDockingPoint(c);
-                            dockedTransporter.put(c, t);
-                            break;
-                        }
-                    }
-                    break;
-                case TransportTypes.SEASHIP:
-                    for (int i = 0; i < 10; i += 2) {
-                        if (!dockedTransporter.containsKey(seaCranes.get(i))) {
-                            Crane c = seaCranes.get(i);
-                            t.setDockingPoint(c);
-                            dockedTransporter.put(c, t);
-                            break;
-                        }
-                    }
-                    break;
-                case TransportTypes.TRAIN:
-                    for (int i = 0; i < trainCranes.size(); i++) {
-                        if (!dockedTransporter.containsKey(trainCranes.get(i))) {
-                            Crane c = trainCranes.get(i);
-                            t.setDockingPoint(c);
-                            dockedTransporter.put(c, t);
-                            break;
-                        }
-                    }
-                    break;
-                case TransportTypes.LORREY:
-                    for (Crane crane : lorreyCranes) {
-                        if (!dockedTransporter.containsKey(crane)) {
-                            t.setDockingPoint(crane);
-                            dockedTransporter.put(crane, t);
-                            break;
-                        }
-                    }
-                    break;
+         for (Transporter t : departingTransporters) {
+         switch (t.getTransportType()) {
+         case TransportTypes.BARGE:
+         for (int i = 0; i < 8; i += 2) {
+         if (!dockedTransporter.containsKey(bargeCranes.get(i))) {
+         Crane c = bargeCranes.get(i);
+         t.setDockingPoint(c);
+         dockedTransporter.put(c, t);
+         break;
+         }
+         }
+         break;
+         case TransportTypes.SEASHIP:
+         for (int i = 0; i < 10; i += 2) {
+         if (!dockedTransporter.containsKey(seaCranes.get(i))) {
+         Crane c = seaCranes.get(i);
+         t.setDockingPoint(c);
+         dockedTransporter.put(c, t);
+         break;
+         }
+         }
+         break;
+         case TransportTypes.TRAIN:
+         for (int i = 0; i < 4; i++) {
+         if (!dockedTransporter.containsKey(trainCranes.get(i))) {
+         Crane c = trainCranes.get(i);
+         t.setDockingPoint(c);
+         dockedTransporter.put(c, t);
+         break;
+         }
+         }
+         break;
+         case TransportTypes.LORREY:
+         for (Crane crane : lorreyCranes) {
+         if (!dockedTransporter.containsKey(crane)) {
+         t.setDockingPoint(crane);
+         dockedTransporter.put(crane, t);
+         break;
+         }
+         }
+         break;
 
-            }
-            if (t.getDockingPoint() != null) {
-                currentTransporter.add(t);
+         }
+         if (t.getDockingPoint() != null) {
+         currentTransporter.add(t);
 
-                PrintMessage("Departing: " + t.toString());
+         PrintMessage("Departing: " + t.toString());
 
-                Message m = new Message(Commands.CREATE_TRANSPORTER, null);
+         Message m = new Message(Commands.CREATE_TRANSPORTER, null);
 
-                Object[] objects = new Object[3];
-                objects[0] = t.id;
-                objects[1] = t.getTransportType();
-                objects[2] = t.getDockingPoint().id;
-                m.setParameters(objects);
-                server.sendCommand(m);
-            }
-        }
+         Object[] objects = new Object[3];
+         objects[0] = t.id;
+         objects[1] = t.getTransportType();
+         objects[2] = t.getDockingPoint().id;
+         m.setParameters(objects);
+         server.sendCommand(m);
+         }
+         }
 
-        /*
+         /*
          ArrayList<Container> expectedContainers = new ArrayList();
          Container pivot = departingContainers.get(0);
          for (Container dc : departingContainers){
@@ -449,12 +453,14 @@ public class Controller {
                         departingContainer.setPosition(reserverdPosition);
                         wantedCrane.setIsReady(false);
                         toWantTransporter.reservePosition(departingContainer);
+
                         agvToMove.setIsReady(false);
                         waitingForContainerFromBuffer.put(buf.crane, agvToMove);
                         goingToCrane.put(agvToMove, wantedCrane);
                         buf.crane.ready = false;
                         buf.crane.container = departingContainer;
                         buf.removeContainer(departingContainer);
+                        movingToTransporter.add(departingContainer);
                         if (agvToMove.home.getId().startsWith("bfa")) {
                             Message m = new Message(Commands.PICKUP_CONTAINER, new Object[]{buf.crane.id, true, departingContainer.getId()});
                             this.sendMessage(m);
@@ -462,11 +468,81 @@ public class Controller {
                             Message m = new Message(Commands.PICKUP_CONTAINER, new Object[]{buf.crane.id, false, departingContainer.getId()});
                             this.sendMessage(m);
                         }
+                    } else {
+                        boolean exists = false;
+                        for (Transporter t : allDepartingTransporters) {
+                            if (t.getTransportType() == departingContainer.getTransportTypeDeparture()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {
+                            Transporter newTransporter = new Transporter(departingContainer.getTransportTypeDeparture(), simTime);
+                            allDepartingTransporters.add(newTransporter);
+                        }
+
                     }
                 }
             }
         }
+        for (Transporter t : allDepartingTransporters) {
+            switch (t.getTransportType()) {
+                case TransportTypes.BARGE:
+                    for (int i = 0; i < 8; i += 2) {
+                        if (!dockedTransporter.containsKey(bargeCranes.get(i))) {
+                            Crane c = bargeCranes.get(i);
+                            t.setDockingPoint(c);
+                            dockedTransporter.put(c, t);
+                            break;
+                        }
+                    }
+                    break;
+                case TransportTypes.SEASHIP:
+                    for (int i = 0; i < 10; i += 2) {
+                        if (!dockedTransporter.containsKey(seaCranes.get(i))) {
+                            Crane c = seaCranes.get(i);
+                            t.setDockingPoint(c);
+                            dockedTransporter.put(c, t);
+                            break;
+                        }
+                    }
+                    break;
+                case TransportTypes.TRAIN:
+                    for (int i = 0; i < 4; i++) {
+                        if (!dockedTransporter.containsKey(trainCranes.get(i))) {
+                            Crane c = trainCranes.get(i);
+                            t.setDockingPoint(c);
+                            dockedTransporter.put(c, t);
+                            break;
+                        }
+                    }
+                    break;
+                case TransportTypes.LORREY:
+                    for (Crane crane : lorreyCranes) {
+                        if (!dockedTransporter.containsKey(crane)) {
+                            t.setDockingPoint(crane);
+                            dockedTransporter.put(crane, t);
+                            break;
+                        }
+                    }
+                    break;
 
+            }
+            if (t.getDockingPoint() != null) {
+                currentTransporter.add(t);
+
+                PrintMessage("Departing: " + t.toString());
+
+                Message m = new Message(Commands.CREATE_TRANSPORTER, null);
+
+                Object[] objects = new Object[3];
+                objects[0] = t.id;
+                objects[1] = t.getTransportType();
+                objects[2] = t.getDockingPoint().id;
+                m.setParameters(objects);
+                server.sendCommand(m);
+            }
+        }
         /*   for (Buffer buf : buffers) {
          ArrayList<Container> depContainers = new ArrayList<Container>();
          depContainers.addAll(buf.checkDepartingContainers(simTime));
@@ -668,7 +744,7 @@ public class Controller {
 
     private void createTransporters(List<Container> allContainers) {
         List<String> id = new ArrayList<String>();
-        List<Container> allDepContainers = new ArrayList<Container>(allContainers);
+        //  List<Container> allDepContainers = new ArrayList<Container>(allContainers);
         Container previousContainer = null;
         Transporter newTransporter = null;
         allArivingTransporters.clear();
@@ -705,37 +781,34 @@ public class Controller {
             }
         }
         allArivingTransporters.add(newTransporter);
-        List<String> gehad = new ArrayList<String>();
+       // List<String> gehad = new ArrayList<String>();
 
-        previousContainer = null;
-        newTransporter = null;
+        //  previousContainer = null;
+        //  newTransporter = null;
 
-        allDepartingTransporters.clear();
-        Collections.sort(allDepContainers, new ContainerDepartureComparer());
-        for (int i = 0; i < allDepContainers.size(); i++) {
-            Container c = allDepContainers.get(i);
+        /*   allDepartingTransporters.clear();
+         Collections.sort(allDepContainers, new ContainerDepartureComparer());
+         for (int i = 0; i < allDepContainers.size(); i++) {
+         Container c = allDepContainers.get(i);
 
-            if (previousContainer == null) {
-                newTransporter = new Transporter(c.getTransportTypeDeparture(), c.getDateDeparture());
+         if (previousContainer == null) {
+         newTransporter = new Transporter(c.getTransportTypeDeparture(), c.getDateDeparture());
 
-                allDepartingTransporters.add(newTransporter);
-            } else {
-                if (c.getTransportTypeDeparture() == TransportTypes.BARGE) {
-                    System.out.println("");
-                }
-                if (c.getTransportTypeDeparture() != previousContainer.getTransportTypeDeparture()
-                        || !c.getDateDeparture().equals(previousContainer.getDateDeparture())
-                        || c.getTransportTypeDeparture() == TransportTypes.LORREY) {
-                    newTransporter = new Transporter(c.getTransportTypeDeparture(), c.getDateDeparture());
+         allDepartingTransporters.add(newTransporter);
+         } else {
+         if (c.getTransportTypeDeparture() != previousContainer.getTransportTypeDeparture()
+         || !c.getDateDeparture().equals(previousContainer.getDateDeparture())
+         || c.getTransportTypeDeparture() == TransportTypes.LORREY) {
+         newTransporter = new Transporter(c.getTransportTypeDeparture(), c.getDateDeparture());
 
-                    allDepartingTransporters.add(newTransporter);
-                }
-            }
-            previousContainer = c;
-            allDepContainers.remove(i);
-            i--;
-        }
-        Collections.sort(allDepartingTransporters, new TransporterComparer());
+         allDepartingTransporters.add(newTransporter);
+         }
+         }
+         previousContainer = c;
+         allDepContainers.remove(i);
+         i--;
+         }
+         Collections.sort(allDepartingTransporters, new TransporterComparer());*/
     }
 
     private AGV getValueFromHashmap(HashMap<AGV, Crane> collection, Crane c) {
@@ -773,6 +846,7 @@ public class Controller {
 
         return null;
     }
+    ArrayList<Container> movingToTransporter = new ArrayList<Container>();
 
     /**
      * Put container onto agv
@@ -814,15 +888,48 @@ public class Controller {
             this.sendMessage(m);
         } else if (putContainer.contains(c)) {
             putContainer.remove(c);
+
             Transporter t = dockedTransporter.get(c);
+            movingToTransporter.remove(c.container);
             t.loadContainer(c.container);
             c.container = null;
+
             if (dockedTransporter.get(c).getTransportType() == TransportTypes.LORREY) {
 
                 Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{t.id});
                 this.sendMessage(m);
+                availbleForLoad.remove(t);
                 dockedTransporter.remove(c);
                 currentTransporter.remove(t);
+
+            } else {
+                boolean delete = true;
+                for (Buffer b : buffers) {
+                    for (Container cont : b.checkDepartingContainers(simTime)) {
+                        if (cont.getTransportTypeDeparture() == t.getTransportType()) {
+                            delete = false;
+                            break;
+                        }
+                    }
+                }
+                if (delete) {
+                    for (Container cont : movingToTransporter) {
+                        if (cont.getTransportTypeDeparture() == t.getTransportType()) {
+                            delete = false;
+
+                            break;
+                        }
+                    }
+
+                }
+
+                if (delete) {
+                    Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{t.id});
+                    this.sendMessage(m);
+                    availbleForLoad.remove(t);
+                    dockedTransporter.remove(c);
+                    currentTransporter.remove(t);
+                }
 
             }
             c.ready = true;
@@ -983,29 +1090,6 @@ public class Controller {
             goingToCrane.remove(targetAGV);
 
         }
-        /*                   waitingForContainerFromBuffer.put(buf.crane, agvToMove);
-         goingToCrane.put(agvToMove, wantedCrane);*/
-
-//        else if (waitingForBufferCraneGive.containsKey(b.crane)) {
-//            AGV agv = waitingForBufferCraneGive.get(b.crane);
-//            waitingForBufferCraneGive.remove(b.crane);
-//
-//            if (agv != null) {
-//                putContainer(agv, b.crane);
-//            }
-//        } else if (waitingForCraneToPutToAgv.containsKey(b.crane)) {
-//            b.crane.container = null;
-//            AGV agv = waitingForCraneToPutToAgv.get(b.crane);
-//            Container con = agv.container;
-//            Crane cra = null;
-//            cra = containerToCrane.get(con);
-//            waitingForCraneToPutToAgv.remove(b.crane);
-//            if (cra != null) {
-//                agv.moveToCrane(cra, this);
-//                agv.setIsHome(false);
-//                movingToLoad.put(agv, cra);
-//            }
-//        }
         if (b.crane.ready) {
             if (waitingForBufferCrane.containsValue(b.crane)) {
                 List<AGV> _temp = getWaitingAGV(b.crane);
@@ -1128,6 +1212,7 @@ public class Controller {
                 sendAGVTo(crane, toMove);
             }
         } else if (t.getContainers() != null && t.getContainerCount() == 0) {
+            allDepartingTransporters.remove(t);
             availbleForLoad.add(t);
             int maxCranes = 0;
             int minRange = 0;

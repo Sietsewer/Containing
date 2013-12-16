@@ -78,6 +78,7 @@ public class Transporter extends Node implements MotionPathListener {
     private MotionEvent motionEvent;
     private float speed;
     MotionPath path = new MotionPath();
+    Vector3f size;
 
     /**
      * Constructor
@@ -94,7 +95,7 @@ public class Transporter extends Node implements MotionPathListener {
 
         Geometry currentGeometry = null;
         Spatial currentSpatial = null;
-        Vector3f size;
+        
         
 
         switch (type) {
@@ -121,7 +122,7 @@ public class Transporter extends Node implements MotionPathListener {
                 size = new Vector3f(TRAINb.xExtent, TRAINb.yExtent, TRAINb.yExtent);
                 this.position.z -= 8f;
                 this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-                 this.speed = 300;
+                this.speed = 300;
                 break;
             default:
             case TransportTypes.LORRY:
@@ -215,7 +216,8 @@ public class Transporter extends Node implements MotionPathListener {
             containers[(int) pos.x][(int) pos.y][(int) pos.z] = container;
             this.attachChild(container);
             Vector3f vec = container.getLocalTranslation();
-            vec.y += 1.72f;
+            vec.y += 1.5f + size.y;
+            vec.x -= size.x - 1.22f;
             setRendering();
             return true;
         } else {

@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
 public class TransporterTest {
     
     Date date;
+    Date date2;
     
     public TransporterTest() {
         date = new Date();
@@ -35,6 +36,17 @@ public class TransporterTest {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         date.setTime(cal.getTimeInMillis());
+        
+        date2 = new Date();
+        Calendar cal2 = Calendar.getInstance();
+        cal2.set(Calendar.YEAR, 2004);
+        cal2.set(Calendar.MONTH, Calendar.DECEMBER);
+        cal2.set(Calendar.DAY_OF_MONTH, 24);
+        cal2.set(Calendar.HOUR_OF_DAY, 0);
+        cal2.set(Calendar.MINUTE, 0);
+        cal2.set(Calendar.SECOND, 0);
+        cal2.set(Calendar.MILLISECOND, 0);
+        date2.setTime(cal2.getTimeInMillis());
     }
     
     @BeforeClass
@@ -79,6 +91,9 @@ public class TransporterTest {
         Transporter instance = new Transporter(0, date);
         Container c = new Container();
         c.setPosition(new CustomVector3f(0, 0, 0));
+        c.setBufferPosition(new CustomVector3f(0, 0, 0));
+        c.setDateArrival(date);
+        c.setDateDeparture(date2);
         instance.reservePosition(c);
         instance.loadContainer(c);
         
@@ -100,6 +115,9 @@ public class TransporterTest {
         float z = 0.0F;
         Container c = new Container();
         c.setPosition(new CustomVector3f(0, 0, 0));
+        c.setBufferPosition(new CustomVector3f(0, 0, 0));
+        c.setDateArrival(date);
+        c.setDateDeparture(date2);
         
         Transporter instance = new Transporter(0, date);
         instance.reservePosition(c);
@@ -123,6 +141,9 @@ public class TransporterTest {
             Container c = new Container();
             CustomVector3f cv = new CustomVector3f(i, 0, 0);
             c.setPosition(cv);
+            c.setBufferPosition(cv);
+            c.setDateArrival(date);
+            c.setDateDeparture(date2);
             instance.reservePosition(c);
             instance.loadContainer(c);
         }
@@ -147,6 +168,9 @@ public class TransporterTest {
             Container c = new Container();
             CustomVector3f cv = new CustomVector3f(i, 0, 0);
             c.setPosition(cv);
+            c.setBufferPosition(cv);
+            c.setDateArrival(date);
+            c.setDateDeparture(date2);
             instance.reservePosition(c);
             instance.loadContainer(c);
             expResult.add(c);
@@ -169,7 +193,14 @@ public class TransporterTest {
         Container c1 = new Container();
         Container c2 = new Container();
         c1.setPosition(new CustomVector3f(0, 0, 0));
+        c1.setBufferPosition(new CustomVector3f(0, 0, 0));
         c2.setPosition(new CustomVector3f(1, 0, 0));
+        c2.setBufferPosition(new CustomVector3f(0, 0, 0));
+        c1.setDateArrival(date);
+        c1.setDateDeparture(date2);
+        c2.setDateArrival(date);
+        c2.setDateDeparture(date2);
+        
         instance.reservePosition(c1);
         instance.reservePosition(c2);
         instance.loadContainer(c1);
@@ -210,6 +241,9 @@ public class TransporterTest {
             Container c = new Container();
             CustomVector3f cv = new CustomVector3f(i, 0, 0);
             c.setPosition(cv);
+            c.setBufferPosition(cv);
+            c.setDateArrival(date);
+            c.setDateDeparture(date2);
             instance.reservePosition(c);
             instance.loadContainer(c);
         }
@@ -229,8 +263,12 @@ public class TransporterTest {
         System.out.println("reservePosition");
         Container container = new Container();
         container.setPosition(new CustomVector3f(0, 0, 0));
+        container.setBufferPosition(new CustomVector3f(0, 0, 0));
+        container.setDateArrival(date);
+        container.setDateDeparture(date2);
         Transporter instance = new Transporter(0, date);
         instance.reservePosition(container);
+        instance.loadContainer(container);
         boolean expResult = false;
         boolean result = instance.reservePosition(container);
         assertEquals(expResult, result);

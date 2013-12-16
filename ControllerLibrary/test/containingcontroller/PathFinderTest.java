@@ -46,6 +46,7 @@ public class PathFinderTest {
         System.out.println("getShortestPath");
         
         PathFinder instance = new PathFinder();
+        instance.createMap();
         List<PathNode> map = instance.getMapCSE();
         PathNode srce = map.get(0);
         PathNode dest = map.get(1);
@@ -69,6 +70,7 @@ public class PathFinderTest {
         System.out.println("getShortestPath");
         
         PathFinder instance = new PathFinder();
+        instance.createMap();
         List<PathNode> map = instance.getMapCSE();
         PathNode srce = map.get(0);
         PathNode dest = map.get(1);

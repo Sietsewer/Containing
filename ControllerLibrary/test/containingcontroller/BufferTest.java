@@ -159,6 +159,29 @@ public class BufferTest {
         AGV result = instance.AGVAvailable(up);
         assertEquals(expResult, result);         
     }
+    
+    /**
+     * Test of toString method, of class Buffer.
+     */
+    @Test
+    public void testToString() {
+        System.out.println("toString");
+        
+        Buffer instance = new Buffer();
+        PathFinder pf = new PathFinder();
+        pf.createMap();
+        instance.pathNodeUp = pf.getMapBA().get(0);
+        instance.pathNodeDown = pf.getMapBB().get(0);
+        
+        instance.crane = new Crane("BFA" + String.format("%03d", 0), Crane.BufferCrane);;
+        
+        String expResult = "Buffer{" + "id=" + instance.id + ", containers=" + instance.containers + ", crane=" + instance.crane.id + ", reservedSpace=" + instance.reservedSpace + ", pathNodeUp=" + instance.pathNodeUp.getId() + ", pathNodeDown=" + instance.pathNodeDown.getId() + '}';
+        String result = instance.toString();
+        assertEquals(expResult, result);
+
+
+    }
+
 
     /**
      * Test of getContainerCount method, of class Buffer.

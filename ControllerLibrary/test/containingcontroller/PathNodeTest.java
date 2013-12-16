@@ -61,7 +61,7 @@ public class PathNodeTest {
         PathNode parent = new PathNode("testID");
         PathNode instance = new PathNode("testID2");
         instance.setCost(0.5f, parent);
-        float expResult = 0.05f;
+        float expResult = 0.5f;
         float result = instance.getCost();
         assertEquals(expResult, result, 0.0);
         
@@ -79,6 +79,7 @@ public class PathNodeTest {
         
         neighbour.setCost(10, instance);
         instance.setCost(5, neighbour);
+        instance.addNeighbour(neighbour, 10);
         
         float expResult = 10;
         float result = instance.getCostNeighb(neighbour);

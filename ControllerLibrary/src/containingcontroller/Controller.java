@@ -877,6 +877,7 @@ public class Controller {
         } else if (waitingForBufferCraneGive.containsKey(b.crane)) {
             AGV agv = waitingForBufferCraneGive.get(b.crane);
             waitingForBufferCraneGive.remove(b.crane);
+           
             if (agv != null) {
                 putContainer(agv, b.crane);
             }
@@ -1073,15 +1074,15 @@ public class Controller {
             }
             prefrence = PreferedAGV.UP;
         } else {
-            if (dockingpoint.id.contains("1") || dockingpoint.id.contains("2")
+            if ((dockingpoint.id.contains("1")&&!dockingpoint.id.contains("10")) || dockingpoint.id.contains("2")
                     || dockingpoint.id.contains("3")
-                    || dockingpoint.id.contains("4")) {
+                    || dockingpoint.id.contains("4") || dockingpoint.id.contains("5")) {
                 startBuffer = 1;
-                endBuffer = 5;
+                endBuffer = 6;
                 prefrence = PreferedAGV.UP;
             } else {
-                startBuffer = 5;
-                endBuffer = 20;
+                startBuffer = 6;
+                endBuffer = 25;
                 prefrence = PreferedAGV.DOWN;
             }
 

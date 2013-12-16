@@ -289,4 +289,57 @@ public class TransporterTest {
         
         
     }
+
+    /**
+     * Test of loadContainer method, of class Transporter.
+     */
+    @Test
+    public void testLoadContainer() {
+        System.out.println("loadContainer");
+        Container container = null;
+        Transporter instance = null;
+        instance.loadContainer(container);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of RemoveContainer method, of class Transporter.
+     */
+    @Test
+    public void testRemoveContainer() {
+        System.out.println("RemoveContainer");
+        Container c = null;
+        Transporter instance = null;
+        instance.RemoveContainer(c);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of toString method, of class Transporter.
+     */
+    @Test
+    public void testToString() {
+        System.out.println("toString");
+        Transporter instance = null;
+        String expResult = "";
+        String result = instance.toString();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setDockingPoint method, of class Transporter.
+     */
+    @Test
+    public void testSetDockingPoint() {
+        System.out.println("setDockingPoint");
+        Crane dockingPoint = null;
+        Transporter instance = null;
+        instance.setDockingPoint(dockingPoint);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
 }

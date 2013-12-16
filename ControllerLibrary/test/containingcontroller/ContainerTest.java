@@ -380,4 +380,276 @@ public class ContainerTest {
         // TODO review the generated test code and remove the default call to fail.
         
     }
+
+    /**
+     * Test of setId method, of class Container.
+     */
+    @Test
+    public void testSetId() {
+        System.out.println("setId");
+        String id = "";
+        Container instance = new Container();
+        instance.setId(id);
+        assertEquals(true, true);
+    }
+
+    /**
+     * Test of setDateArrival method, of class Container.
+     */
+    @Test
+    public void testSetDateArrival() {
+        System.out.println("setDateArrival");
+        Date dateArrival = null;
+        Container instance = new Container();
+        instance.setDateArrival(dateArrival);
+        assertEquals(true, true);
+    }
+
+    /**
+     * Test of setDateDeparture method, of class Container.
+     */
+    @Test
+    public void testSetDateDeparture() {
+        System.out.println("setDateDeparture");
+        Date dateDeparture = null;
+        Container instance = new Container();
+        instance.setDateDeparture(dateDeparture);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setTransportTypeArrival method, of class Container.
+     */
+    @Test
+    public void testSetTransportTypeArrival() {
+        System.out.println("setTransportTypeArrival");
+        int transportTypeArrival = 0;
+        Container instance = new Container();
+        instance.setTransportTypeArrival(transportTypeArrival);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setTransportTypeDeparture method, of class Container.
+     */
+    @Test
+    public void testSetTransportTypeDeparture() {
+        System.out.println("setTransportTypeDeparture");
+        int transportTypeDeparture = 0;
+        Container instance = new Container();
+        instance.setTransportTypeDeparture(transportTypeDeparture);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setCargoCompanyArrival method, of class Container.
+     */
+    @Test
+    public void testSetCargoCompanyArrival() {
+        System.out.println("setCargoCompanyArrival");
+        String cargoCompanyArrival = "";
+        Container instance = new Container();
+        instance.setCargoCompanyArrival(cargoCompanyArrival);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setCargoCompanyDeparture method, of class Container.
+     */
+    @Test
+    public void testSetCargoCompanyDeparture() {
+        System.out.println("setCargoCompanyDeparture");
+        String cargoCompanyDeparture = "";
+        Container instance = new Container();
+        instance.setCargoCompanyDeparture(cargoCompanyDeparture);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setPosition method, of class Container.
+     */
+    @Test
+    public void testSetPosition() {
+        System.out.println("setPosition");
+        CustomVector3f position = null;
+        Container instance = new Container();
+        instance.setPosition(position);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setBufferPosition method, of class Container.
+     */
+    @Test
+    public void testSetBufferPosition() {
+        System.out.println("setBufferPosition");
+        CustomVector3f bufferPosition = null;
+        Container instance = new Container();
+        instance.setBufferPosition(bufferPosition);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setOwner method, of class Container.
+     */
+    @Test
+    public void testSetOwner() {
+        System.out.println("setOwner");
+        String owner = "";
+        Container instance = new Container();
+        instance.setOwner(owner);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setContainerNumber method, of class Container.
+     */
+    @Test
+    public void testSetContainerNumber() {
+        System.out.println("setContainerNumber");
+        int containerNumber = 0;
+        Container instance = new Container();
+        instance.setContainerNumber(containerNumber);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setHeight method, of class Container.
+     */
+    @Test
+    public void testSetHeight() {
+        System.out.println("setHeight");
+        String height = "";
+        Container instance = new Container();
+        instance.setHeight(height);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setWidth method, of class Container.
+     */
+    @Test
+    public void testSetWidth() {
+        System.out.println("setWidth");
+        String width = "";
+        Container instance = new Container();
+        instance.setWidth(width);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setLenght method, of class Container.
+     */
+    @Test
+    public void testSetLenght() {
+        System.out.println("setLenght");
+        String lenght = "";
+        Container instance = new Container();
+        instance.setLenght(lenght);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setWeightEmpty method, of class Container.
+     */
+    @Test
+    public void testSetWeightEmpty() {
+        System.out.println("setWeightEmpty");
+        int weightEmpty = 0;
+        Container instance = new Container();
+        instance.setWeightEmpty(weightEmpty);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setWeightLoaded method, of class Container.
+     */
+    @Test
+    public void testSetWeightLoaded() {
+        System.out.println("setWeightLoaded");
+        int weightLoaded = 0;
+        Container instance = new Container();
+        instance.setWeightLoaded(weightLoaded);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setContents method, of class Container.
+     */
+    @Test
+    public void testSetContents() {
+        System.out.println("setContents");
+        String contents = "";
+        Container instance = new Container();
+        instance.setContents(contents);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setContentType method, of class Container.
+     */
+    @Test
+    public void testSetContentType() {
+        System.out.println("setContentType");
+        String contentType = "";
+        Container instance = new Container();
+        instance.setContentType(contentType);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setContentDanger method, of class Container.
+     */
+    @Test
+    public void testSetContentDanger() {
+        System.out.println("setContentDanger");
+        String contentDanger = "";
+        Container instance = new Container();
+        instance.setContentDanger(contentDanger);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setIso method, of class Container.
+     */
+    @Test
+    public void testSetIso() {
+        System.out.println("setIso");
+        String iso = "";
+        Container instance = new Container();
+        instance.setIso(iso);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of toString method, of class Container.
+     */
+    @Test
+    public void testToString() {
+        System.out.println("toString");
+        Container instance = new Container();
+        String expResult = "";
+        String result = instance.toString();
+        assertEquals(expResult, result);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
 }

@@ -64,4 +64,43 @@ public class CraneTest {
         // TODO review the generated test code and remove the default call to fail.
         
     }
+
+    /**
+     * Test of loadContainer method, of class Crane.
+     */
+    @Test
+    public void testLoadContainer() {
+        System.out.println("loadContainer");
+        Container cont = null;
+        Crane instance = null;
+        instance.loadContainer(cont);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of getContainer method, of class Crane.
+     */
+    @Test
+    public void testGetContainer() {
+        System.out.println("getContainer");
+        Container cont = null;
+        Crane instance = null;
+        instance.getContainer(cont);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
+
+    /**
+     * Test of setIsReady method, of class Crane.
+     */
+    @Test
+    public void testSetIsReady() {
+        System.out.println("setIsReady");
+        boolean b = false;
+        Crane instance = null;
+        instance.setIsReady(b);
+        // TODO review the generated test code and remove the default call to fail.
+        fail("The test case is a prototype.");
+    }
 }

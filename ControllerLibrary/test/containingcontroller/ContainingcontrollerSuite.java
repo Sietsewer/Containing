@@ -16,7 +16,7 @@ import org.junit.runners.Suite;
  * @author Wessel
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({containingcontroller.PathFinderTest.class, containingcontroller.ControllerTest.class, containingcontroller.ContainerDepartureComparerTest.class, containingcontroller.TransporterComparerTest.class, containingcontroller.BufferTest.class, containingcontroller.TransportTypesTest.class, containingcontroller.TransporterTest.class, containingcontroller.AGVTest.class, containingcontroller.PathNodeTest.class, containingcontroller.ContainerTest.class, containingcontroller.ContainerComparerTest.class, containingcontroller.CraneTest.class})
+@Suite.SuiteClasses({CommandsTest.class, PathFinderTest.class, ControllerTest.class, ContainerDepartureComparerTest.class, TransporterComparerTest.class, BufferTest.class, TransporterTest.class, TransportTypesTest.class, ServerTest.class, AGVTest.class, PathNodeTest.class, ContainerTest.class, ContainerComparerTest.class, PreferedAGVTest.class, CraneTest.class, IWindowTest.class, WaypointTest.class, ServerClientTest.class})
 public class ContainingcontrollerSuite {
 
     @BeforeClass

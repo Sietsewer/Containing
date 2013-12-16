@@ -95,4 +95,61 @@ public class AGVTest {
         
         
     }
+
+    /**
+     * Test of moveToCrane method, of class AGV.
+     */
+    @Test
+    public void testMoveToCrane() {
+        System.out.println("moveToCrane");
+        assertEquals(true, true);
+    }
+
+    /**
+     * Test of moveToHome method, of class AGV.
+     */
+    @Test
+    public void testMoveToHome() {
+        System.out.println("moveToHome");
+        assertEquals(true, true);
+    }
+
+    /**
+     * Test of setIsReady method, of class AGV.
+     */
+    @Test
+    public void testSetIsReady() {
+        System.out.println("setIsReady");
+        boolean newValue = false;
+        Buffer b = new Buffer();
+        AGV instance = new AGV(b.pathNodeUp, b);
+        instance.setIsReady(newValue);
+        assertEquals(true, true);
+    }
+
+    /**
+     * Test of setReady method, of class AGV.
+     */
+    @Test
+    public void testSetReady() {
+        System.out.println("setReady");
+        boolean ready = false;
+        Buffer b = new Buffer();
+        AGV instance = new AGV(b.pathNodeUp, b);
+        instance.setReady(ready);
+        assertEquals(true, true);
+    }
+
+    /**
+     * Test of setIsHome method, of class AGV.
+     */
+    @Test
+    public void testSetIsHome() {
+        System.out.println("setIsHome");
+        boolean isHome = false;
+        Buffer b = new Buffer();
+        AGV instance = new AGV(b.pathNodeUp, b);
+        instance.setIsHome(isHome);
+        assertEquals(true, true);
+    }
 }

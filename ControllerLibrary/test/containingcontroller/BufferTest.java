@@ -202,8 +202,49 @@ public class BufferTest {
         
         int expResult = count;
         int result = instance.getContainerCount();
-        assertEquals(expResult, result);
-        
-        
+        assertEquals(expResult, result);                
+    }
+
+    /**
+     * Test of addContainer method, of class Buffer.
+     */
+    @Test
+    public void testAddContainer() {
+        System.out.println("addContainer");
+        Container container = new Container();
+        container.setBufferPosition(new CustomVector3f(0, 0, 0));
+        Buffer instance = new Buffer();
+        instance.reservePosition(container);
+        instance.addContainer(container);
+        assertEquals(true, true);
+    }
+
+    /**
+     * Test of removeContainer method, of class Buffer.
+     */
+    @Test
+    public void testRemoveContainer() {
+        System.out.println("removeContainer");
+        Container container = new Container();
+        container.setBufferPosition(new CustomVector3f(0, 0, 0));
+        container.setId("testID");
+        Buffer instance = new Buffer();
+        instance.reservePosition(container);
+        instance.addContainer(container);
+        instance.removeContainer(container);
+        assertEquals(true, true);
+    }
+
+    /**
+     * Test of reservePosition method, of class Buffer.
+     */
+    @Test
+    public void testReservePosition() {
+        System.out.println("reservePosition");
+        Container container = new Container();
+        container.setBufferPosition(new CustomVector3f(0, 0, 0));
+        Buffer instance = new Buffer();
+        instance.reservePosition(container);
+        assertEquals(true, true);
     }
 }

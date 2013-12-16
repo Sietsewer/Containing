@@ -191,6 +191,7 @@ public class ContainerTest {
         System.out.println("getBufferPosition");
         Container instance = new Container();
         instance.setPosition(new CustomVector3f(0, 0, 0));
+        instance.setBufferPosition(new CustomVector3f(0, 0, 0));
         CustomVector3f expResult = new CustomVector3f(0, 0, 0);
         CustomVector3f result = instance.getBufferPosition();
         assertEquals(expResult, result);

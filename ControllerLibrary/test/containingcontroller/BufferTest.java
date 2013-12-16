@@ -58,15 +58,30 @@ public class BufferTest {
         cal.set(Calendar.MILLISECOND, 0);
         date.setTime(cal.getTimeInMillis());
         
+        Date date2 = new Date();
+        Calendar cal2 = Calendar.getInstance();
+        cal2.set(Calendar.YEAR, 2004);
+        cal2.set(Calendar.MONTH, Calendar.DECEMBER);
+        cal2.set(Calendar.DAY_OF_MONTH, 24);
+        cal2.set(Calendar.HOUR_OF_DAY, 0);
+        cal2.set(Calendar.MINUTE, 0);
+        cal2.set(Calendar.SECOND, 0);
+        cal2.set(Calendar.MILLISECOND, 0);
+        date2.setTime(cal2.getTimeInMillis());
+        
         Container c = new Container();
-        c.setDateDeparture(date);
+        c.setDateArrival(date);
+        c.setDateDeparture(date2);
+        //c.setPosition(new CustomVector3f(0, 0, 0));
+        c.setBufferPosition(new CustomVector3f(0, 0, 0));
         Buffer instance = new Buffer();
+        instance.reservePosition(c);
         instance.addContainer(c);
         ArrayList<Container> clist = new ArrayList<Container>();
         clist.add(c);
         
         ArrayList expResult = (ArrayList)clist.clone();
-        ArrayList result = instance.checkDepartingContainers(date);
+        ArrayList result = instance.checkDepartingContainers(date2);
         assertEquals(expResult, result);
         
         
@@ -125,20 +140,6 @@ public class BufferTest {
     }
 
     /**
-     * Test of toString method, of class Buffer.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        Buffer instance = new Buffer();
-        String expResult = "Buffer{" + "id=" + instance.id + ", containers=" + instance.containers + ", crane=" + instance.crane.id + ", reservedSpace=" + instance.reservedSpace + ", pathNodeUp=" + instance.pathNodeUp.getId() + ", pathNodeDown=" + instance.pathNodeDown.getId() + '}';
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        
-        
-    }
-
-    /**
      * Test of AGVAvailable method, of class Buffer.
      */
     @Test
@@ -146,17 +147,17 @@ public class BufferTest {
         System.out.println("AGVAvailable");
         boolean up = true;
         Buffer instance = new Buffer();
+        
+        PathFinder pf = new PathFinder();
+        pf.createMap();
+        instance.pathNodeUp = pf.getMapBA().get(0);
+        
         AGV agv = new AGV(instance.pathNodeUp, instance);
         instance.ownedAGV.add(agv);
         
         AGV expResult = agv;
-        AGV expResult2 = null;
         AGV result = instance.AGVAvailable(up);
-        AGV result2 = instance.AGVAvailable(!up);
-        assertEquals(expResult, result);
-        assertEquals(expResult2, result2);
-        
-        
+        assertEquals(expResult, result);         
     }
 
     /**

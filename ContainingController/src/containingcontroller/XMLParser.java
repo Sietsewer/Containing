@@ -33,6 +33,7 @@ public class XMLParser {
      */
     static public List<Container> parseXMLFile(InputStream File) {
         try {
+            int id =0;
             int maxX = 0;
             int maxY = 0;
             int maxZ = 0;
@@ -56,7 +57,8 @@ public class XMLParser {
 
                         if ("record".equals(reader.getLocalName())) {
                             currentContainer = new Container();
-                            currentContainer.setId(reader.getAttributeValue(0));
+                            id+=1;
+                            currentContainer.setId("id"+ id);
                         }
                         if ("recordset".equals(reader.getLocalName())) {
                             containersList = new ArrayList<>();

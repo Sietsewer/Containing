@@ -332,7 +332,9 @@ public class Main extends SimpleApplication implements ScreenController {
         scSModel = assetManager.loadModel("Models/seacrane/seacrane_slider.j3o");
         scHModel = assetManager.loadModel("Models/seacrane/seacrane_slider_hook.j3o");
         Material scMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        scMat.setColor("Color", ColorRGBA.Yellow);
+        Texture sc_text = assetManager.loadTexture("Textures/seacrane/seacrane.png");
+        scMat.setColor("Color", ColorRGBA.White);
+        scMat.setTexture("ColorMap", sc_text);
         scModel.setMaterial(scMat);
         scSModel.setMaterial(scMat);
         scHModel.setMaterial(scMat);

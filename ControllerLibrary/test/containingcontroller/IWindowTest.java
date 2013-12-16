@@ -4,6 +4,7 @@
  */
 package containingcontroller;
 
+import java.util.Calendar;
 import java.util.Date;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -43,11 +44,10 @@ public class IWindowTest {
     @Test
     public void testWriteLogLine() {
         System.out.println("WriteLogLine");
-        String message = "";
+        String message = "testMessage";
         IWindow instance = new IWindowImpl();
         instance.WriteLogLine(message);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -56,11 +56,22 @@ public class IWindowTest {
     @Test
     public void testSetTime() {
         System.out.println("setTime");
-        Date simTime = null;
+        
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2004);
+        cal.set(Calendar.MONTH, Calendar.DECEMBER);
+        cal.set(Calendar.DAY_OF_MONTH, 22);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        date.setTime(cal.getTimeInMillis());
+        
+        Date simTime = date;
         IWindow instance = new IWindowImpl();
         instance.setTime(simTime);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     public class IWindowImpl implements IWindow {

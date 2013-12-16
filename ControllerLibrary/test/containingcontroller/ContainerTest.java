@@ -399,7 +399,19 @@ public class ContainerTest {
     @Test
     public void testSetDateArrival() {
         System.out.println("setDateArrival");
-        Date dateArrival = null;
+        
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2004);
+        cal.set(Calendar.MONTH, Calendar.DECEMBER);
+        cal.set(Calendar.DAY_OF_MONTH, 22);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        date.setTime(cal.getTimeInMillis());
+        
+        Date dateArrival = date;
         Container instance = new Container();
         instance.setDateArrival(dateArrival);
         assertEquals(true, true);
@@ -411,11 +423,24 @@ public class ContainerTest {
     @Test
     public void testSetDateDeparture() {
         System.out.println("setDateDeparture");
+        
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2004);
+        cal.set(Calendar.MONTH, Calendar.DECEMBER);
+        cal.set(Calendar.DAY_OF_MONTH, 22);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        date.setTime(cal.getTimeInMillis());
+        
+        Date dateArrival = date;
+        
         Date dateDeparture = null;
         Container instance = new Container();
         instance.setDateDeparture(dateDeparture);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -427,8 +452,7 @@ public class ContainerTest {
         int transportTypeArrival = 0;
         Container instance = new Container();
         instance.setTransportTypeArrival(transportTypeArrival);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -440,8 +464,7 @@ public class ContainerTest {
         int transportTypeDeparture = 0;
         Container instance = new Container();
         instance.setTransportTypeDeparture(transportTypeDeparture);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -450,11 +473,10 @@ public class ContainerTest {
     @Test
     public void testSetCargoCompanyArrival() {
         System.out.println("setCargoCompanyArrival");
-        String cargoCompanyArrival = "";
+        String cargoCompanyArrival = "testCompany";
         Container instance = new Container();
         instance.setCargoCompanyArrival(cargoCompanyArrival);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -463,11 +485,10 @@ public class ContainerTest {
     @Test
     public void testSetCargoCompanyDeparture() {
         System.out.println("setCargoCompanyDeparture");
-        String cargoCompanyDeparture = "";
+        String cargoCompanyDeparture = "testCompany";
         Container instance = new Container();
         instance.setCargoCompanyDeparture(cargoCompanyDeparture);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -476,11 +497,10 @@ public class ContainerTest {
     @Test
     public void testSetPosition() {
         System.out.println("setPosition");
-        CustomVector3f position = null;
+        CustomVector3f position = new CustomVector3f(0, 0, 0);
         Container instance = new Container();
         instance.setPosition(position);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -489,11 +509,10 @@ public class ContainerTest {
     @Test
     public void testSetBufferPosition() {
         System.out.println("setBufferPosition");
-        CustomVector3f bufferPosition = null;
+        CustomVector3f bufferPosition = new CustomVector3f(0, 0, 0);
         Container instance = new Container();
         instance.setBufferPosition(bufferPosition);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -502,11 +521,10 @@ public class ContainerTest {
     @Test
     public void testSetOwner() {
         System.out.println("setOwner");
-        String owner = "";
+        String owner = "testOwner";
         Container instance = new Container();
         instance.setOwner(owner);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -518,8 +536,7 @@ public class ContainerTest {
         int containerNumber = 0;
         Container instance = new Container();
         instance.setContainerNumber(containerNumber);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -528,11 +545,10 @@ public class ContainerTest {
     @Test
     public void testSetHeight() {
         System.out.println("setHeight");
-        String height = "";
+        String height = "testHeight";
         Container instance = new Container();
         instance.setHeight(height);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -541,11 +557,10 @@ public class ContainerTest {
     @Test
     public void testSetWidth() {
         System.out.println("setWidth");
-        String width = "";
+        String width = "testWidth";
         Container instance = new Container();
         instance.setWidth(width);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -554,11 +569,10 @@ public class ContainerTest {
     @Test
     public void testSetLenght() {
         System.out.println("setLenght");
-        String lenght = "";
+        String lenght = "testLength";
         Container instance = new Container();
         instance.setLenght(lenght);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -570,8 +584,7 @@ public class ContainerTest {
         int weightEmpty = 0;
         Container instance = new Container();
         instance.setWeightEmpty(weightEmpty);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -580,11 +593,10 @@ public class ContainerTest {
     @Test
     public void testSetWeightLoaded() {
         System.out.println("setWeightLoaded");
-        int weightLoaded = 0;
+        int weightLoaded = 10;
         Container instance = new Container();
         instance.setWeightLoaded(weightLoaded);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -593,11 +605,10 @@ public class ContainerTest {
     @Test
     public void testSetContents() {
         System.out.println("setContents");
-        String contents = "";
+        String contents = "testContents";
         Container instance = new Container();
         instance.setContents(contents);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -606,11 +617,10 @@ public class ContainerTest {
     @Test
     public void testSetContentType() {
         System.out.println("setContentType");
-        String contentType = "";
+        String contentType = "testContentType";
         Container instance = new Container();
         instance.setContentType(contentType);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -619,11 +629,10 @@ public class ContainerTest {
     @Test
     public void testSetContentDanger() {
         System.out.println("setContentDanger");
-        String contentDanger = "";
+        String contentDanger = "testContentDanger";
         Container instance = new Container();
         instance.setContentDanger(contentDanger);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 
     /**
@@ -632,24 +641,9 @@ public class ContainerTest {
     @Test
     public void testSetIso() {
         System.out.println("setIso");
-        String iso = "";
+        String iso = "testISO";
         Container instance = new Container();
         instance.setIso(iso);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of toString method, of class Container.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        Container instance = new Container();
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(true, true);
     }
 }

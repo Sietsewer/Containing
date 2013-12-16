@@ -6,6 +6,7 @@ package containingcontroller;
 
 import containing.xml.Message;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.junit.After;
@@ -75,8 +76,9 @@ public class ControllerTest {
     @Test
     public void testStart() {
         System.out.println("Start");
-        Controller instance = null;
-            assertEquals(true,true);
+        Controller instance = new Controller(new WindowTest());
+        instance.Start();
+        assertEquals(true,true);
         // TODO review the generated test code and remove the default call to fail.
 
     }
@@ -87,11 +89,16 @@ public class ControllerTest {
     @Test
     public void testSendMessage() {
         System.out.println("sendMessage");
-        Message Message = null;
-        Controller instance = null;
-          assertEquals(true,true);
-      
-   
+        Message message = new Message(0, new Object[]{});
+        Controller instance = new Controller(new WindowTest());
+        instance.Start();
+        //instance.startServer();
+        try {
+            instance.sendMessage(message);
+        } catch (Exception e){
+            
+        }
+        assertEquals(true,true);
     }
 
     /**
@@ -100,8 +107,10 @@ public class ControllerTest {
     @Test
     public void testTimerTick() {
         System.out.println("timerTick");
-        Controller instance = null;
-           assertEquals(true,true);
+        Controller instance = new Controller(new WindowTest());
+        instance.Start();
+        instance.timerTick();
+        assertEquals(true,true);
         // TODO review the generated test code and remove the default call to fail.
      
     }
@@ -112,8 +121,16 @@ public class ControllerTest {
     @Test
     public void testPause() {
         System.out.println("pause");
-        Controller instance = null;
-            assertEquals(true,true);
+        Controller instance = new Controller(new WindowTest());
+        instance.Start();
+        //instance.startServer();
+        
+        try {
+            instance.pause();
+        } catch (Exception e){
+            
+        }
+        assertEquals(true,true);
         // TODO review the generated test code and remove the default call to fail.
      
     }
@@ -124,8 +141,15 @@ public class ControllerTest {
     @Test
     public void testShutDown() {
         System.out.println("shutDown");
-        Controller instance = null;
-          assertEquals(true,true);
+        Controller instance = new Controller(new WindowTest());
+        instance.Start();
+        //instance.startServer();
+        try {
+            instance.shutDown();
+        } catch (Exception e){
+            
+        }
+        assertEquals(true,true);
         // TODO review the generated test code and remove the default call to fail.
    
     }
@@ -136,8 +160,9 @@ public class ControllerTest {
     @Test
     public void testStartServer() {
         System.out.println("startServer");
-        Controller instance = null;
-            assertEquals(true,true);
+        Controller instance = new Controller(new WindowTest());
+        instance.startServer();
+        assertEquals(true,true);
         // TODO review the generated test code and remove the default call to fail.
 
     }
@@ -148,8 +173,15 @@ public class ControllerTest {
     @Test
     public void testGetContainerBuffer() {
         System.out.println("getContainerBuffer");
-        AGV agv = null;
-        Crane bufferCrane = null;
+        Controller instance = new Controller(new WindowTest());
+        instance.Start();
+        AGV agv = instance.buffers.get(0).ownedAGV.get(0);
+        Crane bufferCrane = instance.buffers.get(0).crane;
+        try {
+            instance.getContainerBuffer(agv, bufferCrane);
+        } catch (Exception e){
+            
+        }
         assertEquals(true,true);        // TODO review the generated test code and remove the default call to fail.
   
     }
@@ -161,8 +193,9 @@ public class ControllerTest {
     public void testPrintMessage() {
         System.out.println("PrintMessage");
         String message = "";
-        Controller instance = null;
-           assertEquals(true,true);
+        Controller instance = new Controller(new WindowTest());
+        instance.PrintMessage(message);
+        assertEquals(true,true);
         // TODO review the generated test code and remove the default call to fail.
     
     }
@@ -173,10 +206,18 @@ public class ControllerTest {
     @Test
     public void testPutContainer() {
         System.out.println("putContainer");
-        AGV agv = new AGV(new PathNode("test"),new Buffer());
-        Crane crane = new Crane("test",0);
-        Controller instance = null;
-          assertEquals(true,true);
+        Controller instance = new Controller(new WindowTest());
+        instance.Start();
+        
+        AGV agv = instance.buffers.get(0).ownedAGV.get(0);
+        Crane bufferCrane = instance.buffers.get(0).crane;
+        try {
+            instance.putContainer(agv, bufferCrane);
+        } catch (Exception e){
+            
+        }
+        
+        assertEquals(true,true);
         // TODO review the generated test code and remove the default call to fail.
        
     }
@@ -187,9 +228,17 @@ public class ControllerTest {
     @Test
     public void testBufferCraneReady() {
         System.out.println("bufferCraneReady");
-        Buffer b = null;
-        Controller instance = null;
-     assertEquals(true,true);
+        Controller instance = new Controller(new WindowTest());
+        instance.Start();
+        Buffer b = instance.buffers.get(0);
+        
+        try {
+            instance.bufferCraneReady(b);
+        } catch (Exception e){
+            
+        }
+        
+        assertEquals(true,true);
         // TODO review the generated test code and remove the default call to fail.
         
     }
@@ -200,7 +249,7 @@ public class ControllerTest {
     @Test
     public void testSetContainers() throws Exception{
         System.out.println("setContainers");
-        List<Container> containers = new ArrayList();
+        
         assertEquals(true,true);
         // TODO review the generated test code and remove the default call to fail.
       

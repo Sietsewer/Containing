@@ -135,12 +135,12 @@ public class OffsetRoute {
         
         temp = buildWay("m16");
 
-        temp.addWay("m15", "m1", new Vector3f(-3f,0f,-4f), new Vector3f(-9f,0f,-4f));
-        temp.addWay("m15", "m13", new Vector3f(3f,0f,-4f), new Vector3f(9f,0f,-4f));
-        temp.addWay("m13", "m1", new Vector3f(-3f,0f,4f), new Vector3f(-9f,0f,4f));
-        temp.addWay("m13", "m15", new Vector3f(-3f,0f,4f), new Vector3f(-9f,0f,4f));
-        temp.addWay("m1", "m13", new Vector3f(3f,0f,-4f), new Vector3f(9f,0f,-4f));
-        temp.addWay("m1", "m15", new Vector3f(3f,0f,4f), new Vector3f(9f,0f,4f));
+        temp.addWay("m15", "m1", new Vector3f(3f,0f,-4f), new Vector3f(9f,0f,-4f));
+        temp.addWay("m15", "m13", new Vector3f(-3f,0f,-4f), new Vector3f(-9f,0f,-4f));
+        temp.addWay("m13", "m1", new Vector3f(3f,0f,4f), new Vector3f(9f,0f,4f));
+        temp.addWay("m13", "m15", new Vector3f(3f,0f,4f), new Vector3f(9f,0f,4f));
+        temp.addWay("m1", "m13", new Vector3f(-3f,0f,-4f), new Vector3f(-9f,0f,-4f));
+        temp.addWay("m1", "m15", new Vector3f(-3f,0f,4f), new Vector3f(-9f,0f,4f));
 
         
     }
@@ -236,125 +236,4 @@ public class OffsetRoute {
       map.put("m14",new Vector3f(65,10,55));
       map.put("m15",new Vector3f(65,10,475));
       map.put("m16",new Vector3f(95.5f,10,472));
-      * 
-      * 
-      * -4, 3 | 3, -4
  */
-/*
-             if (id.length() == 2) {
-             switch (id.charAt(1)) {
-             case ('1'):
-             if (idNext.equalsIgnoreCase("m16") || idNext.equalsIgnoreCase("m2")) {
-             if (lane == 2) {
-             returnVector = new Vector3f(86.5f, 10f, 512.5f);
-             } else {
-             returnVector = new Vector3f(92.5f, 10f, 506.5f);
-             }
-             } else {
-             if (lane == 2) {
-             returnVector = new Vector3f(104.5f, 10f, 494.5f);
-             } else {
-             returnVector = new Vector3f(98.5f, 10f, 500.5f);
-             }
-             }
-             break;
-             case ('2'):
-             break;
-             case ('3'):
-             break;
-             case ('4'):
-             break;
-             case ('5'):
-             break;
-             case ('6'):
-             break;
-             case ('7'):
-             break;
-             case ('8'):
-             break;
-             case ('9'):
-             break;
-             }
-             } else {
-             switch (id.charAt(2)) {
-             case ('0'):
-             break;
-             case ('1'):
-             break;
-             case ('2'):
-             if (direction == FastMath.PI * .5) {
-             returnVector = new Vector3f(120.5f, 10f, 50f);
-             } else if ((direction > (FastMath.PI * 1.25)) || (direction < (FastMath.PI * 0.25))) {
-             if (lane == 2) {//98.5, 63.5
-             returnVector = new Vector3f(127.5f, 10f, 69.5f);
-             } else {//104.5, 69.5
-             returnVector = new Vector3f(127.5f, 10f, 63.5f);
-             }
-             } else {
-             if (lane == 2) {//92.5, 57.5
-             returnVector = new Vector3f(127.5f, 10f, 51.5f);
-             } else {//86.5, 51.5
-             returnVector = new Vector3f(127.5f, 10f, 57.5f);
-             }
-             }
-             break;
-             case ('3'):
-             if (idLast.equalsIgnoreCase("bfa001")) {
-             if (lane == 2) {//92.5, 57.5
-             returnVector = new Vector3f(86.5f, 10f, 51.5f);
-             } else {//86.5, 51.5
-             returnVector = new Vector3f(92.5f, 10f, 57.5f);
-             }
-             } else {
-             if (lane == 2) {//98.5, 63.5
-             returnVector = new Vector3f(104.5f, 10f, 69.5f);
-             } else {//104.5, 69.5
-             returnVector = new Vector3f(98.5f, 10f, 63.5f);
-             }
-             }
-             break;
-             case ('4'):
-             if (direction == FastMath.PI * 1.5f) {
-             returnVector = new Vector3f(61.5f, 10f, 51.5f);
-             } else {
-             returnVector = new Vector3f(68.5f, 10f, 58.5f);
-             }
-             break;
-             case ('5'):
-             if (idNext.equalsIgnoreCase("m16")) {
-             returnVector = returnVector.add(-4f,0f,3f);
-             } else {
-             returnVector = returnVector.add(3f,0f,-4f);
-             }
-             break;
-             case ('6'):
-             if (idNext.equalsIgnoreCase("m13")) {
-             if (lane == 2) {
-             returnVector = returnVector.add(4f,0f,9f);
-             } else {
-             returnVector = returnVector.add(4f,0f,3f);
-             }
-             } else if (idNext.equalsIgnoreCase("m1")) {
-             if (lane == 2) {
-             returnVector = returnVector.add(4f,0f,9f);
-             } else {
-             returnVector = returnVector.add(4f,0f,3f);
-             }
-             } else {
-             if (idLast.equalsIgnoreCase("m1")) {
-             if (lane == 2) {
-             returnVector = returnVector.add(-4f,0f,3f);
-             } else {
-             returnVector = returnVector.add(-4f,0f,9f);
-             }
-             } else {
-             if (lane == 2) {
-             returnVector = returnVector.add(-4f,0f,-3f);
-             } else {
-             returnVector = returnVector.add(-4f,0f,-9f);
-             }
-             }
-             }
-             break;
-             }
-             }*/

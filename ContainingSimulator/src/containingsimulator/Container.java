@@ -256,20 +256,20 @@ public class Container extends Node {
                 "Textures/Container/axe.png"));
         companyTextures.put("LLyod", am.loadTexture(
                 "Textures/Container/lloyd.png"));
-        
-        
-            companyTextures.put("GJMW", am.loadTexture(
+                
+        companyTextures.put("GJMW", am.loadTexture(
                 "Textures/Container/GJMW.png"));
         companyTextures.put("WoodNorge", am.loadTexture(
                 "Textures/Container/woodnorge.png"));
         companyTextures.put("FlowersNL", am.loadTexture(
                 "Textures/Container/flowersnl.png"));
-
-
-
-
-
-
+        
+        companyTextures.put("FruitINT", am.loadTexture(
+                "Textures/Container/fruitint.png"));
+        companyTextures.put("IntTrans", am.loadTexture(
+                "Textures/Container/inttrans.png"));
+        companyTextures.put("MaasHolland", am.loadTexture(
+                "Textures/Container/maasholland.png"));
 
         mat.setTexture("ColorMap", Tex);
         r = new Random();

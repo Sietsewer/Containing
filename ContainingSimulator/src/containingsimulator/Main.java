@@ -194,7 +194,6 @@ public class Main extends SimpleApplication implements ScreenController {
     public void loadGame() {
         Path.createPath();
         loadAssets();
-        showPathNodes(true); //set false for disabling view PathNodes 
         init_Input();
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);

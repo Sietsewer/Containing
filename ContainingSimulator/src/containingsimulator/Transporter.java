@@ -217,14 +217,15 @@ public class Transporter extends Node implements MotionPathListener {
         Vector3f pos = new Vector3f(container.indexPosition.x, container.indexPosition.y, container.indexPosition.z);
         if (containers[(int) pos.x][(int) pos.y][(int) pos.z] == null) {
             containers[(int) pos.x][(int) pos.y][(int) pos.z] = container;
-            this.attachChild(container);
             Vector3f vec = container.getLocalTranslation();
-            vec.y += 1.5f + size.y;
-            vec.x -= size.x - 1.22f;        
+            vec.y += 1.5f + size.y + (pos.y * 2.44f);
+            vec.x -= size.x - 1.22f - (pos.z * 14.41f)* (pos.z-1f);
+            vec.z += (pos.x *2.44f)* (pos.x-1f);
             if(this.type == TransportTypes.BARGE){
                 container.setLocalRotation(new Quaternion().fromAngles(0f, 0f, 0f));
             }
             setRendering();
+            this.attachChild(container);
             return true;
         } else {
             return false;

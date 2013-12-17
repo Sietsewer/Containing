@@ -61,12 +61,13 @@ public class Controller {
     HashMap<Crane, AGV> waitingForBuferCranePickup;
     HashMap<Crane, AGV> waitingForBufferCraneGive;
     List<Transporter> availbleForLoad;
-
+List<AGV> movingHome;
     List<Crane> puttingToTransporter;
     HashMap<Crane, AGV> pickingupToLoad;
     HashMap<AGV, Crane> movingToLoad;
     HashMap<Container, Crane> containerToCrane;
     List<String> messageLog;
+    List<Transporter> currentDepartingTranspoters;
 
     HashMap<Crane, AGV> waitingForContainerFromBuffer;
 
@@ -87,6 +88,7 @@ public class Controller {
     public Controller(IWindow window) {
 
         this.window = window;
+        currentDepartingTranspoters = new ArrayList<Transporter>();
         waitingForContainerFromBuffer = new HashMap<Crane, AGV>();
         goingToCrane = new HashMap< AGV, Crane>();
         waitingForBuferCranePickup = new HashMap<Crane, AGV>();
@@ -108,6 +110,7 @@ public class Controller {
         pickingupToLoad = new HashMap<Crane, AGV>();
         containerToCrane = new HashMap<Container, Crane>();
         availbleForLoad = new ArrayList<Transporter>();
+        movingHome =new ArrayList<AGV>();
         //Set time of simulator
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2004);
@@ -461,6 +464,7 @@ public class Controller {
                         buf.crane.container = departingContainer;
                         buf.removeContainer(departingContainer);
                         movingToTransporter.add(departingContainer);
+
                         if (agvToMove.home.getId().startsWith("bfa")) {
                             Message m = new Message(Commands.PICKUP_CONTAINER, new Object[]{buf.crane.id, true, departingContainer.getId()});
                             this.sendMessage(m);
@@ -471,6 +475,12 @@ public class Controller {
                     } else {
                         boolean exists = false;
                         for (Transporter t : allDepartingTransporters) {
+                            if (t.getTransportType() == departingContainer.getTransportTypeDeparture()) {
+                                exists = true;
+                                break;
+                            }
+                        }
+                        for (Transporter t : currentDepartingTranspoters) {
                             if (t.getTransportType() == departingContainer.getTransportTypeDeparture()) {
                                 exists = true;
                                 break;
@@ -530,7 +540,7 @@ public class Controller {
             }
             if (t.getDockingPoint() != null) {
                 currentTransporter.add(t);
-
+                        currentDepartingTranspoters.add(t);
                 PrintMessage("Departing: " + t.toString());
 
                 Message m = new Message(Commands.CREATE_TRANSPORTER, null);
@@ -713,7 +723,14 @@ public class Controller {
 
             }
 
-        } else if (agvLoadedMovingHome.contains(agv)) {
+        }else if(movingHome.contains(agv))
+        {
+            movingHome.remove(agv);
+            agv.setIsHome(true);
+                    
+        }
+        else if (agvLoadedMovingHome.contains(agv)) {
+            
             Crane bufferCrane = agv.homeBuffer.crane;
             if (bufferCrane.ready) {
                 getContainerBuffer(agv, bufferCrane);
@@ -882,6 +899,7 @@ public class Controller {
             AGV a = loadingContainer.get(c);
             loadingContainer.remove(c);
             a.moveToHome(c, this);
+            movingHome.add(a);
             c.setIsReady(false);
             putContainer.add(c);
             Message m = new Message(Commands.PUT_CONTAINER, new Object[]{c.id, c.container.getPosition().x, c.container.getPosition().y, c.container.getPosition().z, dockedTransporter.get(c).id});
@@ -900,6 +918,7 @@ public class Controller {
                 this.sendMessage(m);
                 availbleForLoad.remove(t);
                 dockedTransporter.remove(c);
+                currentDepartingTranspoters.remove(t);
                 currentTransporter.remove(t);
 
             } else {
@@ -926,6 +945,7 @@ public class Controller {
                 if (delete) {
                     Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{t.id});
                     this.sendMessage(m);
+                    currentDepartingTranspoters.remove(t);
                     availbleForLoad.remove(t);
                     dockedTransporter.remove(c);
                     currentTransporter.remove(t);

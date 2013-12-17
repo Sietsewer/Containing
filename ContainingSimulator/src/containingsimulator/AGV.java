@@ -182,7 +182,6 @@ public class AGV extends Node implements MotionPathListener {
                 jumpToPark(targetCrane.getParkingspot());
             } else {
                 jumpToPark(targetCrane.getParkingspot());
-                this.setLocalTranslation(path.getWayPoint(wayPointIndex));
                 this.setLocalRotation(targetCrane.getBaseRotation());
             }
             

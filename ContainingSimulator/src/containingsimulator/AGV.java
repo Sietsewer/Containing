@@ -176,6 +176,7 @@ public class AGV extends Node implements MotionPathListener {
      */
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
         if (wayPointIndex + 1 == path.getNbWayPoints()) {
+           if(targetCrane != null){
             if (targetCrane instanceof BufferCrane) {
                 jumpToPark(((BufferCrane) targetCrane).getBuffer().getBestParkingSpot(up));
             } else if (targetCrane instanceof LorryCrane) {
@@ -184,7 +185,7 @@ public class AGV extends Node implements MotionPathListener {
                 jumpToPark(targetCrane.getParkingspot());
                 this.setLocalRotation(targetCrane.getBaseRotation());
             }
-            
+           }
             pathWasPlaying = false;
             Main.sendReady(id);
         } else {

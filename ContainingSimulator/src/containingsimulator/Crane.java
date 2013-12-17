@@ -108,6 +108,7 @@ public abstract class Crane extends Node implements MotionPathListener {
         {
             pathWasPlaying[i] = false;
         }
+        this.parkingVector = position;
       
     }
     

@@ -221,7 +221,7 @@ public class Transporter extends Node implements MotionPathListener {
             vec.y += 1.5f + size.y + (pos.y * 2.44f);
             vec.x -= size.x - 1.22f - (pos.z * 14.41f)* (pos.z-1f);
             vec.z += (pos.x *2.44f)* (pos.x-1f);
-            if(this.type == TransportTypes.BARGE){
+            if(this.type == TransportTypes.BARGE||this.type == TransportTypes.TRAIN){
                 container.setLocalRotation(new Quaternion().fromAngles(0f, 0f, 0f));
             }
             setRendering();

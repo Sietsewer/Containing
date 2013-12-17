@@ -60,7 +60,7 @@ public abstract class Crane extends Node implements MotionPathListener {
     protected float timeCount = 0;
     private boolean[]pathWasPlaying = new boolean[3];
     protected boolean waitingOnTimer = false;
-    
+    protected Vector3f parkingVector = null;
     
 
     /**
@@ -373,7 +373,6 @@ public abstract class Crane extends Node implements MotionPathListener {
         switch(action)
         {
             case 1:
-                
                 doAction(1,false);
                 break;
             case 2:
@@ -385,7 +384,6 @@ public abstract class Crane extends Node implements MotionPathListener {
             case 4:
                 if(!waitingOnTimer){
                  setTimer(attachDur);}   
-              
                 break;
             case 5:
                 if(doAction(3,true))
@@ -488,10 +486,10 @@ public abstract class Crane extends Node implements MotionPathListener {
         this.target = cont.getWorldTranslation().subtract(new Vector3f(0,cont.size.y,0));
         action = 1;
         busy = true;
-        
+        Vector3f temp = null;
         if(!((this instanceof BufferCrane)||(this instanceof LorryCrane)))
         {
-        Vector3f temp;
+        
         if(this instanceof TrainCrane || this instanceof BargeCrane)
         {
         temp = new Vector3f(target.x,this.getLocalTranslation().y,this.getLocalTranslation().z);
@@ -502,6 +500,8 @@ public abstract class Crane extends Node implements MotionPathListener {
         }
         Path.updatePath(this.id, temp);
         }
+         this.parkingVector = temp;
+        
     }
 
      private void debugMessage(int option, String message)

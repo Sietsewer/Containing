@@ -940,6 +940,10 @@ public class Main extends SimpleApplication implements ScreenController {
                 new KeyTrigger(KeyInput.KEY_U));
         inputManager.addMapping("resetRot-button",
                 new KeyTrigger(KeyInput.KEY_P));
+          inputManager.addMapping("camSpeedPlus-button",
+                new KeyTrigger(KeyInput.KEY_C));
+            inputManager.addMapping("camSpeedMin-button",
+                new KeyTrigger(KeyInput.KEY_X));
 
         inputManager.addListener(actionListener, "left-click");
         inputManager.addListener(actionListener, "right-click");
@@ -950,9 +954,21 @@ public class Main extends SimpleApplication implements ScreenController {
         inputManager.addListener(analogListener, "rotateFor-button");
         inputManager.addListener(analogListener, "rotateBac-button");
         inputManager.addListener(actionListener, "resetRot-button");
+        inputManager.addListener(analogListener, "camSpeedPlus-button");
+        inputManager.addListener(analogListener, "camSpeedMin-button");
     }
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String name, float value, float tpf) {
+            
+            if(name.equals("camSpeedPlus-button"))
+            {
+                flyCam.setMoveSpeed(flyCam.getMoveSpeed()+300*tpf);
+            }
+            else if(name.equals("camSpeedMin-button"))
+            {
+                flyCam.setMoveSpeed(flyCam.getMoveSpeed()-300*tpf);
+            }
+            
             if (cam2EndNode.getParent() == null) {
                 return;
             }
@@ -985,6 +1001,7 @@ public class Main extends SimpleApplication implements ScreenController {
             if (nifty.getCurrentScreen().equals(nifty.getScreen("start"))) {
                 return;
             }
+            
             if (name.equals("Pause")) {
                 app.flyCam.setDragToRotate(true);
                 setCrossHairs(false);

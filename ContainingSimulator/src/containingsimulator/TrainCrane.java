@@ -126,6 +126,6 @@ public class TrainCrane extends Crane implements MotionPathListener{
     
     @Override
     public ParkingSpot getParkingspot() {
-        return new ParkingSpot(this.base.getWorldTranslation(),(float)Math.PI/2f);
+        return new ParkingSpot(parkingVector,(float)Math.PI/2f);
     }
 }

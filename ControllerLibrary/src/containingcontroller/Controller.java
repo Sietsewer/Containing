@@ -895,7 +895,7 @@ public class Controller {
 
     private void craneReady(Crane c) {
         this.PrintMessage("Crane ready - " + c.id);
-        c.setIsReady(true);
+        c.ready = true;
         if (waitingToBeReadyAtCrane.containsValue(c)) {
             System.out.println("waiting agv ");
             AGV agv = getValueFromHashmap(waitingToBeReadyAtCrane, c);
@@ -926,6 +926,11 @@ public class Controller {
 
                 Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{t.id});
                 this.sendMessage(m);
+                List<Crane> cranes = getCranesTransporter(t);
+                for (Crane cra : cranes) {
+                    dockedTransporter.remove(cra);
+                    cra.ready = true;
+                }
                 availbleForLoad.remove(t);
                 dockedTransporter.remove(c);
                 currentDepartingTranspoters.remove(t);
@@ -933,6 +938,7 @@ public class Controller {
 
             } else {
                 boolean delete = true;
+
                 for (Buffer b : buffers) {
                     for (Container cont : b.checkDepartingContainers(simTime)) {
                         if (cont.getTransportTypeDeparture() == t.getTransportType()) {
@@ -951,10 +957,25 @@ public class Controller {
                     }
 
                 }
-
+                if (dockedTransporter.get(c).getTransportType() == TransportTypes.TRAIN) {
+                    if (dockedTransporter.get(c).getContainerCount() >= 30) {
+                        delete=true;
+                    }
+                }
+                else if(dockedTransporter.get(c).getTransportType() == TransportTypes.BARGE)
+                {
+                     if (dockedTransporter.get(c).getContainerCount() >= 190) {
+                        delete=true;
+                    }
+                }
                 if (delete) {
                     Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{t.id});
                     this.sendMessage(m);
+                    List<Crane> cranes = getCranesTransporter(t);
+                    for (Crane cra : cranes) {
+                        dockedTransporter.remove(cra);
+                        cra.ready = true;
+                    }
                     currentDepartingTranspoters.remove(t);
                     availbleForLoad.remove(t);
                     dockedTransporter.remove(c);
@@ -962,7 +983,6 @@ public class Controller {
                 }
 
             }
-            c.ready = true;
 
         } else if (waitingForCraneToPickUpFromAgv.containsKey(c)) {
 

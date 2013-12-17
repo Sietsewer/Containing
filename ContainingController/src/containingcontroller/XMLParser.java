@@ -33,7 +33,7 @@ public class XMLParser {
      */
     static public List<Container> parseXMLFile(InputStream File) {
         try {
-            int id =0;
+            int id = 0;
             int maxX = 0;
             int maxY = 0;
             int maxZ = 0;
@@ -43,10 +43,10 @@ public class XMLParser {
             List<Container> containersList = null;
             Container currentContainer = null;
             String tagContent = null;
-
+            List<String> ID = new ArrayList<String>();
             XMLInputFactory factory = XMLInputFactory.newInstance();
-            XMLStreamReader reader =
-                    factory.createXMLStreamReader(File);
+            XMLStreamReader reader
+                    = factory.createXMLStreamReader(File);
 
             while (reader.hasNext()) {
                 int event = reader.next();
@@ -54,11 +54,16 @@ public class XMLParser {
                 switch (event) {
                     case XMLStreamConstants.START_ELEMENT:
 
-
                         if ("record".equals(reader.getLocalName())) {
                             currentContainer = new Container();
-                            id+=1;
-                            currentContainer.setId("id"+ id);
+                            String contId = reader.getAttributeValue(0);
+                            if (ID.contains(contId)) {
+                                id += 1;
+                                contId = "ownid" + id;
+                            }
+
+                            currentContainer.setId(contId);
+
                         }
                         if ("recordset".equals(reader.getLocalName())) {
                             containersList = new ArrayList<>();
@@ -126,7 +131,6 @@ public class XMLParser {
                                     p.x = 0;
                                 }
 
-
                                 break;
                             case "y":
                                 p.z = Integer.parseInt(tagContent);
@@ -186,8 +190,6 @@ public class XMLParser {
                         }
                         break;
 
-
-
                     case XMLStreamConstants.START_DOCUMENT:
                         containersList = new ArrayList<>();
                         break;
@@ -202,7 +204,6 @@ public class XMLParser {
             Logger.getLogger(XMLParser.class.getName()).log(Level.SEVERE, null, ex);
             return null;
         }
-
 
     }
 }

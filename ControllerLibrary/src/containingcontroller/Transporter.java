@@ -81,20 +81,16 @@ class Transporter {
             }
 
         } else if (transportType == TransportTypes.TRAIN) {
-            for (int x = start; x < start + range; x++) {
-                 boolean posistionTaken = false;
+            for (int x = 0; x < 30; x++) {
+                boolean posistionTaken = false;
                 for (Container c : containers) {
-                    if (c.getPosition().x != x) {
-                       posistionTaken=true;
+                    if (c.getPosition().x == x) {
+                        posistionTaken = true;
+                        break;
                     }
                 }
-                if(posistionTaken)
-                {
-                    return null;
-                }
-                else
-                {
-                    return new CustomVector3f(x,0,0);
+                if (!posistionTaken) {
+                    return new CustomVector3f(x, 0, 0);
                 }
             }
         } else if (transportType == TransportTypes.LORREY) {
@@ -144,17 +140,15 @@ class Transporter {
 
     }
 
-    public void RemoveContainer(Container c)
-    {
-        for(int i =0;i< containers.size(); i++)
-        {
-            if(containers.get(i).getId().trim().equalsIgnoreCase(c.getId().trim()))
-            {
+    public void RemoveContainer(Container c) {
+        for (int i = 0; i < containers.size(); i++) {
+            if (containers.get(i).getId().trim().equalsIgnoreCase(c.getId().trim())) {
                 containers.remove(i);
                 i--;
             }
         }
     }
+
     public int getContainerCount() {
         if (containers != null) {
             return containers.size();
@@ -220,10 +214,9 @@ class Transporter {
 
     public boolean reservePosition(Container container) {
         if (container.getDateArrival().before(container.getDateDeparture())) {
-           if(containers==null)
-           {
-               containers= new ArrayList<Container>();
-           }
+            if (containers == null) {
+                containers = new ArrayList<Container>();
+            }
             boolean posistionTaken = false;
             for (Container c : containers) {
                 if (c.getPosition().x == container.getPosition().x
@@ -240,10 +233,8 @@ class Transporter {
                 return false;
             }
 
-        }
-        else
-        {
-         return false;   
+        } else {
+            return false;
         }
     }
 

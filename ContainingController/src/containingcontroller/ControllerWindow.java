@@ -116,6 +116,7 @@ public class ControllerWindow extends javax.swing.JFrame implements IWindow {
         jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem21 = new javax.swing.JMenuItem();
+        jMenuItem22 = new javax.swing.JMenuItem();
         jMenuItem12 = new javax.swing.JMenuItem();
         jMenuItem20 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
@@ -217,6 +218,14 @@ public class ControllerWindow extends javax.swing.JFrame implements IWindow {
             }
         });
         jMenu4.add(jMenuItem21);
+
+        jMenuItem22.setText("add half Day");
+        jMenuItem22.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem22ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem22);
 
         jMenuItem12.setText("add Day");
         jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
@@ -426,6 +435,13 @@ openFile(System.getProperty("user.dir")+"\\XML\\xml7.xml");
        
     }//GEN-LAST:event_jMenuItem20ActionPerformed
 
+    private void jMenuItem22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem22ActionPerformed
+    Calendar cal = Calendar.getInstance(); // creates calendar
+        cal.setTime( controller.simTime); // sets calendar time/date
+        cal.add(Calendar.HOUR, 12); // adds one minute
+         controller.simTime = cal.getTime(); // returns new date object, one hour in the future
+    }//GEN-LAST:event_jMenuItem22ActionPerformed
+
     /**
      * write line to log window
      *
@@ -472,6 +488,7 @@ openFile(System.getProperty("user.dir")+"\\XML\\xml7.xml");
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem20;
     private javax.swing.JMenuItem jMenuItem21;
+    private javax.swing.JMenuItem jMenuItem22;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;

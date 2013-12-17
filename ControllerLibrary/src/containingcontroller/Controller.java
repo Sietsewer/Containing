@@ -61,7 +61,7 @@ public class Controller {
     HashMap<Crane, AGV> waitingForBuferCranePickup;
     HashMap<Crane, AGV> waitingForBufferCraneGive;
     List<Transporter> availbleForLoad;
-List<AGV> movingHome;
+    List<AGV> movingHome;
     List<Crane> puttingToTransporter;
     HashMap<Crane, AGV> pickingupToLoad;
     HashMap<AGV, Crane> movingToLoad;
@@ -110,7 +110,7 @@ List<AGV> movingHome;
         pickingupToLoad = new HashMap<Crane, AGV>();
         containerToCrane = new HashMap<Container, Crane>();
         availbleForLoad = new ArrayList<Transporter>();
-        movingHome =new ArrayList<AGV>();
+        movingHome = new ArrayList<AGV>();
         //Set time of simulator
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2004);
@@ -409,6 +409,7 @@ List<AGV> movingHome;
          }
          */
         /*DEPARTURE STUFF ENDS HERE*/
+        allDepartingTransporters.clear();
         for (Buffer buf : buffers) {
             List<Container> departing = buf.checkDepartingContainers(simTime);
             if (departing.size() > 0 && buf.crane.ready) {
@@ -474,16 +475,18 @@ List<AGV> movingHome;
                         }
                     } else {
                         boolean exists = false;
-                        for (Transporter t : allDepartingTransporters) {
-                            if (t.getTransportType() == departingContainer.getTransportTypeDeparture()) {
-                                exists = true;
-                                break;
+                        if (departingContainer.getTransportTypeDeparture() != TransportTypes.LORREY) {
+                            for (Transporter t : allDepartingTransporters) {
+                                if (t.getTransportType() == departingContainer.getTransportTypeDeparture()) {
+                                    exists = true;
+                                    break;
+                                }
                             }
-                        }
-                        for (Transporter t : currentDepartingTranspoters) {
-                            if (t.getTransportType() == departingContainer.getTransportTypeDeparture()) {
-                                exists = true;
-                                break;
+                            for (Transporter t : currentDepartingTranspoters) {
+                                if (t.getTransportType() == departingContainer.getTransportTypeDeparture()) {
+                                    exists = true;
+                                    break;
+                                }
                             }
                         }
                         if (!exists) {
@@ -508,12 +511,21 @@ List<AGV> movingHome;
                     }
                     break;
                 case TransportTypes.SEASHIP:
-                    for (int i = 0; i < 10; i += 2) {
-                        if (!dockedTransporter.containsKey(seaCranes.get(i))) {
-                            Crane c = seaCranes.get(i);
-                            t.setDockingPoint(c);
-                            dockedTransporter.put(c, t);
-                            break;
+                    boolean taken = false;
+                    for (Transporter trans : currentTransporter) {
+                        if (trans.getTransportType() == TransportTypes.SEASHIP) {
+                            taken = true;
+                        }
+                    }
+                    if (!taken) {
+                        for (int i = 0; i < 10; i += 2) {
+
+                            if (!dockedTransporter.containsKey(seaCranes.get(i))) {
+                                Crane c = seaCranes.get(i);
+                                t.setDockingPoint(c);
+                                dockedTransporter.put(c, t);
+                                break;
+                            }
                         }
                     }
                     break;
@@ -540,7 +552,7 @@ List<AGV> movingHome;
             }
             if (t.getDockingPoint() != null) {
                 currentTransporter.add(t);
-                        currentDepartingTranspoters.add(t);
+                currentDepartingTranspoters.add(t);
                 PrintMessage("Departing: " + t.toString());
 
                 Message m = new Message(Commands.CREATE_TRANSPORTER, null);
@@ -723,14 +735,12 @@ List<AGV> movingHome;
 
             }
 
-        }else if(movingHome.contains(agv))
-        {
+        } else if (movingHome.contains(agv)) {
             movingHome.remove(agv);
             agv.setIsHome(true);
-                    
-        }
-        else if (agvLoadedMovingHome.contains(agv)) {
-            
+
+        } else if (agvLoadedMovingHome.contains(agv)) {
+
             Crane bufferCrane = agv.homeBuffer.crane;
             if (bufferCrane.ready) {
                 getContainerBuffer(agv, bufferCrane);
@@ -1420,7 +1430,8 @@ List<AGV> movingHome;
                                 }
                                 break;
                             case 't':
-                                for (Transporter t : currentTransporter) {
+                                ArrayList<Transporter> temp = new ArrayList<Transporter>(currentTransporter);
+                                for (Transporter t : temp) {
                                     if (t.id.equalsIgnoreCase(((String) m.getParameters()[0]))) {
                                         transporterReady(t);
                                         break;

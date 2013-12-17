@@ -19,6 +19,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.texture.Texture;
 import containing.xml.CustomVector3f;
 import java.util.ArrayList;
 
@@ -343,9 +344,9 @@ public class Transporter extends Node implements MotionPathListener {
      */
     public static void makeGeometry(AssetManager am) {
         SEASHIP = am.loadModel("Models/seaShip/seaShip.j3o");
-        SEASHIP.setLocalScale(134.1f, 1f, 19.52f);
+        SEASHIP.setLocalScale(134.1f, 7f, 19.52f);
         SEASHIP.rotate(0, -90f*FastMath.DEG_TO_RAD, 0);
-        SEASHIP.setLocalTranslation(0, 20f, 128f);
+        SEASHIP.setLocalTranslation(0, 19.5f, 128f);
         
         BARGE = am.loadModel("Models/barge/barge.j3o");
         BARGE.setLocalScale(50f, 1f, 5.5f);
@@ -362,11 +363,14 @@ public class Transporter extends Node implements MotionPathListener {
         TRAIN = new Geometry("Train", TRAINb);
 
         Material mat = new Material(am, "Common/MatDefs/Misc/Unshaded.j3md");
+        Material seaShipMat = new Material(am, "Common/MatDefs/Misc/Unshaded.j3md");
+        Texture seaShipText = am.loadTexture("Textures/seaShip/seaShip.png");
+        seaShipMat.setTexture("ColorMap", seaShipText);
         mat.setColor("Color", ColorRGBA.Red);
 
 
 
-        SEASHIP.setMaterial(mat);
+        SEASHIP.setMaterial(seaShipMat);
         BARGE.setMaterial(mat);
         LORRY.setMaterial(mat);
         TRAIN.setMaterial(mat);

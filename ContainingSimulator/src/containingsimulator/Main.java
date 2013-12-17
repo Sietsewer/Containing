@@ -91,6 +91,12 @@ public class Main extends SimpleApplication implements ScreenController {
     Spatial tcModel;
     Spatial tcSModel;
     Spatial tcHModel;
+     /*
+     Bargecrane spatials
+     */
+    Spatial barModel;
+    Spatial barSModel;
+    Spatial barHModel;
     /*
      crane 
      */
@@ -338,7 +344,18 @@ public class Main extends SimpleApplication implements ScreenController {
         scModel.setMaterial(scMat);
         scSModel.setMaterial(scMat);
         scHModel.setMaterial(scMat);
-
+        //Init of bargecrane viewmodel
+        barModel = assetManager.loadModel("Models/seacrane/seacrane.j3o");
+        barSModel = assetManager.loadModel("Models/seacrane/seacrane_slider.j3o");
+        barHModel = assetManager.loadModel("Models/seacrane/seacrane_slider_hook.j3o");
+        Material barMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Texture bar_text = assetManager.loadTexture("Textures/seacrane/bargecrane.png");
+        barMat.setColor("Color", ColorRGBA.White);
+        barMat.setTexture("ColorMap", bar_text);
+        barModel.setMaterial(barMat);
+        barSModel.setMaterial(barMat);
+        barHModel.setMaterial(barMat);
+        
         Material m = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         m.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         // m.setColor("Color", new ColorRGBA(0,0,0,100));
@@ -827,7 +844,7 @@ public class Main extends SimpleApplication implements ScreenController {
         String cID = Path.getBargeID();
         for (int i = 1; i <= 8; i++) {
             String id = cID + String.format("%03d", i);
-            Crane c = new BargeCrane(id, Path.getVector(id), scModel, scSModel, scHModel);
+            Crane c = new BargeCrane(id, Path.getVector(id), barModel, barSModel, barHModel);
             barCranes[i - 1] = c;
 
             rootNode.attachChild(c);

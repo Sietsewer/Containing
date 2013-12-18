@@ -365,7 +365,9 @@ public class Main extends SimpleApplication implements ScreenController {
         bcSModel = assetManager.loadModel("Models/buffercrane/buffercrane_slider.j3o");
         bcHModel = assetManager.loadModel("Models/buffercrane/buffercrane_slider_hook.j3o");
         Material bcMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        bcMat.setColor("Color", ColorRGBA.Yellow);
+        Texture bc_text = assetManager.loadTexture("Textures/buffercrane/buffercrane.png");
+        bcMat.setColor("Color", ColorRGBA.White);
+        bcMat.setTexture("ColorMap", bc_text);
         bcModel.setMaterial(bcMat);
         bcSModel.setMaterial(bcMat);
         bcHModel.setMaterial(bcMat);

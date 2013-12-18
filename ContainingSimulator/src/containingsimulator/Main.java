@@ -569,6 +569,15 @@ public class Main extends SimpleApplication implements ScreenController {
                     System.err.println("Error: No crane/container with this ID");
                 }
                 break;
+                case Commands.MOVE_CRANE:
+               crane = getCraneByID((String) params[0]);
+                crane.transporter = getTransporterByID((String) params[1]);
+                Vector3f indexPos = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
+                realPosition = crane.transporter.getRealContainerPosition(indexPos);
+                System.out.println(crane.getID() + " MOVECRANE CALLED pos: " + indexPos + " : " + realPosition);
+                crane.transporter = null;
+                crane.moveToPos(realPosition);
+                break;
             case Commands.GET_CONTAINER:
                 agv = getAGVbyID((String) params[0]);
                 crane = getCraneByID((String) params[1]);

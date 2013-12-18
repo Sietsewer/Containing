@@ -61,6 +61,7 @@ public abstract class Crane extends Node implements MotionPathListener {
     private boolean[]pathWasPlaying = new boolean[3];
     protected boolean waitingOnTimer = false;
     protected Vector3f parkingVector = null;
+    protected boolean onlyMoveToPos = false;
     
 
     /**
@@ -159,7 +160,7 @@ public abstract class Crane extends Node implements MotionPathListener {
     
     public void update(float tpf)
      {
-         if(target!=null)
+         if(target!=null && action != 0)
          {
          updateSpeed();
          
@@ -175,6 +176,10 @@ public abstract class Crane extends Node implements MotionPathListener {
           else{return;}
          }
          
+         if(onlyMoveToPos)
+         {
+             updateMoveToPos();
+         }else
          if(pickupContainer)
          {
           updatePickup();
@@ -217,6 +222,31 @@ public abstract class Crane extends Node implements MotionPathListener {
         else
         {
              debugMessage(1,"getContainer");
+        }
+    }
+    public void moveToPos(Vector3f realPosition)
+    {
+        if(!busy)
+        {
+            System.out.println(this.id + " move to Pos: " + realPosition);
+           target = realPosition;
+           onlyMoveToPos = true;
+           initializeStartUp();
+        }else{System.out.println(this.id + " is already busy");}
+    }
+    private void updateMoveToPos()
+    {
+        System.out.println(this.id + " moves to position: " + target + ", is at action:" + action );
+        switch(action)
+        {
+            case 1:
+                doAction(1,false);
+                break;
+            case 2:
+                onlyMoveToPos = false;
+                finishActions();
+
+                break;
         }
     }
     
@@ -325,6 +355,7 @@ public abstract class Crane extends Node implements MotionPathListener {
          this.target = null;
          this.cont = null;
          this.transporter = null;
+         
          sendMessage(this.id + " transfer finished");
     }
 
@@ -416,6 +447,7 @@ public abstract class Crane extends Node implements MotionPathListener {
              transporter.setContainer(cont);
              transporter = null;
          }
+       
          loaded = false;
      }
      
@@ -438,11 +470,14 @@ public abstract class Crane extends Node implements MotionPathListener {
         {
             ((BufferCrane)this).getBuffer().removeContainer(cont.indexPosition);
         }
+        
         }
-        else if(!pickupContainer && agv!= null)
+        else if(!pickupContainer)
         {
+            if(agv!= null){
             agv.getContainer();//this.cont=
-            agv = null;
+            agv = null;}
+            else{System.out.println(this.id + " has agv that is null at getContainer");}
         } 
       
         cont.rotate(0, base.getWorldRotation().toAngles(null)[1], 0);
@@ -477,14 +512,17 @@ public abstract class Crane extends Node implements MotionPathListener {
            if (!readyForL) 
             {
                 readyForL = true;
-                sendMessage("container ready for drop");
+                sendMessage(this.id + " has container ready for drop");
             } 
             return (readyForL && loadContainer);
      }
 
     private void initializeStartUp()
     {
+        if(!onlyMoveToPos)
+        {
         this.target = cont.getWorldTranslation().subtract(new Vector3f(0,cont.size.y,0));
+        }
         action = 1;
         busy = true;
         Vector3f temp = null;

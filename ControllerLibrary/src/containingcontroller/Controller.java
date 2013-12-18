@@ -955,6 +955,11 @@ public class Controller {
                         delete = true;
                     }
                 }
+                else if (dockedTransporter.get(c).getTransportType() == TransportTypes.LORREY) {
+                    if (dockedTransporter.get(c).getContainerCount() >= 1) {
+                        delete = true;
+                    }
+                }
                 if (delete) {
                     Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{t.id});
                     this.sendMessage(m);

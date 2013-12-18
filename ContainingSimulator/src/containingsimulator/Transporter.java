@@ -97,8 +97,8 @@ public class Transporter extends Node implements MotionPathListener {
 
         Geometry currentGeometry = null;
         Spatial currentSpatial = null;
-        
-        
+
+
 
         switch (type) {
             case TransportTypes.SEASHIP:
@@ -113,7 +113,7 @@ public class Transporter extends Node implements MotionPathListener {
                 containers = new Container[12][4][4];
                 currentSpatial = BARGE.clone();
                 size = new Vector3f(4.88f, -7f, 85f);
-                this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+                this.rotate(0, 90 * FastMath.DEG_TO_RAD, 0);
                 //position.y -= 10f;
                 this.position.z += 20f;
                 this.speed = 11;
@@ -123,7 +123,7 @@ public class Transporter extends Node implements MotionPathListener {
                 currentGeometry = TRAIN.clone();
                 size = new Vector3f(TRAINb.xExtent, TRAINb.yExtent, TRAINb.yExtent);
                 this.position.z -= 8f;
-                this.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+                this.rotate(0, 90 * FastMath.DEG_TO_RAD, 0);
                 this.speed = 300;
                 break;
             default:
@@ -134,12 +134,12 @@ public class Transporter extends Node implements MotionPathListener {
                 this.speed = 22;
                 break;
         }
-        
+
         Vector3f first = new Vector3f(this.position);
-        
+
         switch (type) {
             case TransportTypes.SEASHIP:
-                first.z -= 200f; 
+                first.z -= 200f;
                 break;
             case TransportTypes.BARGE:
                 first.x -= 200f;
@@ -149,13 +149,13 @@ public class Transporter extends Node implements MotionPathListener {
                 break;
             default:
             case TransportTypes.LORRY:
-                first.z += 50f; 
+                first.z += 50f;
                 break;
         }
-            
+
 
         for (SimContainer container : containersList) {
-       
+
             try {
                 this.containers[(int) container.getIndexPosition().x][(int) container.getIndexPosition().y][(int) container.getIndexPosition().z] = new Container(container);
             } catch (Exception e) {
@@ -167,15 +167,16 @@ public class Transporter extends Node implements MotionPathListener {
         path.setPathSplineType(Spline.SplineType.Linear);
         path.addListener(this);
         path.addWayPoint(first);
-        if(type == TransportTypes.TRAIN){
-        path.addWayPoint(first.subtract(this.position.x,0,0));}
+        if (type == TransportTypes.TRAIN) {
+            path.addWayPoint(first.subtract(this.position.x, 0, 0));
+        }
         path.addWayPoint(this.position);
-        
-        motionEvent = new MotionEvent(this,this.path);
-       
-        motionEvent.setInitialDuration(path.getLength()/speed/Main.globalSpeed);
 
-        
+        motionEvent = new MotionEvent(this, this.path);
+
+        motionEvent.setInitialDuration(path.getLength() / speed / Main.globalSpeed);
+
+
 
 
         for (int z = 0; z < containers[0][0].length; z++) {
@@ -196,12 +197,12 @@ public class Transporter extends Node implements MotionPathListener {
         setRendering();
 
         this.setLocalTranslation(this.position);
-        if(currentGeometry != null) {
+        if (currentGeometry != null) {
             this.attachChild(currentGeometry);
-        } else  if(currentSpatial != null) {
+        } else if (currentSpatial != null) {
             this.attachChild(currentSpatial);
         }
-      
+
         this.motionEvent.play();
     }
 
@@ -219,9 +220,9 @@ public class Transporter extends Node implements MotionPathListener {
             containers[(int) pos.x][(int) pos.y][(int) pos.z] = container;
             Vector3f vec = container.getLocalTranslation();
             vec.y += 1.5f + size.y + (pos.y * 2.44f);
-            vec.x -= size.x - 1.22f - (pos.z * 14.41f)* (pos.z-1f);
-            vec.z += (pos.x *2.44f)* (pos.x-1f);
-            if(this.type == TransportTypes.BARGE||this.type == TransportTypes.TRAIN){
+            vec.x -= size.x - 1.22f - (pos.z * 2.44f);
+            vec.z += (pos.x * 14.41f);
+            if (this.type == TransportTypes.BARGE || this.type == TransportTypes.TRAIN) {
                 container.setLocalRotation(new Quaternion().fromAngles(0f, 0f, 0f));
             }
             setRendering();
@@ -250,19 +251,19 @@ public class Transporter extends Node implements MotionPathListener {
 
         return tempCont;
     }
-    
+
     /**
      * Finds and returns a container by container ID
      *
      * @param id the id to search for
      * @return reference to a container that matches the ID
      */
-    public Container getContainerByID(String id){
+    public Container getContainerByID(String id) {
         Container tempCont = null;
-        for(int i = 0; i < containers.length; i++){
-            for(int j = 0; j < containers[0].length; j++){
-                for(int k = 0; k < containers[0][0].length; k++){
-                    if(containers[i][j][k] != null && containers[i][j][k].id.equalsIgnoreCase(id)){
+        for (int i = 0; i < containers.length; i++) {
+            for (int j = 0; j < containers[0].length; j++) {
+                for (int k = 0; k < containers[0][0].length; k++) {
+                    if (containers[i][j][k] != null && containers[i][j][k].id.equalsIgnoreCase(id)) {
                         tempCont = containers[i][j][k];
                         return tempCont;
                     }
@@ -271,13 +272,16 @@ public class Transporter extends Node implements MotionPathListener {
         }
         return tempCont;
     }
-    
+
     /**
      * Find the actual position of a container inside this simulation
-     * @param indexpos index of the container for which to find the position inside the simulation
-     * @return the position of the container with this index inside the simulation
+     *
+     * @param indexpos index of the container for which to find the position
+     * inside the simulation
+     * @return the position of the container with this index inside the
+     * simulation
      */
-    public Vector3f getRealContainerPosition(Vector3f indexpos){
+    public Vector3f getRealContainerPosition(Vector3f indexpos) {
         if (this.containers[(int) indexpos.x][(int) indexpos.y][(int) indexpos.z] != null) {
             return this.containers[(int) indexpos.x][(int) indexpos.y][(int) indexpos.z].getWorldTranslation();
         } else {
@@ -304,31 +308,32 @@ public class Transporter extends Node implements MotionPathListener {
             }
         }
     }
-    
-    public void globalSpeedChanged(){
-        motionEvent.setInitialDuration(path.getLength()/speed/Main.globalSpeed);
+
+    public void globalSpeedChanged() {
+        motionEvent.setInitialDuration(path.getLength() / speed / Main.globalSpeed);
     }
-    
+
     /**
      * Move transporter to next waypoint and rotate it accordingly
+     *
      * @param wayPointIndex the index of the waypoint to move towards
      */
-   
-    private void nextWaypoint(int wayPointIndex){
-       // this.lookAt(path.getWayPoint(wayPointIndex),Vector3f.UNIT_Y);
-       motionEvent.setSpeed(0.5f);
-        
-        
+    private void nextWaypoint(int wayPointIndex) {
+        // this.lookAt(path.getWayPoint(wayPointIndex),Vector3f.UNIT_Y);
+        motionEvent.setSpeed(0.5f);
+
+
     }
-    
+
     /**
      * Moves transporter to next waypoint, stops transporter and sends READY to
      * controller once the end is reached
+     *
      * @param motionControl MotionEvent class
      * @param wayPointIndex current index of list of waypoints
      */
     public void onWayPointReach(MotionEvent motionControl, int wayPointIndex) {
-        if(wayPointIndex == path.getNbWayPoints()-1){
+        if (wayPointIndex == path.getNbWayPoints() - 1) {
             path.clearWayPoints();
             this.setLocalTranslation(this.position);
             Main.sendReady(id);
@@ -346,18 +351,18 @@ public class Transporter extends Node implements MotionPathListener {
     public static void makeGeometry(AssetManager am) {
         SEASHIP = am.loadModel("Models/seaShip/seaShip.j3o");
         SEASHIP.setLocalScale(134.1f, 7f, 19.52f);
-        SEASHIP.rotate(0, -90f*FastMath.DEG_TO_RAD, 0);
+        SEASHIP.rotate(0, -90f * FastMath.DEG_TO_RAD, 0);
         SEASHIP.setLocalTranslation(0, 19.5f, 128f);
-        
+
         BARGE = am.loadModel("Models/barge/barge.j3o");
         BARGE.setLocalScale(50f, 1f, 5.5f);
-        BARGE.rotate(0, -90f*FastMath.DEG_TO_RAD, 0);
+        BARGE.rotate(0, -90f * FastMath.DEG_TO_RAD, 0);
         BARGE.setLocalTranslation(0, -7f, 40f);
 
         LORRY = am.loadModel("Models/lorry/lorry.j3o");
         LORRY.setLocalScale(1f, 1f, 1f);
         LORRY.setLocalTranslation(0, 1f, 0f);
-        
+
         //LORRYb = new Box(Vector3f.ZERO, 1.22f, 0.5f, 6.705f); //container size in m divided by 2 because box size grows both ways
         //LORRY = new Geometry("Lorry", LORRYb);
         TRAINb = new Box(new Vector3f(0, 0, 190f), 1.22f, 0.5f, 200f); //container size in m divided by 2 because box size grows both ways

@@ -93,7 +93,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem24">
               <Properties>
-                <Property name="text" type="java.lang.String" value="1000x"/>
+                <Property name="text" type="java.lang.String" value="1000x(unstable)"/>
               </Properties>
             </MenuItem>
           </SubComponents>

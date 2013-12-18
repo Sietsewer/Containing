@@ -219,7 +219,7 @@ public class ControllerWindow extends javax.swing.JFrame implements IWindow {
         jMenuItem23.setText("150x");
         jMenu2.add(jMenuItem23);
 
-        jMenuItem24.setText("1000x");
+        jMenuItem24.setText("1000x(unstable)");
         jMenu2.add(jMenuItem24);
 
         jMenuBar1.add(jMenu2);

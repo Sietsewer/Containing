@@ -848,6 +848,7 @@ public class Controller {
             if (value.id.equalsIgnoreCase(c.id)) {
                 return key;
             }
+           
         }
         return null;
     }
@@ -935,7 +936,7 @@ public class Controller {
                     cra.ready = true;
                 }
                 availbleForLoad.remove(t);
-                dockedTransporter.remove(c);
+                //dockedTransporter.remove(c);
                 currentDepartingTranspoters.remove(t);
                 currentTransporter.remove(t);
 

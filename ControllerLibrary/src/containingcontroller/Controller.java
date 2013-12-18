@@ -1145,9 +1145,10 @@ public class Controller {
             b.crane.container = null;
             b.crane.setIsReady(true);
             puttingContainerOnAGVBuffer.remove(b.crane);
-            String craneId =goingToCrane.get(targetAGV).id;
-            String transporterId=dockedTransporter.get(goingToCrane.get(targetAGV)).id;
-            Message m = new Message(Commands.MOVE_CRANE, new Object[]{craneId,transporterId , targetAGV.container.getPosition().x, targetAGV.container.getPosition().y, targetAGV.container.getPosition().z});
+            String craneId = goingToCrane.get(targetAGV).id;
+            Crane  crane =goingToCrane.get(targetAGV);
+            String transporterID = dockedTransporter.get(crane).id;
+            Message m = new Message(Commands.MOVE_CRANE, new Object[]{craneId, transporterID, targetAGV.container.getPosition().x, targetAGV.container.getPosition().y, targetAGV.container.getPosition().z});
             this.sendMessage(m);
             targetAGV.moveToCrane(goingToCrane.get(targetAGV), this);
 

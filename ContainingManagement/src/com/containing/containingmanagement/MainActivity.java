@@ -93,7 +93,7 @@ public class MainActivity extends Activity {
 						getData();
 					}
 
-				}, 0, 5000);
+				}, 0, 2500);
 
 			}
 		});
@@ -119,13 +119,20 @@ public class MainActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return true;
+		 switch (item.getItemId()) {
+		    case R.id.item1:
+		        b=!b;
+		        getData();
+		        return true;
+		    default:
+		        return super.onOptionsItemSelected(item);
+		    }
 	}
 
 	public void getData() {
 		new ServerListener(this, ipAdress);
 	}
-
+	boolean b = false;
 	public void messageRecieved(final Message decodedMessage) {
 		this.runOnUiThread(new Runnable() {
 
@@ -140,7 +147,7 @@ public class MainActivity extends Activity {
 								.toString()),
 						Integer.parseInt(decodedMessage.getParameters()[4]
 								.toString()) };
-				boolean b = false;
+
 				if (b) {
 					mSeries.clear();
 					mRenderer.removeAllRenderers();
@@ -197,7 +204,15 @@ public class MainActivity extends Activity {
 								LayoutParams.MATCH_PARENT,
 								LayoutParams.MATCH_PARENT));
 					} else {
+				
+						dataset.clear();
+						CategorySeries series = new CategorySeries("container series");
+						for (int i = 0; i < VALUES.length; i++) {
+							series.add(VALUES[i]);
+						}
+						dataset.addSeries(series.toXYSeries());
 						BarChartView.repaint();
+						
 					}
 					/*
 					 * GraphView graphView = new BarGraphView(MainActivity.this
@@ -231,7 +246,7 @@ public class MainActivity extends Activity {
 
 		});
 	}
-
+	
 	public XYMultipleSeriesRenderer getBarRenderer() {
 		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
 		renderer.setAxisTitleTextSize(16);
@@ -262,9 +277,9 @@ public class MainActivity extends Activity {
 		renderer.setXAxisMax(4);
 		renderer.setYAxisMin(0);
 	}
-
+	XYMultipleSeriesDataset dataset;
 	private XYMultipleSeriesDataset getBarDataset() {
-		XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
+		 dataset = new XYMultipleSeriesDataset();
 		Random r = new Random();
 		CategorySeries series = new CategorySeries("container series");
 		for (int i = 0; i < VALUES.length; i++) {

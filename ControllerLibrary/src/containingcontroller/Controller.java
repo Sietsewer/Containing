@@ -436,7 +436,7 @@ public class Controller {
                     for (Transporter transporter : availbleForLoad) {
                         if (transporter.getTransportType() == departingContainer.getTransportTypeDeparture()) {
                             for (Crane crane : getCranesTransporter(transporter)) {
-                                if (crane.ready&& !goingToDepartingTransporter.containsValue(crane)) {
+                                if (crane.ready && !goingToDepartingTransporter.containsValue(crane)) {
 
                                     reserverdPosition = transporter.getFreeLocation(crane.startRange, crane.range);
                                     if (reserverdPosition != null) {
@@ -1145,10 +1145,10 @@ public class Controller {
             b.crane.container = null;
             b.crane.setIsReady(true);
             puttingContainerOnAGVBuffer.remove(b.crane);
-
-            targetAGV.moveToCrane(goingToCrane.get(targetAGV), this);
-            Message m  =new Message(Commands.MOVE_CRANE, new Object[]{goingToCrane.get(targetAGV).id,dockedTransporter.get(goingToCrane.get(targetAGV)).id,targetAGV.container.getPosition().x,targetAGV.container.getPosition().y,targetAGV.container.getPosition().z});
+            Message m = new Message(Commands.MOVE_CRANE, new Object[]{goingToCrane.get(targetAGV).id, dockedTransporter.get(goingToCrane.get(targetAGV)).id, targetAGV.container.getPosition().x, targetAGV.container.getPosition().y, targetAGV.container.getPosition().z});
             this.sendMessage(m);
+            targetAGV.moveToCrane(goingToCrane.get(targetAGV), this);
+
             goingToDepartingTransporter.put(targetAGV, goingToCrane.get(targetAGV));
             goingToCrane.remove(targetAGV);
 

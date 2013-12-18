@@ -122,6 +122,10 @@ public class MainActivity extends Activity {
 		 switch (item.getItemId()) {
 		    case R.id.item1:
 		        b=!b;
+		    	LinearLayout layout = (LinearLayout) findViewById(R.id.chart);
+				layout.removeAllViews();
+				mChartView = null;
+				BarChartView= null;
 		        getData();
 		        return true;
 		    default:

@@ -112,7 +112,7 @@ public class Transporter extends Node implements MotionPathListener {
             case TransportTypes.BARGE:
                 containers = new Container[12][4][4];
                 currentSpatial = BARGE.clone();
-                size = new Vector3f(4.88f, -7f, 85f);
+                size = new Vector3f(4.88f, -10f, 90f);
                 this.rotate(0, 90 * FastMath.DEG_TO_RAD, 0);
                 //position.y -= 10f;
                 this.position.z += 20f;
@@ -357,7 +357,7 @@ public class Transporter extends Node implements MotionPathListener {
         BARGE = am.loadModel("Models/barge/barge.j3o");
         BARGE.setLocalScale(50f, 1f, 5.5f);
         BARGE.rotate(0, -90f * FastMath.DEG_TO_RAD, 0);
-        BARGE.setLocalTranslation(0, -7f, 40f);
+        BARGE.setLocalTranslation(0, -11f, 40f);
 
         LORRY = am.loadModel("Models/lorry/lorry.j3o");
         LORRY.setLocalScale(1f, 1f, 1f);
@@ -372,12 +372,15 @@ public class Transporter extends Node implements MotionPathListener {
         Material seaShipMat = new Material(am, "Common/MatDefs/Misc/Unshaded.j3md");
         Texture seaShipText = am.loadTexture("Textures/seaShip/seaShip.png");
         seaShipMat.setTexture("ColorMap", seaShipText);
+        Material bargeMat = new Material(am, "Common/MatDefs/Misc/Unshaded.j3md");
+        Texture bargeText = am.loadTexture("Textures/barge/barge.png");
+        bargeMat.setTexture("ColorMap", bargeText);
         mat.setColor("Color", ColorRGBA.Red);
 
 
 
         SEASHIP.setMaterial(seaShipMat);
-        BARGE.setMaterial(mat);
+        BARGE.setMaterial(bargeMat);
         LORRY.setMaterial(mat);
         TRAIN.setMaterial(mat);
     }

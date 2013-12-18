@@ -10,6 +10,8 @@ package containingcontroller;
  */
 public class Commands {
 
+    
+    final static public int MOVE_CRANE =12;
     /**
      * Device is ready
      */

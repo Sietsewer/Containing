@@ -365,7 +365,9 @@ public class Main extends SimpleApplication implements ScreenController {
         bcSModel = assetManager.loadModel("Models/buffercrane/buffercrane_slider.j3o");
         bcHModel = assetManager.loadModel("Models/buffercrane/buffercrane_slider_hook.j3o");
         Material bcMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        bcMat.setColor("Color", ColorRGBA.Yellow);
+        Texture bc_text = assetManager.loadTexture("Textures/buffercrane/buffercrane.png");
+        bcMat.setColor("Color", ColorRGBA.White);
+        bcMat.setTexture("ColorMap", bc_text);
         bcModel.setMaterial(bcMat);
         bcSModel.setMaterial(bcMat);
         bcHModel.setMaterial(bcMat);
@@ -566,6 +568,15 @@ public class Main extends SimpleApplication implements ScreenController {
                 } else {
                     System.err.println("Error: No crane/container with this ID");
                 }
+                break;
+                case Commands.MOVE_CRANE:
+               crane = getCraneByID((String) params[0]);
+                crane.transporter = getTransporterByID((String) params[1]);
+                Vector3f indexPos = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
+                realPosition = crane.transporter.getRealContainerPosition(indexPos);
+                System.out.println(crane.getID() + " MOVECRANE CALLED pos: " + indexPos + " : " + realPosition);
+                crane.transporter = null;
+                crane.moveToPos(realPosition);
                 break;
             case Commands.GET_CONTAINER:
                 agv = getAGVbyID((String) params[0]);

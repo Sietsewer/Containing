@@ -436,7 +436,7 @@ public class Controller {
                     for (Transporter transporter : availbleForLoad) {
                         if (transporter.getTransportType() == departingContainer.getTransportTypeDeparture()) {
                             for (Crane crane : getCranesTransporter(transporter)) {
-                                if (crane.ready) {
+                                if (crane.ready && !goingToDepartingTransporter.containsValue(crane)) {
 
                                     reserverdPosition = transporter.getFreeLocation(crane.startRange, crane.range);
                                     if (reserverdPosition != null) {
@@ -750,12 +750,14 @@ public class Controller {
             agvLoadedMovingHome.remove(agv);
         } else if (goingToDepartingTransporter.containsKey(agv)) {
             Crane targetCrane = goingToDepartingTransporter.get(agv);
-            targetCrane.container = agv.container;
-            agv.container = null;
-            loadingContainer.put(targetCrane, agv);
-            goingToDepartingTransporter.remove(agv);
-            Message m = new Message(Commands.GET_CONTAINER, new Object[]{agv.name, targetCrane.id});
-            this.sendMessage(m);
+            if (targetCrane.ready) {
+                targetCrane.container = agv.container;
+                agv.container = null;
+                loadingContainer.put(targetCrane, agv);
+                goingToDepartingTransporter.remove(agv);
+                Message m = new Message(Commands.GET_CONTAINER, new Object[]{agv.name, targetCrane.id});
+                this.sendMessage(m);
+            }
         }
 
     }
@@ -959,13 +961,11 @@ public class Controller {
                 }
                 if (dockedTransporter.get(c).getTransportType() == TransportTypes.TRAIN) {
                     if (dockedTransporter.get(c).getContainerCount() >= 30) {
-                        delete=true;
+                        delete = true;
                     }
-                }
-                else if(dockedTransporter.get(c).getTransportType() == TransportTypes.BARGE)
-                {
-                     if (dockedTransporter.get(c).getContainerCount() >= 190) {
-                        delete=true;
+                } else if (dockedTransporter.get(c).getTransportType() == TransportTypes.BARGE) {
+                    if (dockedTransporter.get(c).getContainerCount() >= 190) {
+                        delete = true;
                     }
                 }
                 if (delete) {
@@ -1089,6 +1089,17 @@ public class Controller {
                     c.ready = true;
                 }
             }
+        } else if (goingToDepartingTransporter.containsValue(c)) {
+            c.ready = true;
+            AGV agv = getDepartingTransporter(c);
+            if (agv.getIsReady()) {
+                c.container = agv.container;
+                agv.container = null;
+                loadingContainer.put(c, agv);
+                goingToDepartingTransporter.remove(agv);
+                Message m = new Message(Commands.GET_CONTAINER, new Object[]{agv.name, c.id});
+                this.sendMessage(m);
+            }
         } else {
             c.ready = false;
         }
@@ -1134,8 +1145,13 @@ public class Controller {
             b.crane.container = null;
             b.crane.setIsReady(true);
             puttingContainerOnAGVBuffer.remove(b.crane);
-
+            String craneId = goingToCrane.get(targetAGV).id;
+            Crane  crane =goingToCrane.get(targetAGV);
+            String transporterID = dockedTransporter.get(crane).id;
+            Message m = new Message(Commands.MOVE_CRANE, new Object[]{craneId, transporterID, targetAGV.container.getPosition().x, targetAGV.container.getPosition().y, targetAGV.container.getPosition().z});
+            this.sendMessage(m);
             targetAGV.moveToCrane(goingToCrane.get(targetAGV), this);
+
             goingToDepartingTransporter.put(targetAGV, goingToCrane.get(targetAGV));
             goingToCrane.remove(targetAGV);
 
@@ -1630,5 +1646,15 @@ public class Controller {
             }
         });
         return temp;
+    }
+
+    private AGV getDepartingTransporter(Crane c) {
+        for (Entry<AGV, Crane> entry : goingToDepartingTransporter.entrySet()) {
+            if (entry.getValue().id.equals(c.id)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+
     }
 }

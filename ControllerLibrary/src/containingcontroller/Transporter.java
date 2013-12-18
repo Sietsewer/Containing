@@ -53,6 +53,14 @@ class Transporter {
                                 break;
                             }
                         }
+                        for (CustomVector3f c : reservedSpace.values()) {
+                            if (c.x == currentposition.x
+                                    && c.y == currentposition.y
+                                    && c.z == currentposition.z) {
+                                posistionTaken = true;
+                                break;
+                            }
+                        }
                         if (!posistionTaken) {
                             return currentposition;
                         }
@@ -73,6 +81,14 @@ class Transporter {
                                 break;
                             }
                         }
+                        for (CustomVector3f c : reservedSpace.values()) {
+                            if (c.x == currentposition.x
+                                    && c.y == currentposition.y
+                                    && c.z == currentposition.z) {
+                                posistionTaken = true;
+                                break;
+                            }
+                        }
                         if (!posistionTaken) {
                             return currentposition;
                         }
@@ -89,6 +105,14 @@ class Transporter {
                         break;
                     }
                 }
+
+                for (CustomVector3f c : reservedSpace.values()) {
+                    if (c.x == x) {
+                        posistionTaken = true;
+                        break;
+                    }
+                }
+
                 if (!posistionTaken) {
                     return new CustomVector3f(x, 0, 0);
                 }

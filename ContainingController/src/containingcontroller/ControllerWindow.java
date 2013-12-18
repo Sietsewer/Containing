@@ -81,6 +81,16 @@ public class ControllerWindow extends javax.swing.JFrame implements IWindow {
                 jMenuItem5ActionPerformed(evt);
             }
         });
+         jMenuItem23.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+          jMenuItem24.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
 
     }
 
@@ -113,6 +123,8 @@ public class ControllerWindow extends javax.swing.JFrame implements IWindow {
         jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
         jMenuItem11 = new javax.swing.JMenuItem();
+        jMenuItem23 = new javax.swing.JMenuItem();
+        jMenuItem24 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenu4 = new javax.swing.JMenu();
         jMenuItem21 = new javax.swing.JMenuItem();
@@ -203,6 +215,12 @@ public class ControllerWindow extends javax.swing.JFrame implements IWindow {
             }
         });
         jMenu2.add(jMenuItem11);
+
+        jMenuItem23.setText("150x");
+        jMenu2.add(jMenuItem23);
+
+        jMenuItem24.setText("1000x");
+        jMenu2.add(jMenuItem24);
 
         jMenuBar1.add(jMenu2);
 
@@ -489,6 +507,8 @@ openFile(System.getProperty("user.dir")+"\\XML\\xml7.xml");
     private javax.swing.JMenuItem jMenuItem20;
     private javax.swing.JMenuItem jMenuItem21;
     private javax.swing.JMenuItem jMenuItem22;
+    private javax.swing.JMenuItem jMenuItem23;
+    private javax.swing.JMenuItem jMenuItem24;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;

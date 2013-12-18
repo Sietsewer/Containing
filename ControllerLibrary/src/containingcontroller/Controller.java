@@ -751,6 +751,7 @@ public class Controller {
         } else if (goingToDepartingTransporter.containsKey(agv)) {
             Crane targetCrane = goingToDepartingTransporter.get(agv);
             if (targetCrane.ready) {
+                targetCrane.ready=false;
                 targetCrane.container = agv.container;
                 agv.container = null;
                 loadingContainer.put(targetCrane, agv);
@@ -1093,6 +1094,7 @@ public class Controller {
             c.ready = true;
             AGV agv = getDepartingTransporter(c);
             if (agv.getIsReady()) {
+                c.ready=false;
                 c.container = agv.container;
                 agv.container = null;
                 loadingContainer.put(c, agv);

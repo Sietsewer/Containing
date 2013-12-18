@@ -926,21 +926,6 @@ public class Controller {
             t.loadContainer(c.container);
             c.container = null;
 
-            if (dockedTransporter.get(c).getTransportType() == TransportTypes.LORREY) {
-
-                Message m = new Message(Commands.REMOVE_TRANSPORTER, new Object[]{t.id});
-                this.sendMessage(m);
-                List<Crane> cranes = getCranesTransporter(t);
-                for (Crane cra : cranes) {
-                    dockedTransporter.remove(cra);
-                    cra.ready = true;
-                }
-                availbleForLoad.remove(t);
-                //dockedTransporter.remove(c);
-                currentDepartingTranspoters.remove(t);
-                currentTransporter.remove(t);
-
-            } else {
                 boolean delete = true;
 
                 for (Buffer b : buffers) {
@@ -984,7 +969,7 @@ public class Controller {
                     currentTransporter.remove(t);
                 }
 
-            }
+            
 
         } else if (waitingForCraneToPickUpFromAgv.containsKey(c)) {
 

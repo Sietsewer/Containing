@@ -1147,7 +1147,7 @@ public class Controller {
             puttingContainerOnAGVBuffer.remove(b.crane);
 
             targetAGV.moveToCrane(goingToCrane.get(targetAGV), this);
-            Message m  =new Message(Commands.MOVE_CRANE, new Object[]{targetAGV.container.getPosition().x,targetAGV.container.getPosition().y,targetAGV.container.getPosition().z});
+            Message m  =new Message(Commands.MOVE_CRANE, new Object[]{dockedTransporter.get(goingToCrane.get(targetAGV)).id,targetAGV.container.getPosition().x,targetAGV.container.getPosition().y,targetAGV.container.getPosition().z});
             this.sendMessage(m);
             goingToDepartingTransporter.put(targetAGV, goingToCrane.get(targetAGV));
             goingToCrane.remove(targetAGV);

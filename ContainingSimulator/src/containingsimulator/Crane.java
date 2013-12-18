@@ -228,15 +228,13 @@ public abstract class Crane extends Node implements MotionPathListener {
     {
         if(!busy)
         {
-            System.out.println(this.id + " move to Pos: " + realPosition);
            target = realPosition;
            onlyMoveToPos = true;
            initializeStartUp();
-        }else{System.out.println(this.id + " is already busy");}
+        }else{debugMessage(4,"moveToPos");}
     }
     private void updateMoveToPos()
     {
-        System.out.println(this.id + " moves to position: " + target + ", is at action:" + action );
         switch(action)
         {
             case 1:
@@ -361,7 +359,7 @@ public abstract class Crane extends Node implements MotionPathListener {
 
     private void sendMessage(String message)
     {
-        System.out.println(message);
+        //System.out.println(message);
           Main.sendReady(this.id);
     }
     
@@ -470,14 +468,13 @@ public abstract class Crane extends Node implements MotionPathListener {
         {
             ((BufferCrane)this).getBuffer().removeContainer(cont.indexPosition);
         }
-        
         }
         else if(!pickupContainer)
         {
             if(agv!= null){
             agv.getContainer();//this.cont=
             agv = null;}
-            else{System.out.println(this.id + " has agv that is null at getContainer");}
+            else{debugMessage(1,"getContainer");}
         } 
       
         cont.rotate(0, base.getWorldRotation().toAngles(null)[1], 0);

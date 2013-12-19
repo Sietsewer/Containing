@@ -1174,6 +1174,10 @@ public class Main extends SimpleApplication implements ScreenController {
         if (!nifty.getCurrentScreen().equals(nifty.getScreen("hud2"))) {
             return;
         }
+        if(!listener.running)
+        {
+            return;
+        }
         Node node = cam2EndNode.getParent();
         System.out.println(node.getName());
 

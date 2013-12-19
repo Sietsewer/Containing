@@ -196,9 +196,9 @@ public abstract class Crane extends Node implements MotionPathListener {
          }
      }
     
-        /**First method to be called from main for picking up a container from an AGV
+    /**First method to be called from main for picking up a container from an AGV
      *and transfering it to an transporter or buffer
-     * @param agv
+     * @param agv the AGV to get a container from
      */
 
     public void getContainer(AGV agv)
@@ -252,8 +252,7 @@ public abstract class Crane extends Node implements MotionPathListener {
      * First method to be called from main for 
      * picking up a container from a transporter or buffer.
      * Initializes variables needed for starting this action
-     * @param cont
-     * @param trans
+     * @param cont the container to pick up
      */
     protected boolean pickupContainer(Container cont)
     {
@@ -280,8 +279,8 @@ public abstract class Crane extends Node implements MotionPathListener {
 
     
      /**
-     *method to be called for loading a container from an agv
-     * @param agv
+     *method to be called for loading a container to an agv
+     * @param agv the AGV give a container to
      */
     public void loadContainer(AGV agv)
      {
@@ -300,8 +299,8 @@ public abstract class Crane extends Node implements MotionPathListener {
     
      /**
      * Method to be called for putting a container on a transporter/buffer
-     * @param nextPosition
-     * @param indexPosition
+     * @param realPosition actual world translation of future container position inside transporter/buffer
+     * @param indexPosition future index position of container inside transporter/buffer
      */
     public void putContainer(Vector3f realPosition,Vector3f indexPosition)
      {
@@ -316,6 +315,13 @@ public abstract class Crane extends Node implements MotionPathListener {
              debugMessage(1,"putContainer");
          }
      }
+    
+    /**
+     * Method to be called for putting a container on a transporter
+     * @param realPosition actual world translation of future container position inside transporter
+     * @param indexPosition future index position of container inside transporter
+     * @param trans the transporter to load the container to
+     */
     public void putContainer(Vector3f realPosition, Vector3f indexPosition, Transporter trans)
     {
         if(trans!=null){
@@ -357,6 +363,10 @@ public abstract class Crane extends Node implements MotionPathListener {
          sendMessage(this.id + " transfer finished");
     }
 
+    /**
+     * Send a ready message back to the controller
+     * @param message the message to be sent
+     */
     private void sendMessage(String message)
     {
         //System.out.println(message);
@@ -365,8 +375,8 @@ public abstract class Crane extends Node implements MotionPathListener {
     
     /**
      * calls classmethod for playing a motionpath, based on which globalAction is given and if is toDefault.
-     * @param globalAction
-     * @param toDefault
+     * @param globalAction the action for this crane to perform
+     * @param toDefault whether the crane has to move to default position
      * @return
      */
     protected boolean doAction(int globalAction, boolean toDefault)
@@ -398,6 +408,9 @@ public abstract class Crane extends Node implements MotionPathListener {
         return false;
     }
     
+    /**
+     * Actions for every crane
+     */
     protected void commonActions()
     {
         switch(action)
@@ -423,6 +436,11 @@ public abstract class Crane extends Node implements MotionPathListener {
                 break;              
         }
     }
+    
+    /**
+     * Set timer for crane
+     * @param maxTime the timer target which the crane has to wait for
+     */
     protected void setTimer(float maxTime)
     {
         timeTarget = maxTime;
@@ -484,7 +502,7 @@ public abstract class Crane extends Node implements MotionPathListener {
        /**
      *
      * Resets default position of chosen option
-     * @param option
+     * @param option the crane component which toset to its default position
      */
     protected void resetPos(int option)
        {
@@ -501,8 +519,7 @@ public abstract class Crane extends Node implements MotionPathListener {
      
      /**
       * sets the crane ready for load if not done already, and sends a message to controller.
-     * returns true if the crane is ready and the controller has given permission to load
-     * @return
+     * @return true if the crane is ready and the controller has given permission to load
      */
     protected boolean readyToLoad()
      {
@@ -514,6 +531,9 @@ public abstract class Crane extends Node implements MotionPathListener {
             return (readyForL && loadContainer);
      }
 
+    /**
+     * inits for the Crane on startup
+     */
     private void initializeStartUp()
     {
         if(!onlyMoveToPos)
@@ -540,6 +560,11 @@ public abstract class Crane extends Node implements MotionPathListener {
         
     }
 
+    /**
+     * Show debug message when something breaks
+     * @param option the part to check for debug
+     * @param message the message that may causes the problem
+     */
      private void debugMessage(int option, String message)
      {
          switch(option)
@@ -559,7 +584,15 @@ public abstract class Crane extends Node implements MotionPathListener {
          }
      }
     
-     //initialize new motionpath/play animation
+     /**
+      * Initialize new motionpath/play animation
+      * @param mC MotionEvent to play
+      * @param mP MotionPath to play
+      * @param duration animation duration
+      * @param startPos starting position
+      * @param destPos destination position
+      * @return 
+      */
     private boolean moveSpatial(MotionEvent mC, MotionPath mP, Float duration, Vector3f startPos, Vector3f destPos)
     {
         if(startPos.distance(destPos)>0) //if next position is not current position
@@ -577,7 +610,10 @@ public abstract class Crane extends Node implements MotionPathListener {
         }
     }
     
-    //move the base of the crane
+    /**
+       * Move the base of the crane
+       * @param toDefault whether to move the base to its default position or not
+       */
       private void moveBase(boolean toDefault)
     {
         Vector3f startPos = this.getLocalTranslation();
@@ -608,7 +644,10 @@ public abstract class Crane extends Node implements MotionPathListener {
         }
         
     }
-      //move the slide of the crane
+      /**
+       * Move the slider of the crane
+       * @param toDefault whether to move the slider to its default position or not
+       */
       private void moveSlider(boolean toDefault)
     {
         Vector3f startPos = sNode.getLocalTranslation();
@@ -638,7 +677,11 @@ public abstract class Crane extends Node implements MotionPathListener {
             pathWasPlaying[1] = true;
         }
     }
-    //move the hook of the crane
+    
+      /**
+       * Move the hook of the crane
+       * @param toDefault whether to move the hook to its default position or not
+       */
     private void moveHook(boolean toDefault)
     {
         Vector3f startPos = hNode.getLocalTranslation();
@@ -662,7 +705,9 @@ public abstract class Crane extends Node implements MotionPathListener {
         }
     }
     
-   //update speed/duration of motionpaths/motionevents
+   /**
+    * update speed/duration of motionpaths/motionevents
+    */
     private void updateSpeed() 
      {
         setEventDuration(baseControl, basePath, baseDur);
@@ -673,6 +718,11 @@ public abstract class Crane extends Node implements MotionPathListener {
         sliderControl.setSpeed(loaded ? sliderLP : 1);
         hookControl.setSpeed(loaded ? hookLP : 1);
      }
+    
+    /**
+     * Pause or play the crane's motion
+     * @param pause whether the simulation is paused or not
+     */
     public void pausePlay(boolean pause)
     {
         for(int i = 0; i <pathWasPlaying.length;i++)
@@ -709,7 +759,13 @@ public abstract class Crane extends Node implements MotionPathListener {
                 }
         }
     }
-    //set duration of motionevents
+    
+    /**
+     * Set duration of MotionEvent
+     * @param event the MotionEvent to change the duration of
+     * @param path the MotionPath to change the duration of
+     * @param defDur the default duration of the MotionEvent
+     */
     private void setEventDuration(MotionEvent event, MotionPath path, float defDur)
     {
         if(path.getNbWayPoints()>1)
@@ -717,6 +773,7 @@ public abstract class Crane extends Node implements MotionPathListener {
             event.setInitialDuration(path.getLength()/(defDur*Main.globalSpeed));
         }
     }
+    
      /**
      * Keeping track of where the motionpath is
      * every motionpath has 2 points. When index 1 is reached, the action

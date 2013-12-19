@@ -123,7 +123,6 @@ public class Main extends SimpleApplication implements ScreenController {
     private boolean gameIsStarted = false;
     private ParticleEmitter fire;
 
-
     /**
      *
      * @param args
@@ -1038,6 +1037,9 @@ public class Main extends SimpleApplication implements ScreenController {
                     CollisionResult closest = results.getClosestCollision();
                     Node closestNode = closest.getGeometry().getParent();
                     if (closestNode != null && !closestNode.equals(rootNode)) {
+                        if (closestNode.getName() == null) {
+                            return;
+                        }
                         nifty.gotoScreen("hud2");
                         init_SecondCam();
                         cam2EndNode.setLocalRotation(new Quaternion(0, 0, 0, 1));
@@ -1191,16 +1193,22 @@ public class Main extends SimpleApplication implements ScreenController {
             }
             if (defect) {
                 ParticleEmitter f = fire.clone();
-                if(node instanceof Crane)
-                {
-                    f.setStartSize(10f);
-                    f.setEndSize(15f);
-                    f.setHighLife(20);
-                   
+                if (node instanceof Crane) {
                     f.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 5, 0));
                 }
                 cam2EndNode.getParent().attachChild(f);
-                f.setLocalTranslation(cam2EndNode.getLocalTranslation());
+                if (node instanceof SeaCrane || node instanceof BargeCrane) {
+                    f.setStartSize(10f);
+                    f.setEndSize(15f);
+                    f.setHighLife(20);
+                    f.setLocalTranslation(cam2EndNode.getLocalTranslation().add(0, 30, 0));
+                } else if (node instanceof TrainCrane) {
+                    f.setLocalTranslation(cam2EndNode.getLocalTranslation().add(0, 16, 0));
+                } else if (node instanceof BufferCrane) {
+                    f.setLocalTranslation(cam2EndNode.getLocalTranslation().add(0, 22, 0));
+                } else if (node instanceof LorryCrane) {
+                    f.setLocalTranslation(cam2EndNode.getLocalTranslation().add(0, 8, 0));
+                }
             } else {
                 cam2EndNode.getParent().detachChildNamed("fire");
             }

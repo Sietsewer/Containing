@@ -67,6 +67,10 @@ public class ServerClient {
         }
     }
 
+    /**
+     * send message to android phone
+     * @param message
+     */
     public void sendAndroidMessage(String message) {
      //  System.out .println("message to ip:" + client.getRemoteSocketAddress());
         //System.out.println(message);

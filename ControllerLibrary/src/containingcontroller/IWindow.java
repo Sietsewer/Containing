@@ -13,6 +13,16 @@ import java.util.Date;
  * @author Hendrik
  */
 public interface IWindow {
+
+    /**
+     *Write line to output
+     * @param message
+     */
     public void WriteLogLine(String message);
+
+    /**
+     * set time in simulator
+     * @param simTime
+     */
     public void setTime(Date simTime);
 }

@@ -32,6 +32,9 @@ import java.util.logging.Logger;
  */
 public class Controller {
 
+    /**
+     * Speed in wich the controller and simulator are runnning
+     */
     public static int Speed = 1;
     //pathfinde variable
     PathFinder pathFinder;
@@ -77,8 +80,16 @@ public class Controller {
      * list of all transporters that are arriving
      */
     public List<Transporter> allArivingTransporters; // this list holds all loaded transporters
+
+    /**
+     *All container that are departing
+     */
     public List<Transporter> allDepartingTransporters; //this list holds all departing transporters
     ArrayList<Container> allDepartingContainers;
+
+    /**
+     * true if controller is running
+     */
     public boolean playing = false;
 
     /**
@@ -1246,6 +1257,10 @@ public class Controller {
         return false;
     }
 
+    /**
+     * set all containers for controller
+     * @param containers
+     */
     public void setContainers(List<Container> containers) {
         this.containers = new ArrayList(containers);
         Collections.sort(containers, new ContainerComparer());
@@ -1259,6 +1274,10 @@ public class Controller {
 
     }
 
+    /**
+     * handle message
+     * @param message
+     */
     public void recievedMessage(String message) {
         // PrintMessage(message);
         Message m = Message.decodeMessage(message);
@@ -1486,6 +1505,10 @@ public class Controller {
 
     }
 
+    /**
+     * Set speed of controller
+     * @param speedNumber
+     */
     public void setSpeed(int speedNumber) {
 
         this.PrintMessage("Change speed - " + speedNumber + "x");

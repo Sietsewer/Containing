@@ -99,6 +99,7 @@ public class Buffer {
      * Checks the best place for container
      *
      * @param container
+     * @param up set true if the posistion must be on the up side
      * @return Vector3f
      */
     public CustomVector3f findBestBufferPlace(Container container, boolean up) {

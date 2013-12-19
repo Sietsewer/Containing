@@ -10,16 +10,24 @@ package containingcontroller;
  */
 public class Commands {
 
+    /**
+     * Set object as defect so it doesn't function anymore
+     */
     final static public int DEFECT = 13;
 
+    /**
+     * Move crane to posistion to load a container in to a transporter
+     */
     final static public int MOVE_CRANE = 12;
     /**
      * Device is ready
      */
     final static public int READY = 0;
-    /*
-     Get extra info
+
+    /**
+     *     Get extra info
      */
+    
     final static public int RETREIVE_INFO = 11;
 
     /**

@@ -32,7 +32,7 @@ public class PathFinder {
     private float smallCost = 0.5f; //smallest cost (the lorry points)
 
     /**
-     *
+     * create pathfinder
      */
     public PathFinder() {
     }

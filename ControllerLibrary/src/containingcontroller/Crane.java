@@ -10,6 +10,9 @@ package containingcontroller;
  */
 public class Crane {
 
+    /**
+     * LastX to detect wich container has to be pickedup
+     */
     public int lastX = 13;
     
     /**

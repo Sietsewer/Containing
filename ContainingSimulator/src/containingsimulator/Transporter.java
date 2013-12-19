@@ -122,7 +122,7 @@ public class Transporter extends Node implements MotionPathListener {
                 containers = new Container[30][1][1];
                 currentGeometry = TRAIN.clone();
                 size = new Vector3f(TRAINb.xExtent, TRAINb.yExtent, TRAINb.yExtent);
-                this.position.z -= 8f;
+                this.position.z -= 13f;
                 this.rotate(0, 90 * FastMath.DEG_TO_RAD, 0);
                 this.speed = 300;
                 break;
@@ -221,7 +221,7 @@ public class Transporter extends Node implements MotionPathListener {
             Vector3f vec = container.getLocalTranslation();
             vec.y += 1.5f + size.y + (pos.y * 2.44f);
             vec.x -= size.x - 1.22f - (pos.z * 2.44f);
-            vec.z += (pos.x * 14.41f);
+            vec.z += (pos.x * 14f);
             if (this.type == TransportTypes.BARGE || this.type == TransportTypes.TRAIN) {
                 container.setLocalRotation(new Quaternion().fromAngles(0f, 0f, 0f));
             }

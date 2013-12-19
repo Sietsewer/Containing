@@ -5,6 +5,8 @@ import containing.xml.Message;
 import com.jme3.app.SimpleApplication;
 import com.jme3.collision.CollisionResult;
 import com.jme3.collision.CollisionResults;
+import com.jme3.effect.ParticleEmitter;
+import com.jme3.effect.ParticleMesh;
 import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
@@ -26,6 +28,7 @@ import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.renderer.queue.RenderQueue.Bucket;
 import com.jme3.scene.CameraNode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
@@ -35,7 +38,6 @@ import com.jme3.scene.shape.Quad;
 import com.jme3.scene.shape.Sphere;
 import com.jme3.system.AppSettings;
 import com.jme3.texture.Texture;
-import com.jme3.ui.Picture;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.dropdown.DropDownControl;
 import de.lessvoid.nifty.screen.Screen;
@@ -119,6 +121,8 @@ public class Main extends SimpleApplication implements ScreenController {
     public static Material alpha;
     Nifty nifty;
     private boolean gameIsStarted = false;
+    private ParticleEmitter fire;
+
 
     /**
      *
@@ -193,6 +197,7 @@ public class Main extends SimpleApplication implements ScreenController {
     public void loadGame() {
         Path.createPath();
         loadAssets();
+        init_Fire();
         init_Input();
         flyCam.setMoveSpeed(400f);
         cam.setFrustumFar(5000f);
@@ -1179,12 +1184,26 @@ public class Main extends SimpleApplication implements ScreenController {
 
             if (sub.equalsIgnoreCase("c") || sub.equalsIgnoreCase("b")) {
                 pathWasPlaying = ((Crane) node).simulateDefect();
-                defect = ((Crane)node).getDefect();
+                defect = ((Crane) node).getDefect();
             } else if (sub.equalsIgnoreCase("a")) {
                 pathWasPlaying = ((AGV) node).simulateDefect();
                 defect = ((AGV) node).getDefect();
             }
-
+            if (defect) {
+                ParticleEmitter f = fire.clone();
+                if(node instanceof Crane)
+                {
+                    f.setStartSize(10f);
+                    f.setEndSize(15f);
+                    f.setHighLife(20);
+                   
+                    f.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 5, 0));
+                }
+                cam2EndNode.getParent().attachChild(f);
+                f.setLocalTranslation(cam2EndNode.getLocalTranslation());
+            } else {
+                cam2EndNode.getParent().detachChildNamed("fire");
+            }
             Message m = new Message(Commands.DEFECT, null);
             ArrayList<Object> params = new ArrayList();
             params.add(id);
@@ -1194,5 +1213,29 @@ public class Main extends SimpleApplication implements ScreenController {
             sendMessage(m);
 
         }
+    }
+
+    private void init_Fire() {
+
+        Texture fireTexture = assetManager.loadTexture("Textures/effects/flame.png");
+        fire = new ParticleEmitter("fire", ParticleMesh.Type.Triangle, 30);
+        Material mat_red = new Material(assetManager, "Common/MatDefs/Misc/Particle.j3md");
+        mat_red.setTexture("Texture", fireTexture);
+        fire.setMaterial(mat_red);
+        fire.setImagesX(2);
+        fire.setImagesY(2); // 2x2 texture animation
+        fire.setEndColor(new ColorRGBA(1f, 0f, 0f, 1f));   // red
+        fire.setStartColor(new ColorRGBA(1f, 1f, 0f, 0.5f)); // yellow
+        fire.getParticleInfluencer().setInitialVelocity(new Vector3f(0, 5, 5));
+        fire.setStartSize(1.5f);
+        fire.setEndSize(3f);
+        fire.setGravity(0, 0, 0);
+        fire.setLowLife(0.5f);
+        fire.setHighLife(3f);
+
+        fire.setQueueBucket(Bucket.Translucent);
+        fire.getParticleInfluencer().setVelocityVariation(0.3f);
+
+
     }
 }

@@ -28,34 +28,65 @@ public class Path {
     public Path() {
     }
     
+    /**
+     * Get ID of main path
+     * @return ID of main path;
+     */
     public static String getMainPathID() {
         return m;
     }
     
+    /**
+     * get ID of lorry path
+     * @return ID of lorry path
+     */
     public static String getLorryID() {
         return clo;
     }
     
+    /**
+     * get ID of seaship path
+     * @return ID of seaship path
+     */
     public static String getSeaID() {
         return cse;
     }
     
+    /**
+     * get ID of barge path
+     * @return ID of barge pth
+     */
     public static String getBargeID() {
         return cba;
     }
     
+    /**
+     * get ID of upper buffer path
+     * @return ID of upper buffer path
+     */
     public static String getBufferAID() {
         return bfa;
     }
     
+    /**
+     * get ID of lower buffer path
+     * @return  ID of lower buffer path
+     */
     public static String getBufferBID() {
         return bfb;
     }
     
+    /**
+     * get ID of train path
+     * @return ID of train path
+     */
     public static String getTrainID() {
         return ctr;
     }
     
+    /**
+     * Initialize all paths
+     */
     public static void createPath() {
         createM();
         createBF();
@@ -64,6 +95,11 @@ public class Path {
         createCBA();
         createCLO();
     }
+    
+    /**
+     * Get all paths
+     * @return a hashmap of all paths IDs and their point locations
+     */
     public static HashMap<String,Vector3f>getPath()
     {
 
@@ -72,14 +108,17 @@ public class Path {
     }
     /**
      * returns vector3f for id
-     * @param id
-     * @return
+     * @param id the ID to get the matching Vector3f for
+     * @return the Vector3f mathcing the ID
      */
     public static Vector3f getVector(String id)
   {
         return map.get(id);
     }
         
+    /**
+     * Create main path
+     */
   private static void createM()
   {
       map.put("m1", new Vector3f(95.5f,10,505.5f));
@@ -100,6 +139,12 @@ public class Path {
       map.put("m16",new Vector3f(95.5f,10,478));
       OffsetRoute.init();
     }
+  
+  /**
+   * Update HasMap with ID and new Vector3f
+   * @param id the ID to possibly replace
+   * @param vec the Vector3f to possibly add to the HashMap
+   */
   public static void updatePath(String id, Vector3f vec)
   { 
       if(map.containsKey(id)){
@@ -109,6 +154,9 @@ public class Path {
       }
   }
     
+  /**
+   * Create buffer paths
+   */
     private static void createBF() {
         int dist = 22;
         Vector3f vecBFA = new Vector3f(118, 10, 60.5f);
@@ -128,6 +176,9 @@ public class Path {
         
     }
     
+    /**
+     * Create seaship paths
+     */
     private static void createCSE() {
         int dist = 40;
         Vector3f vecCSE = new Vector3f(65, 10, 85);
@@ -139,6 +190,9 @@ public class Path {
         }
     }
     
+    /**
+     * Create train paths
+     */
     private static void createCTR() {
         int dist = 22 * 18; //was 22*18
         Vector3f vecCTR = new Vector3f(167, 10, 30); //x was 167
@@ -150,6 +204,9 @@ public class Path {
         }
     }
     
+    /**
+     * create barge paths
+     */
     private static void createCBA() {
         int dist = 66;
         Vector3f vecCBA = new Vector3f(222, 10, 537);
@@ -160,6 +217,9 @@ public class Path {
         }
     }
     
+    /**
+     * create lorry paths
+     */
     private static void createCLO() {
         int dist = 11;
         Vector3f vecCLO = new Vector3f(850.5f, 10, 520);//z was 560

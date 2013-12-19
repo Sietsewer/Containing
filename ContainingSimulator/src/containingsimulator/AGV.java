@@ -37,6 +37,7 @@ public class AGV extends Node implements MotionPathListener {
     private Spatial viewModel;//Model of the AGV.
     public boolean pathWasPlaying = false;
     public Geometry boundingGeom;
+    private boolean defect = false;
 
     /**
      * Constructor. Inits all variable required.
@@ -62,6 +63,10 @@ public class AGV extends Node implements MotionPathListener {
         boundingGeom.setCullHint(cullHint.Always);
         this.attachChild(boundingGeom);
         this.attachChild(viewModel);
+    }
+    public boolean getDefect()
+    {
+        return this.defect;
     }
 
     /**
@@ -213,5 +218,19 @@ public class AGV extends Node implements MotionPathListener {
         this.setLocalRotation(new Quaternion().fromAngles(0f, spot.rotation, 0f));
         this.pSpot = spot;
         pSpot.occupied = true;
+    }
+    
+    /**
+     *simulates defect for this AGV
+     * switches boolean defect
+     * pauses motionpath if was playing
+     * returns boolean motionpath playing
+     * @return
+     */
+    public boolean simulateDefect()
+    {
+        this.defect = !defect;
+        this.pausePlay(defect);
+        return pathWasPlaying;
     }
 }

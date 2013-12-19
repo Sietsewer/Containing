@@ -1177,7 +1177,7 @@ public class Main extends SimpleApplication implements ScreenController {
 
             if (sub.equalsIgnoreCase("c") || sub.equalsIgnoreCase("b")) {
                 pathWasPlaying = ((Crane) node).simulateDefect();
-                defect = ((Crane) node).getDefect();
+                defect = ((Crane)node).getDefect();
             } else if (sub.equalsIgnoreCase("a")) {
                 pathWasPlaying = ((AGV) node).simulateDefect();
                 defect = ((AGV) node).getDefect();

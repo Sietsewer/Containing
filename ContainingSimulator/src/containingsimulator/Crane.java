@@ -29,6 +29,7 @@ public abstract class Crane extends Node implements MotionPathListener {
     private MotionEvent hookControl;
     private MotionEvent sliderControl;
     private Vector3f defPosBase;
+    private boolean defect = false;
     private boolean loaded = false;
     private boolean goToHome = false;
     private boolean busy = false;
@@ -113,7 +114,11 @@ public abstract class Crane extends Node implements MotionPathListener {
       
     }
     
-       
+    public boolean getDefect()
+    {
+        return this.defect;
+    }
+    
     public String getID()
     {
         return this.id;
@@ -803,6 +808,24 @@ public abstract class Crane extends Node implements MotionPathListener {
             
         }
     }
+    
+    
+    /**
+     *pauses motionpath if playing
+     * switches boolean for defect
+     * simulates defect of this crane
+     * returns motionpath playing
+     * @return
+     */
+    public boolean simulateDefect()
+    {
+        this.defect= !defect;
+        
+        this.pausePlay(this.defect);
+       
+        return (pathWasPlaying[0]||pathWasPlaying[1]||pathWasPlaying[2]);
+    }
+    
     
 
 }

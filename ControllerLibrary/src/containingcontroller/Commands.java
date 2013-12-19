@@ -10,8 +10,9 @@ package containingcontroller;
  */
 public class Commands {
 
-    
-    final static public int MOVE_CRANE =12;
+    final static public int DEFECT = 13;
+
+    final static public int MOVE_CRANE = 12;
     /**
      * Device is ready
      */
@@ -20,7 +21,7 @@ public class Commands {
      Get extra info
      */
     final static public int RETREIVE_INFO = 11;
-    
+
     /**
      * Shutdown simulator
      */
@@ -49,19 +50,18 @@ public class Commands {
      * Container must be moved by AVG
      */
     static public int CREATE_TRANSPORTER = 6;
-    
+
     /**
      * remove transporter from simulator
      */
     static public int REMOVE_TRANSPORTER = 7;
-    
-    
-        /**
+
+    /**
      * change speed
      */
     static public int CHANGE_SPEEED = 8;
-        
-        /**
+
+    /**
      * change speed
      */
     static public int PAUSE_PLAY = 10;

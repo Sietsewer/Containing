@@ -382,7 +382,9 @@ public class Main extends SimpleApplication implements ScreenController {
         tcSModel = assetManager.loadModel("Models/traincrane/traincrane_slider.j3o");
         tcHModel = assetManager.loadModel("Models/traincrane/traincrane_slider_hook.j3o");
         Material tcMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        tcMat.setColor("Color", ColorRGBA.Yellow);
+        Texture tc_text = assetManager.loadTexture("Textures/traincrane/traincrane.png");
+        tcMat.setColor("Color", ColorRGBA.White);
+        tcMat.setTexture("ColorMap", tc_text);
         tcModel.setMaterial(tcMat);
         tcSModel.setMaterial(tcMat);
         tcHModel.setMaterial(tcMat);

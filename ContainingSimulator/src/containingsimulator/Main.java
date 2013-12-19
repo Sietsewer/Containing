@@ -24,6 +24,8 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.niftygui.NiftyJmeDisplay;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.post.filters.FogFilter;
 import com.jme3.renderer.Camera;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -101,6 +103,10 @@ public class Main extends SimpleApplication implements ScreenController {
     /*
      crane 
      */
+    
+    Spatial env;
+    FogFilter fog;
+    
     Crane[] seaCranes = new Crane[10];
     Crane[] bufCranes = new Crane[63];
     Crane[] lorCranes = new Crane[20];
@@ -331,6 +337,25 @@ public class Main extends SimpleApplication implements ScreenController {
         sky_geo.setQueueBucket(RenderQueue.Bucket.Sky);
         sky_geo.scale(1000f);
         rootNode.attachChild(sky_geo);
+        
+        //Init of enviroments
+        env = assetManager.loadModel("Models/env/env.j3o");
+        Material env_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        Texture env_text = assetManager.loadTexture("Textures/env.png");
+        env_mat.setTexture("ColorMap", env_text);
+        env.setMaterial(env_mat);
+        rootNode.attachChild(env);
+        env.scale(100f);
+        env.setLocalTranslation(0f, 0f, 600f);
+        
+        FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
+        fog=new FogFilter();
+        fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
+        fog.setFogDistance(2000f);
+        fog.setFogDensity(2.0f);
+        fpp.addFilter(fog);
+        viewPort.addProcessor(fpp);
+
 
         //Init Container
         Container.makeGeometry(assetManager);
@@ -423,10 +448,11 @@ public class Main extends SimpleApplication implements ScreenController {
         Geometry waterGeo = new Geometry("Quad", waterQuad);
         waterGeo.rotate(-(float) Math.PI / 2, 0f, 0f);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", new ColorRGBA(26f / 255, 126f / 255, 168f / 255, 1f));
+        mat.setColor("Color", new ColorRGBA(64f / 255, 113f / 255, 150f / 255, 1f));
         waterGeo.setMaterial(mat);
         rootNode.attachChild(waterGeo);
-        waterGeo.setLocalTranslation(0f, 0f, 600f);
+        waterGeo.setLocalTranslation(-10000f, 0f, 30000f);
+        waterGeo.scale(100f);
 
         //Init of lightsources of the project.
         DirectionalLight sun = new DirectionalLight();

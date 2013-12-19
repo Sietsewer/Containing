@@ -55,7 +55,6 @@ import java.util.logging.Logger;
 public class Main extends SimpleApplication implements ScreenController {
 
     public void bind(Nifty nifty, Screen screen) {
-        
     }
 
     public void onStartScreen() {
@@ -91,7 +90,7 @@ public class Main extends SimpleApplication implements ScreenController {
     Spatial tcModel;
     Spatial tcSModel;
     Spatial tcHModel;
-     /*
+    /*
      Bargecrane spatials
      */
     Spatial barModel;
@@ -205,9 +204,9 @@ public class Main extends SimpleApplication implements ScreenController {
 
     private boolean setConnection(String ip, int port) {
         try {
-            if(!listener.running){
-            listener.changeConnection(ip, port);
-            return true;
+            if (!listener.running) {
+                listener.changeConnection(ip, port);
+                return true;
             }
         } catch (Exception ex) {
 
@@ -226,10 +225,10 @@ public class Main extends SimpleApplication implements ScreenController {
         app.setDisplayStatView(showStats);
         setConnection(ip, port);
         app.restart();
-        
+
         if (!gameIsStarted) { //only once! 
             gameIsStarted = true;
-             setCrossHairs(true);
+            setCrossHairs(true);
         }
         updateCHPos();
         nifty.gotoScreen("hud");
@@ -313,7 +312,7 @@ public class Main extends SimpleApplication implements ScreenController {
 
         //Init of the AGV viewmodel.
         agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
-       
+
         Material avgMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         Texture agv_text = assetManager.loadTexture("Textures/AGV/AGV.png");
         avgMat.setTexture("ColorMap", agv_text);
@@ -354,7 +353,7 @@ public class Main extends SimpleApplication implements ScreenController {
         barModel.setMaterial(barMat);
         barSModel.setMaterial(barMat);
         barHModel.setMaterial(barMat);
-        
+
         Material m = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         m.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         // m.setColor("Color", new ColorRGBA(0,0,0,100));
@@ -463,6 +462,7 @@ public class Main extends SimpleApplication implements ScreenController {
         String transporterID;
         AGV agv;
         switch (decodedMessage.getCommand()) {
+
             case Commands.RETREIVE_INFO:
 
                 StringBuilder sB = new StringBuilder();
@@ -569,8 +569,8 @@ public class Main extends SimpleApplication implements ScreenController {
                     System.err.println("Error: No crane/container with this ID");
                 }
                 break;
-                case Commands.MOVE_CRANE:
-               crane = getCraneByID((String) params[0]);
+            case Commands.MOVE_CRANE:
+                crane = getCraneByID((String) params[0]);
                 crane.transporter = getTransporterByID((String) params[1]);
                 Vector3f indexPos = new Vector3f((Float) params[2], (Float) params[3], (Float) params[4]);
                 realPosition = crane.transporter.getRealContainerPosition(indexPos);
@@ -949,11 +949,16 @@ public class Main extends SimpleApplication implements ScreenController {
                 new KeyTrigger(KeyInput.KEY_U));
         inputManager.addMapping("resetRot-button",
                 new KeyTrigger(KeyInput.KEY_P));
-          inputManager.addMapping("camSpeedPlus-button",
+        inputManager.addMapping("camSpeedPlus-button",
                 new KeyTrigger(KeyInput.KEY_C));
-            inputManager.addMapping("camSpeedMin-button",
+        inputManager.addMapping("camSpeedMin-button",
                 new KeyTrigger(KeyInput.KEY_X));
+        inputManager.addMapping("defect-button",
+                new KeyTrigger(KeyInput.KEY_DELETE));
 
+
+
+        inputManager.addListener(actionListener, "defect-button");
         inputManager.addListener(actionListener, "left-click");
         inputManager.addListener(actionListener, "right-click");
         inputManager.addListener(analogListener, "left-button");
@@ -968,16 +973,13 @@ public class Main extends SimpleApplication implements ScreenController {
     }
     private AnalogListener analogListener = new AnalogListener() {
         public void onAnalog(String name, float value, float tpf) {
-            
-            if(name.equals("camSpeedPlus-button"))
-            {
-                flyCam.setMoveSpeed(flyCam.getMoveSpeed()+300*tpf);
+
+            if (name.equals("camSpeedPlus-button")) {
+                flyCam.setMoveSpeed(flyCam.getMoveSpeed() + 300 * tpf);
+            } else if (name.equals("camSpeedMin-button")) {
+                flyCam.setMoveSpeed(flyCam.getMoveSpeed() - 300 * tpf);
             }
-            else if(name.equals("camSpeedMin-button"))
-            {
-                flyCam.setMoveSpeed(flyCam.getMoveSpeed()-300*tpf);
-            }
-            
+
             if (cam2EndNode.getParent() == null) {
                 return;
             }
@@ -1009,9 +1011,10 @@ public class Main extends SimpleApplication implements ScreenController {
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (nifty.getCurrentScreen().equals(nifty.getScreen("start"))) {
                 return;
-            }
-            
-            if (name.equals("Pause")) {
+            } else if (name.equals("defect-button") && keyPressed) {
+                simulateDefect();
+
+            } else if (name.equals("Pause")) {
                 app.flyCam.setDragToRotate(true);
                 setCrossHairs(false);
                 remScreen2();
@@ -1154,5 +1157,40 @@ public class Main extends SimpleApplication implements ScreenController {
     private void updateCHPos() {
         crossHair.setLocalTranslation( // center
                 settings.getWidth() / 2 - crossHair.getLineWidth() / 2, settings.getHeight() / 2 + crossHair.getLineHeight() / 2, 0);
+    }
+
+    //select AGV or Crane and press DELETE-key to defect/repair
+    private void simulateDefect() {
+
+        if (!nifty.getCurrentScreen().equals(nifty.getScreen("hud2"))) {
+            return;
+        }
+        Node node = cam2EndNode.getParent();
+        System.out.println(node.getName());
+
+        if (!((node instanceof Transporter) || (node instanceof Container))) {
+
+            String id = node.getName();
+            boolean pathWasPlaying = false;
+            boolean defect = false;
+            String sub = id.substring(0, 1);
+
+            if (sub.equalsIgnoreCase("c") || sub.equalsIgnoreCase("b")) {
+                pathWasPlaying = ((Crane) node).simulateDefect();
+                defect = ((Crane) node).getDefect();
+            } else if (sub.equalsIgnoreCase("a")) {
+                pathWasPlaying = ((AGV) node).simulateDefect();
+                defect = ((AGV) node).getDefect();
+            }
+
+            Message m = new Message(Commands.DEFECT, null);
+            ArrayList<Object> params = new ArrayList();
+            params.add(id);
+            params.add(defect);
+            params.add(pathWasPlaying);
+            m.setParameters(params.toArray());
+            sendMessage(m);
+
+        }
     }
 }

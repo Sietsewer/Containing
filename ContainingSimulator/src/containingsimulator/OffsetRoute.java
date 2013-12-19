@@ -18,6 +18,9 @@ public class OffsetRoute {
 
     private static Map<String, OffsetPoint> offsetPoints = new HashMap();
 
+    /*
+     * Initialize offset waypoints
+     */
     public static void init() {
         OffsetPoint temp;
         temp = buildWay("m1");
@@ -145,19 +148,42 @@ public class OffsetRoute {
         
     }
 
+    /**
+     * Add new offsetPoint to offsetPoint hashmap
+     * @param id the ID of the new way
+     * @return the newly added OffsetPoint
+     */
     private static OffsetPoint buildWay(String id) {
         offsetPoints.put(id, new OffsetPoint());
         return offsetPoints.get(id);
     }
 
+    /**
+     * Corrected modulo method because Java's built-in modulo doesn't do what we want it to
+     * @param a argument 1
+     * @param b argument 2
+     * @return a(mod)b
+     */
     static float modulo(float a, float b) {
         return (((-a % b) + b) % b);
     }
 
+    /**
+     * Get angle between two Vector3f points
+     * @param start starting Vector3f
+     * @param end end Vector3f
+     * @return the angle between start and end
+     */
     static float getAngle(Vector3f start, Vector3f end) {
         return modulo(FastMath.atan2(end.z - start.z, end.x - start.x), (FastMath.PI * 2));
     }
 
+    /**
+     * Apply offset to OffsetPoints
+     * @param ids the IDs of OffsetPoints to change the location of
+     * @param fastLane whether to make a fast lane or not
+     * @return a list of Vector3f positions after the offset has been applied
+     */
     static ArrayList<Vector3f> applyOffset(String[] ids, boolean fastLane) {
         float eightRad = (FastMath.PI / 4);
         float fourthRad = (FastMath.PI / 2);
@@ -178,6 +204,15 @@ public class OffsetRoute {
         return returnList;
     }
 
+    /**
+     * Get OffsetPoint from lane
+     * @param id current ID of OffsetPoint to get position from
+     * @param idNext ID of next OffsetPoint
+     * @param idLast ID of previous OffsetPoint
+     * @param direction direction in radians
+     * @param lane the lane to getthe Vector3f from
+     * @return the matching OffsetPoint position
+     */
     public static Vector3f getVectorAtLane(String id, String idNext, String idLast, float direction, int lane) {
         Vector3f returnVector = new Vector3f();
         returnVector = Path.getVector(id).clone();

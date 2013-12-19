@@ -84,7 +84,7 @@ public class Container extends Node {
     }
 
     /**
-     * assign color, geometry, etc. to this object
+     * assign color,texture, geometry, etc. to this object
      */
     private void setGeometry() {
         this.setCullHint(Spatial.CullHint.Dynamic);

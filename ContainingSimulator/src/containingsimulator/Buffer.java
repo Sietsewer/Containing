@@ -112,6 +112,12 @@ public class Buffer extends Node{
         }*/
         return null;
     }
+    
+    /**
+     * Gets the location of a ParkingSpot at this buffer for BufferCrane
+     * @param up whether to check for a ParkingSpot at the top or the bottom of the buffer
+     * @return the position of the parking spot
+     */
     public Vector3f getSideVector3f(boolean up)
     {
        int i = up ? 0 : pSpots.length/2;

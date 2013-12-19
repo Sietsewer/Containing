@@ -114,6 +114,10 @@ public class AGV extends Node implements MotionPathListener {
         motionEvent.setInitialDuration(path.getLength() / 11.11f / Main.globalSpeed);
     }
     
+    /**
+     * pause or play this AGV's MotionPath
+     * @param pause whether the simulation is paused or not
+     */
     public void pausePlay(boolean pause) {
         if (pathWasPlaying) {
             if (!pause) {
@@ -126,6 +130,11 @@ public class AGV extends Node implements MotionPathListener {
         
     }
     
+    /**
+     * Loads a container onto this AGV
+     * @param container the container to load to this AGV
+     * @return true if loading container was successful, false if this AGV already carries a container
+     */
     public boolean setContainer(Container container) {
         if (this.container == null) {
             this.container = container;

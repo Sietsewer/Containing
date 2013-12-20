@@ -335,7 +335,7 @@ public class Main extends SimpleApplication implements ScreenController {
         skyMat.setTexture("ColorMap", sky_text);
         sky_geo.setMaterial(skyMat);
         sky_geo.setQueueBucket(RenderQueue.Bucket.Sky);
-        sky_geo.scale(1000f);
+        sky_geo.scale(2000f);
         rootNode.attachChild(sky_geo);
         
         //Init of enviroments
@@ -347,13 +347,9 @@ public class Main extends SimpleApplication implements ScreenController {
         rootNode.attachChild(env);
         env.scale(100f);
         env.setLocalTranslation(0f, 0f, 600f);
-        
-        FilterPostProcessor fpp=new FilterPostProcessor(assetManager);
-        fog=new FogFilter();
-        fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
-        fog.setFogDistance(2000f);
-        fog.setFogDensity(2.0f);
-        fpp.addFilter(fog);
+        //fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
+        //fog.setFogDistance(2000f);fog.setFogDensity(2.0f);
+        FilterPostProcessor fpp=(FilterPostProcessor) assetManager.loadAsset("Effects/newfilter.j3f");
         viewPort.addProcessor(fpp);
 
 
@@ -449,9 +445,10 @@ public class Main extends SimpleApplication implements ScreenController {
         waterGeo.rotate(-(float) Math.PI / 2, 0f, 0f);
         Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         mat.setColor("Color", new ColorRGBA(64f / 255, 113f / 255, 150f / 255, 1f));
+        mat.setColor("Color", new ColorRGBA(50f / 255, 50f / 255, 50f / 255, 1f));
         waterGeo.setMaterial(mat);
         rootNode.attachChild(waterGeo);
-        waterGeo.setLocalTranslation(-10000f, 0f, 30000f);
+        waterGeo.setLocalTranslation(-10000f, -10f, 30000f);
         waterGeo.scale(100f);
 
         //Init of lightsources of the project.

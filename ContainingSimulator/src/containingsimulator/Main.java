@@ -258,7 +258,7 @@ public class Main extends SimpleApplication implements ScreenController {
         if (!isPaused) {
             ArrayList<AGV> gehad = new ArrayList<AGV>();
             for (AGV a : agvs) {
-                if (a.pathWasPlaying && !gehad.contains(a)) {
+                if (a.pathWasPlaying && !gehad.contains(a) && !a.getDefect()) {
                     boolean collision = false;
                     for (AGV collidingWith : agvs) {
                         if (collidingWith.pathWasPlaying && collidingWith != a) {
@@ -274,7 +274,7 @@ public class Main extends SimpleApplication implements ScreenController {
                     if (collision == false) {
                         a.motionEvent.play();
                     }
-                } else if (gehad.contains(a)) {
+                } else if (gehad.contains(a) && !a.getDefect()) {
                     a.motionEvent.play();
                 }
             }
@@ -1202,8 +1202,6 @@ public class Main extends SimpleApplication implements ScreenController {
             return;
         }
         Node node = cam2EndNode.getParent();
-        System.out.println(node.getName());
-
         if (!((node instanceof Transporter) || (node instanceof Container))) {
 
             String id = node.getName();

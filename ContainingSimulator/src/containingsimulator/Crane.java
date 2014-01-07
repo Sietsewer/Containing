@@ -37,36 +37,111 @@ public abstract class Crane extends Node implements MotionPathListener {
     private boolean loadContainer = false;
     private boolean pickupContainer;
     
+    /**
+     * Position of the hook
+     */
     protected Vector3f defPosHook;
+    /**
+     * Position of the slider
+     */
     protected Vector3f defPosSlider;
+    /**
+     * Action counter
+     */
     protected int action = 0;
+    /**
+     * Base spatial
+     */
     protected Spatial base;
+    /**
+     * Hook spatial
+     */
     protected Spatial hook;
+    /**
+     * Slider spatial
+     */
     protected Spatial slider;
+    /**
+     * Slider node
+     */
     protected Node sNode = new Node();
+    /**
+     * Hook node
+     */
     protected Node hNode = new Node();
+    /**
+     * Base duration
+     */
     protected float baseDur = 2f;
+    /**
+     * Hook duration
+     */
     protected float hookDur = 2f;
+    /**
+     * Slider duration
+     */
     protected float sliDur = 2f;
+    /**
+     * Attach duration
+     */
     protected float attachDur = 30f;
+    /**
+     * Detach duration
+     */
     protected float detachDur = 10f;
+    /**
+     *
+     */
     protected float baseLP = 1f;
+    /**
+     *
+     */
     protected float sliderLP = 1f;
+    /**
+     *
+     */
     protected float hookLP = 1f;
+    /**
+     * Target position
+     */
     protected Vector3f target = null;
+    /**
+     * Container
+     */
     protected Container cont = null;
+     /**
+     * Transporter
+     */
     protected Transporter transporter = null;
+    /**
+     * AGV
+     */
     protected AGV agv = null;
+    /**
+     * Time target
+     */
     protected float timeTarget = 0;
+    /**
+     * Time count
+     */
     protected float timeCount = 0;
     private boolean[]pathWasPlaying = new boolean[3];
+    /**
+     * Waiting on Timer
+     */
     protected boolean waitingOnTimer = false;
+    /**
+     * Parking position
+     */
     protected Vector3f parkingVector = null;
+    /**
+     * Move boolean
+     */
     protected boolean onlyMoveToPos = false;
     
 
     /**
-     *
+     * Crane constructor
      * @param id
      * @param pos
      * @param base
@@ -114,35 +189,62 @@ public abstract class Crane extends Node implements MotionPathListener {
       
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean getDefect()
     {
         return this.defect;
     }
     
+    /**
+     *
+     * @return
+     */
     public String getID()
     {
         return this.id;
     }
     
+    /**
+     *
+     * @return
+     */
     public Vector3f getPos()
     {
         return this.position;
     }
     
+    /**
+     *
+     * @return
+     */
     public String getId() 
     {
         return this.id;
     }
   
+    /**
+     *
+     * @return
+     */
     public boolean getIsBusy()
     {
         return this.busy;
     }
 
+    /**
+     *
+     */
     public void moveToHome()
     {
          goToHome = true;
     }
+    /**
+     *
+     * @return
+     */
     public Quaternion getBaseRotation()
     {
         return this.base.getLocalRotation();
@@ -229,6 +331,10 @@ public abstract class Crane extends Node implements MotionPathListener {
              debugMessage(1,"getContainer");
         }
     }
+    /**
+     *
+     * @param realPosition
+     */
     public void moveToPos(Vector3f realPosition)
     {
         if(!busy)
@@ -258,6 +364,7 @@ public abstract class Crane extends Node implements MotionPathListener {
      * picking up a container from a transporter or buffer.
      * Initializes variables needed for starting this action
      * @param cont the container to pick up
+     * @return  
      */
     protected boolean pickupContainer(Container cont)
     {
@@ -274,6 +381,11 @@ public abstract class Crane extends Node implements MotionPathListener {
           return true;
          
     }
+    /**
+     *
+     * @param cont
+     * @param trans
+     */
     public void pickupContainer(Container cont, Transporter trans)
     {
        if(pickupContainer(cont))

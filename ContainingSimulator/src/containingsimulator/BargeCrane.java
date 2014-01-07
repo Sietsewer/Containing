@@ -4,13 +4,8 @@
  */
 package containingsimulator;
 
-import com.jme3.animation.LoopMode;
-import com.jme3.cinematic.MotionPath;
-import com.jme3.cinematic.MotionPathListener;
-import com.jme3.cinematic.events.MotionEvent;
 import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
@@ -19,6 +14,14 @@ import com.jme3.scene.Spatial;
  */
 public class BargeCrane extends Crane { 
     
+    /**
+     * BargeCrane constructor
+     * @param id crane ID
+     * @param basePos position
+     * @param base base spatial
+     * @param slider slider spatial
+     * @param hook hook spatial
+     */
     public BargeCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook)
     {
         super(id,basePos,base,slider,hook);

@@ -11,14 +11,29 @@ package containingsimulator;
 public class Commands {
     
 
+    /**
+     * Shutdown
+     */
     static public final int SHUTDOWN = 9;
     
+    /**
+     * Defect
+     */
     static public final int DEFECT= 13;
     
+    /**
+     * Move crane
+     */
     static public final int MOVE_CRANE = 12;
     
+    /**
+     * Retreive infor from controller
+     */
     static public final int RETREIVE_INFO = 11;
     
+    /**
+     * Pause or play
+     */
     static public final int PAUSE_PLAY = 10;
     /**
      *Device is ready

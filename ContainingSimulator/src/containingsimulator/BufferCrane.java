@@ -17,6 +17,15 @@ public class BufferCrane extends Crane {
     private Buffer buffer;
     private Vector3f tempTarget;
 
+    /**
+     * BufferCrane constructor
+     * @param id crane ID
+     * @param basePos position
+     * @param base base spatial
+     * @param slider slider spatial
+     * @param hook hook spatial
+     * @param buffer buffer link
+     */
     public BufferCrane(String id, Vector3f basePos, Spatial base, Spatial slider, Spatial hook, Buffer buffer)
     {
         super(id, basePos,base,slider, hook);
@@ -32,6 +41,9 @@ public class BufferCrane extends Crane {
         this.hookDur = 3f;
         this.baseLP = 0.66f; 
     }
+    /**
+     * @return buffer
+     */
     public Buffer getBuffer()
     {
         return this.buffer;
@@ -76,7 +88,12 @@ public class BufferCrane extends Crane {
                 break;
          }
     }
-     public void pickupContainer(Container cont, boolean up)
+     /**
+     *
+     * @param cont
+     * @param up
+     */
+    public void pickupContainer(Container cont, boolean up)
      {
          this.tempTarget = buffer.getSideVector3f(up);
          this.pickupContainer(cont);

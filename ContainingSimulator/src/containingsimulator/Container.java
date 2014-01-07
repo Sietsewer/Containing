@@ -9,9 +9,7 @@ import containing.xml.CustomVector3f;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
@@ -29,17 +27,50 @@ import java.util.Random;
  */
 public class Container extends Node {
 
-    static Box b;               //container geometry, static to reduce memory load
-    static Material mat;        //container material, static to reduce memory load
-    static Spatial geom;       //geometry object
-    static Random r;            //RNG for color assignment
-    String id;                  //container ID
-    Vector3f realPosition;      //actual position in the simulation
-    Vector3f indexPosition;     //position in transport/buffer
-    Vector3f size;              //size in m
-    static HashMap<String, Texture> companyTextures = new HashMap<String, Texture>();
-    static List<Texture> Colors = new ArrayList<Texture>();
-    String company;
+    /**
+     * container geometry, static to reduce memory load
+     */
+    public static Box b;
+    /**
+     * container material, static to reduce memory load
+     */
+    public static Material mat;
+    /**
+     * geometry object
+     */
+    public static Spatial geom;
+    /**
+     * RNG for color assignment
+     */
+    public static Random r;
+    /**
+     * container ID
+     */
+    public String id;
+    /**
+     * actual position in the simulation
+     */
+    public Vector3f realPosition;
+    /**
+     * position in transport/buffer
+     */
+    public Vector3f indexPosition;
+    /**
+     * size in m
+     */
+    public Vector3f size;
+    /**
+     * Container textures
+     */
+    public static HashMap<String, Texture> companyTextures = new HashMap<String, Texture>();
+    /**
+     * List of container colors
+     */
+    public static List<Texture> Colors = new ArrayList<Texture>();
+    /**
+     * Company name
+     */
+    public String company;
 
     /**
      * Constructor

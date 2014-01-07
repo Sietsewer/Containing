@@ -58,6 +58,7 @@ public class Buffer extends Node{
 
     /**
      * Attach parking spots to both ends of the buffer
+     * @param loc 
      */
     public void addParkingSpots(Vector3f loc){
         pSpots = new ParkingSpot[12];
@@ -173,7 +174,7 @@ public class Buffer extends Node{
     /**
      * Add a container to the buffer
      * @param index index where you want to add the container
-     * @param sc1 the container you want to add to the buffer
+     * @param c1  
      */
     public void addContainer(Vector3f index, Container c1){
         Container c2 = (Container)c1;

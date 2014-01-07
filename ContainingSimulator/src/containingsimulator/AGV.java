@@ -4,12 +4,9 @@
  */
 package containingsimulator;
 
-import com.jme3.bounding.BoundingBox;
 import com.jme3.cinematic.MotionPath;
 import com.jme3.cinematic.MotionPathListener;
 import com.jme3.cinematic.events.MotionEvent;
-import com.jme3.material.Material;
-import com.jme3.material.RenderState;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Spline;
@@ -27,16 +24,49 @@ import java.util.ArrayList;
  */
 public class AGV extends Node implements MotionPathListener {
     
-    public Container container;//The contianer that is mounted on the AGV.
-    public String id;//ID string of the AGV
-    public ParkingSpot pSpot;//Holds the current parking spot of the AGV.
-    boolean up;//holds (if the parking spot is in a buffer) if the parking spot is in the up, or down position.
-    private Crane targetCrane;//The crane at the end of the path.
-    public MotionEvent motionEvent;//Controls the motionpath that the AGV uses.
-    private MotionPath path;//Holds the path of the AGV.
-    private Spatial viewModel;//Model of the AGV.
+    /**
+     * The contianer that is mounted on the AGV.
+     */
+    public Container container;
+    /**
+     * ID string of the AGV
+     */
+    public String id;
+    /**
+     * Holds the current parking spot of the AGV.
+     */
+    public ParkingSpot pSpot;
+    /**
+     * Holds (if the parking spot is in a buffer) if the parking spot is in the up, or down position.
+     */
+    boolean up;
+    /**
+     * The crane at the end of the path.
+     */
+    private Crane targetCrane;
+    /**
+     * Controls the motionpath that the AGV uses.
+     */
+    public MotionEvent motionEvent;
+    /**
+     * Holds the path of the AGV.
+     */
+    private MotionPath path;
+    /**
+     * Model of the AGV.
+     */
+    private Spatial viewModel;
+    /**
+     * Playing boolean
+     */
     public boolean pathWasPlaying = false;
+    /**
+     * Holds the geometry
+     */
     public Geometry boundingGeom;
+    /**
+     * Holds the defect
+     */
     private boolean defect = false;
 
     /**
@@ -64,6 +94,10 @@ public class AGV extends Node implements MotionPathListener {
         this.attachChild(boundingGeom);
         this.attachChild(viewModel);
     }
+    /**
+     * Gets if the agv has a defect.
+     * @return
+     */
     public boolean getDefect()
     {
         return this.defect;
@@ -73,6 +107,7 @@ public class AGV extends Node implements MotionPathListener {
      * Adds waypoints to the current list of waypoints.
      *
      * @param waypoints The waypoints to be added.
+     * @param targetCrane  
      */
     public void addWaypoints(String[] waypoints, Crane targetCrane) {
         this.path.clearWayPoints();
@@ -111,9 +146,6 @@ public class AGV extends Node implements MotionPathListener {
     /**
      * When called, places a container on the AGV. null can be sent.
      *
-     * @param container The container to be placed on the AGV.
-     * @return True if the container was received, False if there already is a
-     * container.
      */
     public void globalSpeedChanged() {
         motionEvent.setInitialDuration(path.getLength() / 11.11f / Main.globalSpeed);

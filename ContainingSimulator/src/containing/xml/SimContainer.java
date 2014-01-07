@@ -22,10 +22,16 @@ public class SimContainer {
     private CustomVector3f indexPosition;
 
     /**
-     *
+     * Empty simcontainer constructor
      */
     public SimContainer() {
     }
+    
+    /**
+     * Simcontainer constructor
+     * @param id container id
+     * @param pos indexposition
+     */
     public SimContainer(String id, CustomVector3f pos)
     {
         this.id = id;
@@ -34,7 +40,7 @@ public class SimContainer {
 
 
     /**
-     *
+     * Get ID
      * @return
      */
     public String getId() {
@@ -42,15 +48,15 @@ public class SimContainer {
     }
 
     /**
-     *
-     * @param id
+     * Set ID
+     * @param id container ID
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     *
+     * Get index position
      * @return
      */
     public CustomVector3f getIndexPosition() {
@@ -58,17 +64,25 @@ public class SimContainer {
     }
 
     /**
-     *
-     * @param indexPosition
+     * set index position
+     * @param indexPosition index position
      */
     public void setIndexPosition(CustomVector3f indexPosition) {
         this.indexPosition = indexPosition;
     }
 
+    /**
+     * Get company
+     * @return
+     */
     public String getBedrijf() {
         return bedrijf;
     }
 
+    /**
+     * Set company
+     * @param bedrijf company
+     */
     public void setBedrijf(String bedrijf) {
         this.bedrijf = bedrijf;
     }

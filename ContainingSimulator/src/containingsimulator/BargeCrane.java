@@ -27,6 +27,7 @@ public class BargeCrane extends Crane {
         super(id,basePos,base,slider,hook);
         this.base.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
+        this.slider.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
         this.hNode.setLocalTranslation(new Vector3f(0,25,0));
         
         defPosHook = this.hNode.getWorldTranslation().clone();

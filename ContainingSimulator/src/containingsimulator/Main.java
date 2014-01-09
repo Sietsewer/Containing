@@ -103,10 +103,8 @@ public class Main extends SimpleApplication implements ScreenController {
     /*
      crane 
      */
-    
     Spatial env;
     FogFilter fog;
-    
     Crane[] seaCranes = new Crane[10];
     Crane[] bufCranes = new Crane[63];
     Crane[] lorCranes = new Crane[20];
@@ -128,6 +126,9 @@ public class Main extends SimpleApplication implements ScreenController {
     Nifty nifty;
     private boolean gameIsStarted = false;
     private ParticleEmitter fire;
+    private boolean escPressed = false;
+    private float count = 0;
+    private float max = 2;
 
     /**
      *
@@ -175,6 +176,7 @@ public class Main extends SimpleApplication implements ScreenController {
         //nifty.loadStyleFile("nifty-default-styles.xml");
         // nifty.loadControlFile("nifty-default-controls.xml");
         Screen_Start startController = new Screen_Start(this);
+        startController.initialize(stateManager, app);
         nifty.registerScreenController(this);
         nifty.registerScreenController(startController);
         nifty.fromXml("Interface/screen.xml", "start", startController);
@@ -226,15 +228,29 @@ public class Main extends SimpleApplication implements ScreenController {
     }
 
     public void startGame(String ip, int port, int width, int height, int bbp, boolean vSync, boolean showFps, boolean showStats) {
-
-        app.settings.setWidth(width);
-        app.settings.setHeight(height);
-        app.settings.setBitsPerPixel(bbp);
-        app.settings.put("VSync", vSync);
+        boolean newSet = false;
+        if (app.settings.getWidth() != width) {
+            newSet = true;
+            app.settings.setWidth(width);
+        }
+        if (app.settings.getHeight() != height) {
+            newSet = true;
+            app.settings.setHeight(height);
+        }
+        if (app.settings.getBitsPerPixel() != bbp) {
+            newSet = true;
+            app.settings.setBitsPerPixel(bbp);
+        }
+        if (app.settings.getBoolean("VSync") != vSync) {
+            newSet = true;
+            app.settings.put("VSync", vSync);
+        }
+        if (newSet) {
+            app.restart();
+        }
         app.setDisplayFps(showFps);
         app.setDisplayStatView(showStats);
         setConnection(ip, port);
-        app.restart();
 
         if (!gameIsStarted) { //only once! 
             gameIsStarted = true;
@@ -251,6 +267,19 @@ public class Main extends SimpleApplication implements ScreenController {
      */
     @Override
     public void simpleUpdate(float tpf) {
+        ((Screen_Start) nifty.getScreen("start").getScreenController()).update(tpf);
+        if (escPressed) {
+            if (count >= max) {
+                escPressed = false;
+                count = 0;
+                app.flyCam.setDragToRotate(true);
+                setCrossHairs(false);
+                remScreen2();
+                nifty.gotoScreen("start");
+            } else {
+                count += tpf * 10;
+            }
+        }
 
         if (!gameIsStarted) {
             return;
@@ -337,7 +366,7 @@ public class Main extends SimpleApplication implements ScreenController {
         sky_geo.setQueueBucket(RenderQueue.Bucket.Sky);
         sky_geo.scale(2000f);
         rootNode.attachChild(sky_geo);
-        
+
         //Init of enviroments
         env = assetManager.loadModel("Models/env/env.j3o");
         Material env_mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -349,7 +378,7 @@ public class Main extends SimpleApplication implements ScreenController {
         env.setLocalTranslation(0f, 0f, 600f);
         //fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
         //fog.setFogDistance(2000f);fog.setFogDensity(2.0f);
-        FilterPostProcessor fpp=(FilterPostProcessor) assetManager.loadAsset("Effects/newfilter.j3f");
+        FilterPostProcessor fpp = (FilterPostProcessor) assetManager.loadAsset("Effects/newfilter.j3f");
         viewPort.addProcessor(fpp);
 
 
@@ -1044,10 +1073,7 @@ public class Main extends SimpleApplication implements ScreenController {
                 simulateDefect();
 
             } else if (name.equals("Pause")) {
-                app.flyCam.setDragToRotate(true);
-                setCrossHairs(false);
-                remScreen2();
-                nifty.gotoScreen("start");
+                escPressed = true;
             } else if (name.equals("resetRot-button")) {
                 cam2EndNode.setLocalRotation(new Quaternion(0, 0, 0, 1));
             } else if (name.equals("left-click") && !keyPressed) {
@@ -1197,8 +1223,7 @@ public class Main extends SimpleApplication implements ScreenController {
         if (!nifty.getCurrentScreen().equals(nifty.getScreen("hud2"))) {
             return;
         }
-        if(!listener.running)
-        {
+        if (!listener.running) {
             return;
         }
         Node node = cam2EndNode.getParent();

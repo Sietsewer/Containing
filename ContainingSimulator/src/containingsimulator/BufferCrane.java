@@ -32,7 +32,7 @@ public class BufferCrane extends Crane {
         this.buffer = buffer;
         hNode.setLocalTranslation(new Vector3f(0,18.5f,0));
         this.hook.rotate(0, 90*FastMath.DEG_TO_RAD, 0);
-        
+        this.slider.rotate(0,90*FastMath.DEG_TO_RAD,0);
         this.defPosHook = hNode.getWorldTranslation().clone();
         this.defPosSlider = sNode.getWorldTranslation().clone();
         

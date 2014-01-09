@@ -8,6 +8,9 @@ import com.jme3.app.Application;
 import com.jme3.app.SimpleApplication;
 import com.jme3.app.state.AbstractAppState;
 import com.jme3.app.state.AppStateManager;
+import com.jme3.input.KeyInput;
+import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.KeyTrigger;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.CheckBox;
 import de.lessvoid.nifty.controls.TextField;
@@ -25,6 +28,9 @@ public class Screen_Start extends AbstractAppState implements ScreenController {
     Screen screen;
     Main main;
     SimpleApplication app;
+    private boolean escPressed = false;
+    private float count = 0;
+    private float max = 1;
 
     public Screen_Start(Main main) {
         this.main = main;
@@ -34,14 +40,34 @@ public class Screen_Start extends AbstractAppState implements ScreenController {
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
         this.app = (SimpleApplication) app;
+        app.getInputManager().addMapping("back", new KeyTrigger(KeyInput.KEY_ESCAPE));
+        app.getInputManager().addListener(actionListener, "back");
 
     }
+    private ActionListener actionListener = new ActionListener() {
+        public void onAction(String name, boolean keyPressed, float tpf) {
+
+            if (name.equals("back")) {
+                escPressed = true;
+
+            }
+        }
+    };
 
     @Override
     public void update(float tpf) {
         /**
          * jME update loop!
          */
+        if (escPressed) {
+            if (count >= max) {
+                count = 0;
+                escPressed = false;
+                startGame();
+            } else {
+                count += tpf * 10;
+            }
+        }
     }
 
     public void startGame() {

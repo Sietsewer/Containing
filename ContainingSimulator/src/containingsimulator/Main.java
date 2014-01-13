@@ -104,7 +104,9 @@ public class Main extends SimpleApplication implements ScreenController {
      crane 
      */
     Spatial env;
-    FogFilter fog;
+    int graphicsQuality = 1;
+    FilterPostProcessor fpp;
+    
     Crane[] seaCranes = new Crane[10];
     Crane[] bufCranes = new Crane[63];
     Crane[] lorCranes = new Crane[20];
@@ -184,7 +186,7 @@ public class Main extends SimpleApplication implements ScreenController {
         DropDownControl dropDown1 = nifty.getScreen("start").findControl("dropDownRes", DropDownControl.class);
         DisplayMode[] modes = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayModes();
         DropDownControl dropDown2 = nifty.getScreen("start").findControl("dropDownBPP", DropDownControl.class);
-
+        DropDownControl dropDown3 = nifty.getScreen("start").findControl("dropDownQuality", DropDownControl.class);
         for (DisplayMode mode : modes) {
             String res = mode.getWidth() + "x" + mode.getHeight();
             if (!dropDown1.getItems().contains(res)) {
@@ -198,6 +200,13 @@ public class Main extends SimpleApplication implements ScreenController {
         dropDown2.addItem("8");
 
         dropDown2.selectItem(3);
+        
+        dropDown3.addItem("low");
+        dropDown3.addItem("medium");
+        dropDown3.addItem("high");
+        
+        dropDown3.selectItem(1);
+        
         nifty.gotoScreen("start"); // start the screen
     }
 
@@ -227,8 +236,11 @@ public class Main extends SimpleApplication implements ScreenController {
         return false;
     }
 
-    public void startGame(String ip, int port, int width, int height, int bbp, boolean vSync, boolean showFps, boolean showStats) {
+    public void startGame(String ip, int port, int width, int height, int bbp, boolean vSync, boolean showFps, boolean showStats, int quality) {
         boolean newSet = false;
+        
+        setQuality(quality);
+        
         if (app.settings.getWidth() != width) {
             newSet = true;
             app.settings.setWidth(width);
@@ -376,11 +388,6 @@ public class Main extends SimpleApplication implements ScreenController {
         rootNode.attachChild(env);
         env.scale(100f);
         env.setLocalTranslation(0f, 0f, 600f);
-        //fog.setFogColor(new ColorRGBA(0.9f, 0.9f, 0.9f, 1.0f));
-        //fog.setFogDistance(2000f);fog.setFogDensity(2.0f);
-        FilterPostProcessor fpp = (FilterPostProcessor) assetManager.loadAsset("Effects/newfilter.j3f");
-        viewPort.addProcessor(fpp);
-
 
         //Init Container
         Container.makeGeometry(assetManager);
@@ -493,6 +500,23 @@ public class Main extends SimpleApplication implements ScreenController {
         Spatial dock = assetManager.loadModel("Models/dockBase/dockBase.j3o");
         rootNode.attachChild(dock);
         dock.setLocalTranslation(0f, 0f, 600f);
+        
+                fpp = new FilterPostProcessor();
+
+        switch(graphicsQuality){
+            case(0):
+                fpp=(FilterPostProcessor) assetManager.loadAsset("Effects/filter_FOG.j3f");
+                break;
+            case(1):
+                fpp=(FilterPostProcessor) assetManager.loadAsset("Effects/filter_WATER+FOG.j3f");
+                break;
+            case(2):
+                fpp=(FilterPostProcessor) assetManager.loadAsset("Effects/filter_WATER+FOG+DOF+BLOOM+AA.j3f");
+                break;
+            default:
+                fpp=(FilterPostProcessor) assetManager.loadAsset("Effects/filter_FOG.j3f");
+                break;
+        }
     }
 
     /**
@@ -1295,5 +1319,25 @@ public class Main extends SimpleApplication implements ScreenController {
         fire.getParticleInfluencer().setVelocityVariation(0.3f);
 
 
+    }
+    
+    public void setQuality(int graphicsQuality) {
+        viewPort.removeProcessor(fpp);
+        switch(graphicsQuality){
+            case(0):
+                fpp=(FilterPostProcessor) assetManager.loadAsset("Effects/filter_FOG.j3f");
+                break;
+            case(1):
+                fpp=(FilterPostProcessor) assetManager.loadAsset("Effects/filter_WATER+FOG.j3f");
+                break;
+            case(2):
+                fpp=(FilterPostProcessor) assetManager.loadAsset("Effects/filter_WATER+FOG+DOF+BLOOM+AA.j3f");
+                break;
+            default:
+                fpp=(FilterPostProcessor) assetManager.loadAsset("Effects/filter_FOG.j3f");
+                break;
+        }
+        
+        viewPort.addProcessor(fpp);
     }
 }

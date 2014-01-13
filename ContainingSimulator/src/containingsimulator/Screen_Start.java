@@ -77,6 +77,8 @@ public class Screen_Start extends AbstractAppState implements ScreenController {
         String myPort = nifty.getScreen("start").findNiftyControl("portField", TextField.class).getDisplayedText();
         DropDownControl dropDown1 = nifty.getScreen("start").findControl("dropDownRes", DropDownControl.class);
         String[] res = dropDown1.getSelection().toString().split("x");
+        DropDownControl dropDownQuality = nifty.getScreen("start").findControl("dropDownQuality", DropDownControl.class);
+        int gfxQuality = dropDownQuality.getSelectedIndex();
         boolean vSync = screen.findNiftyControl("checkBoxVsync", CheckBox.class).isChecked();
         int bpp = Integer.parseInt(nifty.getScreen("start").findControl("dropDownBPP", DropDownControl.class).getSelection().toString());
         boolean showFPS = screen.findNiftyControl("checkBoxFPS", CheckBox.class).isChecked();
@@ -85,7 +87,7 @@ public class Screen_Start extends AbstractAppState implements ScreenController {
             int port = Integer.parseInt(myPort);
             int width = Integer.parseInt(res[0]);
             int height = Integer.parseInt(res[1]);
-            main.startGame(ip, port, width, height, bpp, vSync, showFPS, showStats);
+            main.startGame(ip, port, width, height, bpp, vSync, showFPS, showStats,gfxQuality);
 
         } catch (Exception ex) {
             System.out.println(ex);

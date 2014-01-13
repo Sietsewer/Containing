@@ -58,6 +58,11 @@
                     <text text="Color Depth" font="Interface/Fonts/Default.fnt" width="50%"  align="right"/>                     
                            <control id="dropDownBPP" name="dropDown" width = "10%"displayItems="4" />
                           </panel>   
+						  <panel id="panel_Quality"  width="100%" valign="center" childLayout="horizontal" 
+                       backgroundColor="#0008"> 
+                    <text text="Graphical quality" font="Interface/Fonts/Default.fnt" width="50%"  align="right"/>                     
+                           <control id="dropDownQuality" name="dropDown" width = "12%"displayItems="3" />
+                          </panel>
                            <panel id="panel_Other" height="10%" width="100%" valign="center" childLayout="horizontal" 
                         backgroundColor="#0008"> 
                       <text text="Other" font="Interface/Fonts/Default.fnt"   width = "100%"align="center"/>   

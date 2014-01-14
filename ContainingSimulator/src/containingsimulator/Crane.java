@@ -15,27 +15,29 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
- *
+ *Base class for all subcranes
+ * Contains methods for transporting containers by crane
+ * Contains MotionPaths for each moving object of a crane
  * @author Len
  */
 public abstract class Crane extends Node implements MotionPathListener {
 
-    private String id;
-    private Vector3f position;
-    private MotionPath basePath = new MotionPath();
-    private MotionPath hookPath = new MotionPath();
-    private MotionPath sliderPath = new MotionPath();
-    private MotionEvent baseControl;
-    private MotionEvent hookControl;
-    private MotionEvent sliderControl;
-    private Vector3f defPosBase;
-    private boolean defect = false;
-    private boolean loaded = false;
-    private boolean goToHome = false;
-    private boolean busy = false;
-    private boolean readyForL = false;
-    private boolean loadContainer = false;
-    private boolean pickupContainer;
+    private String id; //id of the crane
+    private Vector3f position; //default position of the crane
+    private MotionPath basePath = new MotionPath();//path of the base of the crane
+    private MotionPath hookPath = new MotionPath();//path of the hook of the crane
+    private MotionPath sliderPath = new MotionPath();//path of the slider of the crane
+    private MotionEvent baseControl; //Controls the path of the base
+    private MotionEvent hookControl; //Controls the path of the hook
+    private MotionEvent sliderControl; //Control the path of the slider
+    private Vector3f defPosBase; //default position of the base
+    private boolean defect = false;//defect-state of the crane. By default: not defect.
+    private boolean loaded = false;//If a container is attached, the crane is loaded.
+    private boolean goToHome = false; //If crane needs to go to its default position
+    private boolean busy = false; //If crane is busy with an objective, it is busy.
+    private boolean readyForL = false;//If crane is in the right position for a containerdrop
+    private boolean loadContainer = false; //If crane needs to drop the container
+    private boolean pickupContainer;//If crane needs to pickup a Container
     
     /**
      * Position of the hook
@@ -261,10 +263,6 @@ public abstract class Crane extends Node implements MotionPathListener {
      * updates this cranes actions
      * @param tpf
     */
-
-    
-    
-    
     public void update(float tpf)
      {
          if(target!=null && action != 0)
@@ -344,6 +342,7 @@ public abstract class Crane extends Node implements MotionPathListener {
            initializeStartUp();
         }else{debugMessage(4,"moveToPos");}
     }
+    //If crane needs to go to a position without further instructions.
     private void updateMoveToPos()
     {
         switch(action)
@@ -382,7 +381,7 @@ public abstract class Crane extends Node implements MotionPathListener {
          
     }
     /**
-     *
+     * pick up  a container from a Transporter
      * @param cont
      * @param trans
      */
@@ -452,11 +451,11 @@ public abstract class Crane extends Node implements MotionPathListener {
     }
     
        /**
-     *update the actions for getting a container from an AGV
+     *update the subactions for getting a container from an AGV and transfer it to a Transporter/Buffer.
      */
     protected abstract void updateGet();
      /**
-     *update the actions for getting a container from a transporter/buffer
+     *update the subactions for getting a container from a transporter/buffer and transfer it to an AGV.
      */
     protected abstract void updatePickup();
 

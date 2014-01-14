@@ -9,7 +9,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 /**
- *
+ *Class of the Cranes which belong to a buffer, extends baseclass Crane
  * @author User
  */
 public class BufferCrane extends Crane {

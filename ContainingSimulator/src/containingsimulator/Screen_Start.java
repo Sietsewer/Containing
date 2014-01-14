@@ -19,7 +19,7 @@ import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 
 /**
- *
+ * Class of menu/pause screen 
  * @author Len
  */
 public class Screen_Start extends AbstractAppState implements ScreenController {
@@ -32,10 +32,19 @@ public class Screen_Start extends AbstractAppState implements ScreenController {
     private float count = 0;
     private float max = 1;
 
+    /**
+     *Constructor
+     * @param main
+     */
     public Screen_Start(Main main) {
         this.main = main;
     }
 
+    /**
+     *Initializes app, add keymapping
+     * @param stateManager
+     * @param app
+     */
     @Override
     public void initialize(AppStateManager stateManager, Application app) {
         super.initialize(stateManager, app);
@@ -70,6 +79,9 @@ public class Screen_Start extends AbstractAppState implements ScreenController {
         }
     }
 
+    /**
+     * Method to be called when switching from menu to ingame
+     */
     public void startGame() {
 
         String connection = nifty.getScreen("start").findNiftyControl("ass", TextField.class).getRealText();
@@ -101,10 +113,12 @@ public class Screen_Start extends AbstractAppState implements ScreenController {
 
     public void onStartScreen() {
     }
-
     public void onEndScreen() {
     }
 
+    /**
+     *Stops the application
+     */
     public void quitGame() {
         System.exit(1);
     }

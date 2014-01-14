@@ -14,7 +14,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
- *
+ *Class of the cranes handling the trains, extends baseclass Crane
  * @author Len
  */
 public class TrainCrane extends Crane implements MotionPathListener{

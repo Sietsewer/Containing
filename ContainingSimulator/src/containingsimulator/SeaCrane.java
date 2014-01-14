@@ -15,7 +15,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
- *
+ *Class of cranes handling the seaships, extends baseclass Crane
  * @author User
  */
 public class SeaCrane extends Crane {

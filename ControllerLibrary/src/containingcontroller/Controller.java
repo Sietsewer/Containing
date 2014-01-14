@@ -424,7 +424,7 @@ public class Controller {
                 }
             }
         }
-        for (Transporter t : allDepartingTransporters) {
+        for (Transporter t : new ArrayList<Transporter>(allDepartingTransporters)) {
             switch (t.getTransportType()) {
                 case TransportTypes.BARGE:
                     for (int i = 0; i < 8; i += 2) {

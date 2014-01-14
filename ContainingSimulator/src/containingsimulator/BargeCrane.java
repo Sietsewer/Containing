@@ -9,7 +9,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 
 /**
- *
+ * Class of cranes handling the bargeships, extends baseclass Crane
  * @author Len
  */
 public class BargeCrane extends Crane { 
@@ -40,6 +40,7 @@ public class BargeCrane extends Crane {
     }
     
     
+   
     @Override
     protected void updateGet()
     {

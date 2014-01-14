@@ -14,14 +14,24 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 
 /**
- *
+ * Class of the lorry crane, extends baseclass Crane
  * @author Len
  */
 public class LorryCrane extends Crane implements MotionPathListener {
 
-
+    /**
+     *ParkingSpot of this crane, position for AGV to wait
+     */
     public ParkingSpot parkingSpot;
     
+    /**
+     * Constructor
+     * @param id
+     * @param pos
+     * @param base
+     * @param slider
+     * @param hook
+     */
     public LorryCrane(String id, Vector3f pos, Spatial base, Spatial slider, Spatial hook) 
     {
         super(id,pos,base,slider.clone().scale(0.4f),hook);
@@ -40,6 +50,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
         
     }
     
+    //used steps by both possible actions (pickup/get container)
     private void commonSteps()
     {
         switch(action)
@@ -65,6 +76,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
                 break;
         }
     }
+    
     @Override
     protected void updateGet()
     {
@@ -155,6 +167,7 @@ public class LorryCrane extends Crane implements MotionPathListener {
         }
     }
 
+    //returns parkingSpot
     @Override
     public ParkingSpot getParkingspot() {
         return this.parkingSpot;

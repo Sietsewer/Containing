@@ -8,25 +8,19 @@ import com.jme3.math.Vector3f;
 import java.util.HashMap;
 
 /**
- *
+ *Class containing all worldvectors for all the points in the map
  * @author User
  */
 public class Path {
-    
+    //HashMap containing all id's and their worldvectors
     private static HashMap<String, Vector3f> map = new HashMap();
-    private static String clo = "clo";
-    private static String cse = "cse";
-    private static String cba = "cba";
-    private static String ctr = "ctr";
-    private static String bfa = "bfa";
-    private static String bfb = "bfb";
-    private static String m = "m";
-
-    /**
-     * Constructor creates path
-     */
-    public Path() {
-    }
+    private final static String clo = "clo";
+    private final static String cse = "cse";
+    private final static String cba = "cba";
+    private final static String ctr = "ctr";
+    private final static String bfa = "bfa";
+    private final static String bfb = "bfb";
+    private final static String m = "m";
     
     /**
      * Get ID of main path

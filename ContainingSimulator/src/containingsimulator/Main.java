@@ -106,6 +106,7 @@ public class Main extends SimpleApplication implements ScreenController {
     Spatial env;
     int graphicsQuality = 1;
     FilterPostProcessor fpp;
+    Material noTex;
     
     Crane[] seaCranes = new Crane[10];
     Crane[] bufCranes = new Crane[63];
@@ -361,6 +362,9 @@ public class Main extends SimpleApplication implements ScreenController {
      */
     void loadAssets() {
 
+        noTex = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        noTex.setColor("Color", ColorRGBA.DarkGray);
+        
         //Init of the AGV viewmodel.
         agvModel = assetManager.loadModel("Models/AGV/AGV.j3o");
 
@@ -401,8 +405,9 @@ public class Main extends SimpleApplication implements ScreenController {
         scMat.setColor("Color", ColorRGBA.White);
         scMat.setTexture("ColorMap", sc_text);
         scModel.setMaterial(scMat);
-        scSModel.setMaterial(scMat);
-        scHModel.setMaterial(scMat);
+        scSModel.setMaterial(noTex);
+        scHModel.setMaterial(noTex);
+        
         //Init of bargecrane viewmodel
         barModel = assetManager.loadModel("Models/seacrane/seacrane.j3o");
         barSModel = assetManager.loadModel("Models/seacrane/seacrane_slider.j3o");
@@ -412,8 +417,8 @@ public class Main extends SimpleApplication implements ScreenController {
         barMat.setColor("Color", ColorRGBA.White);
         barMat.setTexture("ColorMap", bar_text);
         barModel.setMaterial(barMat);
-        barSModel.setMaterial(barMat);
-        barHModel.setMaterial(barMat);
+        barSModel.setMaterial(noTex);
+        barHModel.setMaterial(noTex);
 
         Material m = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         m.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
@@ -430,13 +435,13 @@ public class Main extends SimpleApplication implements ScreenController {
         bcMat.setTexture("ColorMap", bc_text);
         bcModel.setMaterial(bcMat);
         bcSModel.setMaterial(bcMat);
-        bcHModel.setMaterial(bcMat);
+        bcHModel.setMaterial(noTex);
 
         //Init lorryCrane
         lcModel = assetManager.loadModel("Models/lorrycrane/lorrycrane.j3o");
         Material lcMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         lcMat.setColor("Color", ColorRGBA.Yellow);
-        lcModel.setMaterial(lcMat);
+        lcModel.setMaterial(noTex);
 
         //Init trainCrane
         tcModel = assetManager.loadModel("Models/traincrane/traincrane.j3o");
@@ -448,7 +453,7 @@ public class Main extends SimpleApplication implements ScreenController {
         tcMat.setTexture("ColorMap", tc_text);
         tcModel.setMaterial(tcMat);
         tcSModel.setMaterial(tcMat);
-        tcHModel.setMaterial(tcMat);
+        tcHModel.setMaterial(noTex);
 
         //Init empty buffers
         buffers = new Buffer[63];

@@ -376,7 +376,7 @@ public class Transporter extends Node implements MotionPathListener {
         Material bargeMat = new Material(am, "Common/MatDefs/Misc/Unshaded.j3md");
         Texture bargeText = am.loadTexture("Textures/barge/barge.png");
         bargeMat.setTexture("ColorMap", bargeText);
-        mat.setColor("Color", ColorRGBA.Red);
+        mat.setColor("Color", ColorRGBA.Gray);
 
 
 
